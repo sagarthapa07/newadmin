@@ -1,0 +1,307 @@
+<section>
+  <div class="row mt-4">
+    <div class="col-6">
+      <h5>Select States/Counties</h5>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+      <button class="btn border" (click)="openPasteModal()">Paste Here</button>
+    </div>
+    <div class="paste-overlay" *ngIf="showPasteModal">
+      <div class="paste-modal" (click)="$event.stopPropagation()">
+        <h3>Paste States/Counties here</h3>
+
+        <textarea
+          [(ngModel)]="pasteText"
+          placeholder="Paste your article or long text is correct form in here..."
+        ></textarea>
+
+        <div class="paste-actions">
+          <button class="btn-remove" (click)="closePasteModal()">Cancel</button>
+
+          <button class="btn-done" (click)="generateCountiesFromText()">Generate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="grant-coverage-card">
+      <h5>Select Grant Coverage</h5>
+
+      <!-- Toggle buttons -->
+      <div class="mode-toggle">
+        <label>
+          <input
+            type="radio"
+            name="grantMode"
+            [checked]="grantMode === 'single'"
+            (change)="setGrantMode('single')"
+          />
+          Single State
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="grantMode"
+            [checked]="grantMode === 'multiple'"
+            (change)="setGrantMode('multiple')"
+          />
+          Multiple States
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="grantMode"
+            [checked]="grantMode === 'all'"
+            (change)="setGrantMode('all')"
+          />
+          All States
+        </label>
+      </div>
+
+      <!-- SINGLE STATE -->
+      <div *ngIf="grantMode === 'single'" class="mt-3">
+        <div class="row align-items-center">
+          <!-- DROPDOWN COLUMN -->
+          <div class="col-lg-5 col-md-6 col-12">
+            <label class="fw-semibold mb-1">
+              {{ countiesKeyDropDowns.states.label }}
+            </label>
+
+            <ng-multiselect-dropdown
+              [settings]="countieSettings"
+              [data]="countiesKeyDropDowns.states.data"
+              [(ngModel)]="countiesKeyDropDowns.states.selected"
+              (onSelect)="onSingleStateChange()"
+              (onDeSelect)="onSingleStateChange()"
+              (onSelectAll)="onSingleStateChange()"
+              (onDeSelectAll)="onSingleStateChange()"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+
+          <!-- SWITCH COLUMN -->
+          <div class="col-lg-3 col-md-4 col-12 d-flex align-items-center">
+            <div class="custom-switch ms-lg-3 mt-3 mt-md-0">
+              <label class="switch mb-0">
+                <input
+                  type="checkbox"
+                  [checked]="singleFullStateMode"
+                  (change)="onSingleToggleChange($event)"
+                />
+                <span class="slider"></span>
+              </label>
+
+              <span class="switch-label ms-2">
+                {{ singleFullStateMode ? 'Full State' : 'With Counties' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- SUB GRID -->
+        <div
+          class="row"
+          *ngIf="
+            grantMode === 'single' &&
+            countiesKeyDropDowns.states.selected.length &&
+            activeStatesForCounties &&
+            !singleFullStateMode
+          "
+        >
+          <div class="col-12">
+            <div class="county-grid-container">
+              <!-- SELECT ALL -->
+              <div class="select-all-row">
+                <label class="sub-checkbox fw-bold">
+                  <input
+                    type="checkbox"
+                    [checked]="
+                      activeStatesForCounties && isAllCountiesSelected(activeStatesForCounties)
+                    "
+                    (change)="
+                      toggleSelectAllCounties(activeStatesForCounties, $event.target.checked)
+                    "
+                  />
+
+                  <span>Select All Counties</span>
+                </label>
+              </div>
+
+              <!-- COUNTIES GRID -->
+              <div class="county-grid">
+                <label
+                  class="sub-checkbox county-item"
+                  *ngFor="let sub of countiySubCountyMap[activeStatesForCounties]"
+                >
+                  <input
+                    type="checkbox"
+                    [checked]="selectedSubCounties[activeStatesForCounties]?.includes(sub)"
+                    (change)="toggleCounty(activeStatesForCounties, sub, $event.target.checked)"
+                  />
+
+                  <span>{{ sub }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SELECTED RESULT -->
+        <div class="row mt-4">
+          <div class="col-md-3 col-12">
+            <h6>State Name</h6>
+
+            <div *ngFor="let state of selectedState">
+              <span class="chip">
+                {{ state }}
+
+                <span class="remove" (click)="removeState(state)"> × </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-md-9 col-12">
+            <h6>County Name</h6>
+
+            <div *ngFor="let state of selectedState">
+              <span class="chip" *ngFor="let county of selectedSubCounties[state]">
+                {{ county }}, {{ state }}
+
+                <span class="remove" (click)="removeCountyFromState(state, county)"> × </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MULTIPLE STATES -->
+      <div *ngIf="grantMode === 'multiple'" class="mt-3">
+        <!-- DROPDOWN + TOGGLE -->
+        <div class="row align-items-center">
+          <div class="col-md-5 col-12">
+            <label class="fw-semibold mb-1">Select States</label>
+
+            <ng-multiselect-dropdown
+              [settings]="multiSelectSettings"
+              [data]="multipleStatesDropdown.data"
+              [(ngModel)]="multipleStatesDropdown.selected"
+              (ngModelChange)="onMultipleStateChange()"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+
+          <!-- TOGGLE -->
+          <div class="col-md-3 col-12 d-flex align-items-center">
+            <div class="custom-switch ms-md-3 mt-3 mt-md-0">
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  [checked]="multipleFullStateMode"
+                  (change)="onMultipleToggleChange($event)"
+                />
+                <span class="slider"></span>
+              </label>
+
+              <span class="switch-label ms-2">
+                {{ multipleFullStateMode ? 'Full State' : 'With Counties' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- RECENTLY SELECTED STATE GRID -->
+        <div *ngIf="multipleActiveState">
+          <div class="row">
+            <div class="col-12">
+              <div class="county-grid-container" *ngIf="!multipleFullStateMode">
+                <!-- SELECT ALL -->
+                <div class="select-all-row">
+                  <label class="sub-checkbox fw-bold">
+                    <input
+                      type="checkbox"
+                      [checked]="
+                        multipleActiveState && isAllMultipleCountiesSelected(multipleActiveState)
+                      "
+                      (change)="toggleSelectAllMultiple(multipleActiveState, $event.target.checked)"
+                    />
+                    <span>Select All Counties</span>
+                  </label>
+                </div>
+
+                <!-- COUNTIES GRID -->
+                <div class="county-grid">
+                  <label
+                    class="sub-checkbox county-item"
+                    *ngFor="let county of countiySubCountyMap[multipleActiveState]"
+                  >
+                    <input
+                      type="checkbox"
+                      [checked]="multipleSelectedCounties[multipleActiveState]?.includes(county)"
+                      (change)="
+                        toggleMultipleCounty(multipleActiveState, county, $event.target.checked)
+                      "
+                    />
+                    <span>{{ county }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SELECTED RESULT (UNCHANGED AS REQUESTED) -->
+        <div class="row mt-4" *ngIf="multipleSelectedStates.length">
+          <!-- HEADINGS -->
+          <div class="col-md-3 col-12">
+            <h6>State Name</h6>
+          </div>
+
+          <div class="col-md-9 col-12">
+            <h6>County Name</h6>
+          </div>
+
+          <!-- DATA ROWS -->
+          <ng-container *ngFor="let state of multipleSelectedStates">
+            <div class="col-md-3 col-12 mt-3" *ngIf="multipleSelectedCounties[state]?.length">
+              <span class="chip state-chip">
+                {{ state }}
+                <span class="remove" (click)="removeMultipleState(state)"> × </span>
+              </span>
+            </div>
+
+            <div class="col-md-9 col-12 mt-3" *ngIf="multipleSelectedCounties[state]?.length">
+              <span class="chip" *ngFor="let county of multipleSelectedCounties[state]">
+                {{ county }} County, {{ state }}
+
+                <span class="remove" (click)="removeMultipleCounty(state, county)"> × </span>
+              </span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- ALL STATES -->
+      <div *ngIf="grantMode === 'all'" class="mt-3">
+        <p class="text-success">All states and counties selected</p>
+      </div>
+    </div>
+  </div>
+  <!-- FOOTER BUTTONS -->
+  <div class="buttons d-flex justify-content-between">
+    <div>
+      <button type="button" class="btn btn-next" (click)="clearAllSelections()">Clear all</button>
+    </div>
+    <div>
+      <button type="button" class="btn btn-save mx-2" (click)="saveStatesAndCounties()">
+        <i class="bi bi-bookmark-check"></i> Save
+      </button>
+      <button type="button" class="btn btn-next mx-2" (click)="goToFocusGroup()">
+        <i class="bi bi-skip-backward"></i> Back
+      </button>
+      <button type="button" class="btn btn-next" (click)="goToSeo()">
+        Next <i class="bi bi-skip-forward"></i>
+      </button>
+    </div>
+  </div>
+</section>

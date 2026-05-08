@@ -1,0 +1,219 @@
+.opportunity-section {
+  padding: 20px;
+}
+
+.section-title {
+  font-weight: var(--fw-600);
+  font-size: var(--header-text);
+  margin-bottom: 30px;
+  /* color: var(--primary-color); */
+}
+
+.ongoing-box input {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.buttons .btn {
+  min-width: 90px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-save:hover {
+  background-color: #206898;
+  border-color: none;
+}
+
+/* Back Button */
+.btn-next {
+  background-color: var(--nav-color);
+}
+
+.btn-next:hover {
+  background-color: #206898;
+}
+
+@media (max-width: 576px) {
+  .form-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-group label {
+    width: 100%;
+    text-align: left;
+  }
+
+  .form-group .deadline-row {
+    width: 100%;
+  }
+
+  .form-group .deadline-row input[type='date'] {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.btn-save {
+  background: var(--nav-color);
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+}
+
+.footer {
+  margin-top: 40px;
+  text-align: right;
+}
+
+.sub-title {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 10px;
+}
+
+/* SUB ISSUES GRID */
+.subissue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px 16px;
+}
+
+.sub-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.sub-checkbox span {
+  font-size: var(--sub-checkbox);
+  color: var(--text-color);
+}
+
+@media (max-width: 992px) {
+  .issue-text {
+    font-size: 13.5px;
+  }
+
+  .subissue-popover {
+    width: 360px;
+  }
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--box-bg-color);
+  color: var(--text-color);
+  padding: 6px 10px;
+  border-radius: 16px;
+  font-size: 13px;
+  margin: 4px 6px 4px 0;
+  transition: background 0.2s ease;
+}
+
+.chip:hover {
+  cursor: pointer;
+}
+
+.remove {
+  margin-left: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--danger-color);
+}
+
+.entity-chip {
+  font-weight: 600;
+}
+
+.sub-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: var(--placeholder-text);
+}
+
+.sub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px 10px;
+  margin-top: 10px;
+}
+
+.sub-grid .sub-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+@media (max-width: 992px) {
+  .sub-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .sub-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+:host ::ng-deep .multiselect-item-checkbox,
+:host ::ng-deep .selected-item {
+  max-width: none !important;
+}
+.custom-toast {
+
+  position: fixed;
+
+  top: 20px;
+  right: 20px;
+
+  width: 350px;
+
+  background: #fff;
+
+  z-index: 999999;
+
+  padding: 14px;
+
+  border-radius: 8px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.success-toast {
+
+  border-left: 6px solid #22c55e;
+}
+
+.error-toast {
+
+  border-left: 6px solid #ef4444;
+}
+

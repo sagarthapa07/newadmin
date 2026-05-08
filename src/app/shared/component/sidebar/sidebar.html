@@ -1,0 +1,145 @@
+<!-- ================= TWO COLUMN SIDEBAR ================= -->
+<div id="two-col-sidebar" class="two-col-sidebar d-block">
+
+  <!-- ===== MINI SIDEBAR ===== -->
+  <div class="twocol-mini">
+
+    <!-- Quick Add Dropdown -->
+    <div class="dropdown">
+      <a
+        class="btn btn-primary bg-gradient btn-sm btn-icon rounded-circle d-flex align-items-center justify-content-center"
+        data-bs-toggle="dropdown"
+        data-bs-display="static"
+        data-bs-reference="parent"
+        href="javascript:void(0);"
+      >
+        <i class="isax isax-add"></i>
+      </a>
+
+      <ul class="dropdown-menu dropdown-menu-start">
+        <li>
+          <a class="dropdown-item d-flex align-items-center" href="/angular/template/invoices/add-invoice">
+            <i class="isax isax-document-text-1 me-2"></i> Invoice
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item d-flex align-items-center" href="/angular/template/expense">
+            <i class="isax isax-money-send me-2"></i> Expense
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item d-flex align-items-center" href="/angular/template/credit-notes/add-credit-notes">
+            <i class="isax isax-money-add me-2"></i> Credit Notes
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Mini Menu Icons -->
+    <ul class="menu-list">
+      <li>
+        <a href="/angular/template/settings/general-settings/account-settings" data-bs-toggle="tooltip" title="Settings">
+          <i class="isax isax-setting-25"></i>
+        </a>
+      </li>
+      <li>
+        <a href="/angular/template/auth/login">
+          <i class="isax isax-login-15"></i>
+        </a>
+      </li>
+    </ul>
+
+  </div>
+  <!-- ===== /MINI SIDEBAR ===== -->
+
+
+  <!-- ================= MAIN SIDEBAR ================= -->
+  <div id="sidebar-two" class="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <a class="logo logo-normal" href="/angular/template/index">
+        <img src="assets/img/logo.svg" alt="Logo" />
+      </a>
+      <a id="toggle_btn" href="javascript:void(0);">
+        <i class="isax isax-menu-1"></i>
+      </a>
+    </div>
+
+    <!-- Search -->
+    <div class="sidebar-search">
+      <div class="input-icon-end position-relative">
+        <input type="text" class="form-control" placeholder="Search" />
+        <span class="input-icon-addon">
+          <i class="isax isax-search-normal"></i>
+        </span>
+      </div>
+    </div>
+
+    <!-- Menu -->
+    <div class="sidebar-inner slimscroll">
+      <ul class="sidebar-menu">
+
+        <!-- ===== MAIN ===== -->
+        <li class="menu-title">
+          <span>Main</span>
+        </li>
+
+        <li class="submenu">
+          <a href="javascript:void(0);" class="active subdrop">
+            <i class="isax isax-element-45"></i>
+            <span>Dashboard</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="d-block">
+            <li><a href="/angular/template/index" class="active">Admin Dashboard</a></li>
+            <li><a href="/angular/template/customer/dashboard">Customer Dashboard</a></li>
+          </ul>
+        </li>
+
+        <!-- ===== INVENTORY ===== -->
+        <li class="menu-title">
+          <span>Inventory & Sales</span>
+        </li>
+
+        <li>
+          <a href="/angular/template/inventory">
+            <i class="isax isax-lifebuoy5"></i>
+            <span>Inventory</span>
+          </a>
+        </li>
+
+        <!-- ===== AUTH ===== -->
+        <li class="menu-title">
+          <span>Authentication</span>
+        </li>
+
+        <li>
+          <a href="/angular/template/auth/login">
+            <i class="isax isax-login-15"></i>
+            <span>Login</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="/angular/template/auth/register">
+            <i class="isax isax-lock-15"></i>
+            <span>Register</span>
+          </a>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <p class="text-center small text-muted mb-0">
+        © 2025 Your Company
+      </p>
+    </div>
+
+  </div>
+  <!-- ================= /MAIN SIDEBAR ================= -->
+
+</div>
+<!-- ================= /TWO COLUMN SIDEBAR ================= -->

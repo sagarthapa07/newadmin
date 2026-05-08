@@ -1,0 +1,123 @@
+<section>
+  <app-alert-message [message]="toastMessage" [type]="toastType" (close)="toastMessage = ''">
+  </app-alert-message>
+  <form [formGroup]="opportunityForm" (ngSubmit)="onSave()" class="mt-5">
+    <div class="row">
+      <!-- Left Side From Section -->
+      <div class="col-md-6">
+        <h5 class="section-title">SEO DETAILS</h5>
+        <hr />
+        <div class="form-group">
+          <label>Friendly URL:</label>
+          <input
+            type="url"
+            class="form-control"
+            formControlName="linkUrl"
+            placeholder="Friendly URL"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Meta Title:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="M-title"
+            placeholder="Meta Title"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Meta Author:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="M-author"
+            placeholder="Meta Author"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Meta Keywords:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="M-keywords"
+            placeholder="Meta Keywords"
+          />
+        </div>
+        <div class="form-group">
+          <label>Meta Description:</label>
+          <textarea
+            rows="3"
+            class="form-control"
+            formControlName="shortInfo"
+            placeholder="Meta Description"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- right Side Section text area  -->
+      <div class="col-md-6">
+        <h5 class="section-title">SOCIAL REFERENCES</h5>
+        <hr />
+        <div class="form-group">
+          <label>Facebook Handler:</label>
+          <input
+            type="url"
+            class="form-control"
+            formControlName="F-Handler"
+            placeholder="Facebook Handler"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Twitter Handler:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="T-Handler:"
+            placeholder="Twitter Handler"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Google Plus Handler:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="G-Handler"
+            placeholder="Google Plus Handler"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Instagram Handler:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="I-Handler"
+            placeholder="Instagram Handler"
+          />
+        </div>
+      </div>
+      <div class="buttons d-flex justify-content-between">
+        <div>
+          <button type="submit" class="btn btn-save">AI Generated</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-save mx-2" (click)="onSave()">
+            <i class="bi bi-bookmark-check"></i>
+            Save
+          </button>
+          <button type="button" class="btn btn-next mx-2" (click)="goToCounties()">
+            <i class="bi bi-skip-backward"></i> Back
+          </button>
+          <button type="button" class="btn btn-next" (click)="goToCalenderArea()">
+            Next <i class="bi bi-skip-forward"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>

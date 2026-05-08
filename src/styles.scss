@@ -1,1 +1,98 @@
 /* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+:root {
+  /* Colors  */
+  --body-color: #f8f9fd;
+  --sidebar-color: #f7f8f9;
+  --primary-color: #6cb5f9;
+  --primary-color-light: #f6f5ff;
+  --toggle-color: #dddd;
+  --text-color-light: #545454;
+  --text-color-dark: #181818;
+  --text-color: #222;
+  --shadow-color: #a4bec6;
+  --svgIcon-color: #0b6a9a;
+  --calendar-border: #dee2e6;
+  --header2-bkg-color: #edf8ff;
+  --nav-color: #1d93be;
+  --border-color: #e2e4e6;
+  --btn-bg-color: #e9edf0;
+  --box-bg-color: #d6dbe0;
+  --placeholder-color: #6b7280;
+  --danger-color: #f15c5c;
+  --hover-color: #cecece;
+
+  /* Font Sizes */
+  --header-text: 22px;
+  --body-text: 16px;
+  --placeholder-text: 14px;
+
+  /* Extra Small */
+  --fs-10: 10px;
+  --fs-11: 11px;
+
+  /* Small */
+  --fs-13: 13px;
+  --fs-14: 14px;
+  --fs-15: 15px;
+
+  /* Medium (Mostly used) */
+  --fs-16: 16px;
+  --fs-17: 17px;
+
+  /* Large */
+  --fs-20: 20px;
+
+  --fs-24: 24px;
+
+  /* Extra Large */
+  --fs-28: 28px;
+  --fs-32: 32px;
+  --fs-36: 36px;
+
+  /* Headings */
+  --fs-h1: 36px;
+  --fs-h2: 30px;
+  --fs-h3: 24px;
+  --fs-h4: 20px;
+  --fs-h5: 18px;
+  --fs-h6: 16px;
+
+  /* font-weight */
+  --fw-400: 400;
+  /* Regular */
+  --fw-500: 500;
+  /* Medium */
+  --fw-600: 600;
+  /* Semi Bold */
+  --fw-700: 700;
+  /* Bold */
+
+  /* Transition */
+  --tran-02: all 0.2s ease;
+  --tran-03: all 0.3s ease;
+  --tran-04: all 0.4s ease;
+  --tran-05: all 0.5s ease;
+}
+
+.header-section {
+  margin: 30px 12px 0 80px;
+}
+
+.heading {
+  font-size: var(--fs-12);
+  font-weight: var(--fw-700);
+}
+
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+.ngx-pe-img {
+  display: block !important;
+}
+
+.ngx-pe-cropper-wrapper img {
+  display: block !important;
+  max-width: 100%;
+}
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';

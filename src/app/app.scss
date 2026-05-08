@@ -1,0 +1,120 @@
+@import 'ckeditor5/ckeditor5.css';
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@media print {
+  body {
+    margin: 0 !important;
+  }
+}
+
+:root {
+  --ck-content-font-family: 'Lato';
+}
+
+.main-container {
+  font-family: var(--ck-content-font-family);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.editor-container_classic-editor .editor-container__editor {
+  min-width: 795px;
+  max-width: 795px;
+}
+
+.editor-container__sidebar_ckeditor-ai:has(.ck-tabs.ck-hidden) {
+  max-width: 0;
+  min-width: 0;
+}
+
+.ck-content,
+.ck-source-editing-area textarea {
+  padding: 0px 30px !important;
+
+  position: relative;
+  overflow: auto;
+}
+
+.ck-editor__editable,
+.ck-source-editing-area textarea,
+.ck-source-editing-area {
+  max-height: 800px;
+  min-height: 800px;
+  overflow-y: scroll !important;
+}
+
+.document-editor__editable-container {
+  /* Make it possible to scroll the "page" of the edited content. */
+  overflow-y: scroll;
+}
+
+.ck-powered-by {
+  display: none !important;
+}
+
+.is-invalid .ck.ck-editor__main > .ck-editor__editable {
+  border: 1px solid #dc3545;
+}
+
+.ck.ck-editor__main > .ck-editor__editable {
+  background: var(--highLightBox);
+  color: var(--textClr);
+}
+
+.ck-reset_all :not(.ck-reset_all-excluded *),
+.ck.ck-reset_all {
+  color: var(--textClr);
+}
+.ck.ck-toolbar,
+.ck-source-editing-area textarea {
+  color: var(--textClr);
+  background: var(--highLightBox);
+}
+
+.ck-content ul {
+  ol,
+  ul,
+  dl {
+    padding: 0 40px;
+    margin: 1rem 0;
+  }
+}
+
+.ck-content ul {
+  li {
+    ol,
+    ul,
+    dl {
+      margin: 5px 0;
+    }
+  }
+}
+
+.ck-content {
+  font-family: Arial, Verdana, sans-serif;
+  font-size: 13px;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin: 1rem 0;
+  }
+  a {
+    span,
+    small,
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong {
+      color: #0d6efd !important;
+    }
+  }
+}

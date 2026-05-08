@@ -1,0 +1,234 @@
+<Section>
+  <app-alert-message
+    *ngIf="successMessage"
+    [type]="'success'"
+    [message]="successMessage"
+    (close)="successMessage = ''"
+  >
+  </app-alert-message>
+
+  <app-alert-message
+    *ngIf="errorMessage"
+    [type]="'error'"
+    [message]="errorMessage"
+    (close)="errorMessage = ''"
+  >
+  </app-alert-message>
+  <form [formGroup]="opportunityForm" (ngSubmit)="onSave()">
+    <div class="row mt-5">
+      <!-- Left Side From Section -->
+      <div class="col-md-6">
+        <h5 class="section-title">Opportunity Detail</h5>
+        <hr />
+
+        <div class="form-group">
+          <label>Title:</label>
+          <div class="input-wrapper">
+            <input type="text" class="form-control" formControlName="title" placeholder="Title" />
+            <div class="error" *ngIf="isFieldInvalid('title')">Please Enter a Title.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Friendly URL:</label>
+          <div class="input-wrapper">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="friendlyURL"
+              placeholder="Friendly URL"
+            />
+            <div class="error" *ngIf="isFieldInvalid('friendlyURL')">
+              Please Enter a Friendly URL.
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Link URL:</label>
+          <div class="input-wrapper">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="linkUrl"
+              placeholder="Link URL"
+            />
+            <div class="error" *ngIf="isFieldInvalid('linkUrl')">Please Enter a Link URL.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Post Date:</label>
+          <div class="input-wrapper">
+            <input type="date" class="form-control date-input" formControlName="postDate" />
+            <div class="error" *ngIf="isFieldInvalid('postDate')">Please Enter a Post Date.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Deadline Date:</label>
+          <div class="deadline-input-wrapper">
+            <input type="date" class="form-control date-input" formControlName="deadlineDate" />
+            <div class="error" *ngIf="isFieldInvalid('deadlineDate')">
+              Please Enter a Deadline Date.
+            </div>
+          </div>
+
+          <div class="form-check ongoing-box">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              formControlName="isOngoing"
+              id="ongoing"
+            />
+            <div class="error" *ngIf="isFieldInvalid('isOngoing')">Please fill link url</div>
+
+            <label class="form-check-label" for="ongoing"> OnGoing Opportunity </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Short Info:</label>
+
+          <div class="input-wrapper">
+            <textarea
+              rows="3"
+              class="form-control"
+              formControlName="shortInfo"
+              placeholder="Short Info"
+            ></textarea>
+            <div class="error" *ngIf="isFieldInvalid('shortInfo')">Please fill Short Info</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Donor Type:</label>
+          <select class="form-control" formControlName="donorType">
+            <option value="US Donors">US Donors</option>
+            <!-- <option value="International">International</option> -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Donor Agency:</label>
+
+          <div class="input-wrapper" #dropdownContainer>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="donorAgency"
+              (input)="onSearchDonor($event)"
+            />
+
+            <ul class="dropdown-list" *ngIf="showDropdown && donorList.length">
+              <li *ngFor="let item of donorList" (click)="selectDonor(item)">
+                {{ item.donorName }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Donor Agency (if not listed above):</label>
+          <div class="input-wrapper">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="donorAgencyOther"
+              placeholder="Doner Agency"
+            />
+            <div class="error" *ngIf="isFieldInvalid('donorAgencyOther')">Please fill link url</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Grant Type:</label>
+          <select class="form-control" formControlName="grantType">
+            <option value="" disabled selected hidden>Select Grant Type..</option>
+            <option value="Awards and Prizes">Awards and Prizes</option>
+            <option value="Fellowship">Fellowship</option>
+            <option value="Grant">Grant</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Grant Duration:</label>
+          <select class="form-control" formControlName="grantDuration">
+            <option value="" disabled hidden>Select Grant Duration..</option>
+
+            <option value="Less than 1 Year">Less than 1 Year</option>
+            <option value="1 Year">1 Year</option>
+            <option value="2 Year">2 Year</option>
+            <option value="3 Year">3 Year</option>
+            <option value="4 Year">4 Year</option>
+            <option value="5 Year">5 Year</option>
+            <option value="5–10 Years">5–10 Years</option>
+            <option value="Grant Duration Not Mentioned">Grant Duration Not Mentioned</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Grant Size:</label>
+          <select class="form-control" formControlName="grantSize">
+            <option value="" disabled hidden>Select Grant Size..</option>
+
+            <option value="Not Available">Not Available</option>
+            <option value="Less than $1000">Less than $1000</option>
+            <option value="$1000 to $10,000">$1000 to $10,000</option>
+            <option value="$10,000 to $100,000">$10,000 to $100,000</option>
+            <option value="$100,000 to $500,000">$100,000 to $500,000</option>
+            <option value="$500,000 to $1 million">$500,000 to $1 million</option>
+            <option value="More than $1 million">More than $1 million</option>
+            <option value="Not Mentioned">Not Mentioned</option>
+            <option value="Less than $50,000">Less than $50,000</option>
+            <option value="$50,000 to $500,000">$50,000 to $500,000</option>
+            <option value="$500,000 to $1 Million">$500,000 to $1 Million</option>
+            <option value="$1 Million to $50 Million">$1 Million to $50 Million</option>
+            <option value="$50 Million to $100 Million">$50 Million to $100 Million</option>
+            <option value="More than $100 Million">More than $100 Million</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Image:</label>
+          <!-- <input type="file" class="form-control" formControlName="img" /> -->
+          <app-image-croper label="Upload Image" (cropImage)="onImageCropped($event)">
+          </app-image-croper>
+          <img *ngIf="previewUrl" [src]="previewUrl" width="150" />
+        </div>
+
+        <div class="form-group">
+          <label>Status:</label>
+          <select class="form-control" formControlName="status">
+            <option value="" disabled selected hidden>Select Status</option>
+            <option>Draft</option>
+            <option>Published</option>
+            <option>Expired</option>
+          </select>
+          <div class="error" *ngIf="isFieldInvalid('status')">Please select status</div>
+        </div>
+      </div>
+
+      <!-- right Side Section text area  -->
+      <div class="col-md-6">
+        <h5 class="section-title">Letter Text</h5>
+        <hr />
+        <app-editor formControlName="letterText"></app-editor>
+      </div>
+      <div class="buttons d-flex justify-content-between">
+        <div>
+          <button type="submit" class="btn btn-next" (click)="gotoPreview()">
+            <i class="bi bi-eye"></i>Preview
+          </button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-next mx-2" (click)="onSave()">
+            <i class="bi bi-bookmark-check"></i> Save
+          </button>
+          <button type="button" class="btn btn-next" (click)="goToGeoLocation()">
+            <i class="bi bi-fast-forward"></i>Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</Section>

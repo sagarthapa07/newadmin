@@ -1,0 +1,286 @@
+.header-btn {
+  gap: 5px;
+}
+
+.header-btn .btn {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-400);
+  height: 37px;
+  padding: 0 14px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.header-btn .btn:hover {
+  color: var(--primary-color);
+}
+
+.header-btn .btn.active {
+  background: var(--btn-bg-color);
+  font-weight: var(--fw-500);
+  border-color: var(--btn-bg-color);
+  color: var(--primary-color);
+}
+
+.opportunity-section {
+  padding: 20px;
+}
+
+.section-title {
+  font-weight: var(--fw-600);
+  font-size: var(--header-text);
+  margin-bottom: 30px;
+  /* color: var(--primary-color); */
+}
+
+.form-group {
+  display: flex;
+  align-items: flex-start; // 🔥 important (center hatao)
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  width: 180px;
+  font-weight: 500;
+  margin-top: 6px;
+}
+.form-group .input-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.date-input {
+  width: 350px;
+}
+
+.deadline-group {
+  flex-wrap: wrap;
+}
+
+.form-group input {
+  height: 35px;
+}
+
+.form-group select {
+  height: 35px;
+}
+
+textarea {
+  resize: none;
+}
+
+.form-group input::placeholder {
+  font-size: var(--placeholder-text);
+  color: var(--placeholder-color);
+}
+
+select.form-control {
+  font-size: var(--placeholder-text);
+  color: var(--text-color);
+}
+
+.ongoing-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+}
+
+.ongoing-box .form-check-label {
+  font-size: var(--body-text);
+  color: var(--text-color);
+  transition: color 0.2s ease;
+  // width:auto;
+}
+
+.form-check-input:checked {
+  background-color: var(--nav-color);
+}
+
+.ongoing-box input {
+  cursor: pointer;
+}
+
+.form-group .deadline-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.form-group .deadline-row input[type='date'] {
+  flex: 1;
+}
+
+.form-group .ongoing-box {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.ongoing-box input {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.buttons .btn {
+  min-width: 90px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-save:hover {
+  background-color: #206898;
+  border-color: none;
+}
+
+/* Back Button */
+.btn-next {
+  background-color: var(--nav-color);
+}
+
+.btn-next:hover {
+  background-color: #206898;
+}
+
+@media (max-width: 576px) {
+  .form-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-group label {
+    width: 100%;
+    text-align: left;
+  }
+
+  .form-group .deadline-row {
+    width: 100%;
+  }
+
+  .form-group .deadline-row input[type='date'] {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* FOOTER */
+.popup-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-save {
+  background: var(--nav-color);
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+}
+
+::ng-deep .ck.ck-editor {
+  width: 100% !important;
+}
+
+::ng-deep .ck-toolbar {
+  border-radius: 6px 6px 0 0 !important;
+}
+
+::ng-deep .ck-editor__editable_inline {
+  min-height: 578px;
+  max-height: 578px;
+  overflow-y: auto;
+  border-radius: 0 0 6px 6px !important;
+}
+
+::ng-deep .ck.ck-toolbar {
+  flex-wrap: wrap !important;
+}
+
+::ng-deep .ck.ck-toolbar__items {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  width: 100%;
+}
+
+::ng-deep .ck.ck-toolbar__items > * {
+  margin-bottom: 5px;
+}
+
+.error {
+  color: red;
+  width: 250px;
+  font-size: var(--placeholder-text);
+}
+.form-group .deadline-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: -32px;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  background: var(--bs-body-bg);
+  border-radius: 4px;
+  height: 500px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 99999;
+  color: var(--text-color);
+  display: block;
+  list-style: none; 
+  padding: 0;
+  margin: 0;
+
+}
+
+/* item */
+.dropdown-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-list li:hover {
+  background-color: var(--hover-color);
+  color: var(--text-color-dark);
+}
+
+.opportunity-section,
+.row,
+.col-md-6,
+.form-group {
+  overflow: visible !important;
+}

@@ -1,0 +1,32 @@
+/* CKEditor Full Width */
+:host ::ng-deep .ck.ck-editor {
+  width: 100% !important;
+}
+
+/* Toolbar Styling */
+:host ::ng-deep .ck-toolbar {
+  border-radius: 6px 6px 0 0 !important;
+}
+
+/* Editor Area */
+:host ::ng-deep .ck-editor__editable_inline {
+  min-height: 630px;
+  max-height: 630px;
+  overflow-y: auto;
+  border-radius: 0 0 6px 6px !important;
+}
+
+/* Toolbar Wrap Fix */
+:host ::ng-deep .ck.ck-toolbar {
+  flex-wrap: wrap !important;
+}
+
+:host ::ng-deep .ck.ck-toolbar__items {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  width: 100%;
+}
+
+:host ::ng-deep .ck.ck-toolbar__items > * {
+  margin-bottom: 5px;
+}

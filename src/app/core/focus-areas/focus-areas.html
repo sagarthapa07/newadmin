@@ -1,0 +1,146 @@
+<section>
+
+  <app-alert-message
+  *ngIf="toastMessage"
+  [type]="'success'"
+  [message]="toastMessage"
+  (close)="toastMessage = ''"
+>
+</app-alert-message>
+
+
+
+<app-alert-message
+  *ngIf="errorMessage"
+  [type]="'error'"
+  [message]="errorMessage"
+  (close)="errorMessage = ''"
+>
+</app-alert-message>
+
+
+
+  <div class="row mt-4">
+    <div class="col-6">
+      <h5>Select Focus Areas</h5>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+      <button class="btn border" (click)="openPasteModal()">Paste Here</button>
+    </div>
+    <div class="paste-overlay" *ngIf="showPasteModal">
+      <div class="paste-modal" (click)="$event.stopPropagation()">
+        <h3>Paste Article / Content</h3>
+
+        <textarea
+          [(ngModel)]="pasteText"
+          placeholder="Paste your article or long text here..."
+        ></textarea>
+
+        <div class="paste-actions">
+          <button class="btn-remove" (click)="closePasteModal()">Cancel</button>
+
+          <button class="btn-done" (click)="generateFromText()">Generate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="issue-grid" #issueContainer>
+      <div
+        class="issue-box"
+        *ngFor="let issue of issues"
+        (mouseenter)="onHoverIssue(issue)"
+        (mouseleave)="onLeaveIssue()"
+        (click)="onClickIssue(issue); $event.stopPropagation()"
+      >
+        <span class="issue-dot" [class.active]="hasAnySelected(issue)"></span>
+        <span class="issue-text">{{ issue.name }}</span>
+
+        <!-- SUB ISSUE POPOVER -->
+        <div
+          class="subissue-popover"
+          *ngIf="activeIssue?.id === issue.id"
+          (click)="$event.stopPropagation()"
+          (mousedown)="$event.stopPropagation()"
+        >
+          <!-- HEADER -->
+          <div class="popup-header">
+            {{ issue.name }}
+          </div>
+
+          <!-- BODY -->
+          <div class="popup-body">
+            <div class="sub-title">Sub Issues</div>
+
+            <div class="subissue-grid">
+              <label class="sub-checkbox" *ngFor="let sub of issue.subIssues || []">
+                <input
+                  type="checkbox"
+                  [checked]="isSubSelected(issue, sub)"
+                  (change)="toggleSub(issue, sub)"
+                />
+                <div *ngIf="!issue.subIssues?.length">Loading sub issues...</div>
+                <span>{{ sub.name }}</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- SELECT ALL -->
+          <div class="popup-select-all">
+            <label class="sub-checkbox">
+              <input
+                type="checkbox"
+                [checked]="isAllSelected(issue)"
+                (change)="toggleSelectAll(issue)"
+              />
+              <span>Select All</span>
+            </label>
+          </div>
+
+          <!-- FOOTER -->
+          <div class="popup-footer">
+            <button class="btn-remove" (click)="clearIssue(issue.id)">✕ Remove</button>
+            <button class="btn-done" (click)="saveSelectedIssues()">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons d-flex justify-content-between">
+      <div>
+        <button type="button" class="btn btn-next" (click)="clearAll()">Clear all</button>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-save mx-2" (click)="saveSelectedIssues()">
+          <i class="bi bi-bookmark-check"></i>Save
+        </button>
+        <button type="button" class="btn btn-next mx-2" (click)="goToGeoLocation()">
+          <i class="bi bi-skip-backward"></i>Back
+        </button>
+        <button type="button" class="btn btn-next" (click)="goToFocusGroup()">
+          Next <i class="bi bi-skip-forward"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div *ngFor="let entry of selectedEntries" class="summary-issue mb-4">
+      <div class="d-flex align-items-center mb-2">
+        <strong class="">{{ getIssueName(entry[0]) }}</strong>
+        <span
+          class="remove-issue mx-3"
+          (click)="removeWholeIssue(entry[0])"
+          title="Remove entire issue"
+        >
+          ✕
+        </span>
+      </div>
+
+      <span class="chip" *ngFor="let subId of entry[1]">
+        {{ getSubIssueName(entry[0], subId) }}
+        <span class="remove" (click)="clearSingleSub(entry[0], subId)"> × </span>
+      </span>
+    </div>
+  </div>
+</section>

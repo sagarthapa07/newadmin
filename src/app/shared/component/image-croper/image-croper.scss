@@ -1,0 +1,65 @@
+// // @import "/src/assets/css/utility.scss";
+// .imageCropper {
+//     background: #37363b;
+//     .modal-header {
+//         padding: 8px 14px;
+//         .modal-title {
+//             color: white;
+//             font-size: var(--);
+//         }
+//         button {
+//             border: none;
+//             background: none;
+//             color: white;
+//         }
+//     }
+//     .toolbar {
+//         background-color: #8f8d8f;
+//         text-align: center;
+//         button {
+//             border: none;
+//             background: none;
+//             padding: 10px 8px;
+//             color: white;
+//         }
+//     }
+//      .ngx-ic-cropper {
+
+//     //    top: 30% !important;
+//     }
+// }
+
+// .recrop {
+//     border: none;
+//     background: var(--bgBlackTextClr);
+//     color: var(--bgBlack);
+//     padding: 0px 10px;
+// }
+
+// .imageView {
+//     background: var(--highLightBox);
+//     .modal-header {
+//         padding: 8px 0px;
+//         // .modal-title {
+//         //     @include paragraph(var(--subTitleFont), var(--textClr), var(--lineHeight), var(--fontFamily), 600);
+//         // }
+//         button {
+//             background: none;
+//             color: var(--textClr);
+//             font-size: 20px;
+//             border: none;
+//             margin-right: 5px;
+//         }
+//     }
+// }
+
+.preview-img {
+  height: 40px;
+  margin-left: 10px;
+  border: 1px solid #ddd;
+}
+
+.ngx-pe-img {
+  display: block !important;
+  max-width: 100%;
+}

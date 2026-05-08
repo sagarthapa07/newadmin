@@ -1,0 +1,124 @@
+<!-- <div class="mb-3">
+  <label for="{{ label }}" class="form-label">{{ label }}</label>
+
+  <div class="input-group">
+    <input
+      id="{{ label }}"
+      type="file"
+      class="form-control"
+      (change)="fileChangeHandler($event)"
+      accept=".jpeg, .jpg, .png"
+    />
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent"
+      [maintainAspectRatio]="true"
+      [aspectRatio]="aspectRatio ? aspectRatio : 1"
+      format="png"
+      (imageCropped)="imageCropped($event)"
+    >
+    </image-cropper>
+  </div>
+</div> -->
+
+<!-- <div class="mb-3">
+  <label class="form-label">{{ label }}</label>
+
+  <input
+    type="file"
+    class="form-control"
+    (change)="fileChangeHandler($event)"
+    accept=".jpeg, .jpg, .png"
+  />
+
+  <div *ngIf="imageChangedEvent" class="mt-2">
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent"
+      [maintainAspectRatio]="true"
+      [aspectRatio]="aspectRatio ? aspectRatio : 1"
+      format="png"
+      (imageCropped)="imageCropped($event)"
+    >
+    </image-cropper>
+  </div>
+</div> -->
+
+<!-- <ng-template #imageView let-c="close" let-d="dismiss">
+  <div class="modal-content imageView">
+    <div class="modal-header">
+      <h4 class="modal-title ms-3">Current Image</h4>
+      <button type="button" class="close_btn" (click)="close()" aria-label="Close">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body text-center">
+      <img
+        class="img-fluid"
+        [src]="croppedImage ? croppedImage : imageLink"
+        [style.border]="croppedImage ? '1px solid #dee2e6' : 'none'"
+        alt=""
+      />
+    </div>
+  </div>
+</ng-template> -->
+
+<!-- <div class=" mb-3">
+    <label for={{label}} class="form-label">{{label}}</label>
+    <div class="input-group">
+        <input id="{{label}}" type="file"  class="form-control"  (change)="fileChangeHandler($event)"  accept=".jpeg, .jpg, .png" />
+        {{output?.base64}}
+            <img [src]="output?.base64" (click)="showFullImg()" class="mx-2" style="height: 40px;"
+                [style.border]="output?.base64 ? '1px solid #dee2e6' : 'none'"  />
+
+
+
+    </div>
+</div>
+
+<ng-template #imageView let-c="close" let-d="dismiss">
+    <div class="modal-content imageView ">
+        <div class="modal-header">
+            <h4 class="modal-title ms-3">Current Image </h4>
+            <button type="button" class="close_btn" (click)="close()" aria-label="Close">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body text-center" >
+
+            <img class="img-fluid" [src]="output?.base64 ?  output?.base64 : this.imageLink"  [style.border]="output?.base64 ? '1px solid #dee2e6' : 'none'"   alt="">
+
+        </div>
+    </div>
+
+</ng-template> -->
+
+<!-- <div class="mb-3">
+  <label class="form-label">Upload Image</label>
+
+  <div class="input-group">
+    <input
+      type="file"
+      class="form-control"
+      (change)="fileChangeHandler($event)"
+      accept=".jpg,.jpeg,.png"
+    />
+
+    <img *ngIf="output?.base64" [src]="output?.base64" class="preview-img" />
+  </div>
+</div> -->
+
+
+<!-- 
+<input type="file" (change)="fileChangeHandler($event)" />
+
+<image-cropper
+  *ngIf="imageChangedEvent"
+  [imageChangedEvent]="imageChangedEvent"
+  [maintainAspectRatio]="true"
+  [aspectRatio]="1"
+  format="png"
+  (imageCropped)="imageCropped($event)">
+</image-cropper>
+
+<img *ngIf="croppedImage" [src]="croppedImage" style="height:100px" />
+
+<button (click)="save()">Crop</button> -->
