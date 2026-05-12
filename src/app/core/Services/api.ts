@@ -46,9 +46,7 @@ export class Api {
 
   constructor(private http: HttpClient) {}
 
-  // =========================
   // GRANT APIs
-  // =========================
 
   getGrants(payload: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/USGrants/GetUSGrantsGridPaging`, payload);
@@ -150,7 +148,6 @@ export class Api {
 
   // =========================
   // FOCUS AREAS APIs
-  // =========================
 
   getFocusAreas(): Observable<GetFocusAreasResponse> {
     return this.http.get<GetFocusAreasResponse>(`${this.baseUrl}/FocusAreas/GetUSFocusAreas`);
@@ -175,9 +172,7 @@ export class Api {
     );
   }
 
-
   // BENEFICIARIES APIs
-
 
   getBeneficiaries(): Observable<GetBeneficiariesResponse> {
     return this.http.get<GetBeneficiariesResponse>(
@@ -211,9 +206,7 @@ export class Api {
     );
   }
 
-
   // ENTITIES APIs
-
 
   getEntities(): Observable<GetEntitiesResponse> {
     return this.http.get<GetEntitiesResponse>(`${this.baseUrl}/Entities/GetEntities`);
@@ -236,10 +229,21 @@ export class Api {
       `${this.baseUrl}/GEOCounties/GetGEOCountiesForStates?StateID=${stateId}`,
     );
   }
+  // Counties saved data
+  getSelectedCounties(grantId: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/USGrantCounties/ListCountiesForSelectedGrant?GrantID=${grantId}`,
+    );
+  }
 
-
+  // Save states + counties
+  insertGrantStatesJSON(payload: { _USGrantStates: any[] }): Observable<ApiSuccessResponse> {
+    return this.http.post<ApiSuccessResponse>(
+      `${this.baseUrl}/USGrantStates/InsertUSGrantStatesJSON`,
+      payload,
+    );
+  }
   // SEO / SOCIAL APIs
-
 
   getSeoSocial(refId: number) {
     return this.http.get<any>(

@@ -52,9 +52,15 @@
     >
     </app-focus-groups>
 
-    <div *ngIf="activeItem === 5">
-      <app-counties></app-counties>
-    </div>
+    <app-counties
+    *ngIf="grantData"
+    [hidden]="activeItem !== 5"
+    [grantId]="grantData.id"
+    (tabChange)="setActive($event)"
+    >
+
+    </app-counties>
+
 
     <app-seo-social
       *ngIf="grantData"

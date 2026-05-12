@@ -25,7 +25,9 @@
           <label>Title:</label>
           <div class="input-wrapper">
             <input type="text" class="form-control" formControlName="title" placeholder="Title" />
-            <div class="error" *ngIf="isFieldInvalid('title')">Please Enter a Title.</div>
+            @if (isFieldInvalid('title')) {
+              <div class="error">Please Enter a Title.</div>
+            }
           </div>
         </div>
 
@@ -38,9 +40,9 @@
               formControlName="friendlyURL"
               placeholder="Friendly URL"
             />
-            <div class="error" *ngIf="isFieldInvalid('friendlyURL')">
-              Please Enter a Friendly URL.
-            </div>
+            @if (isFieldInvalid('friendlyURL')) {
+              <div class="error">Please Enter a friendlyURL</div>
+            }
           </div>
         </div>
         <div class="form-group">
@@ -52,7 +54,9 @@
               formControlName="linkUrl"
               placeholder="Link URL"
             />
-            <div class="error" *ngIf="isFieldInvalid('linkUrl')">Please Enter a Link URL.</div>
+            @if (isFieldInvalid('linkUrl')) {
+              <div class="error">Please Enter a linkUrl.</div>
+            }
           </div>
         </div>
 
@@ -60,7 +64,9 @@
           <label>Post Date:</label>
           <div class="input-wrapper">
             <input type="date" class="form-control date-input" formControlName="postDate" />
-            <div class="error" *ngIf="isFieldInvalid('postDate')">Please Enter a Post Date.</div>
+            @if (isFieldInvalid('postDate')) {
+              <div class="error">Please Enter a PostDate.</div>
+            }
           </div>
         </div>
 
@@ -68,9 +74,9 @@
           <label>Deadline Date:</label>
           <div class="deadline-input-wrapper">
             <input type="date" class="form-control date-input" formControlName="deadlineDate" />
-            <div class="error" *ngIf="isFieldInvalid('deadlineDate')">
-              Please Enter a Deadline Date.
-            </div>
+            @if (isFieldInvalid('deadlineDate')) {
+              <div class="error">Please Enter a DeadlineDate.</div>
+            }
           </div>
 
           <div class="form-check ongoing-box">
@@ -80,15 +86,12 @@
               formControlName="isOngoing"
               id="ongoing"
             />
-            <div class="error" *ngIf="isFieldInvalid('isOngoing')">Please fill link url</div>
-
             <label class="form-check-label" for="ongoing"> OnGoing Opportunity </label>
           </div>
         </div>
 
         <div class="form-group">
           <label>Short Info:</label>
-
           <div class="input-wrapper">
             <textarea
               rows="3"
@@ -96,7 +99,9 @@
               formControlName="shortInfo"
               placeholder="Short Info"
             ></textarea>
-            <div class="error" *ngIf="isFieldInvalid('shortInfo')">Please fill Short Info</div>
+            @if (isFieldInvalid('shortInfo')) {
+              <div class="error">Please Enter a ShortInfo.</div>
+            }
           </div>
         </div>
 
@@ -104,7 +109,6 @@
           <label>Donor Type:</label>
           <select class="form-control" formControlName="donorType">
             <option value="US Donors">US Donors</option>
-            <!-- <option value="International">International</option> -->
           </select>
         </div>
 
@@ -118,6 +122,9 @@
               formControlName="donorAgency"
               (input)="onSearchDonor($event)"
             />
+            @if (isFieldInvalid('donorAgency')) {
+              <div class="error">Please enter donor agency.</div>
+            }
 
             <ul class="dropdown-list" *ngIf="showDropdown && donorList.length">
               <li *ngFor="let item of donorList" (click)="selectDonor(item)">
@@ -148,6 +155,9 @@
             <option value="Fellowship">Fellowship</option>
             <option value="Grant">Grant</option>
           </select>
+          @if (isFieldInvalid('grantType')) {
+            <div class="error">Please select grant type.</div>
+          }
         </div>
 
         <div class="form-group">
@@ -164,6 +174,9 @@
             <option value="5–10 Years">5–10 Years</option>
             <option value="Grant Duration Not Mentioned">Grant Duration Not Mentioned</option>
           </select>
+          @if (isFieldInvalid('grantDuration')) {
+            <div class="error">Please select grant duration.</div>
+          }
         </div>
 
         <div class="form-group">
@@ -186,11 +199,14 @@
             <option value="$50 Million to $100 Million">$50 Million to $100 Million</option>
             <option value="More than $100 Million">More than $100 Million</option>
           </select>
+          @if (isFieldInvalid('grantSize')) {
+            <div class="error">Please select grant size.</div>
+          }
         </div>
 
         <div class="form-group">
           <label>Image:</label>
-          <!-- <input type="file" class="form-control" formControlName="img" /> -->
+          <input type="file" class="form-control" formControlName="img" />
           <app-image-croper label="Upload Image" (cropImage)="onImageCropped($event)">
           </app-image-croper>
           <img *ngIf="previewUrl" [src]="previewUrl" width="150" />
@@ -213,6 +229,10 @@
         <h5 class="section-title">Letter Text</h5>
         <hr />
         <app-editor formControlName="letterText"></app-editor>
+
+        @if (isEditorEmpty()) {
+          <div class="error">Please enter letter text.</div>
+        }
       </div>
       <div class="buttons d-flex justify-content-between">
         <div>

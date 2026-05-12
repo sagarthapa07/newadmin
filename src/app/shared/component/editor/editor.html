@@ -1,8 +1,15 @@
-<div>
-  <ckeditor
-    [editor]="Editor"
-    [config]="config"
-    [data]="editorData"
-    (change)="onEditorChange($event)">
-  </ckeditor>
+<div class="main-container">
+  <div
+    class="editor-container editor-container_classic-editor editor-container_include-style editor-container_include-fullscreen"
+  >
+    <div class="editor-container__editor">
+      <ckeditor
+        [editor]="Editor"
+        [config]="config"
+        [data]="editorData"
+        (change)="onEditorChange($event)"
+      >
+      </ckeditor>
+    </div>
+  </div>
 </div>

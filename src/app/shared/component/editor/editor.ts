@@ -1,9 +1,10 @@
-import { Component, signal } from '@angular/core';
-import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+/**
+ * This configuration was generated using the CKEditor 5 Builder. You can modify it anytime using this link:
+ * https://ckeditor.com/ckeditor-5/builder/#installation/NodgNARAzAdADDATBSBWRiQEYRyogFgA4A2I/EKArcnAxLOIvAsqg1LYplCAUwB2KOGGBYwIyWHFYAupCgAjRYhIATVBFlA=
+ */
+import { ChangeDetectorRef, Component, ViewEncapsulation, type AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { forwardRef } from '@angular/core';
 import {
   ClassicEditor,
   Alignment,
@@ -62,27 +63,25 @@ import {
   Undo,
   type EditorConfig,
 } from 'ckeditor5';
-import { ViewEncapsulation } from '@angular/core';
+
+const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
 
 @Component({
   selector: 'app-editor',
-  imports: [CKEditorModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, CKEditorModule],
   templateUrl: './editor.html',
   styleUrl: './editor.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => Editor),
-      multi: true,
-    },
-  ],
+  encapsulation: ViewEncapsulation.None,
 })
-export class Editor implements ControlValueAccessor {
-  public Editor = ClassicEditor;
+export class Editor implements AfterViewInit {
   public editorData = '';
   onChange: any = () => {};
   onTouched: any = () => {};
+  constructor(private changeDetector: ChangeDetectorRef) {}
 
+  public isLayoutReady = false;
+  public Editor = ClassicEditor;
   public config: EditorConfig = {
     licenseKey: 'GPL',
 
@@ -289,21 +288,14 @@ export class Editor implements ControlValueAccessor {
         { name: 'Info box', element: 'p', classes: ['info-box'] },
       ],
     },
-  };
-
-  protected readonly title = signal('admin');
-
-  showHeader = true;
-  constructor(private router: Router) {
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.showHeader = !event.url.includes('login');
-      }
-    });
+  }; // CKEditor needs the DOM tree before calculating the configuration.
+  public ngAfterViewInit(): void {
+    this.isLayoutReady = true;
+    this.changeDetector.detectChanges();
   }
-
   writeValue(value: any): void {
     this.editorData = value || '';
+    this.changeDetector.detectChanges();
   }
 
   registerOnChange(fn: any): void {
@@ -315,9 +307,9 @@ export class Editor implements ControlValueAccessor {
   }
 
   onEditorChange(event: any) {
-  const data = event.editor.getData();
+    const data = event.editor.getData();
 
-  this.editorData = data;
-  this.onChange(data); 
-}
+    this.editorData = data;
+    this.onChange(data);
+  }
 }

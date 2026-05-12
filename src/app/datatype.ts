@@ -71,6 +71,7 @@ export interface GetStatesResponse {
 
 // ================== COUNTIES ==================
 export interface County {
+    countyIndex: number;  
   countyName: string;
 }
 

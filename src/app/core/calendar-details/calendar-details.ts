@@ -63,13 +63,13 @@ export class CalendarDetails {
       deadlineDate: ['', Validators.required],
       isOngoing: [false],
       shortInfo: ['', Validators.required],
-      donorType: ['US Donors'],
-      donorAgency: ['', Validators.required],
-      donorAgencyOther: [''],
+      donorType: ['US Donors', Validators.required],
+      donorAgency: [''],
+      donorAgencyOther: ['', Validators.required],
       grantType: ['', Validators.required],
       grantDuration: ['', Validators.required],
       grantSize: ['', Validators.required],
-      status: [''],
+      status: ['', Validators.required],
       letterText: ['', Validators.required],
       img: ['', Validators.required],
     });
@@ -119,6 +119,17 @@ export class CalendarDetails {
     }
   }
 
+  isEditorEmpty(): boolean {
+    const value = this.opportunityForm.get('letterText')?.value || '';
+
+    const plainText = value
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/g, '')
+      .trim();
+
+    return !plainText;
+  }
+
   fillForm(data: GrantDetail) {
     this.opportunityForm.patchValue({
       title: data.title,
@@ -137,7 +148,6 @@ export class CalendarDetails {
       status: data.status,
       letterText: data.letterText,
     });
-    this.editorData = data.letterText;
   }
   public editorData = '';
 
@@ -202,6 +212,14 @@ export class CalendarDetails {
   }
 
   onSave() {
+    if (this.opportunityForm.invalid || this.isEditorEmpty()) {
+      this.opportunityForm.markAllAsTouched();
+
+      return;
+    }
+
+
+
     const form = this.opportunityForm.value;
 
     const formData = new FormData();
@@ -237,7 +255,7 @@ export class CalendarDetails {
       },
     });
   }
-  onImageCropped(file: File) {
+  onImageCropped(file: any) {
     this.opportunityForm.patchValue({ img: file });
 
     const reader = new FileReader();

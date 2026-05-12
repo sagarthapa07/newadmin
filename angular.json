@@ -18,10 +18,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js",
-              "@angular/localize/init"
-            ],
+            "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -30,15 +27,15 @@
                 "input": "public"
               }
             ],
-               "styles": [
+            "styles": [
+              
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/cropperjs/dist/cropper.css",
-              "node_modules/ngx-photo-editor/photo-editor.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/ngx-photo-editor/photo-editor.css"
             ],
-            "scripts": ["node_modules/cropperjs/dist/cropper.js"]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -82,11 +79,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing",
-              "@angular/localize/init"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing", "@angular/localize/init"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -95,9 +88,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["src/styles.scss"]
           }
         }
       }
