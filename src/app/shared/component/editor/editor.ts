@@ -63,6 +63,7 @@ import {
   Undo,
   type EditorConfig,
 } from 'ckeditor5';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
 
@@ -73,8 +74,15 @@ const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
   templateUrl: './editor.html',
   styleUrl: './editor.scss',
   encapsulation: ViewEncapsulation.None,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: Editor,
+      multi: true,
+    },
+  ],
 })
-export class Editor implements AfterViewInit {
+export class Editor implements AfterViewInit, ControlValueAccessor {
   public editorData = '';
   onChange: any = () => {};
   onTouched: any = () => {};
@@ -288,7 +296,7 @@ export class Editor implements AfterViewInit {
         { name: 'Info box', element: 'p', classes: ['info-box'] },
       ],
     },
-  }; // CKEditor needs the DOM tree before calculating the configuration.
+  };
   public ngAfterViewInit(): void {
     this.isLayoutReady = true;
     this.changeDetector.detectChanges();
@@ -308,8 +316,8 @@ export class Editor implements AfterViewInit {
 
   onEditorChange(event: any) {
     const data = event.editor.getData();
-
     this.editorData = data;
     this.onChange(data);
+    this.onTouched();
   }
 }

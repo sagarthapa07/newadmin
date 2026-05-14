@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbDate, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
@@ -12,7 +12,7 @@ import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-calender-opportunity',
-  imports: [FormsModule, NgbDatepickerModule, CommonModule, Header, RouterLink, DatePicker, NgFor],
+  imports: [FormsModule, NgbDatepickerModule, CommonModule, Header, RouterLink, DatePicker],
   templateUrl: './calender-opportunity.html',
   styleUrl: './calender-opportunity.scss',
 })
@@ -23,7 +23,6 @@ export class CalenderOpportunity {
   fromDate: NgbDate | null = null;
   toDate: NgbDate | null = null;
   minToDate: NgbDateStruct | null = null;
-
   grants: any[] = [];
   pageIndex = 1;
   pageSize = 25;
@@ -31,7 +30,6 @@ export class CalenderOpportunity {
   searchHistory: string[] = [];
   showSuggestions = false;
   isLoading = false;
-
   selectAll = false;
   hoveredDate: NgbDate | null = null;
 

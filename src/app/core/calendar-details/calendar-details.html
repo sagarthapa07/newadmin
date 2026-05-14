@@ -37,10 +37,10 @@
             <input
               type="text"
               class="form-control"
-              formControlName="friendlyURL"
+              formControlName="friendlyURLText"
               placeholder="Friendly URL"
             />
-            @if (isFieldInvalid('friendlyURL')) {
+            @if (isFieldInvalid('friendlyURLText')) {
               <div class="error">Please Enter a friendlyURL</div>
             }
           </div>
@@ -203,13 +203,15 @@
             <div class="error">Please select grant size.</div>
           }
         </div>
-
         <div class="form-group">
           <label>Image:</label>
-          <input type="file" class="form-control" formControlName="img" />
-          <app-image-croper label="Upload Image" (cropImage)="onImageCropped($event)">
-          </app-image-croper>
-          <img *ngIf="previewUrl" [src]="previewUrl" width="150" />
+
+          <div class="image-upload-wrapper">
+            <app-image-cropper [imageSrc]="previewUrl" (onCropped)="onImageCropped($event)">
+            </app-image-cropper>
+
+            <img *ngIf="previewUrl" [src]="previewUrl" class="preview-image" />
+          </div>
         </div>
 
         <div class="form-group">

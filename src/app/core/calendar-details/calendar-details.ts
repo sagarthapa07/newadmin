@@ -12,14 +12,15 @@ import { Editor } from '../../shared/component/editor/editor';
 import { Api } from '../Services/api';
 import { Input } from '@angular/core';
 import { GrantDetail } from '../../datatype';
-import { ImageCroper } from '../../shared/component/image-croper/image-croper';
 import { Output, EventEmitter } from '@angular/core';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
+import { ImageCropper } from '../../shared/component/image-cropper/image-cropper';
+import { disableDebugTools } from '@angular/platform-browser';
 
 @Component({
   standalone: true,
   selector: 'app-calendar-details',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, Editor, ImageCroper, AlertMessage],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, Editor, AlertMessage, ImageCropper],
   templateUrl: './calendar-details.html',
   styleUrls: ['./calendar-details.scss'],
 })
@@ -31,6 +32,7 @@ export class CalendarDetails {
   @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
   @Input() data: GrantDetail | null = null;
   @Output() tabChange = new EventEmitter<number>();
+
   key: any;
 
   // public Editor: any;
@@ -57,7 +59,7 @@ export class CalendarDetails {
   ) {
     this.opportunityForm = this.fb.group({
       title: ['', Validators.required],
-      friendlyURL: ['', Validators.required],
+      friendlyURLText: ['', Validators.required],
       linkUrl: ['', Validators.required],
       postDate: ['', Validators.required],
       deadlineDate: ['', Validators.required],
@@ -71,7 +73,13 @@ export class CalendarDetails {
       grantSize: ['', Validators.required],
       status: ['', Validators.required],
       letterText: ['', Validators.required],
-      img: ['', Validators.required],
+      issueString: [''],
+      stateString: [''],
+      countyString: [''],
+      stCtType: [''],
+      entityString: [''],
+
+      grantLogoImage: ['pnyF3OiQ89aI0AEJgHRO2SgAA.jpg'],
     });
   }
   saveForm() {
@@ -130,10 +138,10 @@ export class CalendarDetails {
     return !plainText;
   }
 
-  fillForm(data: GrantDetail) {
+  fillForm(data: any) {
     this.opportunityForm.patchValue({
       title: data.title,
-      friendlyURL: data.friendlyURL,
+      friendlyURLText: data.friendlyURLText,
       linkUrl: data.linkUrl,
       postDate: data.postDate,
       deadlineDate: data.deadlineDate,
@@ -147,7 +155,24 @@ export class CalendarDetails {
       grantSize: data.grantSize,
       status: data.status,
       letterText: data.letterText,
+      issueString: data.issueString,
+      stateString: data.stateString,
+      countyString: data.countyString,
+      entityString: data.entityString,
+      stCtType: data.stCtType,
     });
+
+    debugger;
+    const apiImage = data.grantLogoImage;
+
+    if (apiImage) {
+      // "|" ko "/" me convert karo
+      const imagePath = apiImage.replace('|', '/');
+
+      // FINAL URL
+      this.previewUrl = 'https://s3.amazonaws.com/cdn.grantsforusapp' + imagePath;
+      console.log('✅ FINAL IMAGE URL : ', this.previewUrl);
+    }
   }
   public editorData = '';
 
@@ -167,11 +192,9 @@ export class CalendarDetails {
   goToCounties() {
     this.tabChange.emit(5);
   }
-
   goToSeo() {
     this.tabChange.emit(6);
   }
-
   goToCalenderArea() {
     this.tabChange.emit(1);
   }
@@ -182,7 +205,6 @@ export class CalendarDetails {
       this.showDropdown = false;
       return;
     }
-
     this.api.searchDonors('DU', value).subscribe((res) => {
       console.log(res);
       this.donorList = res?.donorsList?.slice(0, 10) || [];
@@ -194,7 +216,6 @@ export class CalendarDetails {
       donorAgency: item.donorName,
       donorAgencyOther: item.donorName,
     });
-
     this.donorList = [];
     this.showDropdown = false;
   }
@@ -214,33 +235,37 @@ export class CalendarDetails {
   onSave() {
     if (this.opportunityForm.invalid || this.isEditorEmpty()) {
       this.opportunityForm.markAllAsTouched();
-
       return;
     }
-
-
-
     const form = this.opportunityForm.value;
+    let payload = {
+      grantData: {},
+      urlData: {
+        urlIndex: 0,
+        urlRecordType: 'UG',
+        refIndex: this.data?.id,
+        friendlyURLText: this.opportunityForm.value.friendlyURLText,
+        metaTitle: '',
+        metaAuthor: '',
+        metaKeywords: '',
+        metaDescription: 'asdvasdvasdv15151411',
+        facebookHandler: '',
+        twitterHandler: '',
+        googlePlusHandler: '',
+        instagramHandler: '',
+        grantStatus: 'Draft',
+      },
+    };
 
-    const formData = new FormData();
-
-    formData.append('img', form.img);
-    formData.append('title', form.title);
-    formData.append('friendlyURL', form.friendlyURL);
-    formData.append('linkURL', form.linkUrl);
-    formData.append('postDate', form.postDate);
-    formData.append('deadlineDate', form.deadlineDate);
-    formData.append('isOngoing', form.isOngoing);
-    formData.append('shortInfo', form.shortInfo);
-    formData.append('donorType', form.donorType);
-    formData.append('donorAgency', form.donorAgency);
-    formData.append('grantType', form.grantType);
-    formData.append('grantDuration', form.grantDuration);
-    formData.append('grantSize', form.grantSize);
-    formData.append('status', form.status);
-    formData.append('letterText', form.letterText);
-
-    this.api.updateGrant(this.data?.id!, formData).subscribe({
+    payload.grantData = {
+      ...form,
+      ...{
+        grantTitle: this.opportunityForm.value.title,
+        shortIntro: this.opportunityForm.value.shortInfo,
+        grantContent: this.opportunityForm.value.letterText,
+      },
+    };
+    this.api.updateGrant(this.data?.id!, payload).subscribe({
       next: (res) => {
         this.successMessage = 'Calendar Details updated successfully';
         setTimeout(() => {
@@ -255,13 +280,17 @@ export class CalendarDetails {
       },
     });
   }
-  onImageCropped(file: any) {
-    this.opportunityForm.patchValue({ img: file });
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.previewUrl = reader.result as string;
-    };
-    reader.readAsDataURL(file);
+  onImageCropped(images: any[]) {
+    if (!images?.length) return;
+    // MAIN IMAGE
+    const mainImage = images[0];
+    // FORM DATA
+    this.opportunityForm.patchValue({
+      img: mainImage.image,
+    });
+    // PREVIEW
+    this.previewUrl = mainImage.base64;
+    console.log('✅ ALL IMAGES : ', images);
   }
 }

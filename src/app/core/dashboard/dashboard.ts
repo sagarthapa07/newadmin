@@ -2,15 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Header } from '../../shared/component/header/header';
-// import { DateRangePicker } from '../../shared/component/date-range-pic/date-range-pic';
 import { NgbCalendar, NgbDate, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { inject } from '@angular/core';
-import { JsonPipe } from '@angular/common';
 import { DatePicker } from "../../shared/component/date-picker/date-picker";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, FormsModule, Header, NgbDatepicker, JsonPipe, DatePicker],
+  imports: [CommonModule, FormsModule, Header, NgbDatepicker, DatePicker],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })

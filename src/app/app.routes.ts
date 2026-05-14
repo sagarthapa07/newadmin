@@ -47,4 +47,5 @@ export const routes: Routes = [
     component: Preview,
     // canActivate: [AuthGuard]
   },
+  
 ];

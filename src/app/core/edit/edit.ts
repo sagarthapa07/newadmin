@@ -102,14 +102,14 @@ export class Edit {
   formatDate(date: string): string {
     return date ? date.split('T')[0] : '';
   }
-  mapGrantData(res: GrantApiResponse): GrantDetail {
+  mapGrantData(res: any) {
     const data = res.usGrantDataWithURL.grantData;
     const url = res.usGrantDataWithURL.urlData;
-
+debugger;
     return {
       id: data.grantIndex,
       title: data.grantTitle,
-      friendlyURL: url?.friendlyURLText || '',
+      friendlyURLText: url?.friendlyURLText || '',
       linkUrl: data.linkURL,
       postDate: this.formatDate(data.postDate),
       deadlineDate: this.formatDate(data.deadLineDate),
@@ -123,8 +123,15 @@ export class Edit {
       grantSize: data.grantSize?.trim() || '',
       status: data.status || '',
       letterText: data.grantContent || '',
-      img: data.grantLogoImage || '',
+      grantLogoImage: data.grantLogoImage || '',
+      issueString: data.issueString,
+      stateString: data.stateString,
+      countyString: data.countyString,
+      entityString: data.entityString,
+      stCtType :data.stCtType
+      
     };
+  
   }
 
   normalizeDuration(value: string): string {

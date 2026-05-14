@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImageCroper } from './image-croper';
+import { ImageCropper } from './image-cropper';
 
-describe('ImageCroper', () => {
-  let component: ImageCroper;
-  let fixture: ComponentFixture<ImageCroper>;
+describe('ImageCropper', () => {
+  let component: ImageCropper;
+  let fixture: ComponentFixture<ImageCropper>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ImageCroper]
+      imports: [ImageCropper]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ImageCroper);
+    fixture = TestBed.createComponent(ImageCropper);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {

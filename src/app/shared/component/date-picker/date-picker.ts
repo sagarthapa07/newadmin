@@ -3,14 +3,13 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbCalendar, NgbDate, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { inject } from '@angular/core';
-import { JsonPipe } from '@angular/common';
 import { Output, EventEmitter } from '@angular/core';
 import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-date-picker',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbDatepicker, JsonPipe],
+  imports: [CommonModule, FormsModule, NgbDatepicker],
   templateUrl: './date-picker.html',
   styleUrl: './date-picker.scss',
 })

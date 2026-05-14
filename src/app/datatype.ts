@@ -2,7 +2,7 @@
 export interface GrantDetail {
   id: number;
   title: string;
-  friendlyURL: string;
+  friendlyURLText: string;
   linkUrl: string;
   postDate: string;
   deadlineDate: string;
@@ -16,7 +16,7 @@ export interface GrantDetail {
   grantSize: string;
   status: string;
   letterText: string;
-  img: string;
+  grantLogoImage: string;
 }
 
 // ================== GRANT API RESPONSE ==================
