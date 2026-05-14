@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SeoSocialComponent } from '../seo-social/seo-social';
@@ -10,9 +10,8 @@ import { Header } from '../../shared/component/header/header';
 import { FocusGroupsComponent } from '../focus-groups/focus-groups';
 import { CalendarDetails } from '../calendar-details/calendar-details';
 import { Api } from '../Services/api';
-import { GrantDetail, GrantApiResponse } from '../../datatype';
+import { GrantDetail } from '../../datatype';
 import { Input } from '@angular/core';
-import { LoaderService } from '../Services/loader-service';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
@@ -76,21 +75,17 @@ export class Edit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-
     if (id) {
       this.getGrantDetails(+id);
     }
   }
   getGrantDetails(id: number) {
     this.isLoading = true;
-
     this.api.getGrantById(id).subscribe({
       next: (res) => {
         const mapped = this.mapGrantData(res);
         this.grantData = mapped;
-
         this.isLoading = false;
-
         this.cd.detectChanges(); 
       },
       error: (err) => {
@@ -105,7 +100,6 @@ export class Edit {
   mapGrantData(res: any) {
     const data = res.usGrantDataWithURL.grantData;
     const url = res.usGrantDataWithURL.urlData;
-debugger;
     return {
       id: data.grantIndex,
       title: data.grantTitle,
@@ -129,9 +123,7 @@ debugger;
       countyString: data.countyString,
       entityString: data.entityString,
       stCtType :data.stCtType
-      
     };
-  
   }
 
   normalizeDuration(value: string): string {

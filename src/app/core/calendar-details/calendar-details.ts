@@ -15,7 +15,6 @@ import { GrantDetail } from '../../datatype';
 import { Output, EventEmitter } from '@angular/core';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
 import { ImageCropper } from '../../shared/component/image-cropper/image-cropper';
-import { disableDebugTools } from '@angular/platform-browser';
 
 @Component({
   standalone: true,
@@ -78,7 +77,6 @@ export class CalendarDetails {
       countyString: [''],
       stCtType: [''],
       entityString: [''],
-
       grantLogoImage: ['pnyF3OiQ89aI0AEJgHRO2SgAA.jpg'],
     });
   }
@@ -129,12 +127,10 @@ export class CalendarDetails {
 
   isEditorEmpty(): boolean {
     const value = this.opportunityForm.get('letterText')?.value || '';
-
     const plainText = value
       .replace(/<[^>]*>/g, '')
       .replace(/&nbsp;/g, '')
       .trim();
-
     return !plainText;
   }
 
@@ -162,15 +158,16 @@ export class CalendarDetails {
       stCtType: data.stCtType,
     });
 
-    debugger;
     const apiImage = data.grantLogoImage;
-
+    console.log('🖼️ API IMAGE : ', apiImage);
     if (apiImage) {
-      // "|" ko "/" me convert karo
+      // "|" -> "/"
       const imagePath = apiImage.replace('|', '/');
-
+      console.log('✅ IMAGE PATH : ', imagePath);
       // FINAL URL
-      this.previewUrl = 'https://s3.amazonaws.com/cdn.grantsforusapp' + imagePath;
+      this.previewUrl =
+        'https://s3.amazonaws.com/cdn.grantsforusapp/' +
+        imagePath.replace('2026/', '2026/img.USGrants/thumb-80-px/');
       console.log('✅ FINAL IMAGE URL : ', this.previewUrl);
     }
   }
