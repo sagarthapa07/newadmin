@@ -43,6 +43,7 @@ export class CalendarDetails {
   previewUrl: string = '';
   successMessage = '';
   errorMessage = '';
+  fullImageUrl: string = '';
 
   @HostListener('document:mousedown', ['$event'])
   onClickOutside(event: MouseEvent) {
@@ -159,16 +160,18 @@ export class CalendarDetails {
     });
 
     const apiImage = data.grantLogoImage;
-    console.log('🖼️ API IMAGE : ', apiImage);
     if (apiImage) {
-      // "|" -> "/"
       const imagePath = apiImage.replace('|', '/');
-      console.log('✅ IMAGE PATH : ', imagePath);
-      // FINAL URL
+
+      // Thumbnail (60x60 display)
       this.previewUrl =
         'https://s3.amazonaws.com/cdn.grantsforusapp/' +
         imagePath.replace('2026/', '2026/img.USGrants/thumb-80-px/');
-      console.log('✅ FINAL IMAGE URL : ', this.previewUrl);
+
+      // Modal ke liye - 450px (best quality available)
+      this.fullImageUrl =
+        'https://s3.amazonaws.com/cdn.grantsforusapp/' +
+        imagePath.replace('2026/', '2026/img.USGrants/thumb-450-px/');
     }
   }
   public editorData = '';
@@ -280,14 +283,23 @@ export class CalendarDetails {
 
   onImageCropped(images: any[]) {
     if (!images?.length) return;
-    // MAIN IMAGE
     const mainImage = images[0];
-    // FORM DATA
     this.opportunityForm.patchValue({
       img: mainImage.image,
     });
-    // PREVIEW
     this.previewUrl = mainImage.base64;
-    console.log('✅ ALL IMAGES : ', images);
+    this.fullImageUrl = mainImage.base64;
+  }
+
+  showImageModal = false;
+  
+  openImageModal() {
+    if (this.fullImageUrl || this.previewUrl) {
+      this.showImageModal = true;
+    }
+  }
+
+  closeImageModal() {
+    this.showImageModal = false;
   }
 }
