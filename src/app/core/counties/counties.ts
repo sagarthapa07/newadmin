@@ -10,11 +10,12 @@ import {
   GetStatesResponse,
   State,
 } from '../../datatype';
+import { AlertMessage } from '../../shared/component/alert-message/alert-message';
 
 @Component({
   selector: 'app-counties',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule],
+  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule, AlertMessage],
   templateUrl: './counties.html',
   styleUrl: './counties.scss',
 })
@@ -80,18 +81,14 @@ export class CountiesComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.api.getAllStates().subscribe((res: any) => {
-      console.log('STATES RESPONSE:', res); // pehle ye dekho
-
-      const states = res.usStates || [];
-
+      console.log('FULL RESPONSE', JSON.stringify(res, null, 2)); // pehle ye dekho
+      const states = res.states || [];
       const mapped = states.map((s: State) => ({
         item_id: s.stateIndex,
         item_text: s.stateName,
       }));
-
       this.countiesKeyDropDowns.states.data = [...mapped];
       this.multipleStatesDropdown.data = [...mapped];
-
       states.forEach((s: State) => {
         this.stateIndexMap[s.stateName] = s.stateIndex;
       });
@@ -437,62 +434,74 @@ export class CountiesComponent implements OnInit, OnChanges {
   saveStatesAndCounties(): void {
     if (!this.grantId) return;
 
-    const stateRows: any[] = [];
+    const usGrantCounties: any[] = [];
 
     const buildPayload = (state: string, counties: string[]) => {
       const stateIndex = this.stateIndexMap[state] ?? 0;
+
       counties.forEach((county) => {
-        stateRows.push({
-          countryIndex: this.countryIndex,
-          grantIndex: this.grantId,
-          recordIndex: 0,
+        const countyIndex = this.countyIndexMap[`${county}||${state}`] ?? 0;
+
+        usGrantCounties.push({
+          countryIndex: 230,
+          countryName: 'United States',
+
+          countyIndex: countyIndex,
+          countyName: county,
+
           stateIndex: stateIndex,
           stateName: state,
         });
       });
     };
 
+    // SINGLE
     if (this.grantMode === 'single') {
       const state = this.selectedState[0];
-      if (state) buildPayload(state, this.selectedSubCounties[state] || []);
+
+      if (state) {
+        buildPayload(state, this.selectedSubCounties[state] || []);
+      }
     }
 
+    // MULTIPLE
     if (this.grantMode === 'multiple') {
       this.multipleSelectedStates.forEach((state) => {
         buildPayload(state, this.multipleSelectedCounties[state] || []);
       });
     }
 
+    // ALL
     if (this.grantMode === 'all') {
       Object.keys(this.countiySubCountyMap).forEach((state) => {
         buildPayload(state, this.countiySubCountyMap[state] || []);
       });
     }
 
-    // Duplicates remove — ek state ek baar
-    const unique = stateRows.filter(
-      (item, index, self) => index === self.findIndex((t) => t.stateIndex === item.stateIndex),
-    );
-
-    // ✅ Sahi payload structure
     const payload = {
-      _USGrantStates: unique,
+      grantIndex: this.grantId,
+      usGrantCounties: usGrantCounties,
+      userIndex: 5,
+      userEmail: 'ritu@fundsforngos.org',
     };
 
-    console.log('PAYLOAD:', payload);
+    console.log('FINAL PAYLOAD:', payload);
 
-    this.api.insertGrantStatesJSON(payload).subscribe({
+    this.api.insertGrantCounties(payload).subscribe({
       next: (res) => {
-        this.successMessage = 'Saved successfully.';
-        setTimeout(() => (this.successMessage = ''), 4000);
-        if (this.multipleActiveState) {
-          this.loadCountiesForState(this.multipleActiveState);
-        }
+        console.log('SAVE SUCCESS', res);
+        this.successMessage = 'Counties saved successfully';
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 4000);
       },
+
       error: (err) => {
-        console.error('Save Error:', err);
-        this.errorMessage = err?.error?.message || 'Save failed.';
-        setTimeout(() => (this.errorMessage = ''), 5000);
+        console.error('SAVE ERROR', err);
+        this.errorMessage = 'Save failed';
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 4000);
       },
     });
   }

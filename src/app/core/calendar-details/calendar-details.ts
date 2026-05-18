@@ -78,7 +78,7 @@ export class CalendarDetails {
       countyString: [''],
       stCtType: [''],
       entityString: [''],
-      grantLogoImage: ['pnyF3OiQ89aI0AEJgHRO2SgAA.jpg'],
+      grantLogoImage: [''],
     });
   }
   saveForm() {
@@ -270,7 +270,7 @@ export class CalendarDetails {
         this.successMessage = 'Calendar Details updated successfully';
         setTimeout(() => {
           this.successMessage = '';
-        }, 4000);
+        }, 4000); 
       },
       error: (err) => {
         this.errorMessage = err?.error?.message || 'Failed to update Calendar Details';
@@ -282,7 +282,7 @@ export class CalendarDetails {
   }
 
   onImageCropped(images: any[]) {
-    if (!images?.length) return;
+    if (!images?.length) return;    
     const mainImage = images[0];
     this.opportunityForm.patchValue({
       img: mainImage.image,

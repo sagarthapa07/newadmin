@@ -243,6 +243,10 @@ export class Api {
       payload,
     );
   }
+
+  insertGrantCounties(payload: any) {
+    return this.http.post(`${this.baseUrl}/USGrantCounties/InsertUSGrantCountiesJSON`, payload);
+  }
   // SEO / SOCIAL APIs
 
   getSeoSocial(refId: number) {
