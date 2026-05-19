@@ -64,6 +64,10 @@ export class Api {
     return this.http.post(this.uploadUrl, payload);
   }
 
+  insertGrant(payload: any) {
+    return this.http.post(`${this.baseUrl}/USGrants/InsertUSGrants`, payload);
+  }
+
   // =========================
   // SEARCH DONORS
   // =========================

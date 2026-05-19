@@ -258,6 +258,6 @@ export class CalenderOpportunity {
       console.error('ID missing', id);
       return;
     }
-    this.route.navigate(['/edit', id]);
+    this.route.navigate(['/calendar-opportunity/edit', id]);
   }
 }

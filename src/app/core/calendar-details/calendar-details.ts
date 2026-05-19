@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, HostListener, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import {
   FormBuilder,
   FormGroup,
@@ -15,6 +16,7 @@ import { GrantDetail } from '../../datatype';
 import { Output, EventEmitter } from '@angular/core';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
 import { ImageCropper } from '../../shared/component/image-cropper/image-cropper';
+import { FileUpload } from '../Services/file-upload';
 
 @Component({
   standalone: true,
@@ -45,6 +47,10 @@ export class CalendarDetails {
   errorMessage = '';
   fullImageUrl: string = '';
 
+  selectedImage: any;
+  resizeImages: any[] = [];
+  uploadedImageUrl = '';
+
   @HostListener('document:mousedown', ['$event'])
   onClickOutside(event: MouseEvent) {
     if (this.dropdownContainer && !this.dropdownContainer.nativeElement.contains(event.target)) {
@@ -56,6 +62,7 @@ export class CalendarDetails {
     private fb: FormBuilder,
     private router: Router,
     private api: Api,
+    private fileUploadService: FileUpload,
   ) {
     this.opportunityForm = this.fb.group({
       title: ['', Validators.required],
@@ -110,7 +117,8 @@ export class CalendarDetails {
   }
 
   ngOnInit(): void {
-    if (this.data) {
+    // ONLY IF DATA EXISTS
+    if (this.data?.id) {
       this.fillForm(this.data);
     }
   }
@@ -119,8 +127,8 @@ export class CalendarDetails {
     if (changes['data']) {
       const currentData = changes['data'].currentValue;
       const previousData = changes['data'].previousValue;
-      // check if valid data hai
-      if (currentData && currentData !== previousData) {
+      // ONLY EDIT CASE
+      if (currentData?.id && currentData !== previousData) {
         this.fillForm(currentData);
       }
     }
@@ -136,6 +144,7 @@ export class CalendarDetails {
   }
 
   fillForm(data: any) {
+    if (!data?.id) return;
     this.opportunityForm.patchValue({
       title: data.title,
       friendlyURLText: data.friendlyURLText,
@@ -231,68 +240,155 @@ export class CalendarDetails {
         .padStart(2, '0')}${d.getDate().toString().padStart(2, '0')}`,
     );
   }
-
   onSave() {
     if (this.opportunityForm.invalid || this.isEditorEmpty()) {
       this.opportunityForm.markAllAsTouched();
+
       return;
     }
+
     const form = this.opportunityForm.value;
-    let payload = {
-      grantData: {},
-      urlData: {
-        urlIndex: 0,
-        urlRecordType: 'UG',
-        refIndex: this.data?.id,
-        friendlyURLText: this.opportunityForm.value.friendlyURLText,
-        metaTitle: '',
-        metaAuthor: '',
-        metaKeywords: '',
-        metaDescription: 'asdvasdvasdv15151411',
-        facebookHandler: '',
-        twitterHandler: '',
-        googlePlusHandler: '',
-        instagramHandler: '',
-        grantStatus: 'Draft',
-      },
+
+    const saveGrant = (imagePath: string = '') => {
+      const payload: any = {
+        userIndex: 5,
+        userEmail: 'ritu@fundsforngos.org',
+        grantData: {
+          grantIndex: this.data?.id || 0,
+          grantTitle: form.title,
+          linkURL: form.linkUrl,
+          postDate: this.formatDateISO(form.postDate),
+          pdValue: this.getDateNumber(form.postDate),
+          deadLineDate: this.formatDateISO(form.deadlineDate),
+          ddValue: this.getDateNumber(form.deadlineDate),
+          shortIntro: form.shortInfo,
+          donorType: 'UD',
+          donorIndex: 0,
+          donorAgency: form.donorAgency,
+          grantType: form.grantType,
+          grantSize: form.grantSize,
+          grantLogoImage: imagePath || this.data?.grantLogoImage || '',
+          onGoingGrants: form.isOngoing ? 1 : 0,
+          status: form.status,
+          grantContent: form.letterText,
+          grantDuration: form.grantDuration,
+          stCtType: form.stCtType || '',
+          stateString: form.stateString || '',
+          countyString: form.countyString || '',
+          issueString: form.issueString || '',
+          entityString: form.entityString || '',
+          viewCount: 0,
+        },
+        urlData: {
+          urlIndex: 0,
+          refIndex: this.data?.id || 0,
+          urlRecordType: 'UG',
+          friendlyURLText: form.friendlyURLText,
+        },
+      };
+      console.log('FINAL SAVE PAYLOAD', payload);
+      // =========================
+      // EDIT CASE
+      // =========================
+
+      if (this.data?.id) {
+        this.api.updateGrant(this.data.id, payload).subscribe({
+          next: (res) => {
+            console.log('UPDATE SUCCESS', res);
+
+            this.successMessage = 'Grant updated successfully';
+          },
+          error: (err) => {
+            console.log(err);
+
+            this.errorMessage = 'Update failed';
+          },
+        });
+      }
+      // =========================
+      // ADD NEW CASE
+      // =========================
+      else {
+        this.api.insertGrant(payload).subscribe({
+          next: (res: any) => {
+            console.log('INSERT SUCCESS', res);
+            // NEW GRANT INDEX
+            const newGrantId = res?.grantIndex || res?.data?.grantIndex;
+            if (newGrantId) {
+              // IMPORTANT
+              this.data = {
+                ...payload.grantData,
+
+                id: newGrantId,
+              };
+              // RELOAD DETAILS
+              this.api.getGrantById(newGrantId).subscribe({
+                next: (detailRes) => {
+                  const mapped = detailRes.usGrantDataWithURL?.grantData;
+                  console.log('RELOADED', mapped);
+                  this.successMessage = 'Grant created successfully';
+                },
+              });
+            }
+          },
+          error: (err) => {
+            console.log(err);
+            this.errorMessage = 'Insert failed';
+          },
+        });
+      }
     };
 
-    payload.grantData = {
-      ...form,
-      ...{
-        grantTitle: this.opportunityForm.value.title,
-        shortIntro: this.opportunityForm.value.shortInfo,
-        grantContent: this.opportunityForm.value.letterText,
-      },
-    };
-    this.api.updateGrant(this.data?.id!, payload).subscribe({
-      next: (res) => {
-        this.successMessage = 'Calendar Details updated successfully';
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 4000); 
-      },
-      error: (err) => {
-        this.errorMessage = err?.error?.message || 'Failed to update Calendar Details';
-        setTimeout(() => {
-          this.errorMessage = '';
-        }, 5000);
-      },
-    });
+    // =========================
+    // IMAGE UPLOAD FIRST
+    // =========================
+
+    if (this.resizeImages?.length) {
+      this.fileUploadService.uploadImages(this.resizeImages).subscribe({
+        next: (res) => {
+          console.log('UPLOAD SUCCESS', res);
+
+          if (res.successCode === 1) {
+            // uploaded image path
+            const uploadedImagePath = res.filePath || res.data || '';
+
+            // SAVE AFTER IMAGE UPLOAD
+            saveGrant(uploadedImagePath);
+          } else {
+            this.errorMessage = 'Image upload failed';
+          }
+        },
+
+        error: (err) => {
+          console.log('UPLOAD ERROR', err);
+
+          this.errorMessage = 'Image upload failed';
+        },
+      });
+    } else {
+      // NO IMAGE CHANGED
+      saveGrant();
+    }
   }
 
   onImageCropped(images: any[]) {
-    if (!images?.length) return;    
+    if (!images?.length) return;
     const mainImage = images[0];
+    // IMPORTANT FIX
+    mainImage.dirPath = 'img.USGrants/thumb-600-px/';
     this.opportunityForm.patchValue({
       img: mainImage.image,
     });
+
+    // IMPORTANT
+    this.resizeImages = [mainImage];
     this.previewUrl = mainImage.base64;
     this.fullImageUrl = mainImage.base64;
+    console.log('FINAL IMAGE OBJECT', this.resizeImages);
   }
 
   showImageModal = false;
-  
+
   openImageModal() {
     if (this.fullImageUrl || this.previewUrl) {
       this.showImageModal = true;
@@ -301,5 +397,50 @@ export class CalendarDetails {
 
   closeImageModal() {
     this.showImageModal = false;
+  }
+  onFileSelect(event: any) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const base64 = reader.result as string;
+
+      this.resizeImages = [
+        {
+          name: 'grant-logo',
+
+          fileExtension: file.name.split('.').pop(),
+
+          image: file,
+
+          // IMPORTANT FIX
+          dirPath: 'img.USGrants/thumb-600-px/',
+
+          base64: base64,
+        },
+      ];
+    };
+
+    reader.readAsDataURL(file);
+  }
+  uploadImage() {
+    this.fileUploadService.uploadImages(this.resizeImages).subscribe({
+      next: (res) => {
+        console.log('UPLOAD SUCCESS', res);
+
+        if (res.successCode === 1) {
+          this.uploadedImageUrl = res.filePath;
+
+          console.log(this.uploadedImageUrl);
+        }
+      },
+
+      error: (err) => {
+        console.log('UPLOAD ERROR', err);
+      },
+    });
   }
 }

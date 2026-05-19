@@ -277,7 +277,12 @@ export class GeoLocationComponent implements OnInit {
   }
 
   saveAll(): void {
+    console.log('CURRENT GRANT ID', this.grantId);
+    console.log('SELECTED STATES', this.geoDropdowns.states.selected);
+    console.log('SELECTED CITIES', this.geoDropdowns.cities.selected);
     if (!this.grantId) {
+      console.log('NO GRANT ID FOUND');
+
       return;
     }
 

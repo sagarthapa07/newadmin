@@ -75,8 +75,13 @@ export class Edit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    console.log('ROUTE ID:', id);
+    if (id && id !== 'null' && id !== 'undefined' && +id > 0) {
       this.getGrantDetails(+id);
+    } else {
+      console.log('NEW GRANT MODE');
+
+      this.grantData = null;
     }
   }
   getGrantDetails(id: number) {
@@ -86,7 +91,7 @@ export class Edit {
         const mapped = this.mapGrantData(res);
         this.grantData = mapped;
         this.isLoading = false;
-        this.cd.detectChanges(); 
+        this.cd.detectChanges();
       },
       error: (err) => {
         console.log('❌ API ERROR:', err);
@@ -122,7 +127,7 @@ export class Edit {
       stateString: data.stateString,
       countyString: data.countyString,
       entityString: data.entityString,
-      stCtType :data.stCtType
+      stCtType: data.stCtType,
     };
   }
 

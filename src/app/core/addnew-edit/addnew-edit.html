@@ -1,1 +1,70 @@
-<p>addnew-edit works!</p>
+<app-header></app-header>
+
+<section class="header-section">
+  <div class="row">
+    <div class="col-lg-6">
+      <h4>Calendar and Premium Newsletter (Add/Modify)</h4>
+    </div>
+
+    <div class="col-lg-6 d-flex justify-content-end header-btn">
+      <button
+        class="btn"
+        *ngFor="let item of menuItems"
+        [class.active]="activeItem === item.id"
+        (click)="setActive(item.id)"
+      >
+        {{ item.label }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="component-loader">
+    <span class="loader-dot"></span>
+    Loading data...
+  </div>
+  <div>
+    <app-calendar-details
+      *ngIf="activeItem === 1"
+      [data]="grantData"
+      (tabChange)="setActive($event)"
+    >
+    </app-calendar-details>
+
+    <app-geo-location
+      *ngIf="activeItem === 2"
+      [hidden]="activeItem !== 2"
+      (tabChange)="setActive($event)"
+    >
+    </app-geo-location>
+
+    <app-focus-area
+      *ngIf="grantData"
+      [hidden]="activeItem !== 3"
+      [grantId]="grantData.id"
+    ></app-focus-area>
+
+    <app-focus-groups
+      *ngIf="grantData"
+      [hidden]="activeItem !== 4"
+      [grantId]="grantData.id"
+      (tabChange)="setActive($event)"
+    >
+    </app-focus-groups>
+
+    <app-counties
+      *ngIf="grantData"
+      [hidden]="activeItem !== 5"
+      [grantId]="grantData.id"
+      (tabChange)="setActive($event)"
+    >
+    </app-counties>
+
+    <app-seo-social
+      *ngIf="grantData"
+      [hidden]="activeItem !== 6"
+      [grantId]="grantData.id"
+      (tabChange)="setActive($event)"
+    >
+    </app-seo-social>
+  </div>
+</section>

@@ -7,6 +7,7 @@ import { Preview } from './core/preview/preview';
 
 import { AuthGuard } from './core/guards/auth-guard';
 import { Dashboard } from './core/dashboard/dashboard';
+import { AddnewEdit } from './core/addnew-edit/addnew-edit';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -33,7 +34,7 @@ export const routes: Routes = [
     // canActivate: [AuthGuard]
   },
   {
-    path: 'edit/:id',
+    path: 'calendar-opportunity/edit/:id',
     component: Edit,
     data: { breadcrumb: 'edit' },
   },
@@ -43,8 +44,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'preview',
+    path: 'calendar-opportunity/edit/add-new',
     component: Preview,
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: 'calendar-opportunity/add-new',
+    component: AddnewEdit,
     // canActivate: [AuthGuard]
   },
   
