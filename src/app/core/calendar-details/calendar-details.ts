@@ -35,8 +35,6 @@ export class CalendarDetails {
   @Output() tabChange = new EventEmitter<number>();
 
   key: any;
-
-  // public Editor: any;
   public isBrowser = false;
   activeBtn: string = 'calendar';
   donorList: any[] = [];
@@ -46,7 +44,6 @@ export class CalendarDetails {
   successMessage = '';
   errorMessage = '';
   fullImageUrl: string = '';
-
   selectedImage: any;
   resizeImages: any[] = [];
   uploadedImageUrl = '';
@@ -88,6 +85,7 @@ export class CalendarDetails {
       grantLogoImage: [''],
     });
   }
+
   saveForm() {
     console.log(this.opportunityForm.value);
   }
@@ -109,7 +107,6 @@ export class CalendarDetails {
     'Counties',
     'Seo/Social Media',
   ];
-
   activeItem = 'Calender Details';
 
   setActive(item: string) {
@@ -171,7 +168,6 @@ export class CalendarDetails {
     const apiImage = data.grantLogoImage;
     if (apiImage) {
       const imagePath = apiImage.replace('|', '/');
-
       // Thumbnail (60x60 display)
       this.previewUrl =
         'https://s3.amazonaws.com/cdn.grantsforusapp/' +
@@ -209,7 +205,6 @@ export class CalendarDetails {
   }
   onSearchDonor(event: any) {
     const value = event.target.value;
-
     if (!value) {
       this.showDropdown = false;
       return;
@@ -318,7 +313,6 @@ export class CalendarDetails {
               // IMPORTANT
               this.data = {
                 ...payload.grantData,
-
                 id: newGrantId,
               };
               // RELOAD DETAILS
@@ -366,7 +360,6 @@ export class CalendarDetails {
         },
       });
     } else {
-      // NO IMAGE CHANGED
       saveGrant();
     }
   }

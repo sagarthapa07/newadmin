@@ -211,12 +211,6 @@ select.form-control {
   border-radius: 6px 6px 0 0 !important;
 }
 
-::ng-deep .ck-editor__editable_inline {
-  min-height: 578px;
-  max-height: 578px;
-  overflow-y: auto;
-  border-radius: 0 0 6px 6px !important;
-}
 
 ::ng-deep .ck.ck-toolbar {
   flex-wrap: wrap !important;

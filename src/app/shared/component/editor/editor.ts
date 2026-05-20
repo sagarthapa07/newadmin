@@ -64,6 +64,7 @@ import {
   type EditorConfig,
 } from 'ckeditor5';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { forwardRef } from '@angular/core';
 
 const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
 
@@ -77,7 +78,7 @@ const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: Editor,
+      useExisting: forwardRef(() => Editor),
       multi: true,
     },
   ],
@@ -316,7 +317,6 @@ export class Editor implements AfterViewInit, ControlValueAccessor {
 
   onEditorChange(event: any) {
     const data = event.editor.getData();
-    this.editorData = data;
     this.onChange(data);
     this.onTouched();
   }
