@@ -114,7 +114,6 @@ export class CalendarDetails {
   }
 
   ngOnInit(): void {
-    // ONLY IF DATA EXISTS
     if (this.data?.id) {
       this.fillForm(this.data);
     }
@@ -124,7 +123,6 @@ export class CalendarDetails {
     if (changes['data']) {
       const currentData = changes['data'].currentValue;
       const previousData = changes['data'].previousValue;
-      // ONLY EDIT CASE
       if (currentData?.id && currentData !== previousData) {
         this.fillForm(currentData);
       }
@@ -168,12 +166,10 @@ export class CalendarDetails {
     const apiImage = data.grantLogoImage;
     if (apiImage) {
       const imagePath = apiImage.replace('|', '/');
-      // Thumbnail (60x60 display)
       this.previewUrl =
         'https://s3.amazonaws.com/cdn.grantsforusapp/' +
         imagePath.replace('2026/', '2026/img.USGrants/thumb-80-px/');
 
-      // Modal ke liye - 450px (best quality available)
       this.fullImageUrl =
         'https://s3.amazonaws.com/cdn.grantsforusapp/' +
         imagePath.replace('2026/', '2026/img.USGrants/thumb-450-px/');
@@ -235,6 +231,7 @@ export class CalendarDetails {
         .padStart(2, '0')}${d.getDate().toString().padStart(2, '0')}`,
     );
   }
+
   onSave() {
     if (this.opportunityForm.invalid || this.isEditorEmpty()) {
       this.opportunityForm.markAllAsTouched();
@@ -287,6 +284,7 @@ export class CalendarDetails {
       // =========================
 
       if (this.data?.id) {
+        debugger
         this.api.updateGrant(this.data.id, payload).subscribe({
           next: (res) => {
             console.log('UPDATE SUCCESS', res);
@@ -304,6 +302,7 @@ export class CalendarDetails {
       // ADD NEW CASE
       // =========================
       else {
+        debugger; 
         this.api.insertGrant(payload).subscribe({
           next: (res: any) => {
             console.log('INSERT SUCCESS', res);
@@ -338,6 +337,7 @@ export class CalendarDetails {
     // =========================
 
     if (this.resizeImages?.length) {
+      debugger
       this.fileUploadService.uploadImages(this.resizeImages).subscribe({
         next: (res) => {
           console.log('UPLOAD SUCCESS', res);
@@ -365,6 +365,7 @@ export class CalendarDetails {
   }
 
   onImageCropped(images: any[]) {
+    debugger;
     if (!images?.length) return;
     const mainImage = images[0];
     // IMPORTANT FIX
@@ -372,12 +373,15 @@ export class CalendarDetails {
     this.opportunityForm.patchValue({
       img: mainImage.image,
     });
-
-    // IMPORTANT
     this.resizeImages = [mainImage];
     this.previewUrl = mainImage.base64;
     this.fullImageUrl = mainImage.base64;
     console.log('FINAL IMAGE OBJECT', this.resizeImages);
+    debugger;
+  }
+
+  saveGrant(grantLogoImage: string) {
+    throw new Error('Method not implemented.');
   }
 
   showImageModal = false;
@@ -390,50 +394,5 @@ export class CalendarDetails {
 
   closeImageModal() {
     this.showImageModal = false;
-  }
-  onFileSelect(event: any) {
-    const file = event.target.files[0];
-
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const base64 = reader.result as string;
-
-      this.resizeImages = [
-        {
-          name: 'grant-logo',
-
-          fileExtension: file.name.split('.').pop(),
-
-          image: file,
-
-          // IMPORTANT FIX
-          dirPath: 'img.USGrants/thumb-600-px/',
-
-          base64: base64,
-        },
-      ];
-    };
-
-    reader.readAsDataURL(file);
-  }
-  uploadImage() {
-    this.fileUploadService.uploadImages(this.resizeImages).subscribe({
-      next: (res) => {
-        console.log('UPLOAD SUCCESS', res);
-
-        if (res.successCode === 1) {
-          this.uploadedImageUrl = res.filePath;
-
-          console.log(this.uploadedImageUrl);
-        }
-      },
-
-      error: (err) => {
-        console.log('UPLOAD ERROR', err);
-      },
-    });
   }
 }

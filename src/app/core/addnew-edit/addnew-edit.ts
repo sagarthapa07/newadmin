@@ -88,7 +88,7 @@ export class AddnewEdit {
         this.cd.detectChanges();
       },
       error: (err) => {
-        console.log('❌ API ERROR:', err);
+        console.log('API ERROR:', err);
         this.isLoading = false;
       },
     });
@@ -140,7 +140,7 @@ export class AddnewEdit {
   }
   setActive(id: number) {
     this.activeItem = id;
-  } 
+  }
 
   onSave() {
     console.log(this.opportunityForm.value);

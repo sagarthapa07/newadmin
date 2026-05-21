@@ -37,7 +37,6 @@ import {
 export class Api {
   // BASE URL
 
-
   // OTHER APIs
   private uploadUrl =
     'https://2m3attvzvf.execute-api.us-east-1.amazonaws.com/US-Release-Domain-RestAPI-Live-UploadFile';
@@ -53,7 +52,9 @@ export class Api {
   }
 
   getGrantById(id: number): Observable<GrantApiResponse> {
-    return this.http.get<GrantApiResponse>(`${environment.baseUrl}/USGrants/GetUSGrantsDetail?id=${id}`);
+    return this.http.get<GrantApiResponse>(
+      `${environment.baseUrl}/USGrants/GetUSGrantsDetail?id=${id}`,
+    );
   }
 
   updateGrant(id: number, payload: any) {
@@ -68,9 +69,9 @@ export class Api {
     return this.http.post(`${environment.baseUrl}/USGrants/InsertUSGrants`, payload);
   }
 
-  // =========================
+
   // SEARCH DONORS
-  // =========================
+
 
   searchDonors(donorType: string, searchText: string): Observable<any> {
     return this.http.get<any>(
@@ -78,9 +79,9 @@ export class Api {
     );
   }
 
-  // =========================
+
   // GEO LOCATION APIs
-  // =========================
+
 
   getTownShips(): Observable<GetTownshipResponse> {
     return this.http.get<GetTownshipResponse>(`${environment.baseUrl}/TownShips/GetTownShips`);
@@ -150,11 +151,12 @@ export class Api {
     );
   }
 
-  // =========================
   // FOCUS AREAS APIs
 
   getFocusAreas(): Observable<GetFocusAreasResponse> {
-    return this.http.get<GetFocusAreasResponse>(`${environment.baseUrl}/FocusAreas/GetUSFocusAreas`);
+    return this.http.get<GetFocusAreasResponse>(
+      `${environment.baseUrl}/FocusAreas/GetUSFocusAreas`,
+    );
   }
 
   getFocusSubAreas(issueId: number): Observable<GetFocusSubAreasResponse> {
@@ -249,7 +251,10 @@ export class Api {
   }
 
   insertGrantCounties(payload: any) {
-    return this.http.post(`${environment.baseUrl}/USGrantCounties/InsertUSGrantCountiesJSON`, payload);
+    return this.http.post(
+      `${environment.baseUrl}/USGrantCounties/InsertUSGrantCountiesJSON`,
+      payload,
+    );
   }
   // SEO / SOCIAL APIs
 

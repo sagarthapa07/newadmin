@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ import { ChangeDetectorRef } from '@angular/core';
   templateUrl: './focus-areas.html',
   styleUrl: './focus-areas.scss',
 })
-export class FocusAreaComponent implements OnInit {
+export class FocusAreaComponent implements OnInit, OnChanges {
   @ViewChild('issueContainer') issueContainer!: ElementRef;
   @Input() grantId?: number;
 
@@ -40,7 +40,11 @@ export class FocusAreaComponent implements OnInit {
   ngOnInit(): void {
     this.loadFocusAreas();
   }
-
+  ngOnChanges(changes: any): void {
+    if (changes['grantId'] && changes['grantId'].currentValue) {
+      this.loadSelectedFocusAreas(changes['grantId'].currentValue);
+    }
+  }
   @HostListener('document:click', ['$event'])
   handleOutsideClick(event: MouseEvent) {
     if (!this.issueContainer) return;
@@ -68,14 +72,13 @@ export class FocusAreaComponent implements OnInit {
             subIssues: [],
             loaded: false,
           }));
-
-          if (this.grantId) {
-            this.loadSelectedFocusAreas(this.grantId);
-          }
         }
       },
     });
   }
+
+
+  
   loadSelectedFocusAreas(grantId: number): void {
     this.api.getSelectedFocusAreas(grantId).subscribe({
       next: (res) => {
@@ -352,12 +355,10 @@ export class FocusAreaComponent implements OnInit {
             }));
           }
         }
-
         // Find matching subIssues
         const matchedSubIds: number[] = issue.subIssues
           .filter((sub: SubIssue) => this.isTextMatching(text, sub.name))
           .map((sub: SubIssue) => sub.id);
-
         // Save matches
         if (matchedSubIds.length > 0) {
           this.selectedMap.set(issue.id, matchedSubIds);
