@@ -211,7 +211,6 @@ select.form-control {
   border-radius: 6px 6px 0 0 !important;
 }
 
-
 ::ng-deep .ck.ck-toolbar {
   flex-wrap: wrap !important;
 }
@@ -258,6 +257,7 @@ select.form-control {
   list-style: none;
   padding: 0;
   margin: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* item */

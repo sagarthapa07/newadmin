@@ -6,7 +6,6 @@ import {ViewEncapsulation} from'@angular/core';
 
 
 
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -21,7 +20,6 @@ import {ViewEncapsulation} from'@angular/core';
 
 export class App {
   protected readonly title = signal('us-admin');
-
   showHeader = true;
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {

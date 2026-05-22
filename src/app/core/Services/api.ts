@@ -35,8 +35,7 @@ import {
   providedIn: 'root',
 })
 export class Api {
-  // BASE URL
-
+  
   // OTHER APIs
   private uploadUrl =
     'https://2m3attvzvf.execute-api.us-east-1.amazonaws.com/US-Release-Domain-RestAPI-Live-UploadFile';

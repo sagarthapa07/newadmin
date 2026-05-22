@@ -27,12 +27,12 @@ import { FileUpload } from '../Services/file-upload';
 })
 export class CalendarDetails {
   objectKeys = Object.keys;
-  @ViewChild('editorOutlineElement') private editorOutline!: ElementRef<HTMLDivElement>;
-  @ViewChild('editorWordCountElement') private editorWordCount!: ElementRef<HTMLDivElement>;
-  @ViewChild('issueContainer') issueContainer!: ElementRef;
   @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
   @Input() data: GrantDetail | null = null;
   @Output() tabChange = new EventEmitter<number>();
+  @ViewChild('grantTypeContainer') grantTypeContainer!: ElementRef;
+  @ViewChild('grantDurationContainer') grantDurationContainer!: ElementRef;
+  @ViewChild('grantSizeContainer') grantSizeContainer!: ElementRef;
 
   key: any;
   public isBrowser = false;
@@ -47,11 +47,79 @@ export class CalendarDetails {
   selectedImage: any;
   resizeImages: any[] = [];
   uploadedImageUrl = '';
+  showGrantTypeDropdown = false;
+  selectedGrantType = '';
+  showGrantDurationDropdown = false;
+  selectedGrantDuration = '';
+  showGrantSizeDropdown = false;
+  selectedGrantSize = '';
+
+  grantTypeList = [
+    'Awards and Prizes',
+    'Endowment',
+    'Exhibition',
+    'Fellowship',
+    'Grant',
+    'In-Kind',
+    'Matching Grants',
+    'Program',
+    'Reimbursement',
+    'Scholarship',
+    'Seed Money or Start-up Grant',
+    'Training or Mentorship',
+    'Travel Grant',
+  ];
+
+  grantDurationList = [
+    'Less than 1 Year',
+    '1 Year',
+    '2 Year',
+    '3 Year',
+    '4 Year',
+    '5 Year',
+    '5–10 Years',
+    'more then 5 Years',
+    'more then 10 Years',
+    'Grant Duration Not Mentioned',
+  ];
+
+  grantSizeList = [
+    'Not Available',
+    'Less than $1000',
+    '$1000 to $10,000',
+    '$10,000 to $100,000',
+    '$100,000 to $500,000',
+    '$500,000 to $1 million',
+    'More than $1 million',
+    'Not Mentioned',
+    'Less than $50,000',
+    '$50,000 to $500,000',
+    '$500,000 to $1 Million',
+    '$1 Million to $50 Million',
+    '$50 Million to $100 Million',
+    'More than $100 Million',
+  ];
 
   @HostListener('document:mousedown', ['$event'])
   onClickOutside(event: MouseEvent) {
+    // Donor Dropdown
     if (this.dropdownContainer && !this.dropdownContainer.nativeElement.contains(event.target)) {
       this.showDropdown = false;
+    }
+    // Grant Type
+    if (this.grantTypeContainer && !this.grantTypeContainer.nativeElement.contains(event.target)) {
+      this.showGrantTypeDropdown = false;
+    }
+    // Grant Duration
+    if (
+      this.grantDurationContainer &&
+      !this.grantDurationContainer.nativeElement.contains(event.target)
+    ) {
+      this.showGrantDurationDropdown = false;
+    }
+    // Grant Size
+    if (this.grantSizeContainer && !this.grantSizeContainer.nativeElement.contains(event.target)) {
+      this.showGrantSizeDropdown = false;
     }
   }
 
@@ -99,6 +167,27 @@ export class CalendarDetails {
     this.router.navigate(['/preview']);
   }
 
+  selectDropdown(type: 'grantType' | 'grantDuration' | 'grantSize', item: string) {
+    this.opportunityForm.patchValue({
+      [type]: item,
+    });
+
+    if (type === 'grantType') {
+      this.selectedGrantType = item;
+      this.showGrantTypeDropdown = false;
+    }
+
+    if (type === 'grantDuration') {
+      this.selectedGrantDuration = item;
+      this.showGrantDurationDropdown = false;
+    }
+
+    if (type === 'grantSize') {
+      this.selectedGrantSize = item;
+      this.showGrantSizeDropdown = false;
+    }
+  }
+
   menuItems = [
     'Calender Details',
     'Geo Location',
@@ -117,6 +206,21 @@ export class CalendarDetails {
     if (this.data?.id) {
       this.fillForm(this.data);
     }
+    this.opportunityForm.get('title')?.valueChanges.subscribe((value) => {
+      if (this.data?.id) return;
+      const friendlyUrl = value
+        ?.toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+      this.opportunityForm.patchValue(
+        {
+          friendlyURLText: friendlyUrl,
+        },
+        { emitEvent: false },
+      );
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -162,6 +266,9 @@ export class CalendarDetails {
       entityString: data.entityString,
       stCtType: data.stCtType,
     });
+    this.selectedGrantType = data.grantType || '';
+    this.selectedGrantDuration = data.grantDuration || '';
+    this.selectedGrantSize = data.grantSize || '';
 
     const apiImage = data.grantLogoImage;
     if (apiImage) {
@@ -279,12 +386,11 @@ export class CalendarDetails {
         },
       };
       console.log('FINAL SAVE PAYLOAD', payload);
-      // =========================
-      // EDIT CASE
-      // =========================
+
+      // EDIT page
 
       if (this.data?.id) {
-        debugger
+        debugger;
         this.api.updateGrant(this.data.id, payload).subscribe({
           next: (res) => {
             console.log('UPDATE SUCCESS', res);
@@ -298,37 +404,24 @@ export class CalendarDetails {
           },
         });
       }
-      // =========================
-      // ADD NEW CASE
-      // =========================
+
+      // ADD NEW Page
       else {
-        debugger; 
-        this.api.insertGrant(payload).subscribe({
-          next: (res: any) => {
-            console.log('INSERT SUCCESS', res);
-            // NEW GRANT INDEX
-            const newGrantId = res?.grantIndex || res?.data?.grantIndex;
-            if (newGrantId) {
-              // IMPORTANT
-              this.data = {
-                ...payload.grantData,
-                id: newGrantId,
-              };
-              // RELOAD DETAILS
-              this.api.getGrantById(newGrantId).subscribe({
-                next: (detailRes) => {
-                  const mapped = detailRes.usGrantDataWithURL?.grantData;
-                  console.log('RELOADED', mapped);
-                  this.successMessage = 'Grant created successfully';
-                },
-              });
+        this.api.insertGrant(payload).subscribe(
+          (res: any) => {
+            debugger;
+            const grantId = res?.result?.grantIndex;
+            if (grantId) {
+              this.router.navigate(['/calendar-opportunity/edit', grantId]);
+            } else {
+              this.errorMessage = 'Grant ID not found';
             }
           },
-          error: (err) => {
+          (err) => {
             console.log(err);
             this.errorMessage = 'Insert failed';
           },
-        });
+        );
       }
     };
 
@@ -337,7 +430,6 @@ export class CalendarDetails {
     // =========================
 
     if (this.resizeImages?.length) {
-      debugger
       this.fileUploadService.uploadImages(this.resizeImages).subscribe({
         next: (res) => {
           console.log('UPLOAD SUCCESS', res);
@@ -365,10 +457,8 @@ export class CalendarDetails {
   }
 
   onImageCropped(images: any[]) {
-    debugger;
     if (!images?.length) return;
     const mainImage = images[0];
-    // IMPORTANT FIX
     mainImage.dirPath = 'img.USGrants/thumb-600-px/';
     this.opportunityForm.patchValue({
       img: mainImage.image,
@@ -377,7 +467,6 @@ export class CalendarDetails {
     this.previewUrl = mainImage.base64;
     this.fullImageUrl = mainImage.base64;
     console.log('FINAL IMAGE OBJECT', this.resizeImages);
-    debugger;
   }
 
   saveGrant(grantLogoImage: string) {
