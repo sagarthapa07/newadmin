@@ -2,12 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { SeoSocialComponent } from '../seo-social/seo-social';
-import { CountiesComponent } from '../counties/counties';
-import { FocusAreaComponent } from '../focus-areas/focus-areas';
-import { GeoLocationComponent } from '../geo-location/geo-location';
 import { Header } from '../../shared/component/header/header';
-import { FocusGroupsComponent } from '../focus-groups/focus-groups';
 import { CalendarDetails } from '../calendar-details/calendar-details';
 import { Api } from '../Services/api';
 import { GrantDetail } from '../../datatype';
@@ -19,12 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
   imports: [
     CommonModule,
     FormsModule,
-    SeoSocialComponent,
-    CountiesComponent,
-    FocusAreaComponent,
-    GeoLocationComponent,
     Header,
-    FocusGroupsComponent,
     CalendarDetails,
   ],
   templateUrl: './addnew-edit.html',

@@ -17,6 +17,7 @@ export interface GrantDetail {
   status: string;
   letterText: string;
   grantLogoImage: string;
+  stCtType?: string;
 }
 
 // ================== GRANT API RESPONSE ==================

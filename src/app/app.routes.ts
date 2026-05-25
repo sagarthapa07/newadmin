@@ -8,6 +8,7 @@ import { Preview } from './core/preview/preview';
 import { AuthGuard } from './core/guards/auth-guard';
 import { Dashboard } from './core/dashboard/dashboard';
 import { AddnewEdit } from './core/addnew-edit/addnew-edit';
+import { MemberModule } from './core/member-module/member-module';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -51,6 +52,11 @@ export const routes: Routes = [
   {
     path: 'calendar-opportunity/add-new',
     component: AddnewEdit,
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: 'premium-members/memberModule',
+    component: MemberModule,
     // canActivate: [AuthGuard]
   },
   
