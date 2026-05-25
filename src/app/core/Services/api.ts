@@ -35,7 +35,6 @@ import {
   providedIn: 'root',
 })
 export class Api {
-  
   // OTHER APIs
   private uploadUrl =
     'https://2m3attvzvf.execute-api.us-east-1.amazonaws.com/US-Release-Domain-RestAPI-Live-UploadFile';
@@ -68,9 +67,7 @@ export class Api {
     return this.http.post(`${environment.baseUrl}/USGrants/InsertUSGrants`, payload);
   }
 
-
   // SEARCH DONORS
-
 
   searchDonors(donorType: string, searchText: string): Observable<any> {
     return this.http.get<any>(
@@ -78,9 +75,7 @@ export class Api {
     );
   }
 
-
   // GEO LOCATION APIs
-
 
   getTownShips(): Observable<GetTownshipResponse> {
     return this.http.get<GetTownshipResponse>(`${environment.baseUrl}/TownShips/GetTownShips`);
@@ -225,6 +220,13 @@ export class Api {
 
   // STATES / COUNTIES APIs
 
+  updateGrantTags(id: number, payload: any) {
+    return this.http.post(`${environment.baseUrl}/USGrants/UpdateUSGrantsTags?id=${id}`, payload);
+  }
+  insertGrantStatesJSON(payload: any) {
+    return this.http.post(`${environment.baseUrl}/USGrantStates/InsertUSGrantStatesJSON`, payload);
+  }
+
   getAllStates(): Observable<GetStatesResponse> {
     return this.http.get<GetStatesResponse>(`${environment.baseUrl}/States/GetAllStates`);
   }
@@ -241,13 +243,7 @@ export class Api {
     );
   }
 
-  // Save states + counties
-  insertGrantStatesJSON(payload: { _USGrantStates: any[] }): Observable<ApiSuccessResponse> {
-    return this.http.post<ApiSuccessResponse>(
-      `${environment.baseUrl}/USGrantStates/InsertUSGrantStatesJSON`,
-      payload,
-    );
-  }
+
 
   insertGrantCounties(payload: any) {
     return this.http.post(

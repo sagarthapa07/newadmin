@@ -252,7 +252,7 @@
                   >
                     <input
                       type="checkbox"
-                      [checked]="multipleSelectedCounties[multipleActiveState]?.includes(county)"
+                      [checked]="selectedSubCounties[multipleActiveState]?.includes(county)"
                       (change)="
                         toggleMultipleCounty(multipleActiveState, county, $event.target.checked)
                       "
@@ -266,7 +266,7 @@
         </div>
 
         <!-- SELECTED RESULT (UNCHANGED AS REQUESTED) -->
-        <div class="row mt-4" *ngIf="multipleSelectedStates.length">
+        <div class="row mt-4" *ngIf="selectedState.length">
           <!-- HEADINGS -->
           <div class="col-md-3 col-12">
             <h6>State Name</h6>
@@ -277,16 +277,16 @@
           </div>
 
           <!-- DATA ROWS -->
-          <ng-container *ngFor="let state of multipleSelectedStates">
-            <div class="col-md-3 col-12 mt-3" *ngIf="multipleSelectedCounties[state]?.length">
+          <ng-container *ngFor="let state of selectedState">
+            <div class="col-md-3 col-12 mt-3" *ngIf="selectedSubCounties[state]?.length">
               <span class="chip state-chip">
                 {{ state }}
                 <span class="remove" (click)="removeMultipleState(state)"> × </span>
               </span>
             </div>
 
-            <div class="col-md-9 col-12 mt-3" *ngIf="multipleSelectedCounties[state]?.length">
-              <span class="chip" *ngFor="let county of multipleSelectedCounties[state]">
+            <div class="col-md-9 col-12 mt-3" *ngIf="selectedSubCounties[state]?.length">
+              <span class="chip" *ngFor="let county of selectedSubCounties[state]">
                 {{ county }} County, {{ state }}
 
                 <span class="remove" (click)="removeMultipleCounty(state, county)"> × </span>

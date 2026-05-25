@@ -13,7 +13,7 @@ import { AlertMessage } from '../../shared/component/alert-message/alert-message
   templateUrl: './counties.html',
   styleUrl: './counties.scss',
 })
-export class CountiesComponent implements OnInit, OnChanges {
+export class CountiesComponent implements OnInit {
   @Input() grantId?: number;
   @Output() tabChange = new EventEmitter<number>();
 
@@ -33,8 +33,8 @@ export class CountiesComponent implements OnInit, OnChanges {
   selectedState: string[] = [];
   selectedSubCounties: Record<string, string[]> = {};
 
-  multipleSelectedStates: string[] = [];
-  multipleSelectedCounties: Record<string, string[]> = {};
+  // selectedState: string[] = [];
+  // multipleSelectedCounties: Record<string, string[]> = {};
   multipleActiveState: string | null = null;
 
   // stateIndex map — save ke waqt chahiye hoga
@@ -96,17 +96,17 @@ export class CountiesComponent implements OnInit, OnChanges {
 
   // ngOnChanges se loadSavedCounties HATAAO
 
-  ngOnChanges(): void {
-    // grantId baad mein aaye toh bhi kaam kare
-    if (this.grantId && this.multipleStatesDropdown.data.length) {
-      this.loadSavedCounties();
-    }
-  }
+  // ngOnChanges(): void {
+  //   // grantId baad mein aaye toh bhi kaam kare
+  //   if (this.grantId && this.multipleStatesDropdown.data.length) {
+  //     this.loadSavedCounties();
+  //   }
+  // }
 
   checkIfFullState(state: string): boolean {
     const all = this.countiySubCountyMap[state] || [];
 
-    const selected = this.multipleSelectedCounties[state] || [];
+    const selected = this.selectedSubCounties[state] || [];
 
     return all.length > 0 && all.length === selected.length;
   }
@@ -116,8 +116,8 @@ export class CountiesComponent implements OnInit, OnChanges {
       next: (res) => {
         const data: any[] = res.temp || [];
         if (!data.length) return;
-        this.multipleSelectedStates = [];
-        this.multipleSelectedCounties = {};
+        this.selectedState = [];
+        this.selectedSubCounties = {};
         this.countiySubCountyMap = {};
         data.forEach((item) => {
           const stateName = item.stateName;
@@ -125,13 +125,15 @@ export class CountiesComponent implements OnInit, OnChanges {
           const countyIndex = item.countyIndex;
           this.stateIndexMap[stateName] = item.stateIndex;
           this.countyIndexMap[`${countyName}||${stateName}`] = countyIndex;
-          if (!this.multipleSelectedStates.includes(stateName)) {
-            this.multipleSelectedStates.push(stateName);
+          if (!this.selectedState.includes(stateName)) {
+            this.selectedState.push(stateName);
           }
-          if (!this.multipleSelectedCounties[stateName]) {
-            this.multipleSelectedCounties[stateName] = [];
+          if (!this.selectedSubCounties[stateName]) {
+            this.selectedSubCounties[stateName] = [];
           }
-          this.multipleSelectedCounties[stateName].push(countyName);
+          if (!this.selectedSubCounties[stateName].includes(countyName)) {
+            this.selectedSubCounties[stateName].push(countyName);
+          }
           if (!this.countiySubCountyMap[stateName]) {
             this.countiySubCountyMap[stateName] = [];
           }
@@ -141,14 +143,14 @@ export class CountiesComponent implements OnInit, OnChanges {
         });
 
         this.multipleStatesDropdown.selected = this.multipleStatesDropdown.data.filter((item) =>
-          this.multipleSelectedStates.includes(item.item_text),
+          this.selectedState.includes(item.item_text),
         );
 
-        this.multipleSelectedStates.forEach((state) => {
+        this.selectedState.forEach((state) => {
           this.loadCountiesForState(state);
         });
 
-        const lastState = this.multipleSelectedStates.slice(-1)[0];
+        const lastState = this.selectedState.slice(-1)[0];
 
         if (lastState) {
           this.multipleActiveState = lastState;
@@ -156,18 +158,18 @@ export class CountiesComponent implements OnInit, OnChanges {
 
         const totalStates = this.multipleStatesDropdown.data.length;
 
-        const selectedStatesCount = this.multipleSelectedStates.length;
+        const selectedStatesCount = this.selectedState.length;
 
         const allStatesSelected = selectedStatesCount === totalStates;
 
-        const allStatesFullSelected = this.multipleSelectedStates.every((state) =>
+        const allStatesFullSelected = this.selectedState.every((state) =>
           this.checkIfFullState(state),
         );
         if (allStatesSelected && allStatesFullSelected) {
           this.grantMode = 'all';
         } else if (selectedStatesCount === 1) {
           this.grantMode = 'single';
-          const state = this.multipleSelectedStates[0];
+          const state = this.selectedState[0];
           this.countiesKeyDropDowns.states.selected = [
             {
               item_id: this.stateIndexMap[state],
@@ -177,7 +179,7 @@ export class CountiesComponent implements OnInit, OnChanges {
           this.selectedState = [state];
           this.activeStatesForCounties = state;
           this.loadCountiesForState(state, () => {
-            this.selectedSubCounties[state] = [...(this.multipleSelectedCounties[state] || [])];
+            this.selectedSubCounties[state] = [...(this.selectedSubCounties[state] || [])];
             this.singleFullStateMode = this.checkIfFullState(state);
           });
         } else {
@@ -235,8 +237,8 @@ export class CountiesComponent implements OnInit, OnChanges {
 
     const stateObj: DropdownItem = selected[0];
     const stateName = stateObj.item_text;
-    if (!this.multipleSelectedStates.includes(stateName)) {
-      this.multipleSelectedStates.push(stateName);
+    if (!this.selectedState.includes(stateName)) {
+      this.selectedState.push(stateName);
     }
 
     this.activeStatesForCounties = stateName;
@@ -266,59 +268,55 @@ export class CountiesComponent implements OnInit, OnChanges {
     const lastSelected: DropdownItem = selected[selected.length - 1];
     const stateName = lastSelected.item_text;
 
-    this.multipleSelectedStates = selected.map((i: DropdownItem) => i.item_text);
+    this.selectedState = selected.map((i: DropdownItem) => i.item_text);
     this.multipleActiveState = stateName;
 
     // Counties load karo — grid ke liye
     this.loadCountiesForState(stateName);
 
-    if (!this.multipleSelectedCounties[stateName]) {
-      this.multipleSelectedCounties[stateName] = [];
+    if (!this.selectedSubCounties[stateName]) {
+      this.selectedSubCounties[stateName] = [];
     }
   }
 
   toggleMultipleCounty(state: string, county: string, checked: boolean) {
-    if (!this.multipleSelectedCounties[state]) {
-      this.multipleSelectedCounties[state] = [];
+    if (!this.selectedSubCounties[state]) {
+      this.selectedSubCounties[state] = [];
     }
 
     if (checked) {
-      if (!this.multipleSelectedCounties[state].includes(county)) {
-        this.multipleSelectedCounties[state].push(county);
+      if (!this.selectedSubCounties[state].includes(county)) {
+        this.selectedSubCounties[state].push(county);
       }
     } else {
-      this.multipleSelectedCounties[state] = this.multipleSelectedCounties[state].filter(
-        (c) => c !== county,
-      );
+      this.selectedSubCounties[state] = this.selectedSubCounties[state].filter((c) => c !== county);
     }
 
-    if (this.multipleSelectedCounties[state].length === 0) {
-      this.multipleSelectedStates = this.multipleSelectedStates.filter((s) => s !== state);
-      delete this.multipleSelectedCounties[state];
+    if (this.selectedSubCounties[state].length === 0) {
+      this.selectedState = this.selectedState.filter((s) => s !== state);
+      delete this.selectedSubCounties[state];
       this.multipleStatesDropdown.selected = this.multipleStatesDropdown.selected.filter(
         (item: DropdownItem) => item.item_text !== state,
       );
 
-      this.multipleActiveState = this.multipleSelectedStates.slice(-1)[0] || null;
+      this.multipleActiveState = this.selectedState.slice(-1)[0] || null;
     }
   }
 
   onMultipleToggleChange(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     this.multipleFullStateMode = checked;
-    this.multipleSelectedStates.forEach((state) => {
-      this.multipleSelectedCounties[state] = checked
-        ? [...(this.countiySubCountyMap[state] || [])]
-        : [];
+    this.selectedState.forEach((state) => {
+      this.selectedSubCounties[state] = checked ? [...(this.countiySubCountyMap[state] || [])] : [];
     });
   }
-
-  // ================= COMMON =================
 
   toggleCounty(state: string, county: string, checked: boolean) {
     if (!this.selectedSubCounties[state]) this.selectedSubCounties[state] = [];
     if (checked) {
-      this.selectedSubCounties[state].push(county);
+      if (!this.selectedSubCounties[state].includes(county)) {
+        this.selectedSubCounties[state].push(county);
+      }
     } else {
       this.selectedSubCounties[state] = this.selectedSubCounties[state].filter((c) => c !== county);
     }
@@ -327,15 +325,13 @@ export class CountiesComponent implements OnInit, OnChanges {
   clearAllSelections() {
     this.selectedState = [];
     this.selectedSubCounties = {};
-    this.multipleSelectedStates = [];
-    this.multipleSelectedCounties = {};
+    this.selectedState = [];
+    this.selectedSubCounties = {};
     this.countiesKeyDropDowns.states.selected = [];
     this.multipleStatesDropdown.selected = [];
     this.multipleActiveState = null;
     this.activeStatesForCounties = null;
   }
-
-  // ================= PASTE =================
 
   generateCountiesFromText() {
     const text = this.pasteText.toLowerCase();
@@ -353,9 +349,6 @@ export class CountiesComponent implements OnInit, OnChanges {
     this.selectedSubCounties[state] = [...this.countiySubCountyMap[state]];
     this.showPasteModal = false;
   }
-
-  // ================= SINGLE HELPERS =================
-
   removeState(state: string) {
     this.selectedState = this.selectedState.filter((s) => s !== state);
     delete this.selectedSubCounties[state];
@@ -380,51 +373,64 @@ export class CountiesComponent implements OnInit, OnChanges {
     this.selectedSubCounties[state] = checked ? [...(this.countiySubCountyMap[state] || [])] : [];
   }
 
-  // ================= MULTIPLE HELPERS =================
-
   removeMultipleState(state: string) {
-    this.multipleSelectedStates = this.multipleSelectedStates.filter((s) => s !== state);
-    delete this.multipleSelectedCounties[state];
+    this.selectedState = this.selectedState.filter((s) => s !== state);
+    delete this.selectedSubCounties[state];
     if (this.multipleActiveState === state) {
-      this.multipleActiveState = this.multipleSelectedStates.slice(-1)[0] || null;
+      this.multipleActiveState = this.selectedState.slice(-1)[0] || null;
     }
   }
 
   removeMultipleCounty(state: string, county: string) {
-    this.multipleSelectedCounties[state] =
-      this.multipleSelectedCounties[state]?.filter((c) => c !== county) || [];
+    this.selectedSubCounties[state] =
+      this.selectedSubCounties[state]?.filter((c) => c !== county) || [];
   }
 
   isAllMultipleCountiesSelected(state: string): boolean {
     const all = this.countiySubCountyMap[state] || [];
-    const selected = this.multipleSelectedCounties[state] || [];
+    const selected = this.selectedSubCounties[state] || [];
     return all.length > 0 && all.length === selected.length;
   }
 
   toggleSelectAllMultiple(state: string, checked: boolean) {
     if (checked) {
-      this.multipleSelectedCounties[state] = [...(this.countiySubCountyMap[state] || [])];
+      this.selectedSubCounties[state] = [...(this.countiySubCountyMap[state] || [])];
     } else {
-      this.multipleSelectedCounties[state] = [];
-      this.multipleSelectedStates = this.multipleSelectedStates.filter((s) => s !== state);
-      delete this.multipleSelectedCounties[state];
+      this.selectedSubCounties[state] = [];
+      this.selectedState = this.selectedState.filter((s) => s !== state);
+      delete this.selectedSubCounties[state];
       this.multipleStatesDropdown.selected = this.multipleStatesDropdown.selected.filter(
         (item: DropdownItem) => item.item_text !== state,
       );
-      this.multipleActiveState = this.multipleSelectedStates.slice(-1)[0] || null;
+      this.multipleActiveState = this.selectedState.slice(-1)[0] || null;
     }
   }
-
-  // ================= SAVE =================
 
   saveStatesAndCounties(): void {
     if (!this.grantId) return;
 
     const usGrantCounties: any[] = [];
+    const USGrantStates: any[] = [];
+
+    const addedStates = new Set<string>();
 
     const buildPayload = (state: string, counties: string[]) => {
       const stateIndex = this.stateIndexMap[state] ?? 0;
 
+      // STATES PAYLOAD
+      if (!addedStates.has(state)) {
+        addedStates.add(state);
+
+        USGrantStates.push({
+          countryIndex: 230,
+          grantIndex: this.grantId,
+          recordIndex: 0,
+          stateIndex: stateIndex,
+          stateName: state,
+        });
+      }
+
+      // COUNTIES PAYLOAD
       counties.forEach((county) => {
         const countyIndex = this.countyIndexMap[`${county}||${state}`] ?? 0;
 
@@ -452,8 +458,8 @@ export class CountiesComponent implements OnInit, OnChanges {
 
     // MULTIPLE
     if (this.grantMode === 'multiple') {
-      this.multipleSelectedStates.forEach((state) => {
-        buildPayload(state, this.multipleSelectedCounties[state] || []);
+      this.selectedState.forEach((state) => {
+        buildPayload(state, this.selectedSubCounties[state] || []);
       });
     }
 
@@ -464,30 +470,66 @@ export class CountiesComponent implements OnInit, OnChanges {
       });
     }
 
-    const payload = {
+    // TAGS API PAYLOAD
+    const tagsPayload = {
+      memberIndex: this.grantId,
+    };
+
+    // STATES PAYLOAD
+    const statesPayload = {
+      USGrantStates,
       grantIndex: this.grantId,
-      usGrantCounties: usGrantCounties,
+      userEmail: 'ritu@fundsforngos.org',
+      userIndex: 5,
+    };
+
+    // COUNTIES PAYLOAD
+    const countiesPayload = {
+      grantIndex: this.grantId,
+      usGrantCounties,
       userIndex: 5,
       userEmail: 'ritu@fundsforngos.org',
     };
 
-    console.log('FINAL PAYLOAD:', payload);
+    console.log('TAGS PAYLOAD', tagsPayload);
+    console.log('STATES PAYLOAD', statesPayload);
+    console.log('COUNTIES PAYLOAD', countiesPayload);
 
-    this.api.insertGrantCounties(payload).subscribe({
-      next: (res) => {
-        console.log('SAVE SUCCESS', res);
-        this.successMessage = 'Counties saved successfully';
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 4000);
+    // API CHAIN
+    this.api.updateGrantTags(this.grantId, tagsPayload).subscribe({
+      next: () => {
+        console.log('TAGS UPDATED');
+
+        this.api.insertGrantStatesJSON(statesPayload).subscribe({
+          next: () => {
+            console.log('STATES SAVED');
+
+            this.api.insertGrantCounties(countiesPayload).subscribe({
+              next: () => {
+                console.log('COUNTIES SAVED');
+
+                this.successMessage = 'States & Counties saved successfully';
+
+                setTimeout(() => {
+                  this.successMessage = '';
+                }, 4000);
+              },
+
+              error: (err) => {
+                console.error('COUNTIES SAVE ERROR', err);
+                this.errorMessage = 'Counties save failed';
+              },
+            });
+          },
+          error: (err) => {
+            console.error('STATES SAVE ERROR', err);
+            this.errorMessage = 'States save failed';
+          },
+        });
       },
-
       error: (err) => {
-        console.error('SAVE ERROR', err);
-        this.errorMessage = 'Save failed';
-        setTimeout(() => {
-          this.errorMessage = '';
-        }, 4000);
+        console.error('TAGS UPDATE ERROR', err);
+        this.errorMessage = 'Tags update failed';
       },
     });
   }
