@@ -243,8 +243,6 @@ export class Api {
     );
   }
 
-
-
   insertGrantCounties(payload: any) {
     return this.http.post(
       `${environment.baseUrl}/USGrantCounties/InsertUSGrantCountiesJSON`,

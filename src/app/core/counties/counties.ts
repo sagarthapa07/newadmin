@@ -15,6 +15,8 @@ import { AlertMessage } from '../../shared/component/alert-message/alert-message
 })
 export class CountiesComponent implements OnInit {
   @Input() grantId?: number;
+  @Input() stCtType?: string;
+  @Input() stateString?: string;
   @Output() tabChange = new EventEmitter<number>();
 
   constructor(private api: Api) {}
@@ -32,16 +34,12 @@ export class CountiesComponent implements OnInit {
 
   selectedState: string[] = [];
   selectedSubCounties: Record<string, string[]> = {};
-
-  // selectedState: string[] = [];
-  // multipleSelectedCounties: Record<string, string[]> = {};
   multipleActiveState: string | null = null;
 
   // stateIndex map — save ke waqt chahiye hoga
   stateIndexMap: Record<string, number> = {};
-  countyIndexMap: Record<string, number> = {}; // "countyName||stateName" -> countyIndex
-  countryIndex = 230; // US hardcoded
-
+  countyIndexMap: Record<string, number> = {};
+  countryIndex = 230;
   countiesKeyDropDowns: {
     states: { label: string; data: DropdownItem[]; selected: DropdownItem[] };
   } = {
@@ -94,21 +92,8 @@ export class CountiesComponent implements OnInit {
     });
   }
 
-  // ngOnChanges se loadSavedCounties HATAAO
-
-  // ngOnChanges(): void {
-  //   // grantId baad mein aaye toh bhi kaam kare
-  //   if (this.grantId && this.multipleStatesDropdown.data.length) {
-  //     this.loadSavedCounties();
-  //   }
-  // }
-
   checkIfFullState(state: string): boolean {
-    const all = this.countiySubCountyMap[state] || [];
-
-    const selected = this.selectedSubCounties[state] || [];
-
-    return all.length > 0 && all.length === selected.length;
+    return false;
   }
 
   loadSavedCounties(): void {
@@ -156,35 +141,50 @@ export class CountiesComponent implements OnInit {
           this.multipleActiveState = lastState;
         }
 
+        // ALL STATES CHECK FROM API
+
+        const isAllStatesType = this.stCtType === '[ALL STATES]-[ALL COUNTIES]';
+
         const totalStates = this.multipleStatesDropdown.data.length;
 
-        const selectedStatesCount = this.selectedState.length;
+        // stateString parse
+        const stateStringList =
+          this.stateString?.split('-').map((s) => s.replace('[', '').replace(']', '').trim()) || [];
 
-        const allStatesSelected = selectedStatesCount === totalStates;
+        // verify all states count
+        const hasAllStates = stateStringList.length === totalStates;
 
-        const allStatesFullSelected = this.selectedState.every((state) =>
-          this.checkIfFullState(state),
-        );
-        if (allStatesSelected && allStatesFullSelected) {
+        // ALL STATES
+        if (isAllStatesType && hasAllStates) {
           this.grantMode = 'all';
-        } else if (selectedStatesCount === 1) {
+        }
+
+        // SINGLE STATE
+        else if (this.selectedState.length === 1) {
           this.grantMode = 'single';
+
           const state = this.selectedState[0];
+
           this.countiesKeyDropDowns.states.selected = [
             {
               item_id: this.stateIndexMap[state],
               item_text: state,
             },
           ];
-          this.selectedState = [state];
+
           this.activeStatesForCounties = state;
+
           this.loadCountiesForState(state, () => {
             this.selectedSubCounties[state] = [...(this.selectedSubCounties[state] || [])];
-            this.singleFullStateMode = this.checkIfFullState(state);
+
+            this.singleFullStateMode = false;
           });
-        } else {
+        }
+
+        else {
           this.grantMode = 'multiple';
-          this.multipleFullStateMode = allStatesFullSelected;
+
+          this.multipleFullStateMode = false;
         }
       },
       error: (err) => {
@@ -198,9 +198,7 @@ export class CountiesComponent implements OnInit {
     if (!stateId) return;
     this.api.getCountiesByState(stateId).subscribe((res: GetCountiesResponse) => {
       const counties = res.usgeoCounties || [];
-
       this.countiySubCountyMap[stateName] = counties.map((c: County) => c.countyName);
-
       counties.forEach((c: County) => {
         this.countyIndexMap[`${c.countyName}||${stateName}`] = c.countyIndex;
       });
@@ -253,8 +251,11 @@ export class CountiesComponent implements OnInit {
     const checked = (event.target as HTMLInputElement).checked;
     this.singleFullStateMode = checked;
     const state = this.activeStatesForCounties;
+
     if (!state) return;
-    this.selectedSubCounties[state] = checked ? [...(this.countiySubCountyMap[state] || [])] : [];
+    if (checked) {
+      this.selectedSubCounties[state] = [];
+    }
   }
 
   onMultipleStateChange() {
@@ -306,9 +307,11 @@ export class CountiesComponent implements OnInit {
   onMultipleToggleChange(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     this.multipleFullStateMode = checked;
-    this.selectedState.forEach((state) => {
-      this.selectedSubCounties[state] = checked ? [...(this.countiySubCountyMap[state] || [])] : [];
-    });
+    if (checked) {
+      this.selectedState.forEach((state) => {
+        this.selectedSubCounties[state] = [];
+      });
+    }
   }
 
   toggleCounty(state: string, county: string, checked: boolean) {
@@ -414,10 +417,9 @@ export class CountiesComponent implements OnInit {
 
     const addedStates = new Set<string>();
 
-    const buildPayload = (state: string, counties: string[]) => {
+    const buildStatePayload = (state: string) => {
       const stateIndex = this.stateIndexMap[state] ?? 0;
 
-      // STATES PAYLOAD
       if (!addedStates.has(state)) {
         addedStates.add(state);
 
@@ -429,8 +431,11 @@ export class CountiesComponent implements OnInit {
           stateName: state,
         });
       }
+    };
 
-      // COUNTIES PAYLOAD
+    const buildCountyPayload = (state: string, counties: string[]) => {
+      const stateIndex = this.stateIndexMap[state] ?? 0;
+
       counties.forEach((county) => {
         const countyIndex = this.countyIndexMap[`${county}||${state}`] ?? 0;
 
@@ -452,27 +457,71 @@ export class CountiesComponent implements OnInit {
       const state = this.selectedState[0];
 
       if (state) {
-        buildPayload(state, this.selectedSubCounties[state] || []);
+        // STATE PAYLOAD ALWAYS
+        buildStatePayload(state);
+
+        // COUNTIES ONLY WHEN FULL STATE OFF
+        if (!this.singleFullStateMode) {
+          buildCountyPayload(state, this.selectedSubCounties[state] || []);
+        }
       }
     }
 
     // MULTIPLE
     if (this.grantMode === 'multiple') {
       this.selectedState.forEach((state) => {
-        buildPayload(state, this.selectedSubCounties[state] || []);
+        // STATE PAYLOAD
+        buildStatePayload(state);
+
+        // COUNTIES ONLY WHEN TOGGLE OFF
+        if (!this.multipleFullStateMode) {
+          buildCountyPayload(state, this.selectedSubCounties[state] || []);
+        }
       });
     }
 
     // ALL
     if (this.grantMode === 'all') {
       Object.keys(this.countiySubCountyMap).forEach((state) => {
-        buildPayload(state, this.countiySubCountyMap[state] || []);
+        buildStatePayload(state);
+        buildCountyPayload(state, this.countiySubCountyMap[state] || []);
       });
     }
 
     // TAGS API PAYLOAD
+    const fullStateMode = this.singleFullStateMode || this.multipleFullStateMode;
+
+    // STATE STRING
+    const stateString = this.selectedState
+      .map((state) => {
+        // FULL STATE
+        if (fullStateMode) {
+          return `{${state}}`;
+        }
+
+        // MIXED COUNTIES
+        return `[${state}]`;
+      })
+      .join('-');
+
+    // COUNTY STRING
+    const countyString = fullStateMode
+      ? ''
+      : Object.entries(this.selectedSubCounties)
+          .flatMap(([state, counties]) => counties.map((county) => `[${county}]`))
+          .join('-');
+
+    // STCT TYPE
+    const stCtType = fullStateMode ? '[SELECTED STATES]' : '[SELECTED STATES]-[MIXED COUNTIES]';
+
+    // FINAL TAGS PAYLOAD
     const tagsPayload = {
-      memberIndex: this.grantId,
+      CountyString: countyString,
+      GrantIndex: this.grantId?.toString(),
+      StCtType: stCtType,
+      StateString: stateString,
+      userEmail: 'ritu@fundsforngos.org',
+      userIndex: 5,
     };
 
     // STATES PAYLOAD
