@@ -313,7 +313,6 @@ export class CalendarDetails {
       return;
     }
     this.api.searchDonors('DU', value).subscribe((res) => {
-      console.log(res);
       this.donorList = res?.donorsList?.slice(0, 10) || [];
       this.showDropdown = true;
     });
@@ -385,7 +384,6 @@ export class CalendarDetails {
           friendlyURLText: form.friendlyURLText,
         },
       };
-      console.log('FINAL SAVE PAYLOAD', payload);
 
       // EDIT page
 
@@ -393,13 +391,10 @@ export class CalendarDetails {
         debugger;
         this.api.updateGrant(this.data.id, payload).subscribe({
           next: (res) => {
-            console.log('UPDATE SUCCESS', res);
-
             this.successMessage = 'Grant updated successfully';
           },
           error: (err) => {
             console.log(err);
-
             this.errorMessage = 'Update failed';
           },
         });
@@ -432,8 +427,6 @@ export class CalendarDetails {
     if (this.resizeImages?.length) {
       this.fileUploadService.uploadImages(this.resizeImages).subscribe({
         next: (res) => {
-          console.log('UPLOAD SUCCESS', res);
-
           if (res.successCode === 1) {
             // uploaded image path
             const uploadedImagePath = res.filePath || res.data || '';
@@ -447,7 +440,6 @@ export class CalendarDetails {
 
         error: (err) => {
           console.log('UPLOAD ERROR', err);
-
           this.errorMessage = 'Image upload failed';
         },
       });
@@ -466,7 +458,6 @@ export class CalendarDetails {
     this.resizeImages = [mainImage];
     this.previewUrl = mainImage.base64;
     this.fullImageUrl = mainImage.base64;
-    console.log('FINAL IMAGE OBJECT', this.resizeImages);
   }
 
   saveGrant(grantLogoImage: string) {

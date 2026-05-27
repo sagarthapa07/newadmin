@@ -18,6 +18,10 @@ export interface GrantDetail {
   letterText: string;
   grantLogoImage: string;
   stCtType?: string;
+  stateString?: string; 
+  countyString?: string; 
+  issueString?: string;
+  entityString?: string;
 }
 
 // ================== GRANT API RESPONSE ==================

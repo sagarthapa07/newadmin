@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
@@ -17,9 +24,13 @@ export class CountiesComponent implements OnInit {
   @Input() grantId?: number;
   @Input() stCtType?: string;
   @Input() stateString?: string;
+  @Input() countyString?: string;
   @Output() tabChange = new EventEmitter<number>();
 
-  constructor(private api: Api) {}
+  constructor(
+    private api: Api,
+    private cd: ChangeDetectorRef,
+  ) {}
 
   showPasteModal = false;
   pasteText = '';
@@ -40,6 +51,11 @@ export class CountiesComponent implements OnInit {
   stateIndexMap: Record<string, number> = {};
   countyIndexMap: Record<string, number> = {};
   countryIndex = 230;
+  singleStateDropdown: { data: DropdownItem[]; selected: DropdownItem[] } = {
+    data: [],
+    selected: [],
+  };
+
   countiesKeyDropDowns: {
     states: { label: string; data: DropdownItem[]; selected: DropdownItem[] };
   } = {
@@ -73,7 +89,6 @@ export class CountiesComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.getAllStates().subscribe((res: any) => {
-      console.log('FULL RESPONSE', JSON.stringify(res, null, 2)); // pehle ye dekho
       const states = res.states || [];
       const mapped = states.map((s: State) => ({
         item_id: s.stateIndex,
@@ -81,110 +96,115 @@ export class CountiesComponent implements OnInit {
       }));
       this.countiesKeyDropDowns.states.data = [...mapped];
       this.multipleStatesDropdown.data = [...mapped];
+      this.singleStateDropdown.data = [...mapped];
       states.forEach((s: State) => {
         this.stateIndexMap[s.stateName] = s.stateIndex;
       });
-
-      // States load hone KE BAAD counties load karo
       if (this.grantId) {
         this.loadSavedCounties();
       }
     });
   }
 
-  checkIfFullState(state: string): boolean {
-    return false;
-  }
-
   loadSavedCounties(): void {
     this.api.getSelectedCounties(this.grantId!).subscribe({
       next: (res) => {
-        const data: any[] = res.temp || [];
-        if (!data.length) return;
-        this.selectedState = [];
-        this.selectedSubCounties = {};
-        this.countiySubCountyMap = {};
-        data.forEach((item) => {
-          const stateName = item.stateName;
-          const countyName = item.countyName;
-          const countyIndex = item.countyIndex;
-          this.stateIndexMap[stateName] = item.stateIndex;
-          this.countyIndexMap[`${countyName}||${stateName}`] = countyIndex;
-          if (!this.selectedState.includes(stateName)) {
-            this.selectedState.push(stateName);
-          }
-          if (!this.selectedSubCounties[stateName]) {
-            this.selectedSubCounties[stateName] = [];
-          }
-          if (!this.selectedSubCounties[stateName].includes(countyName)) {
-            this.selectedSubCounties[stateName].push(countyName);
-          }
-          if (!this.countiySubCountyMap[stateName]) {
-            this.countiySubCountyMap[stateName] = [];
-          }
-          if (!this.countiySubCountyMap[stateName].includes(countyName)) {
-            this.countiySubCountyMap[stateName].push(countyName);
-          }
-        });
-
-        this.multipleStatesDropdown.selected = this.multipleStatesDropdown.data.filter((item) =>
-          this.selectedState.includes(item.item_text),
-        );
-
-        this.selectedState.forEach((state) => {
-          this.loadCountiesForState(state);
-        });
-
-        const lastState = this.selectedState.slice(-1)[0];
-
-        if (lastState) {
-          this.multipleActiveState = lastState;
-        }
-
-        // ALL STATES CHECK FROM API
-
-        const isAllStatesType = this.stCtType === '[ALL STATES]-[ALL COUNTIES]';
-
-        const totalStates = this.multipleStatesDropdown.data.length;
-
-        // stateString parse
-        const stateStringList =
-          this.stateString?.split('-').map((s) => s.replace('[', '').replace(']', '').trim()) || [];
-
-        // verify all states count
-        const hasAllStates = stateStringList.length === totalStates;
-
-        // ALL STATES
-        if (isAllStatesType && hasAllStates) {
+        // STEP 1 — ALL STATES
+        if (this.stCtType === '[ALL STATES]-[ALL COUNTIES]') {
           this.grantMode = 'all';
+          return;
         }
 
-        // SINGLE STATE
-        else if (this.selectedState.length === 1) {
+        // STEP 2 — SELECTED STATES
+        const isSelectedStates =
+          this.stCtType === '[SELECTED STATES]-[MIXED COUNTIES]' ||
+          this.stCtType === '[SELECTED STATES]-[SELECTED COUNTIES]';
+
+        if (!isSelectedStates) return;
+
+        // stateString se tokens nikalo
+        const stateTokens = this.stateString?.match(/[\[\{][^\]\}]+[\]\}]/g) || [];
+
+        // countyString se countyMap banao
+        const countyTokens =
+          this.countyString?.match(/\[([^\]]+)\]/g)?.map((t) => t.slice(1, -1).trim()) || [];
+
+        const countyMap: Record<string, string[]> = {};
+        countyTokens.forEach((token) => {
+          const lastComma = token.lastIndexOf(',');
+          if (lastComma === -1) return;
+          const countyName = token.slice(0, lastComma).trim();
+          const stateName = token.slice(lastComma + 1).trim();
+          if (!countyMap[stateName]) countyMap[stateName] = [];
+          // "Baldwin County, Alabama" format mein save karo — grid se match karega
+          countyMap[stateName].push(`${countyName}, ${stateName}`);
+        });
+
+        // har token se state naam nikalo — order maintain karo
+        const allStateNames = stateTokens.map((t) => t.slice(1, -1).trim());
+        const hasCounties = !!this.countyString;
+
+        // selectedState set karo
+        this.selectedState = [...allStateNames];
+
+        // SINGLE
+        if (allStateNames.length === 1) {
           this.grantMode = 'single';
-
-          const state = this.selectedState[0];
-
-          this.countiesKeyDropDowns.states.selected = [
-            {
-              item_id: this.stateIndexMap[state],
-              item_text: state,
-            },
+          const state = allStateNames[0];
+          this.activeStatesForCounties = state;
+          this.singleStateDropdown.selected = [
+            { item_id: this.stateIndexMap[state], item_text: state },
           ];
 
-          this.activeStatesForCounties = state;
-
-          this.loadCountiesForState(state, () => {
-            this.selectedSubCounties[state] = [...(this.selectedSubCounties[state] || [])];
-
+          if (hasCounties) {
             this.singleFullStateMode = false;
-          });
-        }
+            this.loadCountiesForState(state, () => {
+              this.selectedSubCounties[state] = countyMap[state] || [];
+              this.cd.detectChanges();
+            });
+          } else {
+            this.singleFullStateMode = true;
+            this.selectedSubCounties[state] = [];
+            this.loadCountiesForState(state);
+          }
 
-        else {
+          // MULTIPLE
+        } else {
           this.grantMode = 'multiple';
 
-          this.multipleFullStateMode = false;
+          // dropdown selected set karo
+          this.multipleStatesDropdown.selected = this.multipleStatesDropdown.data.filter((item) =>
+            allStateNames.includes(item.item_text),
+          );
+
+          if (!hasCounties) {
+            // Full State — saari states, koi county nahi
+            this.multipleFullStateMode = true;
+            allStateNames.forEach((state) => {
+              this.selectedSubCounties[state] = [];
+              this.loadCountiesForState(state);
+            });
+            // pehli state grid mein active karo
+            this.multipleActiveState = allStateNames[0];
+          } else {
+            // With Counties
+            this.multipleFullStateMode = false;
+
+            // pehle saari states ka countySubCountyMap load karo
+            // jab pehli state load ho tab active karo
+            let firstLoaded = false;
+            allStateNames.forEach((state) => {
+              this.loadCountiesForState(state, () => {
+                this.selectedSubCounties[state] = countyMap[state] || [];
+                // pehli state jo load ho woh active ho
+                if (!firstLoaded) {
+                  firstLoaded = true;
+                  this.multipleActiveState = state;
+                }
+                this.cd.detectChanges();
+              });
+            });
+          }
         }
       },
       error: (err) => {
@@ -205,6 +225,7 @@ export class CountiesComponent implements OnInit {
       if (callback) {
         callback();
       }
+      this.cd.detectChanges();
     });
   }
 
@@ -280,30 +301,6 @@ export class CountiesComponent implements OnInit {
     }
   }
 
-  toggleMultipleCounty(state: string, county: string, checked: boolean) {
-    if (!this.selectedSubCounties[state]) {
-      this.selectedSubCounties[state] = [];
-    }
-
-    if (checked) {
-      if (!this.selectedSubCounties[state].includes(county)) {
-        this.selectedSubCounties[state].push(county);
-      }
-    } else {
-      this.selectedSubCounties[state] = this.selectedSubCounties[state].filter((c) => c !== county);
-    }
-
-    if (this.selectedSubCounties[state].length === 0) {
-      this.selectedState = this.selectedState.filter((s) => s !== state);
-      delete this.selectedSubCounties[state];
-      this.multipleStatesDropdown.selected = this.multipleStatesDropdown.selected.filter(
-        (item: DropdownItem) => item.item_text !== state,
-      );
-
-      this.multipleActiveState = this.selectedState.slice(-1)[0] || null;
-    }
-  }
-
   onMultipleToggleChange(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     this.multipleFullStateMode = checked;
@@ -328,8 +325,6 @@ export class CountiesComponent implements OnInit {
   clearAllSelections() {
     this.selectedState = [];
     this.selectedSubCounties = {};
-    this.selectedState = [];
-    this.selectedSubCounties = {};
     this.countiesKeyDropDowns.states.selected = [];
     this.multipleStatesDropdown.selected = [];
     this.multipleActiveState = null;
@@ -351,29 +346,6 @@ export class CountiesComponent implements OnInit {
     this.activeStatesForCounties = state;
     this.selectedSubCounties[state] = [...this.countiySubCountyMap[state]];
     this.showPasteModal = false;
-  }
-  removeState(state: string) {
-    this.selectedState = this.selectedState.filter((s) => s !== state);
-    delete this.selectedSubCounties[state];
-    this.countiesKeyDropDowns.states.selected = this.countiesKeyDropDowns.states.selected.filter(
-      (item: DropdownItem) => item.item_text !== state,
-    );
-    if (this.activeStatesForCounties === state) this.activeStatesForCounties = null;
-  }
-
-  removeCountyFromState(state: string, county: string) {
-    this.selectedSubCounties[state] =
-      this.selectedSubCounties[state]?.filter((c) => c !== county) || [];
-  }
-
-  isAllCountiesSelected(state: string): boolean {
-    const all = this.countiySubCountyMap[state] || [];
-    const selected = this.selectedSubCounties[state] || [];
-    return all.length > 0 && all.length === selected.length;
-  }
-
-  toggleSelectAllCounties(state: string, checked: boolean) {
-    this.selectedSubCounties[state] = checked ? [...(this.countiySubCountyMap[state] || [])] : [];
   }
 
   removeMultipleState(state: string) {
@@ -412,75 +384,60 @@ export class CountiesComponent implements OnInit {
   saveStatesAndCounties(): void {
     if (!this.grantId) return;
 
+    // ARRAYS
     const usGrantCounties: any[] = [];
     const USGrantStates: any[] = [];
-
     const addedStates = new Set<string>();
 
+    // STATE PAYLOAD BUILDER
     const buildStatePayload = (state: string) => {
-      const stateIndex = this.stateIndexMap[state] ?? 0;
-
-      if (!addedStates.has(state)) {
-        addedStates.add(state);
-
-        USGrantStates.push({
-          countryIndex: 230,
-          grantIndex: this.grantId,
-          recordIndex: 0,
-          stateIndex: stateIndex,
-          stateName: state,
-        });
-      }
+      if (addedStates.has(state)) return;
+      addedStates.add(state);
+      USGrantStates.push({
+        countryIndex: 230,
+        grantIndex: this.grantId,
+        recordIndex: 0,
+        stateIndex: this.stateIndexMap[state] ?? 0,
+        stateName: state,
+      });
     };
 
+    // COUNTY PAYLOAD BUILDER
     const buildCountyPayload = (state: string, counties: string[]) => {
-      const stateIndex = this.stateIndexMap[state] ?? 0;
-
       counties.forEach((county) => {
-        const countyIndex = this.countyIndexMap[`${county}||${state}`] ?? 0;
-
         usGrantCounties.push({
           countryIndex: 230,
           countryName: 'United States',
-
-          countyIndex: countyIndex,
+          countyIndex: this.countyIndexMap[`${county}||${state}`] ?? 0,
           countyName: county,
-
-          stateIndex: stateIndex,
+          stateIndex: this.stateIndexMap[state] ?? 0,
           stateName: state,
         });
       });
     };
 
-    // SINGLE
+    // SINGLE MODE
     if (this.grantMode === 'single') {
       const state = this.selectedState[0];
-
       if (state) {
-        // STATE PAYLOAD ALWAYS
         buildStatePayload(state);
-
-        // COUNTIES ONLY WHEN FULL STATE OFF
         if (!this.singleFullStateMode) {
           buildCountyPayload(state, this.selectedSubCounties[state] || []);
         }
       }
     }
 
-    // MULTIPLE
+    // MULTIPLE MODE
     if (this.grantMode === 'multiple') {
       this.selectedState.forEach((state) => {
-        // STATE PAYLOAD
         buildStatePayload(state);
-
-        // COUNTIES ONLY WHEN TOGGLE OFF
         if (!this.multipleFullStateMode) {
           buildCountyPayload(state, this.selectedSubCounties[state] || []);
         }
       });
     }
 
-    // ALL
+    // ALL MODE
     if (this.grantMode === 'all') {
       Object.keys(this.countiySubCountyMap).forEach((state) => {
         buildStatePayload(state);
@@ -488,98 +445,70 @@ export class CountiesComponent implements OnInit {
       });
     }
 
-    // TAGS API PAYLOAD
+    // STRINGS BANAO
     const fullStateMode = this.singleFullStateMode || this.multipleFullStateMode;
 
-    // STATE STRING
     const stateString = this.selectedState
-      .map((state) => {
-        // FULL STATE
-        if (fullStateMode) {
-          return `{${state}}`;
-        }
-
-        // MIXED COUNTIES
-        return `[${state}]`;
-      })
+      .map((state) => (fullStateMode ? `{${state}}` : `[${state}]`))
       .join('-');
 
-    // COUNTY STRING
     const countyString = fullStateMode
       ? ''
       : Object.entries(this.selectedSubCounties)
-          .flatMap(([state, counties]) => counties.map((county) => `[${county}]`))
+          .flatMap(([, counties]) => counties.map((county) => `[${county}]`))
           .join('-');
 
-    // STCT TYPE
     const stCtType = fullStateMode ? '[SELECTED STATES]' : '[SELECTED STATES]-[MIXED COUNTIES]';
 
-    // FINAL TAGS PAYLOAD
+    // PAYLOADS
     const tagsPayload = {
       CountyString: countyString,
-      GrantIndex: this.grantId?.toString(),
+      GrantIndex: this.grantId.toString(),
       StCtType: stCtType,
       StateString: stateString,
       userEmail: 'ritu@fundsforngos.org',
       userIndex: 5,
     };
 
-    // STATES PAYLOAD
     const statesPayload = {
-      USGrantStates,
+      USGrantStates: USGrantStates,
       grantIndex: this.grantId,
       userEmail: 'ritu@fundsforngos.org',
       userIndex: 5,
     };
 
-    // COUNTIES PAYLOAD
     const countiesPayload = {
       grantIndex: this.grantId,
-      usGrantCounties,
+      usGrantCounties: usGrantCounties,
       userIndex: 5,
       userEmail: 'ritu@fundsforngos.org',
     };
 
-    console.log('TAGS PAYLOAD', tagsPayload);
-    console.log('STATES PAYLOAD', statesPayload);
-    console.log('COUNTIES PAYLOAD', countiesPayload);
+    // API CALLS
+    this.saveTags(tagsPayload, statesPayload, countiesPayload);
+  }
 
-    // API CHAIN
-    this.api.updateGrantTags(this.grantId, tagsPayload).subscribe({
+  saveTags(tagsPayload: any, statesPayload: any, countiesPayload: any) {
+    this.api.updateGrantTags(this.grantId!, tagsPayload).subscribe({
+      next: () => this.saveStates(statesPayload, countiesPayload),
+      error: () => (this.errorMessage = 'Tags save failed'),
+    });
+  }
+
+  saveStates(statesPayload: any, countiesPayload: any) {
+    this.api.insertGrantStatesJSON(statesPayload).subscribe({
+      next: () => this.saveCounties(countiesPayload),
+      error: () => (this.errorMessage = 'States save failed'),
+    });
+  }
+
+  saveCounties(countiesPayload: any) {
+    this.api.insertGrantCounties(countiesPayload).subscribe({
       next: () => {
-        console.log('TAGS UPDATED');
-
-        this.api.insertGrantStatesJSON(statesPayload).subscribe({
-          next: () => {
-            console.log('STATES SAVED');
-
-            this.api.insertGrantCounties(countiesPayload).subscribe({
-              next: () => {
-                console.log('COUNTIES SAVED');
-
-                this.successMessage = 'States & Counties saved successfully';
-
-                setTimeout(() => {
-                  this.successMessage = '';
-                }, 4000);
-              },
-
-              error: (err) => {
-                console.error('COUNTIES SAVE ERROR', err);
-                this.errorMessage = 'Counties save failed';
-              },
-            });
-          },
-          error: (err) => {
-            console.error('STATES SAVE ERROR', err);
-            this.errorMessage = 'States save failed';
-          },
-        });
+        this.successMessage = 'Saved successfully!';
+        setTimeout(() => (this.successMessage = ''), 4000);
       },
-      error: (err) => {
-        console.error('TAGS UPDATE ERROR', err);
-        this.errorMessage = 'Tags update failed';
-      },
+      error: () => (this.errorMessage = 'Counties save failed'),
     });
   }
 }

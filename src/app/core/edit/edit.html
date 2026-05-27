@@ -57,8 +57,9 @@
       [hidden]="activeItem !== 5"
       [grantId]="grantData.id"
       [stCtType]="grantData.stCtType"
-    >
-    </app-counties>
+      [stateString]="grantData.stateString"
+      [countyString]="grantData.countyString"
+    ></app-counties>
 
     <app-seo-social
       *ngIf="grantData"

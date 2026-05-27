@@ -87,8 +87,8 @@
 
             <ng-multiselect-dropdown
               [settings]="countieSettings"
-              [data]="countiesKeyDropDowns.states.data"
-              [(ngModel)]="countiesKeyDropDowns.states.selected"
+              [data]="singleStateDropdown.data"
+              [(ngModel)]="singleStateDropdown.selected"
               (onSelect)="onSingleStateChange()"
               (onDeSelect)="onSingleStateChange()"
               (onSelectAll)="onSingleStateChange()"
@@ -120,7 +120,7 @@
           class="row"
           *ngIf="
             grantMode === 'single' &&
-            countiesKeyDropDowns.states.selected.length &&
+            singleStateDropdown.selected.length &&
             activeStatesForCounties &&
             !singleFullStateMode
           "
@@ -133,10 +133,11 @@
                   <input
                     type="checkbox"
                     [checked]="
-                      activeStatesForCounties && isAllCountiesSelected(activeStatesForCounties)
+                      activeStatesForCounties &&
+                      isAllMultipleCountiesSelected(activeStatesForCounties)
                     "
                     (change)="
-                      toggleSelectAllCounties(activeStatesForCounties, $event.target.checked)
+                      toggleSelectAllMultiple(activeStatesForCounties, $event.target.checked)
                     "
                   />
 
@@ -172,19 +173,20 @@
               <span class="chip">
                 {{ state }}
 
-                <span class="remove" (click)="removeState(state)"> × </span>
+                <span class="remove" (click)="removeMultipleState(state)"> × </span>
               </span>
             </div>
           </div>
 
           <div class="col-md-9 col-12">
             <h6>County Name</h6>
-
             <div *ngFor="let state of selectedState">
+              <!-- Full State mode -->
+              <span *ngIf="singleFullStateMode" class="chip"> All Counties </span>
+              <!-- With Counties mode -->
               <span class="chip" *ngFor="let county of selectedSubCounties[state]">
                 {{ county }}, {{ state }}
-
-                <span class="remove" (click)="removeCountyFromState(state, county)"> × </span>
+                <span class="remove" (click)="removeMultipleCounty(state, county)"> × </span>
               </span>
             </div>
           </div>
@@ -225,7 +227,6 @@
             </div>
           </div>
         </div>
-        <!-- RECENTLY SELECTED STATE GRID -->
         <div *ngIf="multipleActiveState">
           <div class="row">
             <div class="col-12">
@@ -254,7 +255,7 @@
                       type="checkbox"
                       [checked]="selectedSubCounties[multipleActiveState]?.includes(county)"
                       (change)="
-                        toggleMultipleCounty(multipleActiveState, county, $event.target.checked)
+                        toggleCounty(multipleActiveState, county, $event.target.checked)
                       "
                     />
                     <span>{{ county }}</span>
@@ -278,17 +279,20 @@
 
           <!-- DATA ROWS -->
           <ng-container *ngFor="let state of selectedState">
-            <div class="col-md-3 col-12 mt-3" *ngIf="selectedSubCounties[state]?.length">
+            <div class="col-md-3 col-12 mt-3" *ngIf="selectedState.includes(state)">
               <span class="chip state-chip">
                 {{ state }}
                 <span class="remove" (click)="removeMultipleState(state)"> × </span>
               </span>
             </div>
 
-            <div class="col-md-9 col-12 mt-3" *ngIf="selectedSubCounties[state]?.length">
-              <span class="chip" *ngFor="let county of selectedSubCounties[state]">
-                {{ county }} County, {{ state }}
+            <div class="col-md-9 col-12 mt-3" *ngIf="selectedState.includes(state)">
+              <!-- Full state mode — All Counties dikhao -->
+              <span *ngIf="!selectedSubCounties[state]?.length" class="chip"> All Counties </span>
 
+              <!-- With counties mode — specific counties dikhao -->
+              <span class="chip" *ngFor="let county of selectedSubCounties[state]">
+                {{ county }}, {{ state }}
                 <span class="remove" (click)="removeMultipleCounty(state, county)"> × </span>
               </span>
             </div>
