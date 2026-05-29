@@ -32,7 +32,6 @@
 
         <div class="paste-actions">
           <button class="btn-remove" (click)="closePasteModal()">Cancel</button>
-
           <button class="btn-done" (click)="generateCountiesFromText()">Generate</button>
         </div>
       </div>
@@ -156,7 +155,6 @@
                     [checked]="selectedSubCounties[activeStatesForCounties]?.includes(sub)"
                     (change)="toggleCounty(activeStatesForCounties, sub, $event.target.checked)"
                   />
-
                   <span>{{ sub }}</span>
                 </label>
               </div>
@@ -172,7 +170,6 @@
             <div *ngFor="let state of selectedState">
               <span class="chip">
                 {{ state }}
-
                 <span class="remove" (click)="removeMultipleState(state)"> × </span>
               </span>
             </div>
@@ -254,9 +251,7 @@
                     <input
                       type="checkbox"
                       [checked]="selectedSubCounties[multipleActiveState]?.includes(county)"
-                      (change)="
-                        toggleCounty(multipleActiveState, county, $event.target.checked)
-                      "
+                      (change)="toggleCounty(multipleActiveState, county, $event.target.checked)"
                     />
                     <span>{{ county }}</span>
                   </label>

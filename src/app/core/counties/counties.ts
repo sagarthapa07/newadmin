@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
@@ -42,14 +35,14 @@ export class CountiesComponent implements OnInit {
   activeStatesForCounties: string | null = null;
   singleFullStateMode = false;
   multipleFullStateMode = false;
-
   selectedState: string[] = [];
   selectedSubCounties: Record<string, string[]> = {};
   multipleActiveState: string | null = null;
-
-  // stateIndex map — save ke waqt chahiye hoga
+  stateModeMap: Record<string, boolean> = {};
   stateIndexMap: Record<string, number> = {};
   countyIndexMap: Record<string, number> = {};
+  countryIndexMap: Record<string, number> = {};
+  countryNameMap: Record<string, string> = {};
   countryIndex = 230;
   singleStateDropdown: { data: DropdownItem[]; selected: DropdownItem[] } = {
     data: [],
@@ -84,8 +77,6 @@ export class CountiesComponent implements OnInit {
   };
 
   countiySubCountyMap: Record<string, string[]> = {};
-
-  // ================= LIFECYCLE =================
 
   ngOnInit(): void {
     this.api.getAllStates().subscribe((res: any) => {
@@ -136,11 +127,8 @@ export class CountiesComponent implements OnInit {
           const countyName = token.slice(0, lastComma).trim();
           const stateName = token.slice(lastComma + 1).trim();
           if (!countyMap[stateName]) countyMap[stateName] = [];
-          // "Baldwin County, Alabama" format mein save karo — grid se match karega
           countyMap[stateName].push(`${countyName}, ${stateName}`);
         });
-
-        // har token se state naam nikalo — order maintain karo
         const allStateNames = stateTokens.map((t) => t.slice(1, -1).trim());
         const hasCounties = !!this.countyString;
 
@@ -184,14 +172,9 @@ export class CountiesComponent implements OnInit {
               this.selectedSubCounties[state] = [];
               this.loadCountiesForState(state);
             });
-            // pehli state grid mein active karo
             this.multipleActiveState = allStateNames[0];
           } else {
-            // With Counties
             this.multipleFullStateMode = false;
-
-            // pehle saari states ka countySubCountyMap load karo
-            // jab pehli state load ho tab active karo
             let firstLoaded = false;
             allStateNames.forEach((state) => {
               this.loadCountiesForState(state, () => {
@@ -293,21 +276,20 @@ export class CountiesComponent implements OnInit {
     this.selectedState = selected.map((i: DropdownItem) => i.item_text);
     this.multipleActiveState = stateName;
 
-    // Counties load karo — grid ke liye
-    this.loadCountiesForState(stateName);
+    if (!this.multipleFullStateMode) {
+      this.loadCountiesForState(stateName);
 
-    if (!this.selectedSubCounties[stateName]) {
-      this.selectedSubCounties[stateName] = [];
+      if (!this.selectedSubCounties[stateName]) {
+        this.selectedSubCounties[stateName] = [];
+      }
     }
   }
 
-  onMultipleToggleChange(event: Event) {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.multipleFullStateMode = checked;
-    if (checked) {
-      this.selectedState.forEach((state) => {
-        this.selectedSubCounties[state] = [];
-      });
+  setStateMode(state: string, isFullState: boolean) {
+    this.stateModeMap[state] = isFullState;
+
+    if (isFullState) {
+      this.selectedSubCounties[state] = [];
     }
   }
 
@@ -449,16 +431,22 @@ export class CountiesComponent implements OnInit {
     const fullStateMode = this.singleFullStateMode || this.multipleFullStateMode;
 
     const stateString = this.selectedState
-      .map((state) => (fullStateMode ? `{${state}}` : `[${state}]`))
+      .map((state) => (fullStateMode ? `[${state}]` : `{${state}}`))
       .join('-');
 
-    const countyString = fullStateMode
-      ? ''
-      : Object.entries(this.selectedSubCounties)
-          .flatMap(([, counties]) => counties.map((county) => `[${county}]`))
-          .join('-');
+    const countyString = Object.entries(this.selectedSubCounties)
+      .flatMap(([state, counties]) => {
+        if (this.stateModeMap[state]) {
+          return [];
+        }
 
-    const stCtType = fullStateMode ? '[SELECTED STATES]' : '[SELECTED STATES]-[MIXED COUNTIES]';
+        return counties.map((county) => `[${county}]`);
+      })
+      .join('-');
+
+    const stCtType = fullStateMode
+      ? '[SELECTED STATES]-[SELECTED COUNTIES]'
+      : '[SELECTED STATES]-[MIXED COUNTIES]';
 
     // PAYLOADS
     const tagsPayload = {
@@ -496,10 +484,30 @@ export class CountiesComponent implements OnInit {
   }
 
   saveStates(statesPayload: any, countiesPayload: any) {
+    const hasMixedCounties = countiesPayload.usGrantCounties.length > 0;
+
     this.api.insertGrantStatesJSON(statesPayload).subscribe({
-      next: () => this.saveCounties(countiesPayload),
-      error: () => (this.errorMessage = 'States save failed'),
+      next: () => {
+        if (!countiesPayload.usGrantCounties.length) {
+          this.successMessage = 'Saved successfully!';
+          return;
+        }
+        this.saveCounties(countiesPayload);
+      },
+      error: () => {
+        this.errorMessage = 'States save failed';
+      },
     });
+  }
+
+  onMultipleToggleChange(event: Event) {
+    this.multipleFullStateMode = (event.target as HTMLInputElement).checked;
+    if (this.multipleFullStateMode) {
+      this.multipleActiveState = null;
+      this.selectedState.forEach((state) => {
+        this.selectedSubCounties[state] = [];
+      });
+    }
   }
 
   saveCounties(countiesPayload: any) {
