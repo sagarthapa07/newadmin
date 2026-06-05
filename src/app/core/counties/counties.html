@@ -212,14 +212,17 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  [checked]="multipleFullStateMode"
-                  (change)="onMultipleToggleChange($event)"
+                  [checked]="multipleActiveState && stateModeMap[multipleActiveState] === true"
+                  (change)="onActiveStateToggleChange($event)"
                 />
                 <span class="slider"></span>
               </label>
-
               <span class="switch-label ms-2">
-                {{ multipleFullStateMode ? 'Full State' : 'With Counties' }}
+                {{
+                  multipleActiveState && stateModeMap[multipleActiveState]
+                    ? 'Full State'
+                    : 'With Counties'
+                }}
               </span>
             </div>
           </div>
@@ -268,8 +271,11 @@
             <h6>State Name</h6>
           </div>
 
-          <div class="col-md-9 col-12">
+          <div class="col-md-6 col-12">
             <h6>County Name</h6>
+          </div>
+          <div class="col-md-3 col-12">
+            <h6>States With Full county Seleted</h6>
           </div>
 
           <!-- DATA ROWS -->
@@ -281,7 +287,7 @@
               </span>
             </div>
 
-            <div class="col-md-9 col-12 mt-3" *ngIf="selectedState.includes(state)">
+            <div class="col-md-6 col-12 mt-3" *ngIf="selectedState.includes(state)">
               <!-- Full state mode — All Counties dikhao -->
               <span *ngIf="!selectedSubCounties[state]?.length" class="chip"> All Counties </span>
 
@@ -291,6 +297,15 @@
                 <span class="remove" (click)="removeMultipleCounty(state, county)"> × </span>
               </span>
             </div>
+              <div class="col-md-3 mt-3 d-flex">
+                <!-- Agar state Full State mode mein hai (stateModeMap true ya koi county select nahi) -->
+                <ng-container
+                  *ngIf="stateModeMap[state] === true || !selectedSubCounties[state]?.length"
+                >
+                  <span class="chip">{{ state }}</span>
+                  <span class="chip">all counties</span>
+                </ng-container>
+              </div>
           </ng-container>
         </div>
       </div>

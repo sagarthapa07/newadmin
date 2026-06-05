@@ -1,0 +1,568 @@
+iss wali API mai 
+
+
+Jab mai single mai Full State k sath Single mark krta hun tab mera payload mai
+StCtType
+: 
+"[SELECTED STATES]-[SELECTED COUNTIES]"
+  ye jana chahiye and isske sath state string mai ese jana chahiye 
+StateString: "[Alabama]"
+
+ye thik hai and sath mai ye wali api bhi chalni chahiye
+"https://ang-dnd.fundsforngospremium.com/api/USGrantStates/InsertUSGrantStatesJSON"
+payload ese jayega 
+{
+    "USGrantStates": [
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 101,
+            "stateName": "Alabama"
+        }
+    ],
+    "grantIndex": "48809",
+    "userEmail": "ritu@fundsforngos.org",
+    "userIndex": 5
+}
+
+
+
+and jab mai multiple states select krru Full State
+k sath tab mera 
+StCtType
+: 
+"[SELECTED STATES]-[SELECTED COUNTIES]"
+ye ese hi jana chahiye and 
+StateString
+: 
+"[Alabama]-[Alaska]-[Arizona]-[Arkansas]"
+
+state stirng bhi iss type mai jana chahiye jisme [] bracket use ho   ye bracket tab use hote hai jab mai Full State option k sath use krta hun.... 
+
+and aab jab mai kisi single state ko 
+With Counties option k sath bhejta hun with counties bhi select krta hun tab mere teen api chelnge 
+"
+https://ang-dnd.fundsforngospremium.com/api/GEOCounties/GetGEOCountiesForStates?StateID=101"
+"
+https://ang-dnd.fundsforngospremium.com/api/USGrants/UpdateUSGrantsTags?id=48809"
+"https://ang-dnd.fundsforngospremium.com/api/USGrantCounties/InsertUSGrantCountiesJSON"
+
+
+and tab mera payload jyega 
+
+{
+    "CountyString": "[Baldwin County, Alabama]-[Bullock County, Alabama]-[Cherokee County, Alabama]-[Barbour County, Alabama]-[Butler County, Alabama]-[Chilton County, Alabama]",
+    "GrantIndex": "48809",
+    "StCtType": "[SELECTED STATES]-[SELECTED COUNTIES]",
+    "StateString": "{Alabama}",
+    "userEmail": "ritu@fundsforngos.org",
+    "userIndex": 5
+}
+
+isme difference hai upper mai sare counties k name  rhega and "StateString": "{Alabama}", mai {} bracket kaa issme mai curly bracket use krenge kyun ki ye humne with counties button mai kiya hai jisme humne countie bhi seleted kiye hai thik hai 
+and issme mere states wali api ka payload jayega 
+{
+    "USGrantStates": [
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 101,
+            "stateName": "Alabama"
+        }
+    ],
+    "grantIndex": "48809",
+    "userEmail": "ritu@fundsforngos.org",
+    "userIndex": 5
+}
+
+
+ese jayega payload and aab mere counties wale ka payload batata hun jisme counites k name jaynge 
+{
+    "grantIndex": "48809",
+    "usGrantCounties": [
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 2,
+            "countyName": "Baldwin County, Alabama",
+            "stateIndex": 101,
+            "stateName": "Alabama"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 6,
+            "countyName": "Bullock County, Alabama",
+            "stateIndex": 101,
+            "stateName": "Alabama"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 10,
+            "countyName": "Cherokee County, Alabama",
+            "stateIndex": 101,
+            "stateName": "Alabama"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 3,
+            "countyName": "Barbour County, Alabama",
+            "stateIndex": 101,
+            "stateName": "Alabama"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 7,
+            "countyName": "Butler County, Alabama",
+            "stateIndex": 101,
+            "stateName": "Alabama"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 11,
+            "countyName": "Chilton County, Alabama",
+            "stateIndex": 101,
+            "stateName": "Alabama"
+        }
+    ],
+    "userIndex": 5,
+    "userEmail": "ritu@fundsforngos.org"
+}   ese jayega mera 
+
+and aab mai kya krta hun ki nmultiple states with counties seletec kr k btata hun kya payload jana chahiye 
+
+see aab mere payload mai maine ek bhi ese full counties select nhi kiya hai sare mere with counties honge and issme bhi changes dekhna...
+{
+    "CountyString": "[Baldwin County, Alabama]-[Bullock County, Alabama]-[Cherokee County, Alabama]-[Barbour County, Alabama]-[Butler County, Alabama]-[Chilton County, Alabama]-[Tolland County, Connecticut]-[Litchfield County, Connecticut]-[Bay County, Florida]-[Calhoun County, Florida]-[Collier County, Florida]-[Kalawao County, Hawaii]-[Honolulu County, Hawaii]",
+    "GrantIndex": "48809",
+    "StCtType": "[SELECTED STATES]-[SELECTED COUNTIES]",
+    "StateString": "{Alabama}-{Connecticut}-{Florida}-{Hawaii}",
+    "userEmail": "ritu@fundsforngos.org",
+    "userIndex": 5
+}
+
+
+upper mai sare counties k name  rhega and 
+"StateString": "{Alabama}-{Connecticut}-{Florida}-{Hawaii}",   ye bhi ese hi jayega {} bracket mai kyun ki iss state k maine counties mark kiye haai
+CountyString
+: 
+"[Baldwin County, Alabama]-[Bullock County, Alabama]-[Cherokee County, Alabama]-[Barbour County, Alabama]-[Butler County, Alabama]-[Chilton County, Alabama]-[Tolland County, Connecticut]-[Litchfield County, Connecticut]-[Bay County, Florida]-[Calhoun County, Florida]-[Collier County, Florida]-[Kalawao County, Hawaii]-[Honolulu County, Hawaii]
+
+
+
+and aab mera ek aur condition what if ki mai dono select krru 
+pehele With counties k select krru and fir krru full states 	tab mera payload kese jayega 
+
+{
+    "CountyString": "[Baldwin County, Alabama]-[Bullock County, Alabama]-[Cherokee County, Alabama]-[Barbour County, Alabama]-[Butler County, Alabama]-[Chilton County, Alabama]-[Tolland County, Connecticut]-[Litchfield County, Connecticut]-[Bay County, Florida]-[Calhoun County, Florida]-[Collier County, Florida]-[Kalawao County, Hawaii]-[Honolulu County, Hawaii]",
+    "GrantIndex": "48809",
+    "StCtType": "[SELECTED STATES]-[MIXED COUNTIES]",
+    "StateString": "{Alabama}-{Connecticut}-{Florida}-{Hawaii}-[Kentucky]-[Louisiana]-[Maine]-[Maryland]-[Massachusetts]-[Michigan]",
+    "userEmail": "ritu@fundsforngos.org",
+    "userIndex": 5
+}
+
+aab issme ye difference hai ki counties k names bhi aagye 
+
+{
+    "CountyString": "[Baldwin County, Alabama]-[Bullock County, Alabama]-[Cherokee County, Alabama]-[Barbour County, Alabama]-[Butler County, Alabama]-[Chilton County, Alabama]-[Tolland County, Connecticut]-[Litchfield County, Connecticut]-[Bay County, Florida]-[Calhoun County, Florida]-[Collier County, Florida]-[Kalawao County, Hawaii]-[Honolulu County, Hawaii]",
+
+
+aur "StCtType": "[SELECTED STATES]-[MIXED COUNTIES]",
+ye type change hogya kyun mai maine mixed use kiye like pehele with counites wale seletec kiya and fir full states wale select kiya 
+
+and ek aur change ye hai ki issme maine "StateString": "{Alabama}-{Connecticut}-{Florida}-{Hawaii}-[Kentucky]-[Louisiana]-[Maine]-[Maryland]-[Massachusetts]-[Michigan]",   ye bheja hai dekho jo {} wale bracket k hai woh woh state hai jiske maine counties bhi mark kiye hai and [] ye bracket mai woh state k name hai jo full state mai marked kiye hai 
+
+
+and ek last contidition ye hai ki jab mai all states seeted krru tab mera do api chalne chahiye "
+https://ang-dnd.fundsforngospremium.com/api/USGrants/UpdateUSGrantsTags?id=48809"
+"
+https://ang-dnd.fundsforngospremium.com/api/USGrantStates/InsertUSGrantStatesJSON"   ye do aur inme mera payload ese jana chahiye 
+
+{
+    "CountyString": "",
+    "GrantIndex": "48809",
+    "StCtType": "[ALL STATES]-[ALL COUNTIES]",
+    "StateString": "[Alabama]-[Alaska]-[Arizona]-[Arkansas]-[California]-[Colorado]-[Connecticut]-[Delaware]-[Florida]-[Georgia]-[Hawaii]-[Idaho]-[Illinois]-[Indiana]-[Iowa]-[Kansas]-[Kentucky]-[Louisiana]-[Maine]-[Maryland]-[Massachusetts]-[Michigan]-[Minnesota]-[Mississippi]-[Missouri]-[Montana]-[Nebraska]-[Nevada]-[New Hampshire]-[New Jersey]-[New Mexico]-[New York]-[North Carolina]-[North Dakota]-[Ohio]-[Oklahoma]-[Oregon]-[Pennsylvania]-[Rhode Island]-[South Carolina]-[South Dakota]-[Tennessee]-[Texas]-[Utah]-[Vermont]-[Virginia]-[Washington]-[West Virginia]-[Wisconsin]-[Wyoming]",
+    "userEmail": "ritu@fundsforngos.org",
+    "userIndex": 5
+}
+
+
+{
+    "USGrantStates": [
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 101,
+            "stateName": "Alabama"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 102,
+            "stateName": "Alaska"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 104,
+            "stateName": "Arizona"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 105,
+            "stateName": "Arkansas"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 106,
+            "stateName": "California"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 107,
+            "stateName": "Colorado"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 108,
+            "stateName": "Connecticut"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 109,
+            "stateName": "Delaware"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 111,
+            "stateName": "Florida"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 112,
+            "stateName": "Georgia"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 114,
+            "stateName": "Hawaii"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 115,
+            "stateName": "Idaho"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 116,
+            "stateName": "Illinois"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 117,
+            "stateName": "Indiana"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 118,
+            "stateName": "Iowa"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 119,
+            "stateName": "Kansas"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 120,
+            "stateName": "Kentucky"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 122,
+            "stateName": "Maine"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 124,
+            "stateName": "Massachusetts"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 125,
+            "stateName": "Michigan"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 126,
+            "stateName": "Minnesota"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 127,
+            "stateName": "Mississippi"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 128,
+            "stateName": "Missouri"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 129,
+            "stateName": "Montana"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 130,
+            "stateName": "Nebraska"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 131,
+            "stateName": "Nevada"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 132,
+            "stateName": "New Hampshire"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 133,
+            "stateName": "New Jersey"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 134,
+            "stateName": "New Mexico"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 135,
+            "stateName": "New York"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 136,
+            "stateName": "North Carolina"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 137,
+            "stateName": "North Dakota"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 139,
+            "stateName": "Ohio"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 140,
+            "stateName": "Oklahoma"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 141,
+            "stateName": "Oregon"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 142,
+            "stateName": "Pennsylvania"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 144,
+            "stateName": "Rhode Island"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 145,
+            "stateName": "South Carolina"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 146,
+            "stateName": "South Dakota"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 147,
+            "stateName": "Tennessee"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 148,
+            "stateName": "Texas"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 150,
+            "stateName": "Utah"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 151,
+            "stateName": "Vermont"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 153,
+            "stateName": "Virginia"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 154,
+            "stateName": "Washington"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 155,
+            "stateName": "West Virginia"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 156,
+            "stateName": "Wisconsin"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 157,
+            "stateName": "Wyoming"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 158,
+            "stateName": "District of Columbia"
+        }
+    ],
+    "grantIndex": "48809",
+    "userEmail": "ritu@fundsforngos.org",
+    "userIndex": 5
+}     
+
+
+
+
+
+
+ese jana chahiye mere payload thik kr k do sab aabhi ka code analyse krro and mereko new code btao kya kya hanata hai kya kya add krna hai 

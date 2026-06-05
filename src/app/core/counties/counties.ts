@@ -234,32 +234,59 @@ export class CountiesComponent implements OnInit {
   }
 
   onSingleStateChange() {
-    const selected = this.countiesKeyDropDowns.states.selected;
-    if (!selected.length) return;
+    const selected = this.singleStateDropdown.selected;
+
+    // Agar deselect hua toh selectedState clear karo aur return
+    if (!selected.length) {
+      this.selectedState = [];
+      this.activeStatesForCounties = null;
+      return;
+    }
 
     const stateObj: DropdownItem = selected[0];
     const stateName = stateObj.item_text;
-    if (!this.selectedState.includes(stateName)) {
-      this.selectedState.push(stateName);
+
+    // Pehli baar state select ho rahi hai
+    // Existing stateModeMap value preserve karo, naya state ho toh current toggle value use karo
+    if (!this.stateModeMap.hasOwnProperty(stateName)) {
+      this.stateModeMap[stateName] = this.singleFullStateMode;
+    } else {
+      // Agar pehle se map mein hai toh uski value se toggle sync karo
+      this.singleFullStateMode = this.stateModeMap[stateName];
     }
 
+    this.selectedState = [stateName];
     this.activeStatesForCounties = stateName;
     this.loadCountiesForState(stateName);
 
     if (!this.selectedSubCounties[stateName]) {
       this.selectedSubCounties[stateName] = [];
     }
+
+    this.cd.detectChanges(); // ← force update
+  }
+
+  onSingleStateDeselect() {
+    this.selectedState = [];
+    this.activeStatesForCounties = null;
+    this.selectedSubCounties = {};
+    this.singleFullStateMode = false;
+    this.cd.detectChanges();
   }
 
   onSingleToggleChange(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     this.singleFullStateMode = checked;
     const state = this.activeStatesForCounties;
-
     if (!state) return;
+
+    this.stateModeMap[state] = checked;
+
     if (checked) {
       this.selectedSubCounties[state] = [];
     }
+
+    this.cd.detectChanges(); // ← force update
   }
 
   onMultipleStateChange() {
@@ -366,12 +393,10 @@ export class CountiesComponent implements OnInit {
   saveStatesAndCounties(): void {
     if (!this.grantId) return;
 
-    // ARRAYS
     const usGrantCounties: any[] = [];
     const USGrantStates: any[] = [];
     const addedStates = new Set<string>();
 
-    // STATE PAYLOAD BUILDER
     const buildStatePayload = (state: string) => {
       if (addedStates.has(state)) return;
       addedStates.add(state);
@@ -384,96 +409,185 @@ export class CountiesComponent implements OnInit {
       });
     };
 
-    // COUNTY PAYLOAD BUILDER
     const buildCountyPayload = (state: string, counties: string[]) => {
       counties.forEach((county) => {
+        // countyName already "Baldwin County, Alabama" format mein stored hai
+        // countyIndex lookup: county value directly use karo
+        const countyIndex = this.countyIndexMap[`${county}||${state}`] || 0;
         usGrantCounties.push({
           countryIndex: 230,
           countryName: 'United States',
-          countyIndex: this.countyIndexMap[`${county}||${state}`] ?? 0,
-          countyName: county,
-          stateIndex: this.stateIndexMap[state] ?? 0,
+          countyIndex,
+          countyName: county, // already "Baldwin County, Alabama" format mein hai
+          stateIndex: this.stateIndexMap[state],
           stateName: state,
         });
       });
     };
 
+    // =====================
+    // ALL MODE
+    // =====================
+    if (this.grantMode === 'all') {
+      // Saari states [] bracket mein
+      const allStateNames = Object.keys(this.stateIndexMap);
+
+      const stateString = allStateNames.map((s) => `[${s}]`).join('-');
+
+      const tagsPayload = {
+        CountyString: '',
+        GrantIndex: this.grantId.toString(),
+        StCtType: '[ALL STATES]-[ALL COUNTIES]',
+        StateString: stateString,
+        userEmail: 'ritu@fundsforngos.org',
+        userIndex: 5,
+      };
+
+      allStateNames.forEach((state) => buildStatePayload(state));
+
+      const statesPayload = {
+        USGrantStates,
+        grantIndex: this.grantId.toString(),
+        userEmail: 'ritu@fundsforngos.org',
+        userIndex: 5,
+      };
+
+      // All mode: sirf 2 APIs
+      this.api.updateGrantTags(this.grantId!, tagsPayload).subscribe({
+        next: () => {
+          this.api.insertGrantStatesJSON(statesPayload).subscribe({
+            next: () => {
+              this.successMessage = 'Saved successfully!';
+              setTimeout(() => (this.successMessage = ''), 4000);
+            },
+            error: () => (this.errorMessage = 'States save failed'),
+          });
+        },
+        error: () => (this.errorMessage = 'Tags save failed'),
+      });
+      return; // baaki logic skip
+    }
+
+    // =====================
     // SINGLE MODE
+    // =====================
     if (this.grantMode === 'single') {
       const state = this.selectedState[0];
-      if (state) {
-        buildStatePayload(state);
-        if (!this.singleFullStateMode) {
-          buildCountyPayload(state, this.selectedSubCounties[state] || []);
-        }
+      if (!state) return;
+
+      buildStatePayload(state);
+
+      const isFullState = this.singleFullStateMode;
+      // [] = Full State, {} = With Counties
+      const stateString = isFullState ? `[${state}]` : `{${state}}`;
+
+      let countyString = '';
+      if (!isFullState) {
+        const counties = this.selectedSubCounties[state] || [];
+        buildCountyPayload(state, counties);
+        countyString = counties.map((c) => `[${c}]`).join('-');
       }
+
+      const stCtType = '[SELECTED STATES]-[SELECTED COUNTIES]';
+
+      const tagsPayload = {
+        CountyString: countyString,
+        GrantIndex: this.grantId.toString(),
+        StCtType: stCtType,
+        StateString: stateString,
+        userEmail: 'ritu@fundsforngos.org',
+        userIndex: 5,
+      };
+
+      const statesPayload = {
+        USGrantStates,
+        grantIndex: this.grantId.toString(),
+        userEmail: 'ritu@fundsforngos.org',
+        userIndex: 5,
+      };
+
+      const countiesPayload = {
+        grantIndex: this.grantId.toString(),
+        usGrantCounties,
+        userIndex: 5,
+        userEmail: 'ritu@fundsforngos.org',
+      };
+
+      this.saveTags(tagsPayload, statesPayload, countiesPayload);
+      return;
     }
 
+    // =====================
     // MULTIPLE MODE
+    // =====================
     if (this.grantMode === 'multiple') {
+      // Per-state mode check:
+      // stateModeMap[state] === true → Full State → [StateName]
+      // stateModeMap[state] === false/undefined + counties selected → With Counties → {StateName}
+      // stateModeMap[state] === false/undefined + no counties → Full State → [StateName]
+
+      let hasFullStates = false;
+      let hasWithCounties = false;
+
+      const stateStringParts: string[] = [];
+
       this.selectedState.forEach((state) => {
         buildStatePayload(state);
-        if (!this.multipleFullStateMode) {
-          buildCountyPayload(state, this.selectedSubCounties[state] || []);
+
+        const isFullState =
+          this.stateModeMap[state] === true ||
+          (this.stateModeMap[state] !== false && !this.selectedSubCounties[state]?.length);
+
+        if (isFullState) {
+          stateStringParts.push(`[${state}]`);
+          hasFullStates = true;
+          // Full state mein counties nahi jaatein
+        } else {
+          stateStringParts.push(`{${state}}`);
+          hasWithCounties = true;
+          const counties = this.selectedSubCounties[state] || [];
+          buildCountyPayload(state, counties);
         }
       });
+
+      const stateString = stateStringParts.join('-');
+
+      const countyString = usGrantCounties.map((c) => `[${c.countyName}]`).join('-');
+
+      // stCtType logic:
+      // Sirf Full States → [SELECTED STATES]-[SELECTED COUNTIES]
+      // Sirf With Counties → [SELECTED STATES]-[SELECTED COUNTIES]
+      // Mixed (dono) → [SELECTED STATES]-[MIXED COUNTIES]
+      const stCtType =
+        hasFullStates && hasWithCounties
+          ? '[SELECTED STATES]-[MIXED COUNTIES]'
+          : '[SELECTED STATES]-[SELECTED COUNTIES]';
+
+      const tagsPayload = {
+        CountyString: countyString,
+        GrantIndex: this.grantId.toString(),
+        StCtType: stCtType,
+        StateString: stateString,
+        userEmail: 'ritu@fundsforngos.org',
+        userIndex: 5,
+      };
+
+      const statesPayload = {
+        USGrantStates,
+        grantIndex: this.grantId.toString(),
+        userEmail: 'ritu@fundsforngos.org',
+        userIndex: 5,
+      };
+
+      const countiesPayload = {
+        grantIndex: this.grantId.toString(),
+        usGrantCounties,
+        userIndex: 5,
+        userEmail: 'ritu@fundsforngos.org',
+      };
+
+      this.saveTags(tagsPayload, statesPayload, countiesPayload);
     }
-
-    // ALL MODE
-    if (this.grantMode === 'all') {
-      Object.keys(this.countiySubCountyMap).forEach((state) => {
-        buildStatePayload(state);
-        buildCountyPayload(state, this.countiySubCountyMap[state] || []);
-      });
-    }
-
-    // STRINGS BANAO
-    const fullStateMode = this.singleFullStateMode || this.multipleFullStateMode;
-
-    const stateString = this.selectedState
-      .map((state) => (fullStateMode ? `[${state}]` : `{${state}}`))
-      .join('-');
-
-    const countyString = Object.entries(this.selectedSubCounties)
-      .flatMap(([state, counties]) => {
-        if (this.stateModeMap[state]) {
-          return [];
-        }
-
-        return counties.map((county) => `[${county}]`);
-      })
-      .join('-');
-
-    const stCtType = fullStateMode
-      ? '[SELECTED STATES]-[SELECTED COUNTIES]'
-      : '[SELECTED STATES]-[MIXED COUNTIES]';
-
-    // PAYLOADS
-    const tagsPayload = {
-      CountyString: countyString,
-      GrantIndex: this.grantId.toString(),
-      StCtType: stCtType,
-      StateString: stateString,
-      userEmail: 'ritu@fundsforngos.org',
-      userIndex: 5,
-    };
-
-    const statesPayload = {
-      USGrantStates: USGrantStates,
-      grantIndex: this.grantId,
-      userEmail: 'ritu@fundsforngos.org',
-      userIndex: 5,
-    };
-
-    const countiesPayload = {
-      grantIndex: this.grantId,
-      usGrantCounties: usGrantCounties,
-      userIndex: 5,
-      userEmail: 'ritu@fundsforngos.org',
-    };
-
-    // API CALLS
-    this.saveTags(tagsPayload, statesPayload, countiesPayload);
   }
 
   saveTags(tagsPayload: any, statesPayload: any, countiesPayload: any) {
@@ -484,12 +598,11 @@ export class CountiesComponent implements OnInit {
   }
 
   saveStates(statesPayload: any, countiesPayload: any) {
-    const hasMixedCounties = countiesPayload.usGrantCounties.length > 0;
-
     this.api.insertGrantStatesJSON(statesPayload).subscribe({
       next: () => {
         if (!countiesPayload.usGrantCounties.length) {
           this.successMessage = 'Saved successfully!';
+          setTimeout(() => (this.successMessage = ''), 4000);
           return;
         }
         this.saveCounties(countiesPayload);
@@ -500,16 +613,27 @@ export class CountiesComponent implements OnInit {
     });
   }
 
-  onMultipleToggleChange(event: Event) {
-    this.multipleFullStateMode = (event.target as HTMLInputElement).checked;
-    if (this.multipleFullStateMode) {
-      this.multipleActiveState = null;
-      this.selectedState.forEach((state) => {
-        this.selectedSubCounties[state] = [];
-      });
+  onActiveStateToggleChange(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (!this.multipleActiveState) return;
+
+    this.stateModeMap[this.multipleActiveState] = checked;
+
+    if (checked) {
+      // Full State select kiya — counties clear karo
+      this.selectedSubCounties[this.multipleActiveState] = [];
     }
   }
+  onMultipleToggleChange(event: Event) {
+    this.multipleFullStateMode = (event.target as HTMLInputElement).checked;
 
+    if (this.multipleActiveState) {
+      this.stateModeMap[this.multipleActiveState] = this.multipleFullStateMode;
+      if (this.multipleFullStateMode) {
+        this.selectedSubCounties[this.multipleActiveState] = [];
+      }
+    }
+  }
   saveCounties(countiesPayload: any) {
     this.api.insertGrantCounties(countiesPayload).subscribe({
       next: () => {
