@@ -30,6 +30,9 @@ export class CountiesComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
 
+  fullStatesList: string[] = [];
+  withCountiesList: string[] = [];
+
   grantMode: 'single' | 'multiple' | 'all' = 'multiple';
 
   activeStatesForCounties: string | null = null;
@@ -114,7 +117,7 @@ export class CountiesComponent implements OnInit {
         if (!isSelectedStates) return;
 
         // stateString se tokens nikalo
-        const stateTokens = this.stateString?.match(/[\[\{][^\]\}]+[\]\}]/g) || [];
+        // const stateTokens = this.stateString?.match(/[\[\{][^\]\}]+[\]\}]/g) || [];
 
         // countyString se countyMap banao
         const countyTokens =
@@ -194,6 +197,15 @@ export class CountiesComponent implements OnInit {
         console.error('Load Counties Error:', err);
       },
     });
+    const stateTokens = this.stateString?.match(/[\[\{][^\]\}]+[\]\}]/g) || [];
+
+    this.fullStatesList = stateTokens
+      .filter((t) => t.startsWith('[') && t.endsWith(']'))
+      .map((t) => t.slice(1, -1).trim());
+
+    this.withCountiesList = stateTokens
+      .filter((t) => t.startsWith('{') && t.endsWith('}'))
+      .map((t) => t.slice(1, -1).trim());
   }
 
   loadCountiesForState(stateName: string, callback?: () => void): void {

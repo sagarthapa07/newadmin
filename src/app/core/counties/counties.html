@@ -264,49 +264,54 @@
           </div>
         </div>
 
-        <!-- SELECTED RESULT (UNCHANGED AS REQUESTED) -->
+        <!-- SELECTED RESULT -->
         <div class="row mt-4" *ngIf="selectedState.length">
-          <!-- HEADINGS -->
-          <div class="col-md-3 col-12">
-            <h6>State Name</h6>
-          </div>
-
-          <div class="col-md-6 col-12">
-            <h6>County Name</h6>
-          </div>
-          <div class="col-md-3 col-12">
-            <h6>States With Full county Seleted</h6>
-          </div>
-
-          <!-- DATA ROWS -->
-          <ng-container *ngFor="let state of selectedState">
-            <div class="col-md-3 col-12 mt-3" *ngIf="selectedState.includes(state)">
-              <span class="chip state-chip">
-                {{ state }}
-                <span class="remove" (click)="removeMultipleState(state)"> × </span>
-              </span>
-            </div>
-
-            <div class="col-md-6 col-12 mt-3" *ngIf="selectedState.includes(state)">
-              <!-- Full state mode — All Counties dikhao -->
-              <span *ngIf="!selectedSubCounties[state]?.length" class="chip"> All Counties </span>
-
-              <!-- With counties mode — specific counties dikhao -->
-              <span class="chip" *ngFor="let county of selectedSubCounties[state]">
-                {{ county }}, {{ state }}
-                <span class="remove" (click)="removeMultipleCounty(state, county)"> × </span>
-              </span>
-            </div>
-              <div class="col-md-3 mt-3 d-flex">
-                <!-- Agar state Full State mode mein hai (stateModeMap true ya koi county select nahi) -->
-                <ng-container
-                  *ngIf="stateModeMap[state] === true || !selectedSubCounties[state]?.length"
-                >
-                  <span class="chip">{{ state }}</span>
-                  <span class="chip">all counties</span>
-                </ng-container>
+          <!-- LEFT SIDE: With Counties -->
+          <div class="col-md-8 col-12">
+            <div class="result-table">
+              <div class="result-table-header">
+                <span class="col-state-name">State Name</span>
+                <span class="col-county-name">County Name</span>
               </div>
-          </ng-container>
+
+              <div class="result-table-row" *ngFor="let state of withCountiesList">
+                <div class="col-state-name">
+                  <span class="chip state-chip">
+                    {{ state }}
+                    <span class="remove" (click)="removeMultipleState(state)"> × </span>
+                  </span>
+                </div>
+                <div class="col-county-name">
+                  <span class="chip" *ngFor="let county of selectedSubCounties[state]">
+                    {{ county }}
+                    <span class="remove" (click)="removeMultipleCounty(state, county)"> × </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT SIDE: Full State / All Counties -->
+          <div class="col-md-4 col-12">
+            <div class="result-table">
+              <div class="result-table-header">
+                <span class="col-state-name">State Name</span>
+                <span class="col-county-name">County Selected</span>
+              </div>
+
+              <div class="result-table-row" *ngFor="let state of fullStatesList">
+                <div class="col-state-name">
+                  <span class="chip state-chip">
+                    {{ state }}
+                    <span class="remove" (click)="removeMultipleState(state)"> × </span>
+                  </span>
+                </div>
+                <div class="col-county-name">
+                  <span class="all-selected-text">All Selected</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

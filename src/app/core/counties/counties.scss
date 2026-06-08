@@ -321,3 +321,49 @@ input:checked + .slider:before {
     grid-template-columns: repeat(1, 1fr);
   }
 }
+// Result Table Layout
+.result-table {
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.result-table-header {
+  display: flex;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #374151;
+}
+
+.result-table-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  gap: 12px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.col-state-name {
+  min-width: 130px;
+  max-width: 130px;
+  flex-shrink: 0;
+}
+
+.col-county-name {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.all-selected-text {
+  font-size: 13px;
+  color: #374151;
+  font-weight: 500;
+  padding: 4px 0;
+}
