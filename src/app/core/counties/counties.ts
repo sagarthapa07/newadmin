@@ -101,25 +101,18 @@ export class CountiesComponent implements OnInit {
   }
 
   loadSavedCounties(): void {
+    const stateTokens = this.stateString?.match(/[\[\{][^\]\}]+[\]\}]/g) || [];
     this.api.getSelectedCounties(this.grantId!).subscribe({
       next: (res) => {
-        // STEP 1 — ALL STATES
         if (this.stCtType === '[ALL STATES]-[ALL COUNTIES]') {
           this.grantMode = 'all';
           return;
         }
-
-        // STEP 2 — SELECTED STATES
         const isSelectedStates =
           this.stCtType === '[SELECTED STATES]-[MIXED COUNTIES]' ||
           this.stCtType === '[SELECTED STATES]-[SELECTED COUNTIES]';
 
         if (!isSelectedStates) return;
-
-        // stateString se tokens nikalo
-        // const stateTokens = this.stateString?.match(/[\[\{][^\]\}]+[\]\}]/g) || [];
-
-        // countyString se countyMap banao
         const countyTokens =
           this.countyString?.match(/\[([^\]]+)\]/g)?.map((t) => t.slice(1, -1).trim()) || [];
 
@@ -197,7 +190,6 @@ export class CountiesComponent implements OnInit {
         console.error('Load Counties Error:', err);
       },
     });
-    const stateTokens = this.stateString?.match(/[\[\{][^\]\}]+[\]\}]/g) || [];
 
     this.fullStatesList = stateTokens
       .filter((t) => t.startsWith('[') && t.endsWith(']'))
@@ -258,14 +250,7 @@ export class CountiesComponent implements OnInit {
     const stateObj: DropdownItem = selected[0];
     const stateName = stateObj.item_text;
 
-    // Pehli baar state select ho rahi hai
-    // Existing stateModeMap value preserve karo, naya state ho toh current toggle value use karo
-    if (!this.stateModeMap.hasOwnProperty(stateName)) {
-      this.stateModeMap[stateName] = this.singleFullStateMode;
-    } else {
-      // Agar pehle se map mein hai toh uski value se toggle sync karo
-      this.singleFullStateMode = this.stateModeMap[stateName];
-    }
+    this.singleFullStateMode = this.stateModeMap[stateName];
 
     this.selectedState = [stateName];
     this.activeStatesForCounties = stateName;
@@ -275,14 +260,6 @@ export class CountiesComponent implements OnInit {
       this.selectedSubCounties[stateName] = [];
     }
 
-    this.cd.detectChanges(); // ← force update
-  }
-
-  onSingleStateDeselect() {
-    this.selectedState = [];
-    this.activeStatesForCounties = null;
-    this.selectedSubCounties = {};
-    this.singleFullStateMode = false;
     this.cd.detectChanges();
   }
 
@@ -298,30 +275,50 @@ export class CountiesComponent implements OnInit {
       this.selectedSubCounties[state] = [];
     }
 
-    this.cd.detectChanges(); // ← force update
+    this.cd.detectChanges();
   }
 
+  // AFTER
   onMultipleStateChange() {
     const selected: DropdownItem[] = this.multipleStatesDropdown.selected;
+    const selectedNames = selected.map((i) => i.item_text);
 
     if (!selected.length) {
       this.multipleActiveState = null;
+      this.selectedState = [];
+      this.fullStatesList = [];
+      this.withCountiesList = [];
       return;
     }
 
-    const lastSelected: DropdownItem = selected[selected.length - 1];
+    this.fullStatesList = this.fullStatesList.filter((s) => selectedNames.includes(s));
+    this.withCountiesList = this.withCountiesList.filter((s) => selectedNames.includes(s));
+
+    const lastSelected = selected[selected.length - 1];
     const stateName = lastSelected.item_text;
 
-    this.selectedState = selected.map((i: DropdownItem) => i.item_text);
+    this.selectedState = selectedNames;
     this.multipleActiveState = stateName;
 
-    if (!this.multipleFullStateMode) {
-      this.loadCountiesForState(stateName);
-
-      if (!this.selectedSubCounties[stateName]) {
-        this.selectedSubCounties[stateName] = [];
-      }
+    if (!this.stateModeMap.hasOwnProperty(stateName)) {
+      this.stateModeMap[stateName] = false;
     }
+
+    // if (this.stateModeMap[stateName] === true) {
+    //   if (!this.fullStatesList.includes(stateName)) this.fullStatesList.push(stateName);
+    //   this.withCountiesList = this.withCountiesList.filter((s) => s !== stateName);
+    // } else {
+    //   if (!this.withCountiesList.includes(stateName)) this.withCountiesList.push(stateName);
+    //   this.fullStatesList = this.fullStatesList.filter((s) => s !== stateName);
+    // }
+
+    this.loadCountiesForState(stateName);
+
+    if (!this.selectedSubCounties[stateName]) {
+      this.selectedSubCounties[stateName] = [];
+    }
+
+    this.cd.detectChanges();
   }
 
   setStateMode(state: string, isFullState: boolean) {
@@ -372,6 +369,18 @@ export class CountiesComponent implements OnInit {
   removeMultipleState(state: string) {
     this.selectedState = this.selectedState.filter((s) => s !== state);
     delete this.selectedSubCounties[state];
+
+    // Yeh do lines add karo
+    this.fullStatesList = this.fullStatesList.filter((s) => s !== state);
+    this.withCountiesList = this.withCountiesList.filter((s) => s !== state);
+
+    this.multipleStatesDropdown.selected = this.multipleStatesDropdown.selected.filter(
+      (item: DropdownItem) => item.item_text !== state,
+    );
+    this.singleStateDropdown.selected = this.singleStateDropdown.selected.filter(
+      (item: DropdownItem) => item.item_text !== state,
+    );
+
     if (this.multipleActiveState === state) {
       this.multipleActiveState = this.selectedState.slice(-1)[0] || null;
     }
@@ -423,14 +432,12 @@ export class CountiesComponent implements OnInit {
 
     const buildCountyPayload = (state: string, counties: string[]) => {
       counties.forEach((county) => {
-        // countyName already "Baldwin County, Alabama" format mein stored hai
-        // countyIndex lookup: county value directly use karo
         const countyIndex = this.countyIndexMap[`${county}||${state}`] || 0;
         usGrantCounties.push({
           countryIndex: 230,
           countryName: 'United States',
           countyIndex,
-          countyName: county, // already "Baldwin County, Alabama" format mein hai
+          countyName: county,
           stateIndex: this.stateIndexMap[state],
           stateName: state,
         });
@@ -477,7 +484,7 @@ export class CountiesComponent implements OnInit {
         },
         error: () => (this.errorMessage = 'Tags save failed'),
       });
-      return; // baaki logic skip
+      return;
     }
 
     // =====================
@@ -490,7 +497,6 @@ export class CountiesComponent implements OnInit {
       buildStatePayload(state);
 
       const isFullState = this.singleFullStateMode;
-      // [] = Full State, {} = With Counties
       const stateString = isFullState ? `[${state}]` : `{${state}}`;
 
       let countyString = '';
@@ -533,11 +539,6 @@ export class CountiesComponent implements OnInit {
     // MULTIPLE MODE
     // =====================
     if (this.grantMode === 'multiple') {
-      // Per-state mode check:
-      // stateModeMap[state] === true → Full State → [StateName]
-      // stateModeMap[state] === false/undefined + counties selected → With Counties → {StateName}
-      // stateModeMap[state] === false/undefined + no counties → Full State → [StateName]
-
       let hasFullStates = false;
       let hasWithCounties = false;
 
@@ -553,7 +554,6 @@ export class CountiesComponent implements OnInit {
         if (isFullState) {
           stateStringParts.push(`[${state}]`);
           hasFullStates = true;
-          // Full state mein counties nahi jaatein
         } else {
           stateStringParts.push(`{${state}}`);
           hasWithCounties = true;
@@ -564,12 +564,9 @@ export class CountiesComponent implements OnInit {
 
       const stateString = stateStringParts.join('-');
 
-      const countyString = usGrantCounties.map((c) => `[${c.countyName}]`).join('-');
-
-      // stCtType logic:
-      // Sirf Full States → [SELECTED STATES]-[SELECTED COUNTIES]
-      // Sirf With Counties → [SELECTED STATES]-[SELECTED COUNTIES]
-      // Mixed (dono) → [SELECTED STATES]-[MIXED COUNTIES]
+      const countyString = usGrantCounties
+        .map((c) => `[${c.countyName}, ${c.stateName}]`)
+        .join('-');
       const stCtType =
         hasFullStates && hasWithCounties
           ? '[SELECTED STATES]-[MIXED COUNTIES]'
@@ -625,16 +622,28 @@ export class CountiesComponent implements OnInit {
     });
   }
 
+  // AFTER
   onActiveStateToggleChange(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
+    console.log('Toggle changed to:', checked);
+    console.log('multipleActiveState:', this.multipleActiveState);
+    console.log('stateModeMap before:', { ...this.stateModeMap });
+
     if (!this.multipleActiveState) return;
 
-    this.stateModeMap[this.multipleActiveState] = checked;
-
+    const state = this.multipleActiveState;
+    this.stateModeMap[state] = checked;
     if (checked) {
-      // Full State select kiya — counties clear karo
-      this.selectedSubCounties[this.multipleActiveState] = [];
+      this.selectedSubCounties[state] = [];
+      if (!this.fullStatesList.includes(state)) this.fullStatesList.push(state);
+      this.withCountiesList = this.withCountiesList.filter((s) => s !== state);
+    } else {
+      if (!this.withCountiesList.includes(state)) this.withCountiesList.push(state);
+      this.fullStatesList = this.fullStatesList.filter((s) => s !== state);
     }
+
+    this.cd.detectChanges();
+    console.log('stateModeMap after:', { ...this.stateModeMap });
   }
   onMultipleToggleChange(event: Event) {
     this.multipleFullStateMode = (event.target as HTMLInputElement).checked;

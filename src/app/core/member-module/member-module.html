@@ -2,7 +2,7 @@
 
 <section class="header-section">
   <div class="heading">
-    <span>Calendar Opportunity</span>
+    <span>Member Module</span>
   </div>
 
   <div class="header-sec">
@@ -10,7 +10,7 @@
       <!-- LEFT COLUMN -->
       <div class="header-left">
         <div class="search-box">
-          <i class="fa-solid fa-magnifying-glass icons" (click)="onSearch()"></i>
+          <!-- <i class="fa-solid fa-magnifying-glass icons" (click)="onSearch()"></i> -->
 
           <div class="search-wrapper">
             <input
@@ -33,42 +33,39 @@
             }
           </div>
         </div>
+        <div class="">
+          <select class="search-box" [(ngModel)]="selectedStatus">
+            <option [ngValue]="null">Select</option>
+            <option value="New">New</option>
+            <option value="Active">Active</option>
+            <option value="Expired">Expired</option>
+            <option value="Blocked">Blocked</option>
+          </select>
+        </div>
+        <div>
+          <select class="search-box" [(ngModel)]="selectedPlanId">
+            <option [ngValue]="0">Select a Plan</option>
+            <option [ngValue]="1">Testing</option>
+            <option [ngValue]="2">GrantsforUS Member Plan</option>
+          </select>
+        </div>
 
-        <button class="filter-btn">
-          <i class="bi bi-funnel mx-1"></i>
-          <span>Filter</span>
-        </button>
+        <div class="col-lg-5 col-md-6 col-12">
+          <ng-multiselect-dropdown
+            [settings]="countieSettings"
+            [data]="singleStateDropdown.data"
+            [(ngModel)]="singleStateDropdown.selected"
+            (onSelect)="onSingleStateChange()"
+            (onDeSelect)="onSingleStateChange()"
+          >
+          </ng-multiselect-dropdown>
+        </div>
+
+        <button class="filter-btn" (click)="onFilterSearch()">Search</button>
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="header-right">
-        <div class="date-range-wrapper position-relative">
-          <div class="input-group range-input" (click)="toggle()">
-            <input
-              class="form-control"
-              readonly
-              [value]="displayValue"
-              placeholder="Select date range"
-              (click)="toggle()"
-            />
-
-            <button class="btn calendar-btn" type="button" (click)="picker.applySelection()">
-              <i class="bi bi-calendar3"></i>
-            </button>
-          </div>
-
-          @if (open) {
-            <div class="calendar-popup">
-              <app-date-picker
-                #picker
-                [fromDate]="fromDate"
-                [toDate]="toDate"
-                (dateSelected)="onDateChange($event)"
-              ></app-date-picker>
-            </div>
-          }
-        </div>
-
         <div>
           <button class="btn filter-btn">
             <i class="bi bi-file-arrow-down"></i>
@@ -117,7 +114,7 @@
             @for (i of [1, 2, 3, 4, 5]; track i) {
               <tr>
                 <td colspan="8">
-                  <div class="skeleton-box"></div>
+                  <div class="skeleton-"></div>
                 </td>
               </tr>
             }
@@ -125,7 +122,7 @@
 
           <!-- DATA -->
           @if (!isLoading && grants.length > 0) {
-            @for (item of grants; track item.grantIndex) {
+            @for (item of grants; track item.memberId) {
               <tr>
                 <td>
                   <label class="custom-checkbox">
@@ -133,34 +130,40 @@
                   </label>
                 </td>
 
-                <td class="id-text">
-                  {{ item.grantTitle }}
+                <td>
+                  <div>{{ item.firstName }} {{ item.lastName }}</div>
+                  <div>{{ item.email }}</div>
                 </td>
 
                 <td>
-                  {{ item.postDate | date: 'dd MMM yyyy' }}
+                  {{ item.plan }}
                 </td>
 
                 <td>
-                  {{ item.deadLineDate | date: 'dd MMM yyyy' }}
+                  {{ item.country }} |
+                  {{ item.expiryDate | date: 'yyyy-MM-dd' }}
                 </td>
 
                 <td>
-                  {{ item.viewCount }}
+                  {{ item.registrationDate | date: 'yyyy-MM-dd' }}
+                  |
+                  {{ item.activationDate | date: 'yyyy-MM-dd' }}
                 </td>
 
+                <td>-</td>
+
                 <td>
-                  <span class="status" [ngClass]="item.status === 'Published' ? 'paid' : 'pending'">
-                    {{ item.status }}
+                  <span class="status">
+                    {{ item.memberStatus | uppercase }}
                   </span>
                 </td>
 
-                <td class="icon-cell" (click)="goToEdit(item.grantIndex)">
-                  <i class="bi bi-pencil-square"></i>
+                <td>
+                  {{ item.memberType }}
                 </td>
 
-                <td class="icon-cell">
-                  <i class="bi bi-copy"></i>
+                <td class="icon-cell" (click)="goToEdit(item.memberId)">
+                  <i class="bi bi-pencil-square"></i>
                 </td>
               </tr>
             }

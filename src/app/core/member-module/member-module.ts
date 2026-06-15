@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { CommonModule, NgClass } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormGroup, FormsModule } from '@angular/forms';
 import { NgbDate, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { Router, RouterLink } from '@angular/router';
@@ -9,16 +9,24 @@ import { Api } from '../Services/api';
 import { HostListener } from '@angular/core';
 import { DatePicker } from '../../shared/component/date-picker/date-picker';
 import { ViewChild } from '@angular/core';
+import { DropdownItem } from '../../datatype';
+import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-member-module',
-  imports: [FormsModule, NgbDatepickerModule, CommonModule, Header, RouterLink, DatePicker],
+  imports: [
+    FormsModule,
+    NgbDatepickerModule,
+    CommonModule,
+    Header,
+    RouterLink,
+    NgMultiSelectDropDownModule,
+  ],
   templateUrl: './member-module.html',
   styleUrl: './member-module.scss',
 })
 export class MemberModule {
   searchText = '';
-  // NEw oneee
   open = false;
   fromDate: NgbDate | null = null;
   toDate: NgbDate | null = null;
@@ -32,6 +40,13 @@ export class MemberModule {
   isLoading = false;
   selectAll = false;
   hoveredDate: NgbDate | null = null;
+  selectedState: string[] = [];
+  activeStatesForCounties: string | null = null;
+  singleFullStateMode = false;
+  stateModeMap: Record<string, boolean> = {};
+  selectedSubCounties: Record<string, string[]> = {};
+  selectedStatus: string | null = null;
+  selectedPlanId = 0;
 
   @ViewChild('picker') picker!: DatePicker;
   @HostListener('document:click', ['$event'])
@@ -45,6 +60,15 @@ export class MemberModule {
     }
   }
 
+  countieSettings: IDropdownSettings = {
+    singleSelection: true,
+    idField: 'item_id',
+    textField: 'item_text',
+    allowSearchFilter: true,
+    enableCheckAll: false,
+    closeDropDownOnSelection: false,
+  };
+
   constructor(
     public formatter: NgbDateParserFormatter,
     private api: Api,
@@ -54,90 +78,51 @@ export class MemberModule {
 
   ngOnInit() {
     this.getData();
+    this.loadStates();
     const data = localStorage.getItem('searchHistory');
     this.searchHistory = data ? JSON.parse(data) : [];
   }
+
+  onFilterSearch() {
+    this.pageIndex = 1;
+    this.getData();
+  }
+  singleStateDropdown: { data: DropdownItem[]; selected: DropdownItem[] } = {
+    data: [],
+    selected: [],
+  };
+
   getData() {
     this.isLoading = true;
 
     const payload = {
-      memberId: '',
+      memberStatus: this.selectedStatus || null,
       pageIndex: this.pageIndex,
       pageSize: this.pageSize,
-      platform: '',
-      searchText: this.searchText,
-      searchType: '',
-      fromDate: this.formatDate(this.fromDate),
-      toDate: this.formatDate(this.toDate),
-      userIP: '',
-      viewType: '',
+      palnId: this.selectedPlanId || 0,
+      searchText: this.searchText || null,
+      state: this.selectedState.length ? this.selectedState[0] : null,
     };
 
-    this.api.getGrants(payload).subscribe({
-      next: (res) => {
-        this.grants = res.pageUSGrants || [];
-        this.totalCount = res.recCount || 0;
-        this.selectAll = false;
-        this.grants.forEach((item) => (item.selected = false));
+    this.api.getAllMembers(payload).subscribe({
+      next: (res: any) => {
+        this.grants = res.result || [];
+        this.totalCount = res.result?.length || 0;
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error(err);
         this.isLoading = false;
       },
     });
-  }
-
-  clearDateFilter() {
-    this.fromDate = null;
-    this.toDate = null;
-    this.minToDate = null;
-    this.pageIndex = 1;
-    this.getData();
-  }
-
-  onDateChange(event: any) {
-    this.fromDate = event.from;
-    this.toDate = event.to;
-    this.open = false;
-    this.pageIndex = 1;
-    this.getData();
-  }
-
-  isHovered(date: NgbDate) {
-    return (
-      this.fromDate &&
-      !this.toDate &&
-      this.hoveredDate &&
-      date.after(this.fromDate) &&
-      date.before(this.hoveredDate)
-    );
-  }
-
-  isInside(date: NgbDate) {
-    return this.toDate && date.after(this.fromDate!) && date.before(this.toDate);
-  }
-
-  isRange(date: NgbDate) {
-    return (
-      date.equals(this.fromDate!) ||
-      date.equals(this.toDate!) ||
-      this.isInside(date) ||
-      this.isHovered(date)
-    );
-  }
-
-  toggle() {
-    this.open = true;
   }
 
   get totalPages(): number {
     return Math.ceil(this.totalCount / this.pageSize);
   }
 
-  // visible page k liye hai ye
   get visiblePages(): number[] {
     const pages: number[] = [];
-
     let start = Math.max(this.pageIndex - 1, 2);
     let end = Math.min(this.pageIndex + 1, this.totalPages - 1);
 
@@ -145,7 +130,6 @@ export class MemberModule {
       start = 2;
       end = 5;
     }
-
     if (this.pageIndex >= this.totalPages - 2) {
       start = this.totalPages - 4;
       end = this.totalPages - 1;
@@ -194,37 +178,13 @@ export class MemberModule {
       : '';
   }
 
-  formatDate(date: NgbDate | null): string | null {
-    if (!date) return null;
-
-    const mm = String(date.month).padStart(2, '0');
-    const dd = String(date.day).padStart(2, '0');
-
-    return `${date.year}-${mm}-${dd}`;
-  }
-
-  menuItems = [
-    { title: 'Dashboard', icon: 'fa-house', key: 'dashboard' },
-    { title: 'Components', icon: 'fa-puzzle-piece', key: 'components' },
-    { title: 'Online Resources', icon: 'fa-globe', key: 'resources' },
-    { title: 'Premium Members', icon: 'fa-people-group', key: 'premium' },
-  ];
-
-  get filteredMenu() {
-    if (!this.searchText) return this.menuItems;
-
-    return this.menuItems.filter((item) =>
-      item.title.toLowerCase().includes(this.searchText.toLowerCase()),
-    );
-  }
-
   toggleSelectAll(event: any) {
-    console.log('CLICK HUA', event.target.checked);
     this.selectAll = event.target.checked;
     this.grants.forEach((item) => {
       item.selected = this.selectAll;
     });
   }
+
   onItemChange() {
     this.selectAll = this.grants.every((item) => item.selected);
   }
@@ -258,7 +218,21 @@ export class MemberModule {
       console.error('ID missing', id);
       return;
     }
-    this.route.navigate(['/calendar-opportunity/edit', id]);
+    this.route.navigate(['premium-members/edit-member', id]);
+  }
+  onSingleStateChange() {
+    const selected = this.singleStateDropdown.selected;
+    this.selectedState = selected.length > 0 ? [selected[0].item_text] : [];
   }
 
+  loadStates() {
+    this.api.getAllStates().subscribe({
+      next: (res: any) => {
+        this.singleStateDropdown.data = (res.states || []).map((s: any) => ({
+          item_id: s.stateIndex,
+          item_text: s.stateName,
+        }));
+      },
+    });
+  }
 }

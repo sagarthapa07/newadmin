@@ -230,7 +230,7 @@
         <div *ngIf="multipleActiveState">
           <div class="row">
             <div class="col-12">
-              <div class="county-grid-container" *ngIf="!multipleFullStateMode">
+              <div class="county-grid-container" *ngIf="!stateModeMap[multipleActiveState]">
                 <!-- SELECT ALL -->
                 <div class="select-all-row">
                   <label class="sub-checkbox fw-bold">
@@ -264,9 +264,7 @@
           </div>
         </div>
 
-        <!-- SELECTED RESULT -->
         <div class="row mt-4" *ngIf="selectedState.length">
-          <!-- LEFT SIDE: With Counties -->
           <div class="col-md-8 col-12">
             <div class="result-table">
               <div class="result-table-header">
@@ -291,7 +289,6 @@
             </div>
           </div>
 
-          <!-- RIGHT SIDE: Full State / All Counties -->
           <div class="col-md-4 col-12">
             <div class="result-table">
               <div class="result-table-header">

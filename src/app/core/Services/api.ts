@@ -263,4 +263,11 @@ export class Api {
       payload,
     );
   }
+
+  getAllMembers(payload: any): Observable<any> {
+    return this.http.post(
+      'https://ang-dnd.fundsforngospremium.com/api/Member/GetAllMembers',
+      payload,
+    );
+  }
 }
