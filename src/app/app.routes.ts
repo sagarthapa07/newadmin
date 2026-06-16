@@ -9,7 +9,7 @@ import { AuthGuard } from './core/guards/auth-guard';
 import { Dashboard } from './core/dashboard/dashboard';
 import { AddnewEdit } from './core/addnew-edit/addnew-edit';
 import { MemberModule } from './core/member-module/member-module';
-import { EditMember } from './core/edit-member/edit-member';
+import { EditMemberComponent } from './core/edit-member/edit-member';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -62,7 +62,7 @@ export const routes: Routes = [
   },
   {
     path: 'premium-members/edit-member/:id',
-    component: EditMember,
+    component: EditMemberComponent,
     // canActivate: [AuthGuard]
   },
   

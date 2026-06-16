@@ -270,4 +270,12 @@ export class Api {
       payload,
     );
   }
+
+  getMemberById(memberId: number): Observable<any> {
+    return this.http.get(`${environment.baseUrl}/Member/GetMemberById?memberId=${memberId}`);
+  }
+
+  getMemberInvoices(memberId: number): Observable<any> {
+    return this.http.get(`${environment.baseUrl}/Invoice/GetMemberInvoices?memberId=${memberId}`);
+  }
 }

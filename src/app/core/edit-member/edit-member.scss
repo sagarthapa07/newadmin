@@ -1,0 +1,135 @@
+.member-container {
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+.member-card,
+.invoice-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.page-title {
+  margin-bottom: 30px;
+  font-size: var(--fs-24);
+  font-weight: var(--fw-700);
+}
+
+.member-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+}
+
+.left-panel h5,
+.right-panel h5 {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 15px;
+}
+
+.form-row label {
+  min-width: 130px;
+  font-weight: var(--fw-500);
+}
+
+.double-input {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+}
+
+.double-input input {
+  flex: 1;
+}
+
+.form-control {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #d6d6d6;
+  padding: 8px 12px;
+}
+
+.btn-section {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+  gap: 10px;
+}
+.btn-save,
+.btn-back,
+.btn-cancel,
+.btn-mailchimp,
+.btn-invoice {
+  color: white;
+  font-weight: var(--fw-500);
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.invoice-table th {
+  background: #f4f4f4;
+  text-align: left;
+  padding: 12px;
+}
+
+.invoice-table td {
+  padding: 12px;
+  border-top: 1px solid #ddd;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+}
+
+@media (max-width: 992px) {
+  .member-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-row label {
+    min-width: auto;
+  }
+
+  .double-input {
+    flex-direction: column;
+  }
+}
+.btn {
+//   display: flex;
+  gap: 10px;
+  background-image: linear-gradient(-180deg, #37aee2 0%, #1e96c8 100%);
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  font-weight: 500;
+}
+.btn-invoice{
+    display: flex;
+    gap: 10px;
+}

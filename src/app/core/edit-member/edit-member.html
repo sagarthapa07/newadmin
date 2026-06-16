@@ -1,2 +1,180 @@
 <app-header></app-header>
 
+<!-- <section class="member-container"> -->
+<section class="header-section">
+  <div class="member-card">
+    <h3 class="page-title">Members Modify</h3>
+
+    <form [formGroup]="memberForm">
+      <div class="member-grid">
+        <!-- LEFT -->
+
+        <div class="left-panel">
+          <h5>Personal details</h5>
+
+          <div class="form-row">
+            <label>Member's name:</label>
+
+            <div class="double-input">
+              <input type="text" class="form-control" formControlName="firstName" />
+
+              <input type="text" class="form-control" formControlName="lastName" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Location:</label>
+
+            <div class="double-input">
+              <input type="text" class="form-control" formControlName="country" />
+
+              <input type="text" class="form-control" formControlName="state" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label></label>
+
+            <div class="double-input">
+              <input type="text" class="form-control" formControlName="zipCode" />
+
+              <input type="text" class="form-control" formControlName="city" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Address</label>
+
+            <input type="text" class="form-control" formControlName="billingAddress" />
+          </div>
+
+          <div class="form-row">
+            <label>Remark</label>
+
+            <input type="text" class="form-control" formControlName="remarks" />
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="right-panel">
+          <h5>Personal details</h5>
+
+          <div class="form-row">
+            <label>Current Plan:</label>
+
+            <input type="text" class="form-control" formControlName="plan" />
+          </div>
+
+          <div class="form-row">
+            <label>Email:</label>
+
+            <input type="text" class="form-control" formControlName="email" />
+          </div>
+
+          <div class="form-row">
+            <label>Password:</label>
+
+            <input type="text" class="form-control" formControlName="password" />
+          </div>
+
+          <div class="form-row">
+            <label>Phone:</label>
+
+            <input type="text" class="form-control" formControlName="contactNo" />
+          </div>
+
+          <div class="form-row">
+            <label>Status:</label>
+
+            <select class="form-control" formControlName="memberStatus">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Registration Date:</label>
+
+            <input type="date" class="form-control" formControlName="registrationDate" />
+          </div>
+
+          <div class="form-row">
+            <label>Activation Date:</label>
+
+            <input type="date" class="form-control" formControlName="activationDate" />
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-section">
+        <button type="button" class="btn btn-save" (click)="onSave()">Save</button>
+
+        <button type="button" class="btn btn-back">Back</button>
+
+        <button type="button" class="btn btn-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+  
+  <div class="invoice-card">
+    <div class="invoice-header">
+      <h3>Invoices</h3>
+
+      <div class="btn-invoice">
+        <button class="btn btn-mailchimp">Subscribe MailChimp</button>
+
+        <button class="btn btn-invoice">Add New Invoice</button>
+      </div>
+    </div>
+
+    <table class="invoice-table">
+      <thead>
+        <tr>
+          <th>#Invoice</th>
+          <th>Invoice Date</th>
+          <th>Full Name</th>
+          <th>Email Address</th>
+          <th>Plan Amount</th>
+          <th>Net Amount</th>
+          <th>Payment Mode</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (invoices.length) {
+          @for (item of invoices; track item.invoiceIndex) {
+            <tr>
+              <td><a href="">{{ item.invoiceNumber }}</a></td>
+
+              <td>{{ item.invoiceDate }}</td>
+
+              <td>
+                {{ item.firstName }}
+                {{ item.lastName }}
+              </td>
+
+              <td>{{ item.payerEmail }}</td>
+
+              <td>
+                {{ item.planAmount }}
+                {{ item.currency }}
+              </td>
+
+              <td>
+                {{ item.netInvoiceAmount }}
+                {{ item.currency }}
+              </td>
+
+              <td>{{ item.paymentMode }}</td>
+            </tr>
+          }
+        } @else {
+          <tr>
+            <td colspan="7" class="no-data">No Invoice Found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
