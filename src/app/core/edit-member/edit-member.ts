@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Api } from '../Services/api';
-import { AlertMessage } from "../../shared/component/alert-message/alert-message";
+import { AlertMessage } from '../../shared/component/alert-message/alert-message';
 import { DatePipe } from '@angular/common';
 import { pipe } from 'rxjs';
-import { Header } from "../../shared/component/header/header";
-
+import { Header } from '../../shared/component/header/header';
 
 @Component({
   selector: 'app-edit-member',
@@ -17,6 +16,7 @@ import { Header } from "../../shared/component/header/header";
 })
 export class EditMemberComponent implements OnInit {
   memberForm!: FormGroup;
+  states: any[] = [];
 
   memberId!: number;
 
@@ -25,7 +25,7 @@ export class EditMemberComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private api: Api
+    private api: Api,
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +50,7 @@ export class EditMemberComponent implements OnInit {
     });
 
     this.memberId = Number(this.route.snapshot.paramMap.get('id'));
+    this.loadStates();
 
     this.loadMember();
     this.loadInvoices();
@@ -85,6 +86,16 @@ export class EditMemberComponent implements OnInit {
     });
   }
 
+  loadStates() {
+    this.api.getAllStates().subscribe({
+      next: (res: any) => {
+        this.states = res.states || res.data || [];
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
   loadInvoices() {
     this.api.getMemberInvoices(this.memberId).subscribe({
       next: (res) => {

@@ -74,20 +74,24 @@
   --tran-05: all 0.5s ease;
 }
 
+
 .header-section {
   margin: 30px 12px 0 80px;
 }
+
 
 .heading {
   font-size: var(--fs-12);
   font-weight: var(--fw-700);
 }
 
+
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 .ngx-pe-img {
   display: block !important;
 }
+
 
 .ngx-pe-cropper-wrapper img {
   display: block !important;
