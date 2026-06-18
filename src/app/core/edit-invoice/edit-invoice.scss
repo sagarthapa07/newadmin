@@ -1,0 +1,176 @@
+.edit-invoice-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  align-items: flex-start;
+}
+
+/* LEFT SIDE */
+
+.invoice-left {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.invoice-tabs {
+  display: flex;
+  border-bottom: 1px solid #d9d9d9;
+  background: #f8f8f8;
+}
+
+.invoice-tabs button {
+  padding: 12px 18px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+  border-right: 1px solid #ddd;
+  white-space: nowrap;
+}
+
+.invoice-tabs button:hover {
+  background: #f2f2f2;
+}
+
+.invoice-tabs button.active {
+  background: #fff;
+  color: #2b63b7;
+  font-weight: 600;
+  border-bottom: 2px solid #2b63b7;
+}
+
+.invoice-left form {
+  padding: 25px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.form-row label {
+  width: 180px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  flex: 1;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  height: 38px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.form-row textarea {
+  min-height: 100px;
+  padding-top: 10px;
+}
+
+.btn-primary {
+  background: linear-gradient(
+    to bottom,
+    #45b2e8,
+    #1996c7
+  );
+  border: 0;
+  color: white;
+  min-width: 100px;
+  height: 38px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* RIGHT PANEL */
+
+.member-sidebar {
+  width: 500px;
+  background: #eaf7fd;
+  border-radius: 10px;
+  padding: 25px;
+}
+
+.member-sidebar form {
+  display: flex;
+  flex-direction: column;
+}
+
+.member-sidebar .form-row {
+  margin-bottom: 14px;
+}
+
+.member-sidebar label {
+  width: 130px;
+}
+
+.member-sidebar input,
+.member-sidebar select {
+  flex: 1;
+  border: 1px solid #d8d8d8;
+  background: #fff;
+  border-radius: 4px;
+  height: 38px;
+  padding: 0 12px;
+}
+
+.member-sidebar button {
+  margin-top: 20px;
+  align-self: flex-end;
+}
+
+/* SELECTS */
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23666' stroke-width='2' d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 35px !important;
+}
+
+/* TAB CONTENT */
+
+.invoice-left form {
+  min-height: 600px;
+}
+
+/* MOBILE */
+
+@media (max-width: 1200px) {
+  .edit-invoice-container {
+    flex-direction: column;
+  }
+
+  .member-sidebar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-row label {
+    width: 100%;
+    margin-bottom: 6px;
+  }
+
+  .invoice-tabs {
+    overflow-x: auto;
+  }
+
+  .invoice-tabs button {
+    flex-shrink: 0;
+  }
+}

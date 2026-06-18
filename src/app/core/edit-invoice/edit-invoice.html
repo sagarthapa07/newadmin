@@ -1,0 +1,174 @@
+<app-header></app-header>
+<section class="header-section">
+  <div class="edit-invoice-container">
+    <!-- LEFT -->
+
+    <div class="invoice-left">
+      <div class="invoice-tabs">
+        <button
+          [class.active]="activeTab === 'invoice-details'"
+          (click)="activeTab = 'invoice-details'"
+        >
+          Invoice details
+        </button>
+
+        <button [class.active]="activeTab === 'discount'" (click)="activeTab = 'discount'">
+          Discount Coupons
+        </button>
+
+        <button [class.active]="activeTab === 'invoice'" (click)="activeTab = 'invoice'">
+          Invoice Detail
+        </button>
+
+        <button [class.active]="activeTab === 'misc'" (click)="activeTab = 'misc'">
+          Miscellaneous Charges
+        </button>
+
+        <button [class.active]="activeTab === 'transaction'" (click)="activeTab = 'transaction'">
+          Transactions Detail
+        </button>
+      </div>
+
+      <form [formGroup]="invoiceForm">
+        @if (activeTab === 'invoice-details') {
+          <div class="form-row">
+            <label>Selected Plan</label>
+
+            <select formControlName="selectedPlan">
+              @for (plan of plans; track plan.index) {
+                <option [value]="plan.name">
+                  {{ plan.name }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Plan Amount</label>
+            <input type="text" formControlName="planAmount" />
+          </div>
+
+          <div class="form-row">
+            <label>Plan Activation Date</label>
+            <input type="date" formControlName="planActivationDate" />
+          </div>
+          <div class="form-row">
+            <label>Plan Duration</label>
+
+            <input type="number" formControlName="planDuration" />
+
+            <select formControlName="planDurationUnit">
+              <option value="Month">Month</option>
+              <option value="Year">Year</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Plan Expiry Date</label>
+            <input type="date" formControlName="planExpiryDate" />
+          </div>
+          <div class="form-row">
+            <label>Extended Expiry Date</label>
+            <input type="date" formControlName="extendedExpiryDate" />
+          </div>
+          <div class="form-row">
+            <label>Validity Remark</label>
+
+            <textarea formControlName="validityRemark"> </textarea>
+          </div>
+        }
+
+        @if (activeTab === 'invoice') {
+          <div class="form-row">
+            <label>Invoice Number</label>
+            <input type="text" formControlName="invoiceNumber" />
+          </div>
+
+          <div class="form-row">
+            <label>Invoice Status</label>
+            <input type="text" formControlName="invoiceStatus" />
+          </div>
+
+          <div class="form-row">
+            <label>Net Amount</label>
+            <input type="text" formControlName="netInvoiceAmount" />
+          </div>
+        }
+
+        @if (activeTab === 'transaction') {
+          <div class="form-row">
+            <label>Payment Mode</label>
+
+            <input type="text" formControlName="paymentMode" />
+          </div>
+
+          <div class="form-row">
+            <label>Payment Id</label>
+
+            <input type="text" formControlName="paymentId" />
+          </div>
+
+          <div class="form-row">
+            <label>Transaction Date</label>
+
+            <input type="date" formControlName="transactionDate" />
+          </div>
+
+          <div class="form-row">
+            <label>Payer Email</label>
+            <input type="text" formControlName="payerEmail" />
+          </div>
+
+          <div class="form-row">
+            <label>Transaction Id</label>
+            <input type="text" formControlName="transactionId" />
+          </div>
+        }
+
+        <button class="btn btn-primary" type="button" (click)="saveInvoice()">Save</button>
+      </form>
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="member-sidebar">
+      <form [formGroup]="memberForm">
+        <div class="form-row">
+          <label>First Name</label>
+          <input type="text" formControlName="firstName" />
+        </div>
+
+        <div class="form-row">
+          <label>Last Name</label>
+          <input type="text" formControlName="lastName" />
+        </div>
+
+        <div class="form-row">
+          <label>State</label>
+
+          <select formControlName="state">
+            @for (state of states; track $index) {
+              <option [value]="state.stateName">
+                {{ state.stateName }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label>Current Plan</label>
+
+          <select formControlName="plan">
+            @for (plan of plans; track plan.index) {
+              <option [value]="plan.name">
+                {{ plan.name }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <button type="button" class="btn btn-primary" (click)="saveMember()">Save</button>
+      </form>
+    </div>
+  </div>
+</section>

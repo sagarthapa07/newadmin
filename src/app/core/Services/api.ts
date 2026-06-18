@@ -278,4 +278,15 @@ export class Api {
   getMemberInvoices(memberId: number): Observable<any> {
     return this.http.get(`${environment.baseUrl}/Invoice/GetMemberInvoices?memberId=${memberId}`);
   }
+
+  getAllPlans() {
+    return this.http.get('https://ang-dnd.fundsforngospremium.com/api/Plan/GetAllPlans');
+  }
+
+  getInvoiceById(invoiceId: number): Observable<any> {
+    return this.http.get(`${environment.baseUrl}/Invoice/GetInvoiceById?invoiceId=${invoiceId}`);
+  }
+  getPaymentMethods(): Observable<any> {
+    return this.http.get(`${environment.baseUrl}/Plan/GetPaymentMethods`);
+  }
 }

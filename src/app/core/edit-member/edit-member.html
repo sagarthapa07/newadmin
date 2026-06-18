@@ -26,24 +26,20 @@
             <label>Location:</label>
 
             <div class="double-input">
-              <select class="form-control">
+              <select class="form-control state-dropdown">
                 <option>Select</option>
                 <option value="United States" selected>United State</option>
               </select>
-              <div class="select-wrapper">
-                <select class="form-control" formControlName="state">
-                  <option value="">Select</option>
+              <select class="form-control state-dropdown" formControlName="state">
+                <option value="">Select</option>
 
-                  @for (item of states; track item.stateID) {
-                    <option [value]="item.stateName">
-                      {{ item.stateName }}
-                    </option>
-                  }
-                </select>
+                @for (item of states; track item.stateID) {
+                  <option [value]="item.stateName">
+                    {{ item.stateName }}
+                  </option>
+                }
+              </select>
 
-                <i class="bi bi-chevron-down"></i>
-              </div>
-                
               <!-- <input type="text" class="form-control" formControlName="state" /> -->
             </div>
           </div>
@@ -79,7 +75,15 @@
           <div class="form-row">
             <label>Current Plan:</label>
 
-            <input type="text" class="form-control" formControlName="plan" />
+            <select class="form-control state-dropdown" formControlName="plan">
+              <option value="">Select</option>
+
+              @for (item of plans; track item.index) {
+                <option [value]="item.name">
+                  {{ item.name }}
+                </option>
+              }
+            </select>
           </div>
 
           <div class="form-row">
@@ -103,9 +107,12 @@
           <div class="form-row">
             <label>Status:</label>
 
-            <select class="form-control" formControlName="memberStatus">
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
+            <select class="form-control state-dropdown" formControlName="memberStatus">
+              <option value="">Select</option>
+              <option value="NEW">New</option>
+              <option value="ACTIVE">Active</option>
+              <option value="EXPIRED">Expired</option>
+              <option value="BLOCKED">Blocked</option>
             </select>
           </div>
 
@@ -162,7 +169,9 @@
           @for (item of invoices; track item.invoiceIndex) {
             <tr>
               <td>
-                <a href="">{{ item.invoiceNumber }}</a>
+                <a href="javascript:void(0)" (click)="openInvoice(item.invoiceIndex)">
+                  {{ item.invoiceNumber }}
+                </a>
               </td>
 
               <td>{{ item.invoiceDate }}</td>

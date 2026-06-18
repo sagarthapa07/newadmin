@@ -10,6 +10,7 @@ import { Dashboard } from './core/dashboard/dashboard';
 import { AddnewEdit } from './core/addnew-edit/addnew-edit';
 import { MemberModule } from './core/member-module/member-module';
 import { EditMemberComponent } from './core/edit-member/edit-member';
+import { EditInvoice } from './core/edit-invoice/edit-invoice';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -65,5 +66,8 @@ export const routes: Routes = [
     component: EditMemberComponent,
     // canActivate: [AuthGuard]
   },
-  
+  {
+    path: 'edit-invoice/:memberId/:invoiceId',
+    component: EditInvoice,
+  },
 ];

@@ -1,31 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Api } from '../Services/api';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
 import { DatePipe } from '@angular/common';
 import { pipe } from 'rxjs';
 import { Header } from '../../shared/component/header/header';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-edit-member',
   standalone: true,
-  imports: [ReactiveFormsModule, AlertMessage, DatePipe, Header],
+  imports: [ReactiveFormsModule, AlertMessage, DatePipe, Header, RouterLink],
   templateUrl: './edit-member.html',
   styleUrls: ['./edit-member.scss'],
 })
 export class EditMemberComponent implements OnInit {
   memberForm!: FormGroup;
   states: any[] = [];
-
+  plans: any[] = [];
   memberId!: number;
-
   invoices: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private api: Api,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -51,11 +52,18 @@ export class EditMemberComponent implements OnInit {
 
     this.memberId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadStates();
-
     this.loadMember();
-    this.loadInvoices();
+    // this.loadInvoices();
+    this.loadPlans();
   }
 
+  loadPlans() {
+    this.api.getAllPlans().subscribe({
+      next: (res: any) => {
+        this.plans = res.result || [];
+      },
+    });
+  }
   loadMember() {
     this.api.getMemberById(this.memberId).subscribe({
       next: (res) => {
@@ -85,6 +93,9 @@ export class EditMemberComponent implements OnInit {
       },
     });
   }
+  openInvoice(invoiceId: number) {
+    this.router.navigate(['/edit-invoice', this.memberId, invoiceId]);
+  }
 
   loadStates() {
     this.api.getAllStates().subscribe({
@@ -96,14 +107,27 @@ export class EditMemberComponent implements OnInit {
       },
     });
   }
-  loadInvoices() {
-    this.api.getMemberInvoices(this.memberId).subscribe({
-      next: (res) => {
-        this.invoices = res.invoice || [];
-      },
-    });
-  }
 
+
+  // loadInvoice() {
+  //   this.api.getInvoiceById(this.invoiceId).subscribe({
+  //     next: (res: any) => {
+  //       console.log('Invoice Response', res);
+
+  //       const inv = res.invoice?.[0];
+
+  //       console.log('Invoice Data', inv);
+
+  //       if (!inv) return;
+
+  //       this.invoiceForm.patchValue({
+  //         invoiceNumber: inv.invoiceNumber,
+  //         invoiceStatus: inv.invoiceStatus,
+  //         planAmount: inv.planAmount,
+  //       });
+  //     },
+  //   });
+  // }
   onSave() {
     console.log(this.memberForm.value);
   }
