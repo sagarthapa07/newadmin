@@ -53,7 +53,7 @@ export class EditMemberComponent implements OnInit {
     this.memberId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadStates();
     this.loadMember();
-    // this.loadInvoices();
+    this.loadInvoices();
     this.loadPlans();
   }
 
@@ -108,26 +108,21 @@ export class EditMemberComponent implements OnInit {
     });
   }
 
+loadInvoices() {
+  this.api.getMemberInvoices(this.memberId).subscribe({
+    next: (res: any) => {
+      console.log('Invoices Response', res);
 
-  // loadInvoice() {
-  //   this.api.getInvoiceById(this.invoiceId).subscribe({
-  //     next: (res: any) => {
-  //       console.log('Invoice Response', res);
+      this.invoices = res.invoice || res.result || [];
+    },
+    error: (err) => {
+      console.log(err);
+    }
+  });
+}
 
-  //       const inv = res.invoice?.[0];
 
-  //       console.log('Invoice Data', inv);
 
-  //       if (!inv) return;
-
-  //       this.invoiceForm.patchValue({
-  //         invoiceNumber: inv.invoiceNumber,
-  //         invoiceStatus: inv.invoiceStatus,
-  //         planAmount: inv.planAmount,
-  //       });
-  //     },
-  //   });
-  // }
   onSave() {
     console.log(this.memberForm.value);
   }

@@ -144,8 +144,7 @@
         </div>
 
         <div class="form-row">
-          <label>State</label>
-
+          <label>Location: </label>
           <select formControlName="state">
             @for (state of states; track $index) {
               <option [value]="state.stateName">
@@ -153,7 +152,21 @@
               </option>
             }
           </select>
+          <select formControlName="state">
+            @for (state of states; track $index) {
+              <option [value]="state.country">
+                {{ state.country }}
+              </option>
+            }
+          </select>
         </div>
+
+
+
+
+
+
+
 
         <div class="form-row">
           <label>Current Plan</label>

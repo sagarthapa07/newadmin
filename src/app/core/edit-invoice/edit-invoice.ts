@@ -20,6 +20,7 @@ export class EditInvoice {
   invoiceId!: number;
 
   states: any[] = [];
+  
   plans: any[] = [];
   paymentMethods: any[] = [];
 
@@ -36,11 +37,9 @@ export class EditInvoice {
     this.invoiceId = Number(this.route.snapshot.paramMap.get('invoiceId'));
 
     this.initForms();
-
     this.loadStates();
     this.loadPlans();
     this.loadPaymentMethods();
-
     this.loadMember();
     this.loadInvoice();
   }
@@ -130,50 +129,27 @@ export class EditInvoice {
   loadInvoice() {
     this.api.getInvoiceById(this.invoiceId).subscribe({
       next: (res: any) => {
+        console.log('Full Response =>', res);
         const inv = res.invoice?.[0];
-
-        if (!inv) return;
-
+        console.log('Invoice =>', inv);
+        if (!inv) {
+          console.log('Invoice data not found');
+          return;
+        }
         this.invoiceForm.patchValue({
           selectedPlan: inv.planIndex,
           planAmount: inv.planAmount,
-
           planActivationDate: inv.planActivationDate?.split('T')[0],
-
           planDuration: inv.planDuration,
-
           planDurationUnit: inv.planDurationUnit,
-
           planExpiryDate: inv.planExpiryDate?.split('T')[0],
-
           extendedExpiryDate: inv.extendedExpiryDate?.split('T')[0],
-
           validityRemark: inv.validityRemark,
-
-          invoiceNumber: inv.invoiceNumber,
-
-          invoiceDate: inv.invoiceDate?.split('T')[0],
-
-          invoiceStatus: inv.invoiceStatus,
-
-          currency: inv.currency,
-
-          netInvoiceAmount: inv.netInvoiceAmount,
-
-          netTaxableAmount: inv.netTaxableAmount,
-
-          paymentMode: inv.paymentMode,
-
-          paymentMethodIndex: inv.paymentMethodIndex,
-
-          payerEmail: inv.payerEmail,
-
-          transactionId: inv.transactionId,
-
-          paymentId: inv.paymentId,
-
-          transactionDate: inv.transactionDate?.split('T')[0],
         });
+        console.log('Form Value =>', this.invoiceForm.value);
+      },
+      error: (err) => {
+        console.log(err);
       },
     });
   }
