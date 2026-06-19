@@ -20,7 +20,7 @@ export class EditInvoice {
   invoiceId!: number;
 
   states: any[] = [];
-  
+  country:any[]=[]
   plans: any[] = [];
   paymentMethods: any[] = [];
 
@@ -66,36 +66,24 @@ export class EditInvoice {
     this.invoiceForm = this.fb.group({
       selectedPlan: [''],
       planAmount: [''],
-
       planActivationDate: [''],
-
       planDuration: [''],
       planDurationUnit: [''],
-
       planExpiryDate: [''],
-
       extendedExpiryDate: [''],
-
       validityRemark: [''],
-
       invoiceNumber: [''],
       invoiceDate: [''],
       invoiceStatus: [''],
-
       currency: [''],
-
       netInvoiceAmount: [''],
       netTaxableAmount: [''],
-
       paymentMode: [''],
       paymentMethodIndex: [''],
-
       payerEmail: [''],
       transactionId: [''],
       paymentId: [''],
-
       transactionDate: [''],
-
       remarkForInvoice: [''],
     });
   }
@@ -145,6 +133,7 @@ export class EditInvoice {
           planExpiryDate: inv.planExpiryDate?.split('T')[0],
           extendedExpiryDate: inv.extendedExpiryDate?.split('T')[0],
           validityRemark: inv.validityRemark,
+          country:inv.  ,
         });
         console.log('Form Value =>', this.invoiceForm.value);
       },

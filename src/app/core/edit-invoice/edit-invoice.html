@@ -152,8 +152,12 @@
               </option>
             }
           </select>
+
+
+          
+
           <select formControlName="state">
-            @for (state of states; track $index) {
+            @for (state of country; track $index) {
               <option [value]="state.country">
                 {{ state.country }}
               </option>
