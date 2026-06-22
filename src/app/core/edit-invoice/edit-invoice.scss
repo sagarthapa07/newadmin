@@ -49,15 +49,14 @@
 
 .form-row {
   display: flex;
-  align-items: center;
-  margin-bottom: 15px;
+  align-items: flex-start;
+  margin-bottom: 18px;
 }
 
 .form-row label {
   width: 180px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #444;
+  font-size: 18px;
+  padding-top: 10px;
 }
 
 .form-row input,
@@ -75,13 +74,44 @@
   min-height: 100px;
   padding-top: 10px;
 }
+.field-group {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.field-group.single {
+  grid-template-columns: 1fr;
+}
+
+.amount-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.amount-row input {
+  flex: 1;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid #d7d7d7;
+  outline: none;
+}
+
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
+}
 
 .btn-primary {
-  background: linear-gradient(
-    to bottom,
-    #45b2e8,
-    #1996c7
-  );
+  background: linear-gradient(to bottom, #45b2e8, #1996c7);
   border: 0;
   color: white;
   min-width: 100px;
@@ -116,7 +146,7 @@
 .member-sidebar select {
   flex: 1;
   border: 1px solid #d8d8d8;
-  background: #fff;
+  background: var(--box-bg-color);
   border-radius: 4px;
   height: 38px;
   padding: 0 12px;
@@ -173,4 +203,35 @@ select {
   .invoice-tabs button {
     flex-shrink: 0;
   }
+}
+
+.member-sidebar .form-row {
+  margin-bottom: 15px;
+}
+
+.member-sidebar .double {
+  display: flex;
+  gap: 20px;
+}
+
+.member-sidebar .double > div {
+  flex: 1;
+}
+.member-sidebar input,
+.member-sidebar select,
+.member-sidebar textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.member-sidebar textarea {
+  resize: vertical;
+  min-height: 38px;
+  background: var(--box-bg-color);
+  width: 100%;
+  padding: 10px 12px;
+  resize: none;
+  overflow: hidden;
+  white-space: nowrap;
 }

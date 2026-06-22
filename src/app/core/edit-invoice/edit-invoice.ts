@@ -20,7 +20,7 @@ export class EditInvoice {
   invoiceId!: number;
 
   states: any[] = [];
-  country:any[]=[]
+  country: any[] = [];
   plans: any[] = [];
   paymentMethods: any[] = [];
 
@@ -64,6 +64,7 @@ export class EditInvoice {
     });
 
     this.invoiceForm = this.fb.group({
+      plan: [''],
       selectedPlan: [''],
       planAmount: [''],
       planActivationDate: [''],
@@ -91,6 +92,9 @@ export class EditInvoice {
   loadMember() {
     this.api.getMemberById(this.memberId).subscribe({
       next: (res: any) => {
+        console.log('Member API Response =', res);
+        console.log('plan name =', res.plan);
+
         const m = res.registeredmember;
 
         this.memberForm.patchValue({
@@ -110,35 +114,50 @@ export class EditInvoice {
           registrationDate: m.registrationDate?.split('T')[0],
           activationDate: m.activationDate?.split('T')[0],
         });
+        this.invoiceForm.patchValue({
+          plan: m.planName,
+        });
+        console.log('Member Plan Name:', m.planName);
       },
     });
   }
 
   loadInvoice() {
-    this.api.getInvoiceById(this.invoiceId).subscribe({
+    this.api.getMemberInvoices(this.memberId).subscribe({
       next: (res: any) => {
-        console.log('Full Response =>', res);
-        const inv = res.invoice?.[0];
-        console.log('Invoice =>', inv);
-        if (!inv) {
-          console.log('Invoice data not found');
-          return;
-        }
+        console.log('Invoice Response:', res);
+        const inv = res.invoice?.find((x: any) => x.invoiceIndex == this.invoiceId);
+        console.log('Selected Invoice:', inv);
+        console.log('inv.planIndex =', inv?.planIndex);
+        console.log('inv.planName =', inv?.planName);
+
+        if (!inv) return;
+
         this.invoiceForm.patchValue({
-          selectedPlan: inv.planIndex,
+          plan: inv.planName,
           planAmount: inv.planAmount,
           planActivationDate: inv.planActivationDate?.split('T')[0],
           planDuration: inv.planDuration,
           planDurationUnit: inv.planDurationUnit,
           planExpiryDate: inv.planExpiryDate?.split('T')[0],
           extendedExpiryDate: inv.extendedExpiryDate?.split('T')[0],
-          validityRemark: inv.validityRemark,
-          country:inv.  ,
+          validityRemark: inv.validityRemark || '-',
+
+          invoiceNumber: inv.invoiceNumber,
+          invoiceDate: inv.invoiceDate?.split('T')[0],
+          invoiceStatus: inv.invoiceStatus,
+          currency: inv.currency,
+          netInvoiceAmount: inv.netInvoiceAmount,
+          netTaxableAmount: inv.netTaxableAmount,
+
+          paymentMode: inv.paymentMode,
+          paymentMethodIndex: inv.paymentMethodIndex,
+          payerEmail: inv.payerEmail,
+          paymentId: inv.paymentId,
+          transactionId: inv.transactionId,
+          transactionDate: inv.transactionDate?.split('T')[0],
+          remarkForInvoice: inv.remarkForInvoice || '-',
         });
-        console.log('Form Value =>', this.invoiceForm.value);
-      },
-      error: (err) => {
-        console.log(err);
       },
     });
   }
@@ -155,6 +174,7 @@ export class EditInvoice {
     this.api.getAllPlans().subscribe({
       next: (res: any) => {
         this.plans = res.result || [];
+        this.plans.forEach((plan: any) => {});
       },
     });
   }

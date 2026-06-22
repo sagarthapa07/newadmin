@@ -32,49 +32,73 @@
       <form [formGroup]="invoiceForm">
         @if (activeTab === 'invoice-details') {
           <div class="form-row">
-            <label>Selected Plan</label>
+            <label>Selected Plan:</label>
 
-            <select formControlName="selectedPlan">
-              @for (plan of plans; track plan.index) {
-                <option [value]="plan.name">
-                  {{ plan.name }}
-                </option>
-              }
-            </select>
+            <div class="field-group single">
+              <select formControlName="plan">
+                @for (plan of plans; track plan.index) {
+                  <option [value]="plan.name">
+                    {{ plan.name }}
+                  </option>
+                }
+              </select>
+            </div>
           </div>
 
           <div class="form-row">
-            <label>Plan Amount</label>
-            <input type="text" formControlName="planAmount" />
+            <label>Plan Amount:</label>
+
+            <div class="field-group amount-row">
+              <input type="text" formControlName="planAmount" />
+              <span>USD</span>
+            </div>
           </div>
 
           <div class="form-row">
-            <label>Plan Activation Date</label>
-            <input type="date" formControlName="planActivationDate" />
-          </div>
-          <div class="form-row">
-            <label>Plan Duration</label>
+            <label>Plan Activation Date:</label>
 
-            <input type="number" formControlName="planDuration" />
-
-            <select formControlName="planDurationUnit">
-              <option value="Month">Month</option>
-              <option value="Year">Year</option>
-            </select>
+            <div class="field-group single">
+              <input type="date" formControlName="planActivationDate" />
+            </div>
           </div>
 
           <div class="form-row">
-            <label>Plan Expiry Date</label>
-            <input type="date" formControlName="planExpiryDate" />
-          </div>
-          <div class="form-row">
-            <label>Extended Expiry Date</label>
-            <input type="date" formControlName="extendedExpiryDate" />
-          </div>
-          <div class="form-row">
-            <label>Validity Remark</label>
+            <label>Plan Duration:</label>
 
-            <textarea formControlName="validityRemark"> </textarea>
+            <div class="field-group">
+              <input type="number" formControlName="planDuration" />
+
+              <select formControlName="planDurationUnit">
+                <option value="Year" selected>Select</option>
+                <option value="Year">Year</option>
+                <option value="Month">Month</option>
+                <option value="day">Day</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Plan Expiry Date:</label>
+
+            <div class="field-group single">
+              <input type="date" formControlName="planExpiryDate" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Extended Expiry Date:</label>
+
+            <div class="field-group single">
+              <input type="date" formControlName="extendedExpiryDate" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Validity Remark:</label>
+
+            <div class="field-group single">
+              <textarea rows="4" formControlName="validityRemark"></textarea>
+            </div>
           </div>
         }
 
@@ -133,48 +157,53 @@
 
     <div class="member-sidebar">
       <form [formGroup]="memberForm">
+        <!-- Member Name -->
         <div class="form-row">
-          <label>First Name</label>
-          <input type="text" formControlName="firstName" />
+          <label>Member's name:</label>
+
+          <div class="field-group">
+            <input type="text" formControlName="firstName" />
+            <input type="text" formControlName="lastName" />
+          </div>
         </div>
 
+        <!-- Location -->
         <div class="form-row">
-          <label>Last Name</label>
-          <input type="text" formControlName="lastName" />
+          <label>Location:</label>
+
+          <div class="field-group">
+            <select formControlName="country">
+              @for (c of country; track $index) {
+                <option [value]="c.country">{{ c.country }}</option>
+              }
+            </select>
+
+            <select formControlName="state">
+              @for (state of states; track $index) {
+                <option [value]="state.stateName">{{ state.stateName }}</option>
+              }
+            </select>
+
+            <input type="text" formControlName="zipCode" />
+            <input type="text" formControlName="city" />
+          </div>
         </div>
 
+        <!-- Address -->
         <div class="form-row">
-          <label>Location: </label>
-          <select formControlName="state">
-            @for (state of states; track $index) {
-              <option [value]="state.stateName">
-                {{ state.stateName }}
-              </option>
-            }
-          </select>
-
-
-          
-
-          <select formControlName="state">
-            @for (state of country; track $index) {
-              <option [value]="state.country">
-                {{ state.country }}
-              </option>
-            }
-          </select>
+          <label>Address</label>
+          <textarea formControlName="billingAddress" rows="1"></textarea>
         </div>
 
+        <!-- Remark -->
+        <div class="form-row">
+          <label>Remark</label>
+          <textarea formControlName="remarks" rows="1"></textarea>
+        </div>
 
-
-
-
-
-
-
+        <!-- Plan -->
         <div class="form-row">
           <label>Current Plan</label>
-
           <select formControlName="plan">
             @for (plan of plans; track plan.index) {
               <option [value]="plan.name">
@@ -182,6 +211,42 @@
               </option>
             }
           </select>
+        </div>
+
+        <!-- Email -->
+        <div class="form-row">
+          <label>Email</label>
+          <input type="text" formControlName="email" />
+        </div>
+
+        <!-- Password -->
+        <div class="form-row">
+          <label>Password</label>
+          <input type="text" formControlName="password" />
+        </div>
+
+        <!-- Phone -->
+        <div class="form-row">
+          <label>Phone</label>
+          <input type="text" formControlName="contactNo" />
+        </div>
+
+        <!-- Status -->
+        <div class="form-row">
+          <label>Status</label>
+          <input type="text" formControlName="memberStatus" />
+        </div>
+
+        <!-- Registration Date -->
+        <div class="form-row">
+          <label>Registration Date</label>
+          <input type="date" formControlName="registrationDate" />
+        </div>
+
+        <!-- Activation Date -->
+        <div class="form-row">
+          <label>Activation Date</label>
+          <input type="date" formControlName="activationDate" />
         </div>
 
         <button type="button" class="btn btn-primary" (click)="saveMember()">Save</button>
