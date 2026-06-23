@@ -11,6 +11,7 @@ import { AddnewEdit } from './core/addnew-edit/addnew-edit';
 import { MemberModule } from './core/member-module/member-module';
 import { EditMemberComponent } from './core/edit-member/edit-member';
 import { EditInvoice } from './core/edit-invoice/edit-invoice';
+import { AddMember } from './core/add-member/add-member';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -69,5 +70,9 @@ export const routes: Routes = [
   {
     path: 'edit-invoice/:memberId/:invoiceId',
     component: EditInvoice,
+  },
+  {
+    path: 'premium-members/add-member',
+    component: AddMember,
   },
 ];

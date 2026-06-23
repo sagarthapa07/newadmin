@@ -67,6 +67,11 @@ export class EditInvoice {
       plan: [''],
       selectedPlan: [''],
       planAmount: [''],
+      couponCode: [''],
+      discountType: [''],
+      discountAmount: [''],
+      amountAfterDiscount: [''],
+      discountRemark: [''],
       planActivationDate: [''],
       planDuration: [''],
       planDurationUnit: [''],
@@ -86,17 +91,24 @@ export class EditInvoice {
       paymentId: [''],
       transactionDate: [''],
       remarkForInvoice: [''],
+      discountValue: [''],
+      afterDiscountAmount: [''],
+      miscAdd: [''],
+      remarkForMiscAdd: [''],
+      miscLess: [''],
+      remarkForMiscLess: [''],
+      transactionAmount: [''],
+      transactionStatus: [''],
+      transactionRemark: [''],
+      recieptAttachment: [''],
+      sendEmail: [false],
     });
   }
 
   loadMember() {
     this.api.getMemberById(this.memberId).subscribe({
       next: (res: any) => {
-        console.log('Member API Response =', res);
-        console.log('plan name =', res.plan);
-
         const m = res.registeredmember;
-
         this.memberForm.patchValue({
           firstName: m.firstName,
           lastName: m.lastName,
@@ -114,50 +126,74 @@ export class EditInvoice {
           registrationDate: m.registrationDate?.split('T')[0],
           activationDate: m.activationDate?.split('T')[0],
         });
-        this.invoiceForm.patchValue({
-          plan: m.planName,
+
+        this.country = [
+          {
+            country: m.country,
+          },
+        ];
+
+        this.memberForm.patchValue({
+          country: m.country,
         });
-        console.log('Member Plan Name:', m.planName);
+
+        this.invoiceForm.patchValue({
+          plan: m.plan,
+        });
       },
     });
   }
 
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString + ' UTC');
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   loadInvoice() {
-    this.api.getMemberInvoices(this.memberId).subscribe({
+    this.api.getInvoiceById(this.invoiceId).subscribe({
       next: (res: any) => {
-        console.log('Invoice Response:', res);
-        const inv = res.invoice?.find((x: any) => x.invoiceIndex == this.invoiceId);
-        console.log('Selected Invoice:', inv);
-        console.log('inv.planIndex =', inv?.planIndex);
-        console.log('inv.planName =', inv?.planName);
-
-        if (!inv) return;
-
+        const inv = res.invoice;
         this.invoiceForm.patchValue({
-          plan: inv.planName,
           planAmount: inv.planAmount,
-          planActivationDate: inv.planActivationDate?.split('T')[0],
           planDuration: inv.planDuration,
           planDurationUnit: inv.planDurationUnit,
-          planExpiryDate: inv.planExpiryDate?.split('T')[0],
-          extendedExpiryDate: inv.extendedExpiryDate?.split('T')[0],
-          validityRemark: inv.validityRemark || '-',
 
+          planActivationDate: this.formatDate(inv.planActivationDate),
+          planExpiryDate: this.formatDate(inv.planExpiryDate),
+          extendedExpiryDate: this.formatDate(inv.extendedExpiryDate),
+          invoiceDate: this.formatDate(inv.invoiceDate),
+          transactionDate: this.formatDate(inv.transactionDate),
+
+          validityRemark: inv.validityRemark || '-',
           invoiceNumber: inv.invoiceNumber,
-          invoiceDate: inv.invoiceDate?.split('T')[0],
-          invoiceStatus: inv.invoiceStatus,
+          invoiceStatus: inv.invStatus,
           currency: inv.currency,
           netInvoiceAmount: inv.netInvoiceAmount,
           netTaxableAmount: inv.netTaxableAmount,
-
           paymentMode: inv.paymentMode,
-          paymentMethodIndex: inv.paymentMethodIndex,
           payerEmail: inv.payerEmail,
           paymentId: inv.paymentId,
           transactionId: inv.transactionId,
-          transactionDate: inv.transactionDate?.split('T')[0],
           remarkForInvoice: inv.remarkForInvoice || '-',
+          couponCode: inv.couponCode,
+          discountType: inv.discountType === '-' ? '' : inv.discountType,
+          discountAmount: inv.discountValue,
+          afterDiscountAmount: inv.afterDiscountAmount,
+          discountRemark: inv.discountRemark,
+          miscAdd: inv.miscAdd,
+          remarkForMiscAdd: inv.remarkForMiscAdd,
+          miscLess: inv.miscLess,
+          remarkForMiscLess: inv.remarkForMiscLess,
+          transactionAmount: inv.transactionAmount,
+          transactionStatus: inv.transactionStatus,
+          transactionRemark: inv.transactionRemark,
+          recieptAttachment: inv.recieptAttachment,
         });
+        console.log(this.invoiceForm.value);
       },
     });
   }
@@ -174,7 +210,6 @@ export class EditInvoice {
     this.api.getAllPlans().subscribe({
       next: (res: any) => {
         this.plans = res.result || [];
-        this.plans.forEach((plan: any) => {});
       },
     });
   }
@@ -188,10 +223,10 @@ export class EditInvoice {
   }
 
   saveInvoice() {
-    console.log(this.invoiceForm.value);
+    // console.log(this.invoiceForm.value);
   }
 
   saveMember() {
-    console.log(this.memberForm.value);
+    // console.log(this.memberForm.value);
   }
 }

@@ -54,7 +54,7 @@
 }
 
 .form-row label {
-  width: 180px;
+  width: 230px;
   font-size: 18px;
   padding-top: 10px;
 }
@@ -103,7 +103,6 @@ textarea {
   border: 1px solid #d7d7d7;
   outline: none;
 }
-
 
 textarea {
   resize: vertical;
@@ -234,4 +233,71 @@ select {
   resize: none;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.attach-file {
+  width: 100%;
+
+  input[type='file'] {
+    width: 100%;
+    height: 34px;
+    padding: 0;
+    border: 1px solid #d8d8d8;
+    background: #fff;
+  }
+}
+.send-email-row {
+  align-items: center;
+}
+
+.send-email-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 8px;
+
+  input[type='checkbox'] {
+    width: 18px;
+    min-width: 18px;
+    height: 18px;
+    min-height: 18px;
+    margin: 0;
+    padding: 0;
+    flex: unset;
+    cursor: pointer;
+  }
+
+  span {
+    font-size: 16px;
+    color: #333;
+    margin: 0;
+  }
+}
+.send-email-group {
+  justify-content: flex-start;
+}
+
+
+.attach-file input[type='file'] {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #d8d8d8;
+  background: #fff;
+}
+
+/* Choose File button */
+.attach-file input[type='file']::file-selector-button {
+  background: #f5f5f5;
+  border: 1px solid #cfcfcf;
+  padding: 10px 15px;
+  margin-right: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  border-radius: 3px;
+}
+
+.attach-file input[type='file']::file-selector-button:hover {
+  background: #e9e9e9;
 }

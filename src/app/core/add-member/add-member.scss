@@ -50,7 +50,7 @@
 
 .double-input input {
   flex: 1;
-}     
+}
 
 .btn-section {
   display: flex;
@@ -145,12 +145,64 @@
 }
 
 .state-dropdown {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 15px;
+  outline: none;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 14px;
-  padding-right: 30px;
+  background-position: right 12px center;
 }
+
+
+
+
+.input-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.error-msg {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.form-control.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+
+// .state-dropdown:focus {
+//   border-color: #4a90e2;
+//   box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+// }
+
+// ::ng-deep .ng-select {
+//   width: 100%;
+// }
+
+// ::ng-deep .ng-select-container {
+//   min-height: 42px !important;
+//   border-radius: 6px !important;
+// }
+
+// ::ng-deep .ng-dropdown-panel-items {
+//   max-height: 100px !important;
+// }
+
+// ::ng-deep .ng-option {
+//   padding: 10px !important;
+// }
+
+// ::ng-deep .ng-option.ng-option-selected {
+//   background: #0d6efd !important;
+//   color: white !important;
+// }

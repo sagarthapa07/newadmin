@@ -102,6 +102,46 @@
           </div>
         }
 
+        @if (activeTab === 'discount') {
+          <div class="form-row">
+            <label>Coupon/Discount Code:</label>
+
+            <div class="field-group single">
+              <input type="text" formControlName="couponCode" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Disc. Type & Amount:</label>
+
+            <div class="field-group">
+              <select formControlName="discountType">
+                <option value="">Select</option>
+                <option value="Fixed">Fixed Discount</option>
+                <option value="Percentage">Percentage Discount</option>
+              </select>
+
+              <input type="number" formControlName="discountAmount" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Amount After Discount:</label>
+
+            <div class="field-group single">
+              <input formControlName="afterDiscountAmount" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Discount Remark:</label>
+
+            <div class="field-group single">
+              <input type="text" formControlName="discountRemark" />
+            </div>
+          </div>
+        }
+
         @if (activeTab === 'invoice') {
           <div class="form-row">
             <label>Invoice Number</label>
@@ -112,43 +152,149 @@
             <label>Invoice Status</label>
             <input type="text" formControlName="invoiceStatus" />
           </div>
-
-          <div class="form-row">
-            <label>Net Amount</label>
-            <input type="text" formControlName="netInvoiceAmount" />
-          </div>
         }
 
+        @if (activeTab === 'misc') {
+          <div class="form-row">
+            <label>Misc (+):</label>
+
+            <div class="field-group single">
+              <input type="number" formControlName="miscAdd" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Remark for Misc (+):</label>
+
+            <div class="field-group single">
+              <input type="text" formControlName="remarkForMiscAdd" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Misc (-):</label>
+
+            <div class="field-group single">
+              <input type="number" formControlName="miscLess" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Remark for Misc (-):</label>
+
+            <div class="field-group single">
+              <input type="text" formControlName="remarkForMiscLess" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Net Taxable Amount:</label>
+
+            <div class="field-group single">
+              <input type="number" formControlName="netTaxableAmount" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Currency:</label>
+
+            <div class="field-group single">
+              <input type="text" formControlName="currency" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Remark for Invoice:</label>
+
+            <div class="field-group single">
+              <textarea rows="3" formControlName="remarkForInvoice"></textarea>
+            </div>
+          </div>
+        }
         @if (activeTab === 'transaction') {
           <div class="form-row">
-            <label>Payment Mode</label>
-
-            <input type="text" formControlName="paymentMode" />
+            <label>Net Invoice Amount:</label>
+            <div class="field-group single">
+              <input type="text" formControlName="netInvoiceAmount" />
+            </div>
           </div>
 
           <div class="form-row">
-            <label>Payment Id</label>
-
-            <input type="text" formControlName="paymentId" />
+            <label>Transaction Date:</label>
+            <div class="field-group single">
+              <input type="date" formControlName="transactionDate" />
+            </div>
           </div>
 
           <div class="form-row">
-            <label>Transaction Date</label>
-
-            <input type="date" formControlName="transactionDate" />
+            <label>Payment Mode:</label>
+            <div class="field-group single">
+              <select formControlName="paymentMode">
+                <option value="Stripe">Stripe</option>
+                <option value="Paypal">Paypal</option>
+              </select>
+            </div>
           </div>
 
           <div class="form-row">
-            <label>Payer Email</label>
-            <input type="text" formControlName="payerEmail" />
+            <label>Payer Email:</label>
+            <div class="field-group single">
+              <input type="text" formControlName="payerEmail" />
+            </div>
           </div>
 
           <div class="form-row">
-            <label>Transaction Id</label>
-            <input type="text" formControlName="transactionId" />
+            <label>Payment ID:</label>
+            <div class="field-group single">
+              <input type="text" formControlName="paymentId" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Transaction ID:</label>
+            <div class="field-group single">
+              <input type="text" formControlName="transactionId" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Transaction Amount:</label>
+            <div class="field-group single">
+              <input type="text" formControlName="transactionAmount" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Transaction Status :</label>
+            <div class="field-group single">
+              <input type="text" formControlName="transactionStatus" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Transaction Remark:</label>
+            <div class="field-group single">
+              <input type="text" formControlName="transactionRemark" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Attach Reciept:</label>
+
+            <div class="field-group single attach-file">
+              <input type="file" />
+            </div>
+          </div>
+
+          <div class="form-row send-email-row">
+            <label>Send Email:</label>
+
+            <div class="send-email-group">
+              <input type="checkbox" formControlName="sendEmail" />
+              <span>Check to send email.</span>
+            </div>
           </div>
         }
-
         <button class="btn btn-primary" type="button" (click)="saveInvoice()">Save</button>
       </form>
     </div>
