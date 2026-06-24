@@ -12,6 +12,7 @@ import { MemberModule } from './core/member-module/member-module';
 import { EditMemberComponent } from './core/edit-member/edit-member';
 import { EditInvoice } from './core/edit-invoice/edit-invoice';
 import { AddMember } from './core/add-member/add-member';
+import { MemberSearch } from './core/member-search/member-search';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -74,5 +75,9 @@ export const routes: Routes = [
   {
     path: 'premium-members/add-member',
     component: AddMember,
+  },
+  {
+    path: 'premium-members/member-search',
+    component: MemberSearch,
   },
 ];

@@ -21,7 +21,7 @@ import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-d
     Header,
     RouterLink,
     NgMultiSelectDropDownModule,
-  ],  
+  ],
   templateUrl: './member-module.html',
   styleUrl: './member-module.scss',
 })

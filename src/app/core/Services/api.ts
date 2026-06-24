@@ -289,4 +289,10 @@ export class Api {
   getPaymentMethods(): Observable<any> {
     return this.http.get(`${environment.baseUrl}/Plan/GetPaymentMethods`);
   }
+
+  membersAdvanceSearch(payload: any) {
+    return this.http.post(`${environment.baseUrl}/Member/MembersAdvanceSearch`, payload);
+  }
+
+  
 }

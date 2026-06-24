@@ -1,0 +1,74 @@
+<app-header></app-header>
+
+<section class="header-section">
+  <div class="table-wrapper">
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>
+              <label class="custom-checkbox">
+                <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll($event)" />
+              </label>
+            </th>
+            <th>Full Name</th>
+            <th>Email Address</th>
+            <th>Transaction ID</th>
+            <th>Payment ID</th>
+            <th>Payer Email</th>
+            <th>Invoice Number</th>
+            <th>Invoice Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @if (isLoading) {
+            <tr>
+              <td colspan="8">Loading...</td>
+            </tr>
+          }
+
+          @if (!isLoading) {
+            @for (item of members; track item.invoiceIndex) {
+              <tr>
+                <td>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" [(ngModel)]="item.selected" />
+                  </label>
+                </td>
+
+                <td>{{ item.firstName }} {{ item.lastName }}</td>
+
+                <td>
+                  {{ item.email }}
+                </td>
+
+                <td>
+                  {{ item.transactionId }}
+                </td>
+
+                <td>
+                  {{ item.paymentId }}
+                </td>
+
+                <td>
+                  {{ item.payerEmail }}
+                </td>
+
+                <td>
+                  <a href="javascript:void(0)">
+                    {{ item.invoiceNumber }}
+                  </a>
+                </td>
+
+                <td>
+                  {{ item.invoiceDate | date: 'yyyy-MMM-dd' }}
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

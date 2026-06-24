@@ -23,13 +23,12 @@
                   <div class="error-msg">Please Enter First Name.</div>
                 }
               </div>
-
-              <input
-                type="text"
-                class="form-control"
-                formControlName="lastName"
-                placeholder="Last Name"
-              />
+              <div class="input-wrapper">
+                <input class="form-control" formControlName="lastName" placeholder="Last Name" />
+                @if (memberForm.get('lastName')?.invalid && memberForm.get('lastName')?.touched) {
+                  <div class="error-msg">Please Enter Last Name.</div>
+                }
+              </div>
             </div>
           </div>
 
@@ -37,58 +36,95 @@
             <label>Location:</label>
 
             <div class="double-input">
-              <select class="form-control">
-                <option>Select</option>
-                <option value="United States" selected>United State</option>
-              </select>
-              @if (memberForm.get('country')?.invalid && memberForm.get('country')?.touched) {
-                <div class="error-msg">Please Select Country.</div>
-              }
+              <!-- Country -->
+              <div class="input-wrapper">
+                <select class="form-control state-dropdown" formControlName="country">
+                  <option value="">Select</option>
+                  <option value="United States">United State</option>
+                </select>
 
-              <select class="form-control state-dropdown" formControlName="state">
-                <option value="">Select</option>
-
-                @for (item of states; track item.stateID) {
-                  <option [value]="item.stateName">
-                    {{ item.stateName }}
-                  </option>
+                @if (memberForm.get('country')?.invalid && memberForm.get('country')?.touched) {
+                  <div class="error-msg">Please Select Country.</div>
                 }
-              </select>
-              @if (memberForm.get('state')?.invalid && memberForm.get('state')?.touched) {
-                <div class="error-msg">Please Select State.</div>
-              }
+              </div>
+
+              <!-- State -->
+              <div class="input-wrapper">
+                <select class="form-control state-dropdown" formControlName="state">
+                  <option value="">Select</option>
+
+                  @for (item of states; track item.stateID) {
+                    <option [value]="item.stateName">
+                      {{ item.stateName }}
+                    </option>
+                  }
+                </select>
+
+                @if (memberForm.get('state')?.invalid && memberForm.get('state')?.touched) {
+                  <div class="error-msg">Please Select State.</div>
+                }
+              </div>
             </div>
-            
+          </div>
+
+          <div class="form-row">
+            <label></label>
+
+            <div class="double-input">
+              <!-- Zip Code -->
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="zipCode"
+                  placeholder="Zip Code"
+                />
+
+                @if (memberForm.get('zipCode')?.invalid && memberForm.get('zipCode')?.touched) {
+                  <div class="error-msg">Please Enter Zip Code.</div>
+                }
+              </div>
+
+              <!-- City -->
+              <div class="input-wrapper">
+                <input type="text" class="form-control" formControlName="city" placeholder="City" />
+
+                @if (memberForm.get('city')?.invalid && memberForm.get('city')?.touched) {
+                  <div class="error-msg">Please Enter City.</div>
+                }
+              </div>
+            </div>
           </div>
 
           <div class="form-row">
             <label>Address</label>
 
-            <input
-              type="text"
-              class="form-control"
-              formControlName="billingAddress"
-              placeholder="Billing Address"
-            />
-            @if (
-              memberForm.get('billingAddress')?.invalid && memberForm.get('billingAddress')?.touched
-            ) {
-              <div class="error-msg">Please Enter Billing Address.</div>
-            }
+            <div class="input-wrapper">
+              <input
+                class="form-control"
+                formControlName="billingAddress"
+                placeholder="Billing Address"
+              />
+
+              @if (
+                memberForm.get('billingAddress')?.invalid &&
+                memberForm.get('billingAddress')?.touched
+              ) {
+                <div class="error-msg">Please Enter Billing Address.</div>
+              }
+            </div>
           </div>
 
           <div class="form-row">
             <label>Remark</label>
 
-            <input
-              type="text"
-              class="form-control"
-              formControlName="remarks"
-              placeholder="Remark"
-            />
-            @if (memberForm.get('remarks')?.invalid && memberForm.get('remarks')?.touched) {
-              <div class="error-msg">Please Enter Remark.</div>
-            }
+            <div class="input-wrapper">
+              <input class="form-control" formControlName="remarks" placeholder="Remark" />
+
+              @if (memberForm.get('remarks')?.invalid && memberForm.get('remarks')?.touched) {
+                <div class="error-msg">Please Enter Remark.</div>
+              }
+            </div>
           </div>
         </div>
 
@@ -100,104 +136,108 @@
           <div class="form-row">
             <label>Current Plan:</label>
 
-            <select class="form-control state-dropdown" formControlName="plan">
-              <option value="">Select</option>
+            <div class="input-wrapper">
+              <select class="form-control" formControlName="plan">
+                <option value="">Select</option>
 
-              @for (item of plans; track item.index) {
-                <option [value]="item.name">
-                  {{ item.name }}
-                </option>
+                @for (item of plans; track item.index) {
+                  <option [value]="item.name">
+                    {{ item.name }}
+                  </option>
+                }
+              </select>
+
+              @if (memberForm.get('plan')?.invalid && memberForm.get('plan')?.touched) {
+                <div class="error-msg">Please Select Plan.</div>
               }
-            </select>
+            </div>
           </div>
 
           <div class="form-row">
             <label>Email:</label>
 
-            <input class="form-control" formControlName="email" placeholder="Email" />
+            <div class="input-wrapper">
+              <input class="form-control" formControlName="email" placeholder="Email" />
 
-            @if (memberForm.get('email')?.invalid && memberForm.get('email')?.touched) {
-              <div class="error-msg">Please Enter Email.</div>
-            }
+              @if (memberForm.get('email')?.invalid && memberForm.get('email')?.touched) {
+                <div class="error-msg">Please Enter Email.</div>
+              }
+            </div>
           </div>
 
           <div class="form-row">
             <label>Password:</label>
 
-            <input
-              type="text"
-              class="form-control"
-              formControlName="password"
-              placeholder="Password"
-            />
-            @if (memberForm.get('password')?.invalid && memberForm.get('password')?.touched) {
-              <div class="error-msg">Please Enter Password.</div>
-            }
+            <div class="input-wrapper">
+              <input class="form-control" formControlName="password" placeholder="Password" />
+
+              @if (memberForm.get('password')?.invalid && memberForm.get('password')?.touched) {
+                <div class="error-msg">Please Enter Password.</div>
+              }
+            </div>
           </div>
 
           <div class="form-row">
             <label>Phone:</label>
 
-            <input
-              type="text"
-              class="form-control"
-              formControlName="contactNo"
-              placeholder="Contact No."
-            />
-            @if (memberForm.get('contactNo')?.invalid && memberForm.get('contactNo')?.touched) {
-              <div class="error-msg">Please Enter Phone.</div>
-            }
+            <div class="input-wrapper">
+              <input class="form-control" formControlName="contactNo" placeholder="Contact No" />
+
+              @if (memberForm.get('contactNo')?.invalid && memberForm.get('contactNo')?.touched) {
+                <div class="error-msg">Please Enter Phone.</div>
+              }
+            </div>
           </div>
 
           <div class="form-row">
             <label>Status:</label>
 
-            <select class="form-control state-dropdown" formControlName="memberStatus">
-              <option value="">Select</option>
-              <option value="NEW">New</option>
-              <option value="ACTIVE">Active</option>
-              <option value="EXPIRED">Expired</option>
-              <option value="BLOCKED">Blocked</option>
-            </select>
+            <div class="input-wrapper">
+              <select class="form-control" formControlName="memberStatus">
+                <option value="">Select</option>
+                <option value="NEW">New</option>
+                <option value="ACTIVE">Active</option>
+                <option value="EXPIRED">Expired</option>
+                <option value="BLOCKED">Blocked</option>
+                F
+              </select>
 
-            @if (
-              memberForm.get('memberStatus')?.invalid && memberForm.get('memberStatus')?.touched
-            ) {
-              <div class="error-msg">Please Enter Status.</div>
-            }
+              @if (
+                memberForm.get('memberStatus')?.invalid && memberForm.get('memberStatus')?.touched
+              ) {
+                <div class="error-msg">Please Enter Status.</div>
+              }
+            </div>
           </div>
 
           <div class="form-row">
             <label>Registration Date:</label>
 
-            <input
-              type="date"
-              class="form-control"
-              formControlName="registrationDate"
-              placeholder="Registration Date"
-            />
-            @if (
-              memberForm.get('registrationDate')?.invalid &&
-              memberForm.get('registrationDate')?.touched
-            ) {
-              <div class="error-msg">Please Enter Registration Date.</div>
-            }
+            <div class="input-wrapper">
+              <input type="date" class="form-control" formControlName="registrationDate" />
+
+              @if (
+                memberForm.get('registrationDate')?.invalid &&
+                memberForm.get('registrationDate')?.touched
+              ) {
+                <div class="error-msg">Please Enter Registration Date.</div>
+              }
+            </div>
           </div>
 
           <div class="form-row">
             <label>Activation Date:</label>
 
-            <input
-              type="date"
-              class="form-control"
-              formControlName="activationDate"
-              placeholder="Activation Date"
-            />
-            @if (
-              memberForm.get('activationDate')?.invalid && memberForm.get('activationDate')?.touched
-            ) {
-              <div class="error-msg">Please Enter Activation Date.</div>
-            }
+            <div class="input-wrapper">
+              <input type="date" class="form-control" formControlName="activationDate" />
+
+              @if (
+                memberForm.get('activationDate')?.invalid &&
+                memberForm.get('activationDate')?.touched
+              ) {
+                <div class="error-msg">Please Enter Activation Date.</div>
+              }
+            </div>
           </div>
         </div>
       </div>
@@ -212,150 +252,3 @@
     </form>
   </div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- First Name -->
-<div class="input-wrapper">
-  <input class="form-control" formControlName="firstName" placeholder="First Name">
-
-  @if(memberForm.get('firstName')?.invalid && memberForm.get('firstName')?.touched){
-    <div class="error-msg">Please Enter First Name.</div>
-  }
-</div>
-
-<!-- Country -->
-<div class="input-wrapper">
-  <select class="form-control" formControlName="country">
-    <option value="">Select</option>
-  </select>
-
-  @if(memberForm.get('country')?.invalid && memberForm.get('country')?.touched){
-    <div class="error-msg">Please Select Country.</div>
-  }
-</div>
-    
-<!-- State -->
-<div class="input-wrapper">
-  <select class="form-control" formControlName="state">
-    <option value="">Select</option>
-  </select>
-
-  @if(memberForm.get('state')?.invalid && memberForm.get('state')?.touched){
-    <div class="error-msg">Please Select State.</div>
-  }
-</div>
-
-<!-- Zip Code -->
-<div class="input-wrapper">
-  <input class="form-control" formControlName="zipCode" placeholder="Zip Code">
-
-  @if(memberForm.get('zipCode')?.invalid && memberForm.get('zipCode')?.touched){
-    <div class="error-msg">Please Enter Zip Code.</div>
-  }
-</div>
-
-<!-- Billing Address -->
-<div class="input-wrapper">
-  <input class="form-control" formControlName="billingAddress" placeholder="Billing Address">
-
-  @if(memberForm.get('billingAddress')?.invalid && memberForm.get('billingAddress')?.touched){
-    <div class="error-msg">Please Enter Billing Address.</div>
-  }
-</div>
-
-<!-- City -->
-<div class="input-wrapper">
-  <input class="form-control" formControlName="city" placeholder="City">
-
-  @if(memberForm.get('city')?.invalid && memberForm.get('city')?.touched){
-    <div class="error-msg">Please Enter City.</div>
-  }
-</div>
-
-<!-- Remark -->
-<div class="input-wrapper">
-  <input class="form-control" formControlName="remarks" placeholder="Remark">
-
-  @if(memberForm.get('remarks')?.invalid && memberForm.get('remarks')?.touched){
-    <div class="error-msg">Please Enter Remark.</div>
-  }
-</div>
-
-<!-- Email -->
-<div class="input-wrapper">
-  <input class="form-control" formControlName="email" placeholder="Email">
-
-  @if(memberForm.get('email')?.invalid && memberForm.get('email')?.touched){
-    <div class="error-msg">Please Enter Email.</div>
-  }
-</div>
-
-<!-- Password -->
-<div class="input-wrapper">
-  <input class="form-control" formControlName="password" placeholder="Password">
-
-  @if(memberForm.get('password')?.invalid && memberForm.get('password')?.touched){
-    <div class="error-msg">Please Enter Password.</div>
-  }
-</div>
-
-<!-- Phone -->
-<div class="input-wrapper">
-  <input class="form-control" formControlName="contactNo" placeholder="Contact No">
-
-  @if(memberForm.get('contactNo')?.invalid && memberForm.get('contactNo')?.touched){
-    <div class="error-msg">Please Enter Phone.</div>
-  }
-</div>
-
-<!-- Status -->
-<div class="input-wrapper">
-  <select class="form-control" formControlName="memberStatus">
-    <option value="">Select</option>
-  </select>
-
-  @if(memberForm.get('memberStatus')?.invalid && memberForm.get('memberStatus')?.touched){
-    <div class="error-msg">Please Enter Status.</div>
-  }
-</div>
-
-<!-- Registration Date -->
-<div class="input-wrapper">
-  <input type="date" class="form-control" formControlName="registrationDate">
-
-  @if(memberForm.get('registrationDate')?.invalid && memberForm.get('registrationDate')?.touched){
-    <div class="error-msg">Please Enter Registration Date.</div>
-  }
-</div>
-
-<!-- Activation Date -->
-<div class="input-wrapper">
-  <input type="date" class="form-control" formControlName="activationDate">
-
-  @if(memberForm.get('activationDate')?.invalid && memberForm.get('activationDate')?.touched){
-    <div class="error-msg">Please Enter Activation Date.</div>
-  }
-</div>
