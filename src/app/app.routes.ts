@@ -69,7 +69,7 @@ export const routes: Routes = [
     // canActivate: [AuthGuard]
   },
   {
-    path: 'edit-invoice/:memberId/:invoiceId',
+    path: 'premium-members/edit-invoice/:memberId/:invoiceId',
     component: EditInvoice,
   },
   {

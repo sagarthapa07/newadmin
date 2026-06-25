@@ -294,5 +294,10 @@ export class Api {
     return this.http.post(`${environment.baseUrl}/Member/MembersAdvanceSearch`, payload);
   }
 
-  
+  addUpdateMember(payload: any): Observable<any> {
+    return this.http.post(`${environment.baseUrl}/Member/AddUpdateMember`, payload);
+  }
+  addUpdateInvoice(payload: any): Observable<any> {
+    return this.http.post(`${environment.baseUrl}/Invoice/AddUpdateInvoice`, payload);
+  }
 }

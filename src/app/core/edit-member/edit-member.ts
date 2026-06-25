@@ -34,18 +34,17 @@ export class EditMemberComponent implements OnInit {
       firstName: [''],
       lastName: [''],
       country: [''],
+      countryId: [''],
       state: [''],
       zipCode: [''],
       city: [''],
       billingAddress: [''],
       remarks: [''],
-
       plan: [''],
       email: [''],
       password: [''],
       contactNo: [''],
       memberStatus: [''],
-
       registrationDate: [''],
       activationDate: [''],
     });
@@ -72,21 +71,18 @@ export class EditMemberComponent implements OnInit {
         this.memberForm.patchValue({
           firstName: m.firstName,
           lastName: m.lastName,
-
           country: m.country,
+          countryId: m.countryId,
           state: m.state,
           zipCode: m.zipCode,
           city: m.city,
-
           billingAddress: m.billingAddress,
           remarks: m.remarks,
-
           plan: m.plan,
           email: m.email,
           password: m.password,
           contactNo: m.contactNo,
           memberStatus: m.memberStatus,
-
           registrationDate: m.registrationDate?.split('T')[0],
           activationDate: m.activationDate?.split('T')[0],
         });
@@ -94,7 +90,7 @@ export class EditMemberComponent implements OnInit {
     });
   }
   openInvoice(invoiceId: number) {
-    this.router.navigate(['/edit-invoice', this.memberId, invoiceId]);
+    this.router.navigate(['/premium-members/edit-invoice', this.memberId, invoiceId]);
   }
 
   loadStates() {
@@ -108,22 +104,62 @@ export class EditMemberComponent implements OnInit {
     });
   }
 
-loadInvoices() {
-  this.api.getMemberInvoices(this.memberId).subscribe({
-    next: (res: any) => {
-      console.log('Invoices Response', res);
+  loadInvoices() {
+    this.api.getMemberInvoices(this.memberId).subscribe({
+      next: (res: any) => {
+        console.log('Invoices Response', res);
 
-      this.invoices = res.invoice || res.result || [];
-    },
-    error: (err) => {
-      console.log(err);
-    }
-  });
-}
-
-
+        this.invoices = res.invoice || res.result || [];
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
 
   onSave() {
-    console.log(this.memberForm.value);
+    const f = this.memberForm.value;
+
+    const payload = {
+      userIndex: 5,
+      userEmail: 'ritu@fundsforngos.org',
+      memberId: this.memberId,
+      memberType: '',
+      firstName: f.firstName,
+      lastName: f.lastName,
+      country: f.country,
+      countryId: f.countryId,
+      state: f.state,
+      zipCode: f.zipCode,
+      city: f.city,
+      billingAddress: f.billingAddress,
+      remarks: f.remarks,
+      plan: f.plan,
+      planId: this.getPlanId(f.plan),
+      email: f.email,
+      password: f.password,
+      contactNo: f.contactNo,
+      memberStatus: f.memberStatus,
+      registrationDate: f.registrationDate ? new Date(f.registrationDate).toISOString() : null,
+      activationDate: f.activationDate ? new Date(f.activationDate).toISOString() : null,
+    };
+
+    console.log(payload);
+
+    this.api.addUpdateMember(payload).subscribe({
+      next: (res: any) => {
+        console.log('Saved Successfully', res);
+      },
+
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  getPlanId(planName: string): number {
+    const plan = this.plans.find((x: any) => x.name === planName);
+
+    return plan ? plan.index : 0;
   }
 }

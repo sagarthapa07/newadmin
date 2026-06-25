@@ -223,10 +223,100 @@ export class EditInvoice {
   }
 
   saveInvoice() {
-    // console.log(this.invoiceForm.value);
+    const form = this.invoiceForm.value;
+
+    const payload = {
+      userIndex: 5,
+      userEmail: 'admin@gmail.com',
+      invoiceIndex: this.invoiceId,
+      memberIndex: this.memberId,
+      invoiceDate: form.invoiceDate,
+      planName: form.plan,
+      planIndex: 1,
+      planAmount: form.planAmount,
+      planActivationDate: form.planActivationDate,
+      planDuration: form.planDuration,
+      planDurationUnit: form.planDurationUnit,
+      planExpiryDate: form.planExpiryDate,
+      extendedExpiryDate: form.extendedExpiryDate,
+      validityRemark: form.validityRemark,
+      couponCode: form.couponCode,
+      discountType: form.discountType,
+      discountValue: form.discountAmount,
+      discountRemark: form.discountRemark,
+      miscAdd: form.miscAdd,
+      remarkForMiscAdd: form.remarkForMiscAdd,
+      miscLess: form.miscLess,
+      remarkForMiscLess: form.remarkForMiscLess,
+      netTaxableAmount: form.netTaxableAmount,
+      currency: form.currency,
+      remarkForInvoice: form.remarkForInvoice,
+      netInvoiceAmount: form.netInvoiceAmount,
+      transactionDate: form.transactionDate,
+      paymentMode: form.paymentMode,
+      paymentMethodIndex: form.paymentMethodIndex,
+      paymentMethodCode: '',
+      payerEmail: form.payerEmail,
+      paymentId: form.paymentId,
+      transactionId: form.transactionId,
+      transactionAmount: form.transactionAmount,
+      transactionStatus: form.transactionStatus,
+      transactionRemark: form.transactionRemark,
+      recieptAttachment: form.recieptAttachment,
+      isSendEmail: form.sendEmail ? 1 : 0,
+    };
+
+    console.log(payload);
+
+    this.api.addUpdateInvoice(payload).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        alert('Invoice Updated Successfully');
+      },
+
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   saveMember() {
-    // console.log(this.memberForm.value);
+    const form = this.memberForm.value;
+
+    const payload = {
+      userIndex: 5,
+      userEmail: 'ritu@fundsforngos.org',
+      memberId: this.memberId,
+      memberType: '',
+      firstName: form.firstName,
+      lastName: form.lastName,
+      country: form.country,
+      countryId: 230,
+      state: form.state,
+      zipCode: form.zipCode,
+      city: form.city,
+      billingAddress: form.billingAddress,
+      remarks: form.remarks,
+      plan: form.plan,
+      planId: 1,
+      email: form.email,
+      password: form.password,
+      contactNo: form.contactNo,
+      memberStatus: form.memberStatus,
+      registrationDate: form.registrationDate,
+      activationDate: form.activationDate,
+    };
+
+    this.api.addUpdateMember(payload).subscribe({
+      next: (res: any) => {
+        console.log(res);
+
+        alert('Member Updated Successfully');
+      },
+
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 }

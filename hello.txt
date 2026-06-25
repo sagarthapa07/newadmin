@@ -566,3 +566,22 @@ https://ang-dnd.fundsforngospremium.com/api/USGrantStates/InsertUSGrantStatesJSO
 
 
 ese jana chahiye mere payload thik kr k do sab aabhi ka code analyse krro and mereko new code btao kya kya hanata hai kya kya add krna hai 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sabse pehele kaa Login krna hai 
+Mereko Image AWS mami upload honi chahiye 
+Mera Counties wala Section krna hai 
+mera aab Onsave mai ko password jata hai woh bhi encrypte jana chahiye  
