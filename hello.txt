@@ -582,6 +582,6 @@ ese jana chahiye mere payload thik kr k do sab aabhi ka code analyse krro and me
 
 
 Sabse pehele kaa Login krna hai 
-Mereko Image AWS mami upload honi chahiye 
+Image cropper ko Center krrna hai
 Mera Counties wala Section krna hai 
 mera aab Onsave mai ko password jata hai woh bhi encrypte jana chahiye  

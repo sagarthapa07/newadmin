@@ -75,7 +75,6 @@
 
       ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
-        console.log('ROUTE ID:', id);
         if (id && id !== 'null' && id !== 'undefined' && +id > 0) {
           this.getGrantDetails(+id);
         } else {

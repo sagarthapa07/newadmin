@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Api } from '../Services/api';
 import { Router } from '@angular/router';
+import { Export } from '../Services/export';
 
 @Component({
   selector: 'app-member-search',
@@ -33,6 +34,7 @@ export class MemberSearch {
   constructor(
     private api: Api,
     private router: Router,
+    private exportService: Export,
   ) {}
   ngOnInit() {
     this.getData();
@@ -125,7 +127,7 @@ export class MemberSearch {
 
     this.api.membersAdvanceSearch(payload).subscribe({
       next: (res: any) => {
-        console.log(res.result);  
+        console.log(res.result);
         this.members = res.result || [];
       },
 
@@ -137,5 +139,30 @@ export class MemberSearch {
 
   openInvoice(memberId: number, invoiceId: number) {
     this.router.navigate(['/premium-members/edit-invoice', memberId, invoiceId]);
+  }
+
+  onItemChange() {
+    this.selectAll = this.members.every((x) => x.selected);
+  }
+  exportSelectedInvoices() {
+    const selectedItems = this.members.filter((x) => x.selected);
+
+    if (selectedItems.length === 0) {
+      alert('Please select at least one invoice.');
+      return;
+    }
+
+    const excelData = selectedItems.map((item, index) => ({
+      'S.No': index + 1,
+      'Full Name': item.name,
+      'Email Address': item.email,
+      'Transaction ID': item.transactionId,
+      'Payment ID': item.paymentId,
+      'Payer Email': item.payerEmail,
+      'Invoice Number': item.invoiceNumber,
+      'Invoice Date': item.invoiceDate,
+    }));
+
+    this.exportService.exportToExcel(excelData, 'Member_Invoice_Search', 'Invoices');
   }
 }

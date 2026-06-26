@@ -218,7 +218,12 @@
         <div class="form-group">
           <label class="mt-4">Image:</label>
           <div class="image-upload-wrapper">
-            <app-image-cropper [imageSrc]="previewUrl" (onCropped)="onImageCropped($event)">
+            <app-image-cropper
+              [imageSrc]="previewUrl"
+              [dirPath]="'img.USGrants'"
+              [recType]="'CU'"
+              (onCropped)="onImageCropped($event)"
+            >
             </app-image-cropper>
 
             <!-- Thumbnail + click to preview -->
@@ -275,7 +280,7 @@
           <button type="button" class="btn btn-next" (click)="goToGeoLocation()">
             <i class="bi bi-fast-forward"></i>Next
           </button>
-        </div>      
+        </div>
       </div>
     </div>
   </form>

@@ -11,6 +11,9 @@ import { DatePicker } from '../../shared/component/date-picker/date-picker';
 import { ViewChild } from '@angular/core';
 import { DropdownItem } from '../../datatype';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import { Export } from '../Services/export';
 
 @Component({
   selector: 'app-member-module',
@@ -74,6 +77,7 @@ export class MemberModule {
     private api: Api,
     private cdr: ChangeDetectorRef,
     private route: Router,
+    private exportService: Export,
   ) {}
 
   ngOnInit() {
@@ -234,5 +238,30 @@ export class MemberModule {
         }));
       },
     });
+  }
+
+  exportSelectedMembers() {
+    const selectedMembers = this.grants.filter((x) => x.selected);
+
+    if (selectedMembers.length === 0) {
+      alert('Please select at least one member.');
+      return;
+    }
+
+    const excelData = selectedMembers.map((item, index) => ({
+      'S.No': index + 1,
+      'First Name': item.firstName,
+      'Last Name': item.lastName,
+      Email: item.email,
+      Plan: item.plan,
+      Country: item.country,
+      'Registration Date': item.registrationDate,
+      'Activation Date': item.activationDate,
+      'Expiry Date': item.expiryDate,
+      Status: item.memberStatus,
+      'Member Type': item.memberType,
+    }));
+
+    this.exportService.exportToExcel(excelData, 'Member_Export', 'Members');
   }
 }

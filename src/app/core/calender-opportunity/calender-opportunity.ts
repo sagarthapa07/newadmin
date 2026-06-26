@@ -9,6 +9,7 @@ import { Api } from '../Services/api';
 import { HostListener } from '@angular/core';
 import { DatePicker } from '../../shared/component/date-picker/date-picker';
 import { ViewChild } from '@angular/core';
+import { Export } from '../Services/export';
 
 @Component({
   selector: 'app-calender-opportunity',
@@ -50,6 +51,7 @@ export class CalenderOpportunity {
     private api: Api,
     private cdr: ChangeDetectorRef,
     private route: Router,
+    private exportService: Export,
   ) {}
 
   ngOnInit() {
@@ -259,5 +261,35 @@ export class CalenderOpportunity {
       return;
     }
     this.route.navigate(['/calendar-opportunity/edit', id]);
+  }
+
+  exportSelectedGrants() {
+    const selected = this.grants.filter((x) => x.selected);
+
+    if (selected.length === 0) {
+      alert('Please select at least one grant.');
+      return;
+    }
+
+    const ids = selected.map((x) => x.grantIndex).join(',');
+
+    console.log('Grant IDs:', ids);
+
+    this.api.exportUSGrants(ids).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        const excelData = res.collections.map((item: any) => ({
+          'Grant ID': item.id,
+          Title: item.title,
+          Categories: item.categories,
+          Content: item.content,
+        }));
+        console.log(excelData);
+        this.exportService.exportToExcel(excelData, 'Grant_Export', 'Grants');
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 }

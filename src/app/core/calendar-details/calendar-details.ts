@@ -155,7 +155,7 @@ export class CalendarDetails {
   }
 
   saveForm() {
-    console.log(this.opportunityForm.value);
+    // console.log(this.opportunityForm.value);
   }
 
   isFieldInvalid(field: string): boolean {
@@ -388,14 +388,17 @@ export class CalendarDetails {
       // EDIT page
 
       if (this.data?.id) {
-        debugger;
         this.api.updateGrant(this.data.id, payload).subscribe({
-          next: (res) => {
-            this.successMessage = 'Grant updated successfully';
+          next: (res: any) => {
+            if (res.successCode === 1) {
+              this.successMessage = 'Grant updated successfully';
+            } else {
+              this.errorMessage = 'Grant update failed';
+            }
           },
           error: (err) => {
-            console.log(err);
-            this.errorMessage = 'Update failed';
+            console.error(err);
+            this.errorMessage = 'Grant update failed';
           },
         });
       }
@@ -404,7 +407,6 @@ export class CalendarDetails {
       else {
         this.api.insertGrant(payload).subscribe(
           (res: any) => {
-            debugger;
             const grantId = res?.result?.grantIndex;
             if (grantId) {
               this.router.navigate(['/calendar-opportunity/edit', grantId]);
@@ -428,16 +430,13 @@ export class CalendarDetails {
       this.fileUploadService.uploadImages(this.resizeImages).subscribe({
         next: (res) => {
           if (res.successCode === 1) {
-            // uploaded image path
-            const uploadedImagePath = res.filePath || res.data || '';
-
-            // SAVE AFTER IMAGE UPLOAD
+            const fullPath = res.body[0].path;
+            const uploadedImagePath = fullPath.split('/')[0] + '|' + fullPath.split('/').pop();
             saveGrant(uploadedImagePath);
           } else {
             this.errorMessage = 'Image upload failed';
           }
         },
-
         error: (err) => {
           console.log('UPLOAD ERROR', err);
           this.errorMessage = 'Image upload failed';
@@ -450,14 +449,12 @@ export class CalendarDetails {
 
   onImageCropped(images: any[]) {
     if (!images?.length) return;
-    const mainImage = images[0];
-    mainImage.dirPath = 'img.USGrants/thumb-600-px/';
+    this.resizeImages = images;
     this.opportunityForm.patchValue({
-      img: mainImage.image,
+      img: images[0].image,
     });
-    this.resizeImages = [mainImage];
-    this.previewUrl = mainImage.base64;
-    this.fullImageUrl = mainImage.base64;
+    this.previewUrl = images[0].base64;
+    this.fullImageUrl = images[0].base64;
   }
 
   saveGrant(grantLogoImage: string) {

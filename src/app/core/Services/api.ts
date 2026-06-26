@@ -43,8 +43,6 @@ export class Api {
 
   constructor(private http: HttpClient) {}
 
-  // GRANT APIs
-
   getGrants(payload: any): Observable<any> {
     return this.http.post<any>(`${environment.baseUrl}/USGrants/GetUSGrantsGridPaging`, payload);
   }
@@ -299,5 +297,10 @@ export class Api {
   }
   addUpdateInvoice(payload: any): Observable<any> {
     return this.http.post(`${environment.baseUrl}/Invoice/AddUpdateInvoice`, payload);
+  }
+  exportUSGrants(grantIndexString: string): Observable<any> {
+    return this.http.get(
+      `${environment.baseUrl}/USGrantExport/ExportUSGrantsDataForWP?GrantIndexString=${grantIndexString}`,
+    );
   }
 }

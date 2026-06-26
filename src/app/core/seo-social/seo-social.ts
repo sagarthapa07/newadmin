@@ -54,14 +54,8 @@ export class SeoSocialComponent implements OnInit, OnChanges {
   getSeoSocialData() {
     this.api.getSeoSocial(this.grantId).subscribe({
       next: (res) => {
-        console.log('FULL RESPONSE', res);
-
         const data = res?.rec;
-
-        console.log('REC DATA', data);
-
         if (!data) return;
-
         this.opportunityForm.patchValue({
           linkUrl: data.friendlyURLText ?? '',
           'M-title': data.metaTitle ?? '',
@@ -73,8 +67,6 @@ export class SeoSocialComponent implements OnInit, OnChanges {
           'G-Handler': data.googlePlusHandler ?? '',
           'I-Handler': data.instagramHandler ?? '',
         });
-
-        console.log('FORM VALUE', this.opportunityForm.value);
       },
 
       error: (err) => {

@@ -32,6 +32,21 @@
 
         <button class="filter-btn" (click)="onSearch()">Search</button>
       </div>
+      <div class="header-right">
+        <div>
+          <button class="btn filter-btn" (click)="exportSelectedInvoices()">
+            <i class="bi bi-file-arrow-down"></i>
+            <span>Export</span>
+          </button>
+        </div>
+
+        <div style="margin-right: 20px">
+          <button class="btn filter-btn w-100" routerLink="/calendar-opportunity/add-new">
+            <i class="fa-solid fa-plus"></i>
+            Add New
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -67,7 +82,7 @@
               <tr>
                 <td>
                   <label class="custom-checkbox">
-                    <input type="checkbox" [(ngModel)]="item.selected" />
+                    <input type="checkbox" [(ngModel)]="item.selected" (change)="onItemChange()" />
                   </label>
                 </td>
 

@@ -9,6 +9,12 @@
   font-weight: 700;
 }
 
+.header-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+
 .table-wrapper {
   background: #fff;
   border: 1px solid #ddd;

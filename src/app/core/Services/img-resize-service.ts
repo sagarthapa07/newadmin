@@ -39,27 +39,27 @@ export class ImgResizeService {
 
       if (recType === 'TC') {
         sizeImg = [
-          { width: 600, height: 400, dirPath: `${dirPath}/thumb-600px/`, name: imgUrl },
-          { width: 450, height: 300, dirPath: `${dirPath}/thumb-450px/`, name: imgUrl },
-          { width: 320, height: 213, dirPath: `${dirPath}/thumb-320px/`, name: imgUrl },
-          { width: 120, height: 80, dirPath: `${dirPath}/thumb-120px/`, name: imgUrl },
-          { width: 80, height: 53, dirPath: `${dirPath}/thumb-80px/`, name: imgUrl },
+          { width: 600, height: 400, dirPath: `${dirPath}/thumb-600-px/`, name: imgUrl },
+          { width: 450, height: 300, dirPath: `${dirPath}/thumb-450-px/`, name: imgUrl },
+          { width: 320, height: 213, dirPath: `${dirPath}/thumb-320-px/`, name: imgUrl },
+          { width: 120, height: 80, dirPath: `${dirPath}/thumb-120-px/`, name: imgUrl },
+          { width: 80, height: 53, dirPath: `${dirPath}/thumb-80-px/`, name: imgUrl },
         ];
       } else if (recType === 'CU') {
         sizeImg = [
-          { width: 600, height: 600, dirPath: `${dirPath}/thumb-600px/`, name: imgUrl },
-          { width: 450, height: 300, dirPath: `${dirPath}/thumb-450px/`, name: imgUrl },
-          { width: 320, height: 213, dirPath: `${dirPath}/thumb-320px/`, name: imgUrl },
-          { width: 120, height: 80, dirPath: `${dirPath}/thumb-120px/`, name: imgUrl },
-          { width: 80, height: 53, dirPath: `${dirPath}/thumb-80px/`, name: imgUrl },
+          { width: 600, height: 600, dirPath: `${dirPath}/thumb-600-px/`, name: imgUrl },
+          { width: 450, height: 300, dirPath: `${dirPath}/thumb-450-px/`, name: imgUrl },
+          { width: 320, height: 213, dirPath: `${dirPath}/thumb-320-px/`, name: imgUrl },
+          { width: 120, height: 80, dirPath: `${dirPath}/thumb-120-px/`, name: imgUrl },
+          { width: 80, height: 53, dirPath: `${dirPath}/thumb-80-px/`, name: imgUrl },
         ];
       } else {
         sizeImg = [
-          { width: 600, height: 600, dirPath: `${dirPath}/thumb-600px/`, name: imgUrl },
-          { width: 450, height: 450, dirPath: `${dirPath}/thumb-450px/`, name: imgUrl },
-          { width: 320, height: 320, dirPath: `${dirPath}/thumb-320px/`, name: imgUrl },
-          { width: 120, height: 120, dirPath: `${dirPath}/thumb-120px/`, name: imgUrl },
-          { width: 80, height: 80, dirPath: `${dirPath}/thumb-80px/`, name: imgUrl },
+          { width: 600, height: 600, dirPath: `${dirPath}/thumb-600-px/`, name: imgUrl },
+          { width: 450, height: 450, dirPath: `${dirPath}/thumb-450-px/`, name: imgUrl },
+          { width: 320, height: 320, dirPath: `${dirPath}/thumb-320-px/`, name: imgUrl },
+          { width: 120, height: 120, dirPath: `${dirPath}/thumb-120-px/`, name: imgUrl },
+          { width: 80, height: 80, dirPath: `${dirPath}/thumb-80-px/`, name: imgUrl },
         ];
       }
 
@@ -106,20 +106,8 @@ export class ImgResizeService {
               };
 
               resizeImages.push(resize);
-              // console.log('----------------------------');
-              // console.log('IMAGE INDEX : ', i + 1);
-              // console.log('WIDTH : ', MAX_WIDTH);
-              // console.log('HEIGHT : ', MAX_HEIGHT);
-              // console.log('DIR PATH : ', sizeImg[i].dirPath);
-              // console.log('FILE NAME : ', `${sizeImg[i].name}.jpg`);
-              // console.log('IMAGE FILE : ', img);
-              // console.log('BASE64 : ', srcEncoded);
-              // console.log('FULL OBJECT : ', resize);
             }
           }
-          console.log('================================');
-          console.log('ALL RESIZED IMAGES');
-          console.log(resizeImages);
 
           if (resizeImages.length > 0) {
             resolve(resizeImages);
