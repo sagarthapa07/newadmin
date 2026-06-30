@@ -1,10 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import * as moment from 'moment';
-import CryptoJS from 'crypto-js';
-import 'moment-timezone';
+import * as CryptoJS from 'crypto-js';
 import { environment } from '../../../environments/environment';
-
+import * as moment from 'moment';
+import 'moment-timezone';
 @Injectable({
   providedIn: 'root',
 })
@@ -132,3 +131,4 @@ export class Common {
     return moment.tz('America/New_York').format('YYYY');
   }
 }
+  

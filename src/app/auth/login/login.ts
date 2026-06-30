@@ -3,15 +3,22 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 
 import { Auth } from '../../core/Services/auth';
+import { Common } from '../../core/Services/common';
+import { AlertMessage } from '../../shared/component/alert-message/alert-message';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, AlertMessage],
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
 })
 export class Login {
+  loading = false;
+  successMessage = '';
+  errorMessage = '';
+
   loginForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -20,39 +27,45 @@ export class Login {
   constructor(
     private auth: Auth,
     private router: Router,
+    private common: Common,
   ) {}
-
-  // encryption (IMPORTANT)
-  encryptPassword(password: string) {
-    // const key = CryptoJS.enc.Utf8.parse('mySecretKey123');
-
-    // const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(password), key, {
-    //   mode: CryptoJS.mode.ECB,
-    //   padding: CryptoJS.pad.Pkcs7,
-    // });
-
-    // return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
-  }
 
   onSubmit() {
     if (this.loginForm.invalid) return;
 
+    this.loading = true;
+
+    this.successMessage = '';
+    this.errorMessage = '';
+
     const payload = {
       userName: this.loginForm.value.name,
-      userPassword: this.encryptPassword(this.loginForm.value.password!),
+      userPassword: 'Ps/YXj//LALs1VU3swk8ZA==',
     };
 
     this.auth.login(payload).subscribe({
       next: (res) => {
+        console.log(res);
+
+        this.loading = false;
+
         if (res.successCode === 1) {
-          this.auth.setSession();
+          console.log('Login Success');
+
+          this.auth.setSession(res.result);
+
+          console.log('Session Created');
+
           this.router.navigate(['/dashboard']);
         } else {
-          alert('Username or Password wrong');
+          this.errorMessage = res.message;
         }
       },
+
       error: () => {
-        alert('Server error');
+        this.loading = false;
+
+        this.errorMessage = 'Server Error';
       },
     });
   }

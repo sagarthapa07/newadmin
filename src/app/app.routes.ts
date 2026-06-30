@@ -1,83 +1,111 @@
 import { Routes } from '@angular/router';
+
 import { Login } from './auth/login/login';
+import { ForgetPass } from './auth/forget-pass/forget-pass';
+
+import { Dashboard } from './core/dashboard/dashboard';
 import { CalenderOpportunity } from './core/calender-opportunity/calender-opportunity';
 import { Edit } from './core/edit/edit';
-import { ForgetPass } from './auth/forget-pass/forget-pass';
 import { Preview } from './core/preview/preview';
-
-import { AuthGuard } from './core/guards/auth-guard';
-import { Dashboard } from './core/dashboard/dashboard';
 import { AddnewEdit } from './core/addnew-edit/addnew-edit';
+
 import { MemberModule } from './core/member-module/member-module';
 import { EditMemberComponent } from './core/edit-member/edit-member';
 import { EditInvoice } from './core/edit-invoice/edit-invoice';
 import { AddMember } from './core/add-member/add-member';
 import { MemberSearch } from './core/member-search/member-search';
 
+import { AuthGuard } from './core/guards/auth-guard';
+
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full',
+  },
 
-  // {
-  //   path: 'dashboard',
-  //   loadComponent: () => import('./core/dashboard/dashboard').then(m => m.Dashboard),
-  //   // canActivate: [AuthGuard]
-  // },
-
+  // Login (No Guard)
   {
     path: 'login',
     component: Login,
   },
+
+  // Dashboard
   {
     path: 'dashboard',
     component: Dashboard,
+    canActivate: [AuthGuard],
     data: { breadcrumb: 'Dashboard' },
   },
+
+  // Calendar Opportunity
   {
     path: 'calendar-opportunity',
     component: CalenderOpportunity,
+    canActivate: [AuthGuard],
     data: { breadcrumb: 'calendar-opportunity' },
-    // canActivate: [AuthGuard]
   },
+
   {
     path: 'calendar-opportunity/edit/:id',
     component: Edit,
+    canActivate: [AuthGuard],
     data: { breadcrumb: 'edit' },
   },
+
+  {
+    path: 'calendar-opportunity/edit/add-new',
+    component: Preview,
+    canActivate: [AuthGuard],
+  },
+
+  {
+    path: 'calendar-opportunity/add-new',
+    component: AddnewEdit,
+    canActivate: [AuthGuard],
+  },
+
+  // Forget Password
   {
     path: 'forget',
     component: ForgetPass,
     canActivate: [AuthGuard],
   },
-  {
-    path: 'calendar-opportunity/edit/add-new',
-    component: Preview,
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: 'calendar-opportunity/add-new',
-    component: AddnewEdit,
-    // canActivate: [AuthGuard]
-  },
+
+  // Members
   {
     path: 'premium-members/memberModule',
     component: MemberModule,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
+
   {
     path: 'premium-members/edit-member/:id',
     component: EditMemberComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
+
   {
     path: 'premium-members/edit-invoice/:memberId/:invoiceId',
     component: EditInvoice,
+    canActivate: [AuthGuard],
   },
+
   {
     path: 'premium-members/add-member',
     component: AddMember,
+    canActivate: [AuthGuard],
   },
+
   {
     path: 'premium-members/member-search',
     component: MemberSearch,
+    canActivate: [AuthGuard],
+  },
+
+  // Invalid Route
+  {
+    path: '**',
+    redirectTo: 'login',
   },
 ];

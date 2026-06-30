@@ -1,4 +1,21 @@
 <section class="login-bg">
+  <app-alert-message
+    *ngIf="successMessage"
+    type="success"
+    [message]="successMessage"
+    (close)="successMessage = ''"
+  >
+  </app-alert-message>
+
+  <app-alert-message
+    *ngIf="errorMessage"
+    type="error"
+    [message]="errorMessage"
+    (close)="errorMessage = ''"
+  >
+  </app-alert-message>
+  <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+
   <nav class="navbar px-3">
     <img src="../../../assets/logo (3).png" alt="Logo" height="40" class="navbar-brand" />
   </nav>
@@ -47,7 +64,11 @@
               </div>
 
               <div class="mt-4">
-                <button class="btn login-btn" type="submit">Login</button>
+                <button class="btn login-btn" type="submit" [disabled]="loading">
+                  <span *ngIf="!loading"> Login </span>
+
+                  <span *ngIf="loading"> Logging... </span>
+                </button>
               </div>
             </form>
           </div>
