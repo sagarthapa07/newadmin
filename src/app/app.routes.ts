@@ -16,6 +16,8 @@ import { AddMember } from './core/add-member/add-member';
 import { MemberSearch } from './core/member-search/member-search';
 
 import { AuthGuard } from './core/guards/auth-guard';
+import { Invoice } from './core/invoice/invoice';
+import { InvoiceDetails } from './core/invoice-details/invoice-details';
 
 export const routes: Routes = [
   {
@@ -102,7 +104,22 @@ export const routes: Routes = [
     component: MemberSearch,
     canActivate: [AuthGuard],
   },
+  {
+    path: 'premium-members/invoice',
+    component: Invoice,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'premium-members/invoice-details/:id',
+    component: InvoiceDetails,
+    canActivate: [AuthGuard],
+  },
 
+
+
+
+
+  
   // Invalid Route
   {
     path: '**',

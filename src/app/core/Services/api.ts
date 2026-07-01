@@ -303,4 +303,7 @@ export class Api {
       `${environment.baseUrl}/USGrantExport/ExportUSGrantsDataForWP?GrantIndexString=${grantIndexString}`,
     );
   }
+  getAllInvoices(payload: any): Observable<any> {
+    return this.http.post(`${environment.baseUrl}/Invoice/GetAllInvoices`, payload);
+  }
 }

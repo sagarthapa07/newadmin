@@ -10,10 +10,20 @@ import 'moment-timezone';
 export class Common {
   constructor(@Inject(CookieService) private Cookie: CookieService) {}
 
+  // public setCookie(key: string, value: string, expireTime: any) {
+  //   this.Cookie.set(key, JSON.stringify(value), {
+  //     expires: expireTime,
+  //     // domain: environment.baseUrl,
+  //     path: '/',
+  //     sameSite: 'Lax',
+  //   });
+
+  //   return true;
+  // }
+
   public setCookie(key: string, value: string, expireTime: any) {
-    this.Cookie.set(key, JSON.stringify(value), {
+    this.Cookie.set(key, value, {
       expires: expireTime,
-      domain: environment.baseUrl,
       path: '/',
       sameSite: 'Lax',
     });
@@ -21,15 +31,19 @@ export class Common {
     return true;
   }
 
-  public getCookie(key: any) {
-    let value: any = this.Cookie.get(key);
-    if (value) {
-      try {
-        return JSON.parse(value);
-      } catch (e) {
-        return null;
-      }
-    }
+  // public getCookie(key: any) {
+  //   let value: any = this.Cookie.get(key);
+  //   if (value) {
+  //     try {
+  //       return JSON.parse(value);
+  //     } catch (e) {
+  //       return null;
+  //     }
+  //   }
+  // }
+
+  public getCookie(key: string) {
+    return this.Cookie.get(key);
   }
 
   public deleteCookie(key: string) {
@@ -131,4 +145,3 @@ export class Common {
     return moment.tz('America/New_York').format('YYYY');
   }
 }
-  

@@ -1,0 +1,284 @@
+/* ===========================
+   PAGE
+=========================== */
+
+.invoice-page {
+  background: #f4f6f9;
+  padding: 30px;
+  min-height: 100vh;
+}
+
+.invoice-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.company-logo img {
+  height: 70px;
+}
+
+.invoice-title h1 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+// hr {
+//   margin: 25px 0;
+//   border: none;
+//   border-top: 2px solid #e5e5e5;
+// }
+
+/* ===========================
+   TOP SECTION
+=========================== */
+
+.invoice-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 35px;
+}
+
+.company-address,
+.customer-details,
+.invoice-details {
+  flex: 1;
+}
+
+.company-address h5 {
+  margin-bottom: 12px;
+  color: var(--primary-color);
+  font-size: 18px;
+}
+
+.company-address p,
+.customer-details p,
+.invoice-details p {
+  margin: 4px 0;
+  color: #555;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.invoice-details {
+  text-align: right;
+}
+
+/* ===========================
+   TABLE
+=========================== */
+
+.invoice-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.invoice-table thead {
+  background: var(--primary-color);
+}
+
+.invoice-table thead th {
+  color: #fff;
+  padding: 14px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.invoice-table tbody td {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  color: #555;
+  font-size: 14px;
+}
+
+/* ===========================
+   PAYMENT
+=========================== */
+
+.payment-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 35px;
+}
+
+.payment-left {
+  width: 45%;
+}
+
+.payment-right {
+  width: 35%;
+}
+
+.payment-right table {
+  width: 100%;
+}
+
+.payment-right td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+.payment-right tr:last-child {
+  background: var(--primary-color);
+  color: white;
+  font-size: 18px;
+}
+
+.payment-right tr:last-child td {
+  border-color: var(--primary-color);
+}
+
+/* ===========================
+   FOOTER
+=========================== */
+
+.invoice-footer {
+  margin-top: 40px;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+.invoice-footer p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.invoice-footer a {
+  color: #0099d8;
+  text-decoration: none;
+}
+
+/* ===========================
+   THANK YOU
+=========================== */
+
+.thankyou {
+  margin-top: 35px;
+  text-align: center;
+  font-size: 26px;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* ===========================
+   PRINT BUTTON
+=========================== */
+
+.print-btn {
+  text-align: right;
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.print-btn button {
+  padding: 10px 22px;
+  font-size: 15px;
+    background: var(--primary-color);
+}
+
+/* ===========================
+   PAID WATERMARK
+=========================== */
+
+.invoice-card::before {
+  content: 'PAID';
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-25deg);
+  font-size: 110px;
+  font-weight: bold;
+  color: rgba(0, 153, 216, 0.08);
+  pointer-events: none;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 992px) {
+  .invoice-info,
+  .payment-section {
+    flex-direction: column;
+  }
+
+  .payment-left,
+  .payment-right {
+    width: 100%;
+  }
+
+  .invoice-details {
+    text-align: left;
+  }
+}
+
+@media (max-width: 768px) {
+  .invoice-card {
+    padding: 20px;
+  }
+
+  .invoice-header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .invoice-title h1 {
+    font-size: 30px;
+  }
+
+  .invoice-table {
+    overflow-x: auto;
+  }
+
+  .invoice-table table {
+    min-width: 900px;
+  }
+
+  .thankyou {
+    font-size: 20px;
+  }
+
+  .invoice-card::before {
+    font-size: 70px;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .print-btn,
+  app-header {
+    display: none !important;
+  }
+
+  .invoice-page {
+    padding: 0;
+    background: white;
+  }
+
+  .invoice-card {
+    box-shadow: none;
+    border: none;
+  }
+}

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { NgbDate, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { Router, RouterLink } from '@angular/router';
@@ -11,8 +11,6 @@ import { DatePicker } from '../../shared/component/date-picker/date-picker';
 import { ViewChild } from '@angular/core';
 import { DropdownItem } from '../../datatype';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
 import { Export } from '../Services/export';
 
 @Component({

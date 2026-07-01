@@ -4,6 +4,7 @@ import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { filter } from 'rxjs';
+import { Auth } from '../../../core/Services/auth';
 
 @Component({
   selector: 'app-header',
@@ -20,6 +21,7 @@ export class Header {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private auth: Auth,
   ) {}
 
   toggleSidebar() {
@@ -44,9 +46,6 @@ export class Header {
     this.activeCollapse = null;
   }
 
-  logout() {
-    this.router.navigate(['/login']);
-  }
   ngOnInit() {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.breadcrumbs = this.buildBreadcrumb(this.route.root);
@@ -74,5 +73,8 @@ export class Header {
     }
 
     return breadcrumbs;
+  }
+  logout() {
+    this.auth.logout();
   }
 }

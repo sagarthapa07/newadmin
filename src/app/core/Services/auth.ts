@@ -21,71 +21,41 @@ export class Auth {
   }
 
   // cookie check
-  isLoggedIn(): boolean {
-    const token = this.common.getCookie('_ADMIN_ACCESSTOKEN_');
+  // isLoggedIn(): boolean {
+  //   const token = this.common.getCookie('_ADMIN_ACCESSTOKEN_');
 
-    if (token) {
-      return true;
-    }
+  //   if (token) {
+  //     return true;
+  //   }
 
-    return false;
-  }
-  getUser() {
-    return this.common.getCookie('userAuth');
-  }
-
-  // set cookie
-
-  // setSession(userData: any) {
-  //   const expireDate = new Date();
-  //   expireDate.setDate(expireDate.getDate() + 7);
-
-  //   this.common.setCookie('userAuth', userData, expireDate);
+  //   return false;
   // }
 
+  isLoggedIn(): boolean {
+    const user = this.common.getCookie('_US_ADMIN_AUTH_');
+    return !!user;
+  }
+
+  getUser() {
+    const encrypted = this.common.getCookie('_US_ADMIN_AUTH_');
+    if (!encrypted) return null;
+    const decrypted = this.common.decryptData(encrypted);
+    return JSON.parse(decrypted!);
+  }
+
+
+  // set cookie
   setSession(user: any) {
     const expire = new Date();
     expire.setDate(expire.getDate() + 7);
+    const encryptedUser = this.common.encryptData(JSON.stringify(user));
 
-    // Dummy Tokens
-    this.common.setCookie('_ADMIN_ACCESSTOKEN_', 'DummyAdminAccessToken', expire);
-
-    this.common.setCookie('_USER_REFRESH_TOKEN_', 'DummyRefreshToken', expire);
-
-    this.common.setCookie('_USR_ACCESSTOKEN_', 'DummyUserAccessToken', expire);
-
-    // User Details
-    this.common.setCookie('_ADMIN_AUTH_', JSON.stringify(user), expire);
-
-    this.common.setCookie('_US_ADMIN_AUTH_', JSON.stringify(user), expire);
-
-    this.common.setCookie('_USR_AUTH_', JSON.stringify(user), expire);
-
-    // Location
-    this.common.setCookie(
-      'memberGeolocation',
-      JSON.stringify({
-        country: 'India',
-        state: '',
-        city: '',
-      }),
-      expire,
-    );
-
-    // Existing cookie (agar chahiye)
-    this.common.setCookie('userAuth', JSON.stringify(user), expire);
+    this.common.setCookie('_US_ADMIN_AUTH_', encryptedUser!, expire);
+    console.log(this.common.getCookie('UserData')); 
   }
   // logout
   logout() {
-    this.common.deleteCookie('_ADMIN_ACCESSTOKEN_');
-    this.common.deleteCookie('_ADMIN_AUTH_');
     this.common.deleteCookie('_US_ADMIN_AUTH_');
-    this.common.deleteCookie('_USER_REFRESH_TOKEN_');
-    this.common.deleteCookie('_USR_ACCESSTOKEN_');
-    this.common.deleteCookie('_USR_AUTH_');
-    this.common.deleteCookie('memberGeolocation');
-    this.common.deleteCookie('userAuth');
-
     this.router.navigate(['/login']);
   }
 }

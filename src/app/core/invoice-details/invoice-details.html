@@ -1,0 +1,187 @@
+<app-header></app-header>
+
+<section class="header-section ">
+  <div class="invoice-card">
+    <!-- ================= HEADER ================= -->
+
+    <div class="invoice-header">
+      <div class="company-logo">
+        <img src="https://grants.fundsforngospremium.com/assets/logo.png" alt="logo" />
+      </div>
+
+      <div class="invoice-title">
+        <h1>INVOICE</h1>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ================= TOP DETAILS ================= -->
+
+    <div class="invoice-info">
+      <!-- Company -->
+
+      <div class="company-address">
+        <h5>FUNDSFORNGOS, LLC</h5>
+
+        <p>140 Broadway</p>
+
+        <p>46th Floor</p>
+
+        <p>New York, NY 10005</p>
+
+        <p>United States</p>
+
+        <p><b>Tel:</b> +1 855 666 2396</p>
+      </div>
+
+      <!-- Customer -->
+
+      <div class="customer-details">
+        <p>
+          <b>{{ invoice.firstName }} {{ invoice.lastName }}</b>
+        </p>
+
+        <p>{{ invoice.address }}</p>
+
+        <p>{{ invoice.city }}</p>
+
+        <p>Ph : {{ invoice.mobile }}</p>
+
+        <p>Email : {{ invoice.payerEmail }}</p>
+      </div>
+
+      <!-- Invoice -->
+
+      <div class="invoice-details">
+        <p>
+          <b>Invoice#</b>
+          {{ invoice.invoiceNumber }}
+        </p>
+
+        <p>
+          <b>Invoice Date :</b>
+          {{ invoice.invoiceDate | date: 'MMMM dd, yyyy' }}
+        </p>
+
+        <p>
+          <b>Amount :</b>
+          {{ invoice.planAmount }} USD
+        </p>
+      </div>
+    </div>
+
+    <!-- ================= TABLE ================= -->
+
+    <div class="invoice-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ITEM</th>
+            <th>DESCRIPTION</th>
+            <th>PLAN DURATION</th>
+            <th>UNIT COST</th>
+            <th>QTY</th>
+            <th>LINE TOTAL</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Subscription</td>
+
+            <td>
+              {{ invoice.planName }}
+            </td>
+
+            <td>
+              {{ invoice.planStartDate | date: 'MMMM dd, yyyy' }}
+              -
+              {{ invoice.planExpiryDate | date: 'MMMM dd, yyyy' }}
+            </td>
+
+            <td>
+              {{ invoice.planAmount }}
+            </td>
+
+            <td>1</td>
+
+            <td>
+              {{ invoice.planAmount }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================= PAYMENT ================= -->
+
+    <div class="payment-section">
+      <div class="payment-left">
+        <p>
+          <b>Payment Method:</b>
+
+          {{ invoice.paymentMode }}
+        </p>
+      </div>
+
+      <div class="payment-right">
+        <table>
+          <tr>
+            <td>Total</td>
+
+            <td>{{ invoice.planAmount }} USD</td>
+          </tr>
+
+          <tr>
+            <td><b>Net Amount</b></td>
+
+            <td>
+              <b>{{ invoice.planAmount }} USD</b>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+
+    <div class="invoice-footer">
+      <div class="footer-left">
+        <p>NOTE: This is a computer generated invoice and does not require signature.</p>
+
+        <p>
+          Primary URL :
+
+          <a href="https://grantsforus.io"> https://grantsforus.io </a>
+        </p>
+
+        <p>
+          Premium URL :
+
+          <a href="https://grantsforus.app"> https://grantsforus.app </a>
+        </p>
+
+        <p>
+          For any queries please contact us at
+
+          <a href="https://support.fundsforngos.org"> support.fundsforngos.org </a>
+        </p>
+      </div>
+    </div>
+
+    <!-- ================= THANK YOU ================= -->
+
+    <div class="thankyou">THANK YOU FOR YOUR BUSINESS!</div>
+  </div>
+
+  <!-- ================= PRINT ================= -->
+
+  <div class="print-btn">
+    <button class="btn btn-primary" (click)="printInvoice()">
+      <i class="bi bi-printer-fill"></i>
+      Print
+    </button>
+  </div>
+</section>
+<Footer></Footer>
