@@ -1,0 +1,81 @@
+<div class="table-wrapper border">
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          @if (showCheckbox) {
+            <th>
+              <label class="custom-checkbox">
+                <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll($event)" />
+              </label>
+            </th>
+          }
+          @for (col of columns; track col.key) {
+            <th>{{ col.label }}</th>
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (isLoading) {
+          @for (i of [1,2,3,4,5]; track i) {
+            <tr><td [attr.colspan]="columns.length + 1"><div class="skeleton-box"></div></td></tr>
+          }
+        }
+
+        @if (!isLoading && data.length > 0) {
+          @for (item of data; track item) {
+            <tr>
+              @if (showCheckbox) {
+                <td>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" [(ngModel)]="item.selected" (change)="onItemChange()" />
+                  </label>
+                </td>
+              }
+              @for (col of columns; track col.key) {
+                <td>
+                  @if (col.customTemplate && cellTemplate) {
+                    <ng-container *ngTemplateOutlet="cellTemplate; context: { $implicit: item, col: col }"></ng-container>
+                  } @else {
+                    {{ item[col.key] }}
+                  }
+                </td>
+              }
+            </tr>
+          }
+        }
+
+        @if (!isLoading && data.length === 0) {
+          <tr><td [attr.colspan]="columns.length + 1" class="no-data">No Data Found</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer-section">
+    <div class="footer-left">
+      <span>Total records : {{ totalCount }}</span>
+      <span class="mx-2">Rows per page:</span>
+      <select class="page-select" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+      </select>
+    </div>
+
+    <div class="footer-right">
+      <button class="page-btn" (click)="changePage(1)">««</button>
+      <button class="page-btn" (click)="changePage(pageIndex - 1)">Prev</button>
+      <button class="page-btn" [class.active]="pageIndex === 1" (click)="changePage(1)">1</button>
+      @if (pageIndex > 4) { <span>...</span> }
+      @for (p of visiblePages; track p) {
+        <button class="page-btn" [class.active]="pageIndex === p" (click)="changePage(p)">{{ p }}</button>
+      }
+      @if (pageIndex < totalPages - 3) { <span>...</span> }
+      <button class="page-btn" [class.active]="pageIndex === totalPages" (click)="changePage(totalPages)">{{ totalPages }}</button>
+      <button class="page-btn" (click)="changePage(pageIndex + 1)">Next</button>
+      <button class="page-btn" (click)="changePage(totalPages)">»»</button>
+    </div>
+  </div>
+</div>

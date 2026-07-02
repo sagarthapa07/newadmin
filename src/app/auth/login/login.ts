@@ -56,7 +56,7 @@ export class Login {
 
           console.log('Session Created');
 
-          this.router.navigate(['/dashboard']).then((res) => {
+          this.router.navigate(['/']).then((res) => {
             console.log('Navigate Result:', res);
           });
         } else {

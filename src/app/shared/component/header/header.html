@@ -10,12 +10,17 @@
     <div class="menu-bar">
       <div class="menu">
         <ul class="menu-links">
+          <!-- Dashboard -->
           <li class="nav-link">
-            <a routerLink="/dashboard">
-              <i class="fa-solid fa-house icons"></i>
-              <span class="text nav-text">Dashboard</span>
+            <a routerLink="/" class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <i class="fa-solid fa-house icons"></i>
+                <span class="text nav-text">Dashboard</span>
+              </div>
             </a>
           </li>
+
+          <!-- Components -->
 
           <li class="nav-link">
             <a
@@ -28,7 +33,7 @@
                 <span class="text nav-text">Components</span>
               </div>
               <i
-                class="fa-solid icons"
+                class="fa-solid icons chevron"
                 [class.fa-chevron-down]="!isOpen('components1')"
                 [class.fa-chevron-up]="isOpen('components1')"
               ></i>
@@ -37,12 +42,63 @@
 
           <li [ngbCollapse]="!isOpen('components1')" class="submenu-wrapper">
             <div class="submenu">
-              <a class="mx-5">Email Configurations</a>
-              <a class="mx-5">User Management</a>
-              <a class="mx-5">Products</a>
+              <!-- Email Configurations -->
+              <a
+                href="#"
+                class="d-flex align-items-center justify-content-between submenu-parent"
+                (click)="toggleSubCollapse('email-config', $event)"
+              >
+                <span>Email Configurations</span>
+              </a>
+              <div *ngIf="isSubOpen('email-config')" class="sub-submenu">
+                <a
+                  class="mx-5"
+                  routerLink="/email-configurations/email-setting"
+                  (click)="onLeafClick()"
+                  >Email Setting</a
+                >
+                <a
+                  class="mx-5"
+                  routerLink="/email-configurations/email-template"
+                  (click)="onLeafClick()"
+                  >Email Template</a
+                >
+              </div>
+
+              <!-- User Management -->
+              <a
+                href="#"
+                class="d-flex align-items-center justify-content-between submenu-parent"
+                (click)="toggleSubCollapse('user-mgmt', $event)"
+              >
+                <span>User Management</span>
+              </a>
+              <div *ngIf="isSubOpen('user-mgmt')" class="sub-submenu">
+                <a class="mx-5" routerLink="/user-management/add-user" (click)="onLeafClick()"
+                  >User List</a
+                >
+                <a class="mx-5" routerLink="/user-management/manage-roles" (click)="onLeafClick()"
+                  >Add User</a
+                >
+              </div>
+
+              <!-- Products -->
+              <a
+                href="#"
+                class="d-flex align-items-center justify-content-between submenu-parent"
+                (click)="toggleSubCollapse('products', $event)"
+              >
+                <span>Products</span>
+              </a>
+              <div *ngIf="isSubOpen('products')" class="sub-submenu">
+                <a class="mx-5" routerLink="/products/add-product" (click)="onLeafClick()"
+                  >Business Plans</a
+                >
+              </div>
             </div>
           </li>
 
+          <!-- Online Resources -->
           <li class="nav-link">
             <a
               href="#"
@@ -54,19 +110,19 @@
                 <span class="text nav-text">Online Resources</span>
               </div>
               <i
-                class="fa-solid icons"
+                class="fa-solid icons chevron"
                 [class.fa-chevron-down]="!isOpen('components2')"
                 [class.fa-chevron-up]="isOpen('components2')"
               ></i>
             </a>
           </li>
-
           <li [ngbCollapse]="!isOpen('components2')" class="submenu-wrapper">
-            <div class="submenu d-flex flex-column p-2">
+            <div class="submenu">
               <a class="mx-5" routerLink="/calendar-opportunity">Calendar Opportunity</a>
             </div>
           </li>
 
+          <!-- Premium Members -->
           <li class="nav-link">
             <a
               href="#"
@@ -78,27 +134,31 @@
                 <span class="text nav-text">Premium Members</span>
               </div>
               <i
-                class="fa-solid icons"
+                class="fa-solid icons chevron"
                 [class.fa-chevron-down]="!isOpen('components3')"
                 [class.fa-chevron-up]="isOpen('components3')"
               ></i>
             </a>
           </li>
-
           <li [ngbCollapse]="!isOpen('components3')" class="submenu-wrapper">
-            <div class="submenu d-flex flex-column p-2">
+            <div class="submenu">
               <a class="mx-5" routerLink="/premium-members/memberModule">Member Module</a>
               <a class="mx-5" routerLink="/premium-members/add-member">Add New Member</a>
               <a class="mx-5" routerLink="/premium-members/member-search">Member Advanced Search</a>
               <a class="mx-5" routerLink="/premium-members/invoice">Invoice Search</a>
             </div>
           </li>
-
+        </ul>
+      </div>
+      <div class="menu-footer">
+        <ul>
           <li class="nav-link logout">
-            <div class="d-flex justify-content-start" (click)="logout()">
-              <i class="fa-solid fa-arrow-right-from-bracket icons"></i>
-              <span class="text nav-text">Logout</span>
-            </div>
+            <a href="#" (click)="logout()" class="">
+              <div class="d-flex align-items-center">
+                <i class="fa-solid fa-arrow-right-from-bracket icons"></i>
+                <span class="text nav-text">Logout</span>
+              </div>
+            </a>
           </li>
         </ul>
       </div>
@@ -109,11 +169,10 @@
 <div class="content">
   <section class="home">
     <div class="breadcrumb">
-      <span routerLink="/dashboard"> <i class="fa-regular fa-house"></i> Home </span>
-
-      <ng-container *ngFor="let crumb of breadcrumbs">
-        /
-        <span [routerLink]="crumb.url">{{ crumb.label }}</span>
+      <span routerLink="/"><i class="bi bi-house-fill"></i>Home</span>
+      <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
+        <span class="separator">/</span>
+        <span [routerLink]="crumb.url" [class.active]="last">{{ crumb.label }}</span>
       </ng-container>
     </div>
   </section>

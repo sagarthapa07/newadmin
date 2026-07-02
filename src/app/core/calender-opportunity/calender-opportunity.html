@@ -1,5 +1,9 @@
 <app-header></app-header>
-
+<app-alert-message
+  [type]="alertType"
+  [message]="alertMessage"
+  (close)="onAlertClose()"
+></app-alert-message>
 <section class="header-section">
   <div class="heading">
     <span>Calendar Opportunity</span>
@@ -89,148 +93,38 @@
   <br />
 
   <!-- TABLE -->
-  <div class="table-wrapper border">
-    <div class="table-responsive">
-      <table class="custom-table">
-        <thead>
-          <tr>
-            <th>
-              <label class="custom-checkbox">
-                <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll($event)" />
-              </label>
-            </th>
-
-            <th>Opportunity</th>
-            <th>Post Date</th>
-            <th>Deadline</th>
-            <th>View</th>
-            <th>Status</th>
-            <th>Edit</th>
-            <th>Copy</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <!-- LOADING -->
-          @if (isLoading) {
-            @for (i of [1, 2, 3, 4, 5]; track i) {
-              <tr>
-                <td colspan="8">
-                  <div class="skeleton-box"></div>
-                </td>
-              </tr>
-            }
-          }
-
-          <!-- DATA -->
-          @if (!isLoading && grants.length > 0) {
-            @for (item of grants; track item.grantIndex) {
-              <tr>
-                <td>
-                  <label class="custom-checkbox">
-                    <input type="checkbox" [(ngModel)]="item.selected" (change)="onItemChange()" />
-                  </label>
-                </td>
-
-                <td class="id-text">
-                  {{ item.grantTitle }}
-                </td>
-
-                <td>
-                  {{ item.postDate | date: 'dd MMM yyyy' }}
-                </td>
-
-                <td>
-                  {{ item.deadLineDate | date: 'dd MMM yyyy' }}
-                </td>
-
-                <td>
-                  {{ item.viewCount }}
-                </td>
-
-                <td>
-                  <span class="status" [ngClass]="item.status === 'Published' ? 'paid' : 'pending'">
-                    {{ item.status }}
-                  </span>
-                </td>
-
-                <td class="icon-cell" (click)="goToEdit(item.grantIndex)">
-                  <i class="bi bi-pencil-square"></i>
-                </td>
-
-                <td class="icon-cell">
-                  <i class="bi bi-copy"></i>
-                </td>
-              </tr>
-            }
-          }
-
-          <!-- NO DATA -->
-          @if (!isLoading && grants.length === 0) {
-            <tr>
-              <td colspan="8" class="no-data">No Data Found</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <div class="footer-section">
-    <!-- LEFT -->
-    <div class="footer-left">
-      <span> Total records : {{ totalCount }} </span>
-
-      <span class="mx-2"> Rows per page: </span>
-
-      <select class="page-select" [(ngModel)]="pageSize" (change)="changePage(1)">
-        <option [value]="10">10</option>
-        <option [value]="25">25</option>
-        <option [value]="50">50</option>
-      </select>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="footer-right">
-      <!-- FIRST -->
-      <button class="page-btn" (click)="changePage(1)">««</button>
-
-      <!-- PREV -->
-      <button class="page-btn" (click)="changePage(pageIndex - 1)">Prev</button>
-
-      <!-- FIRST PAGE -->
-      <button class="page-btn" [class.active]="pageIndex === 1" (click)="changePage(1)">1</button>
-
-      <!-- DOTS -->
-      @if (pageIndex > 4) {
-        <span>...</span>
+  <!-- TABLE -->
+  <app-table-column
+    [columns]="columns"
+    [data]="grants"
+    [isLoading]="isLoading"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [totalCount]="totalCount"
+    (pageChange)="changePage($event)"
+    (pageSizeChange)="onPageSizeChangeHandler($event)"
+    (selectionChange)="onSelectionChange($event)"
+  >
+    <ng-template #cellTemplate let-item let-col="col">
+      @switch (col.key) {
+        @case ('postDate') {
+          {{ item.postDate | date: 'dd MMM yyyy' }}
+        }
+        @case ('deadLineDate') {
+          {{ item.deadLineDate | date: 'dd MMM yyyy' }}
+        }
+        @case ('status') {
+          <span class="status" [ngClass]="item.status === 'Published' ? 'paid' : 'pending'">
+            {{ item.status }}
+          </span>
+        }
+        @case ('edit') {
+          <i class="bi bi-pencil-square icon-cell" (click)="goToEdit(item.grantIndex)"></i>
+        }
+        @case ('copy') {
+          <i class="bi bi-copy table-icon-cell" (click)="copyUrl(item)"></i>
+        }
       }
-
-      <!-- MIDDLE PAGES -->
-      @for (p of visiblePages; track p) {
-        <button class="page-btn" [class.active]="pageIndex === p" (click)="changePage(p)">
-          {{ p }}
-        </button>
-      }
-
-      <!-- DOTS -->
-      @if (pageIndex < totalPages - 3) {
-        <span>...</span>
-      }
-
-      <!-- LAST PAGE -->
-      <button
-        class="page-btn"
-        [class.active]="pageIndex === totalPages"
-        (click)="changePage(totalPages)"
-      >
-        {{ totalPages }}
-      </button>
-
-      <button class="page-btn" (click)="changePage(pageIndex + 1)">Next</button>
-
-      <button class="page-btn" (click)="changePage(totalPages)">»»</button>
-    </div>
-  </div>
+    </ng-template>
+  </app-table-column>
 </section>

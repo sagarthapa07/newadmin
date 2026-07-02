@@ -10,16 +10,32 @@ import { HostListener } from '@angular/core';
 import { DatePicker } from '../../shared/component/date-picker/date-picker';
 import { ViewChild } from '@angular/core';
 import { Export } from '../Services/export';
+import { environment } from '../../../environments/environment';
+import { AlertMessage } from '../../shared/component/alert-message/alert-message';
+import {
+  TableColumn,
+  TableColumnComponent,
+} from '../../shared/component/table-column/table-column';
 
 @Component({
   selector: 'app-calender-opportunity',
-  imports: [FormsModule, NgbDatepickerModule, CommonModule, Header, RouterLink, DatePicker],
+  imports: [
+    FormsModule,
+    NgbDatepickerModule,
+    CommonModule,
+    Header,
+    RouterLink,
+    DatePicker,
+    TableColumnComponent,
+    AlertMessage,
+  ],
   templateUrl: './calender-opportunity.html',
   styleUrl: './calender-opportunity.scss',
 })
 export class CalenderOpportunity {
+  alertMessage = '';
+  alertType: 'success' | 'error' | 'warning' = 'success';
   searchText = '';
-  // NEw oneee
   open = false;
   fromDate: NgbDate | null = null;
   toDate: NgbDate | null = null;
@@ -33,6 +49,16 @@ export class CalenderOpportunity {
   isLoading = false;
   selectAll = false;
   hoveredDate: NgbDate | null = null;
+
+  columns: TableColumn[] = [
+    { key: 'grantTitle', label: 'Opportunity' },
+    { key: 'postDate', label: 'Post Date', customTemplate: true },
+    { key: 'deadLineDate', label: 'Deadline', customTemplate: true },
+    { key: 'viewCount', label: 'View' },
+    { key: 'status', label: 'Status', customTemplate: true },
+    { key: 'edit', label: 'Edit', customTemplate: true },
+    { key: 'copy', label: 'Copy', customTemplate: true },
+  ];
 
   @ViewChild('picker') picker!: DatePicker;
   @HostListener('document:click', ['$event'])
@@ -221,7 +247,6 @@ export class CalenderOpportunity {
   }
 
   toggleSelectAll(event: any) {
-    console.log('CLICK HUA', event.target.checked);
     this.selectAll = event.target.checked;
     this.grants.forEach((item) => {
       item.selected = this.selectAll;
@@ -265,7 +290,6 @@ export class CalenderOpportunity {
 
   exportSelectedGrants() {
     const selected = this.grants.filter((x) => x.selected);
-
     if (selected.length === 0) {
       alert('Please select at least one grant.');
       return;
@@ -273,23 +297,57 @@ export class CalenderOpportunity {
 
     const ids = selected.map((x) => x.grantIndex).join(',');
 
-    console.log('Grant IDs:', ids);
-
     this.api.exportUSGrants(ids).subscribe({
       next: (res: any) => {
-        console.log(res);
         const excelData = res.collections.map((item: any) => ({
           'Grant ID': item.id,
           Title: item.title,
           Categories: item.categories,
           Content: item.content,
         }));
-        console.log(excelData);
         this.exportService.exportToExcel(excelData, 'Grant_Export', 'Grants');
       },
       error: (err) => {
         console.error(err);
       },
     });
+  }
+
+  onSelectionChange(selected: any[]) {
+    // component apne aap item.selected true/false set karta hai,
+    // yaha bas kuch extra chahiye ho to karo — warna ye method khali bhi chalega
+  }
+
+  onPageSizeChangeHandler(size: number) {
+    this.pageSize = size;
+    this.pageIndex = 1;
+    this.getData();
+  }
+
+  copyUrl(item: any) {
+    if (!item?.friendlyUrl) {
+      console.error('friendlyUrl missing', item);
+      this.alertType = 'error';
+      this.alertMessage = 'URL not found for this grant.';
+      return;
+    }
+    const fullUrl = `${environment.copyURl}/${item.friendlyUrl}`;
+
+    navigator.clipboard.writeText(fullUrl).then(
+      () => {
+        console.log('Copy url ho gya hai', fullUrl);
+        this.alertType = 'success';
+        this.alertMessage = 'URL copied to clipboard!';
+      },
+      (err) => {
+        console.error('Copy failed', err);
+        this.alertType = 'error';
+        this.alertMessage = 'Failed to copy URL.';
+      },
+    );
+  }
+
+  onAlertClose() {
+    this.alertMessage = '';
   }
 }

@@ -22,30 +22,34 @@ import { InvoiceDetails } from './core/invoice-details/invoice-details';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    component: Dashboard,
+    canActivate: [AuthGuard],
     pathMatch: 'full',
+    data: { breadcrumb: 'Dashboard' },
   },
 
-  // Login (No Guard)
   {
     path: 'login',
     component: Login,
   },
 
-  // Dashboard
-  {
-    path: 'dashboard',
-    component: Dashboard,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Dashboard' },
-  },
-
-  // Calendar Opportunity
   {
     path: 'calendar-opportunity',
     component: CalenderOpportunity,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'calendar-opportunity' },
+  },
+
+  {
+    path: 'login',
+    component: Login,
+  },
+
+  {
+    path: 'dashboard',
+    component: Dashboard,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Dashboard' },
   },
 
   {
@@ -67,14 +71,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
 
-  // Forget Password
   {
     path: 'forget',
     component: ForgetPass,
     canActivate: [AuthGuard],
   },
 
-  // Members
   {
     path: 'premium-members/memberModule',
     component: MemberModule,
@@ -117,12 +119,6 @@ export const routes: Routes = [
 
 
 
-
-
   
-  // Invalid Route
-  {
-    path: '**',
-    redirectTo: 'login',
-  },
+
 ];
