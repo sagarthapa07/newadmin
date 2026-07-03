@@ -53,13 +53,13 @@
               <div *ngIf="isSubOpen('email-config')" class="sub-submenu">
                 <a
                   class="mx-5"
-                  routerLink="/email-configurations/email-setting"
+                  routerLink="/masters/email-settings"
                   (click)="onLeafClick()"
                   >Email Setting</a
                 >
                 <a
                   class="mx-5"
-                  routerLink="/email-configurations/email-template"
+                  routerLink="/masters/email-templates"
                   (click)="onLeafClick()"
                   >Email Template</a
                 >
@@ -74,10 +74,10 @@
                 <span>User Management</span>
               </a>
               <div *ngIf="isSubOpen('user-mgmt')" class="sub-submenu">
-                <a class="mx-5" routerLink="/user-management/add-user" (click)="onLeafClick()"
+                <a class="mx-5" routerLink="/masters/users" (click)="onLeafClick()"
                   >User List</a
                 >
-                <a class="mx-5" routerLink="/user-management/manage-roles" (click)="onLeafClick()"
+                <a class="mx-5" routerLink="/masters/user/:id" (click)="onLeafClick()"
                   >Add User</a
                 >
               </div>
@@ -91,7 +91,7 @@
                 <span>Products</span>
               </a>
               <div *ngIf="isSubOpen('products')" class="sub-submenu">
-                <a class="mx-5" routerLink="/products/add-product" (click)="onLeafClick()"
+                <a class="mx-5" routerLink="/masters/plans" (click)="onLeafClick()"
                   >Business Plans</a
                 >
               </div>

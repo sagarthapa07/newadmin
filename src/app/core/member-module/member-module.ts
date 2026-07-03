@@ -12,6 +12,7 @@ import { ViewChild } from '@angular/core';
 import { DropdownItem } from '../../datatype';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { Export } from '../Services/export';
+import { TableColumn, TableColumnComponent } from '../../shared/component/table-column/table-column';
 
 @Component({
   selector: 'app-member-module',
@@ -22,6 +23,7 @@ import { Export } from '../Services/export';
     Header,
     RouterLink,
     NgMultiSelectDropDownModule,
+    TableColumnComponent,
   ],
   templateUrl: './member-module.html',
   styleUrl: './member-module.scss',
@@ -48,6 +50,22 @@ export class MemberModule {
   selectedSubCounties: Record<string, string[]> = {};
   selectedStatus: string | null = null;
   selectedPlanId = 0;
+
+  columns: TableColumn[] = [
+    { key: 'nameEmail', label: 'Full Name and Email Address', customTemplate: true },
+    { key: 'plan', label: 'Plan' },
+    { key: 'countryExpiry', label: 'Country Extd. Exp Dt.', customTemplate: true },
+    { key: 'regActivation', label: 'Reg. Date Activ. Date', customTemplate: true },
+    { key: 'status', label: 'Status', customTemplate: true },
+    { key: 'memberType', label: 'Type' },
+    { key: 'edit', label: 'Edit', customTemplate: true },
+  ];
+
+  onPageSizeChangeHandler(size: number) {
+    this.pageSize = size;
+    this.pageIndex = 1;
+    this.getData();
+  }
 
   @ViewChild('picker') picker!: DatePicker;
   @HostListener('document:click', ['$event'])

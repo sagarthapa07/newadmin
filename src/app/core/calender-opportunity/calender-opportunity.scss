@@ -54,11 +54,11 @@
 .search-box {
   display: flex;
   align-items: center;
-  border: 1px solid #ddd;
+  border: 1px solid var(--btn-border-color);
   border-radius: 8px;
   padding: 6px 10px;
   min-width: 220px;
-  background: #fff;
+  background: var(--white);
 }
 
 .search-box input {
@@ -76,7 +76,7 @@
   display: inline-block;
   align-items: center;
   gap: 6px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--btn-border-color);
   border-radius: 8px;
   padding: 6px 12px;
   background: var(--btn-bg-color);
@@ -96,7 +96,6 @@
 
 .range-input {
   display: flex;
-  border: 1px solid #ccc;
   border-radius: 8px;
 }
 .range-input .form-control {
@@ -219,4 +218,35 @@
   display: flex !important;
   justify-content: space-between;
   align-items: center;
+}
+
+.action-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-icons .btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1.2;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  background: #fff;
+  color: #344054;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.action-icons .btn:hover {
+  background: #f9fafb;
+}
+
+.action-icons .btn .table-icon-cell {
+  font-size: 13px;
+  color: inherit; // button ke text color se match karega
+  cursor: pointer;
 }

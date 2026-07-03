@@ -5,10 +5,14 @@ import { CommonModule } from '@angular/common';
 import { Api } from '../Services/api';
 import { Router } from '@angular/router';
 import { Export } from '../Services/export';
+import {
+  TableColumnComponent,
+  TableColumn,
+} from '../../shared/component/table-column/table-column';
 
 @Component({
   selector: 'app-member-search',
-  imports: [CommonModule, FormsModule, Header],
+  imports: [CommonModule, FormsModule, Header, TableColumnComponent],
   templateUrl: './member-search.html',
   styleUrl: './member-search.scss',
 })
@@ -21,6 +25,27 @@ export class MemberSearch {
   selectAll = false;
   searchHistory: string[] = [];
   showSuggestions = false;
+  totalCount = 0;
+
+  columns: TableColumn[] = [
+    { key: 'name', label: 'Full Name' },
+    { key: 'email', label: 'Email Address' },
+    { key: 'transactionId', label: 'Transaction ID' },
+    { key: 'paymentId', label: 'Payment ID' },
+    { key: 'payerEmail', label: 'Payer Email' },
+    { key: 'invoiceNumber', label: 'Invoice Number', customTemplate: true },
+    { key: 'invoiceDate', label: 'Invoice Date', customTemplate: true },
+  ];
+
+  changePage(page: number) {
+    this.pageIndex = page;
+    this.getData();
+  }
+  onPageSizeChangeHandler(size: number) {
+    this.pageSize = size;
+    this.pageIndex = 1;
+    this.getData();
+  }
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent) {
@@ -43,34 +68,6 @@ export class MemberSearch {
 
     this.searchHistory = data ? JSON.parse(data) : [];
   }
-
-  // getData() {
-  //   this.isLoading = true;
-
-  //   const payload = {
-  //     pageIndex: this.pageIndex,
-  //     pageSize: this.pageSize,
-  //     searchText: this.searchText || null,
-  //   };
-
-  //   this.api.membersAdvanceSearch(payload).subscribe({
-  //     next: (res: any) => {
-  //       console.log(res);
-
-  //       this.members = res.result || [];
-  //       this.isLoading = false;
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-  //       this.isLoading = false;
-  //     },
-  //   });
-  // }
-
-  // onSearch() {
-  //   this.pageIndex = 1;
-  //   this.getData();
-  // }
 
   toggleSelectAll(event: any) {
     this.selectAll = event.target.checked;
@@ -117,11 +114,11 @@ export class MemberSearch {
     }
   }
   getData() {
+    this.isLoading = true;
+
     const payload = {
       pageIndex: this.pageIndex,
-
       pageSize: this.pageSize,
-
       searchText: this.searchText || null,
     };
 
@@ -129,10 +126,12 @@ export class MemberSearch {
       next: (res: any) => {
         console.log(res.result);
         this.members = res.result || [];
+        this.totalCount = res.totalCount || res.recCount || this.members.length;
+        this.isLoading = false;
       },
-
       error: (err) => {
         console.log(err);
+        this.isLoading = false;
       },
     });
   }

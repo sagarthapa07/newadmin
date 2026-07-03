@@ -50,74 +50,27 @@
     </div>
   </div>
 
-  <div class="table-wrapper">
-    <div class="table-responsive">
-      <table class="custom-table">
-        <thead>
-          <tr>
-            <th>
-              <label class="custom-checkbox">
-                <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll($event)" />
-              </label>
-            </th>
-            <th>Full Name</th>
-            <th>Email Address</th>
-            <th>Transaction ID</th>
-            <th>Payment ID</th>
-            <th>Payer Email</th>
-            <th>Invoice Number</th>
-            <th>Invoice Date</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          @if (isLoading) {
-            <tr>
-              <td colspan="8">Loading...</td>
-            </tr>
-          }
-
-          @if (!isLoading) {
-            @for (item of members; track item.invoiceIndex) {
-              <tr>
-                <td>
-                  <label class="custom-checkbox">
-                    <input type="checkbox" [(ngModel)]="item.selected" (change)="onItemChange()" />
-                  </label>
-                </td>
-
-                <td>{{ item.name }}</td>
-
-                <td>
-                  {{ item.email }}
-                </td>
-
-                <td>
-                  {{ item.transactionId }}
-                </td>
-
-                <td>
-                  {{ item.paymentId }}
-                </td>
-
-                <td>
-                  {{ item.payerEmail }}
-                </td>
-
-                <td>
-                  <a href="javascript:void(0)" (click)="openInvoice(item.memberId, item.invoiceId)">
-                    {{ item.invoiceNumber }}
-                  </a>
-                </td>
-
-                <td>
-                  {{ item.invoiceDate | date: 'yyyy-MMM-dd' }}
-                </td>
-              </tr>
-            }
-          }
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <app-table-column
+    [columns]="columns"
+    [data]="members"
+    [isLoading]="isLoading"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [totalCount]="totalCount"
+    (pageChange)="changePage($event)"
+    (pageSizeChange)="onPageSizeChangeHandler($event)"
+  >
+    <ng-template #cellTemplate let-item let-col="col">
+      @switch (col.key) {
+        @case ('invoiceNumber') {
+          <a href="javascript:void(0)" (click)="openInvoice(item.memberId, item.invoiceId)">
+            {{ item.invoiceNumber }}
+          </a>
+        }
+        @case ('invoiceDate') {
+          {{ item.invoiceDate | date: 'yyyy-MMM-dd' }}
+        }
+      }
+    </ng-template>
+  </app-table-column>
 </section>

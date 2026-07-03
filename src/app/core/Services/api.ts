@@ -306,4 +306,22 @@ export class Api {
   getAllInvoices(payload: any): Observable<any> {
     return this.http.post(`${environment.baseUrl}/Invoice/GetAllInvoices`, payload);
   }
+  getAllEmailSettings(payload: any) {
+    return this.http.post(`${environment.baseUrl}/Email/GetAllEmailSettings`, payload);
+  }
+
+  getAllEmailTemplates(payload: any) {
+    return this.http.post(`${environment.baseUrl}/Email/GetAllEmailTemplates`, payload);
+  }
+  getUserRecords(payload: any) {
+    return this.http.post(`${environment.baseUrl}/UserManagement/GetUserRecords`, payload);
+  }
+  planAdvanceSearch(payload: any) {
+    return this.http.post(`${environment.baseUrl}/Plan/PlanAdvanceSearch`, payload);
+  }
+  getEmailTemplateById(id: number) {
+    return this.http.get(`${environment.baseUrl}/Email/GetEmailTemplateById?id=${id}`);
+  }
+
+  
 }

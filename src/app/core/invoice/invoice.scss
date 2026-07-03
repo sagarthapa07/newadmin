@@ -26,40 +26,8 @@
   background: var(--body-color);
 }
 
-.header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-/* LEFT SIDE */
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .icons {
   color: #777;
-}
-
-.filter-btn {
-  display: inline-block;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 6px 12px;
-  background: var(--btn-bg-color);
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-/* RIGHT SIDE */
-.header-right {
-  display: flex;
-  justify-content: flex-end;
 }
 
 .custom-day {
@@ -76,6 +44,16 @@
   color: var(--text-color);
 }
 
+.custom-day.filled {
+  background: var(--btn-bg-color);
+  color: white;
+}
+
+.custom-day.range {
+  background: var(--primary-color);
+  color: black;
+}
+
 .calendar-popup {
   position: absolute;
   top: 110%;
@@ -85,202 +63,6 @@
   padding: 12px;
   border-radius: 8px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-/*  Table  */
-
-/* Wrapper */
-.table-wrapper {
-  /* margin-left: 80px; */
-  margin-right: 10px;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-/* Responsive scroll */
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-}
-
-/* Table */
-.custom-table {
-  width: 100%;
-  min-width: 900px;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-.custom-table thead {
-  background: #f9fafb;
-}
-
-.custom-table th,
-.custom-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid #e5e7eb;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.custom-table th {
-  font-weight: 600;
-  color: #475467;
-}
-
-.custom-table td {
-  color: #344054;
-}
-
-.custom-checkbox input {
-  width: 20px;
-  height: 20px;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .table-wrapper {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .custom-table {
-    font-size: 13px;
-  }
-
-  .custom-table th,
-  .custom-table td {
-    padding: 10px;
-  }
-}
-
-/* Footer Sectionnn  */
-
-.footer-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 16px;
-  border-top: 1px solid #e5e7eb;
-  background: #fff;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-/* LEFT */
-.footer-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #344054;
-}
-
-.page-select {
-  border: 1px solid #d0d5dd;
-  border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 14px;
-  outline: none;
-  cursor: pointer;
-}
-
-/* RIGHT */
-.footer-right {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Pagination buttons */
-.page-btn {
-  min-width: 30px;
-  height: 30px;
-  border: 1px solid #d0d5dd;
-  border-radius: 6px;
-  background: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  color: #344054;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.page-btn:hover {
-  background: #f9fafb;
-}
-
-.page-btn.active {
-  border-color: var(--border-color);
-  color: var(--primary-color);
-  font-weight: 600;
-}
-
-.page-btn.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* =========================
-    MOBILE RESPONSIVE
-    ========================= */
-@media (max-width: 768px) {
-  .table-footer {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .footer-right {
-    align-self: flex-end;
-  }
-}
-.skeleton-row {
-  height: 20px;
-  background: linear-gradient(90deg, #eee, #ddd, #eee);
-  animation: shimmer 1.5s infinite;
-}
-
-.custom-day.filled {
-  background: var(--btn-bg-color); // selected
-  color: white;
-}
-
-.custom-day.range {
-  background: var(--primary-color); // range
-  color: black;
-}
-
-.skeleton-row {
-  width: 100%;
-}
-
-.skeleton-box {
-  height: 20px;
-  width: 100%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.no-data {
-  text-align: center;
-  padding: 30px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #777;
 }
 
 /* ===========================
@@ -296,6 +78,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
 }
 
 .header-left,
@@ -369,7 +152,7 @@
 
   .header-left,
   .header-right {
-    width: 1000%;
+    width: 100%;   // 👈 fix kar diya, tumhare original mein 1000% tha jo galat hai
     justify-content: space-between;
   }
 

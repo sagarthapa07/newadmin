@@ -1,1 +1,69 @@
-<p>email-temp works!</p>
+<app-header></app-header>
+
+<section class="header-section">
+  <div class="heading">
+    <span>Email Templates</span>
+  </div>
+
+  <div class="header-sec">
+    <div class="header-row">
+      <!-- LEFT COLUMN -->
+      <div class="header-left">
+        <div class="search-box">
+          <div class="search-wrapper">
+            <input
+              type="text"
+              placeholder="Search"
+              [(ngModel)]="searchText"
+              (focus)="showSuggestions = true"
+              (keyup.enter)="onSearch()"
+              (input)="onInputChange()"
+            />
+
+            @if (showSuggestions && searchHistory.length) {
+              <div class="suggestions">
+                @for (item of searchHistory.slice(0, 5); track item) {
+                  <div class="suggestion-item" (click)="selectSuggestion(item)">
+                    {{ item }}
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <button class="filter-btn" (click)="onSearch()">Search</button>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="header-right">
+        <button class="btn filter-btn w-100" routerLink="/email-templates/add-new">
+          <i class="fa-solid fa-plus"></i>
+          Add New
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <br />
+
+  <app-table-column
+    [columns]="columns"
+    [data]="emailTemplates"
+    [isLoading]="isLoading"
+    [showCheckbox]="false"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [totalCount]="totalCount"
+    (pageChange)="changePage($event)"
+    (pageSizeChange)="onPageSizeChangeHandler($event)"
+  >
+    <ng-template #cellTemplate let-item let-col="col">
+      @switch (col.key) {
+        @case ('edit') {
+          <i class="bi bi-pencil-square table-icon-cell" (click)="goToEdit(item.templateIndex)"></i>
+        }
+      }
+    </ng-template>
+  </app-table-column>
+</section>

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Common } from './common';
 import { Router } from '@angular/router';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -19,17 +20,6 @@ export class Auth {
   login(data: any) {
     return this.http.post<any>(this.apiUrl, data);
   }
-
-  // cookie check
-  // isLoggedIn(): boolean {
-  //   const token = this.common.getCookie('_ADMIN_ACCESSTOKEN_');
-
-  //   if (token) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
 
   isLoggedIn(): boolean {
     const user = this.common.getCookie('_US_ADMIN_AUTH_');

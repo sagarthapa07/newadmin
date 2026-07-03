@@ -1,23 +1,24 @@
 import { Routes } from '@angular/router';
-
 import { Login } from './auth/login/login';
 import { ForgetPass } from './auth/forget-pass/forget-pass';
-
 import { Dashboard } from './core/dashboard/dashboard';
 import { CalenderOpportunity } from './core/calender-opportunity/calender-opportunity';
 import { Edit } from './core/edit/edit';
 import { Preview } from './core/preview/preview';
 import { AddnewEdit } from './core/addnew-edit/addnew-edit';
-
 import { MemberModule } from './core/member-module/member-module';
 import { EditMemberComponent } from './core/edit-member/edit-member';
 import { EditInvoice } from './core/edit-invoice/edit-invoice';
 import { AddMember } from './core/add-member/add-member';
 import { MemberSearch } from './core/member-search/member-search';
-
 import { AuthGuard } from './core/guards/auth-guard';
 import { Invoice } from './core/invoice/invoice';
 import { InvoiceDetails } from './core/invoice-details/invoice-details';
+import { EmailSetting } from './core/email-setting/email-setting';
+import { EmailTemp } from './core/email-temp/email-temp';
+import { UserList } from './core/user-list/user-list';
+import { BusinessPlans } from './core/business-plans/business-plans';
+import { EmailTemplates } from './core/email-templates/email-templates';
 
 export const routes: Routes = [
   {
@@ -116,9 +117,35 @@ export const routes: Routes = [
     component: InvoiceDetails,
     canActivate: [AuthGuard],
   },
+  {
+    path: 'masters/email-settings',
+    component: EmailSetting,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'masters/email-templates',
+    component: EmailTemp,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'masters/users',
+    component: UserList,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'masters/user/:id',
+    component: UserList,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'masters/plans',
+    component: BusinessPlans,
+    canActivate: [AuthGuard],
+  },
 
-
-
-  
-
+  {
+    path: 'email-templates/edit/:id',
+    component: EmailTemplates,
+    canActivate: [AuthGuard],
+  },
 ];

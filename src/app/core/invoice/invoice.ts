@@ -1,19 +1,18 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormsModule } from '@angular/forms';
-import { NgbDate, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { Router, RouterLink } from '@angular/router';
 import { Header } from '../../shared/component/header/header';
 import { Api } from '../Services/api';
-import { HostListener } from '@angular/core';
-import { DatePicker } from '../../shared/component/date-picker/date-picker';
-import { ViewChild } from '@angular/core';
 import { DropdownItem } from '../../datatype';
-import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { Export } from '../Services/export';
+import {
+  TableColumnComponent,
+  TableColumn,
+} from '../../shared/component/table-column/table-column';
 
 @Component({
   selector: 'app-invoice',
@@ -24,6 +23,7 @@ import { Export } from '../Services/export';
     Header,
     RouterLink,
     NgMultiSelectDropDownModule,
+    TableColumnComponent,
   ],
   templateUrl: './invoice.html',
   styleUrl: './invoice.scss',
@@ -38,6 +38,19 @@ export class Invoice {
   selectAll = false;
   selectedMonth = '';
   monthList: { label: string; value: string }[] = [];
+  columns: TableColumn[] = [
+    { key: 'invoiceNumber', label: 'Invoice Number', customTemplate: true },
+    { key: 'dates', label: 'Invoice Date | Expiry Date', customTemplate: true },
+    { key: 'fullName', label: 'Full Name', customTemplate: true },
+    { key: 'payerEmail', label: 'Email Address' },
+    { key: 'planInfo', label: 'Plan / Payment / Type', customTemplate: true },
+  ];
+
+  onPageSizeChangeHandler(size: number) {
+    this.pageSize = size;
+    this.pageIndex = 1;
+    this.getInvoices();
+  }
 
   constructor(
     public formatter: NgbDateParserFormatter,

@@ -86,100 +86,38 @@
   <br />
 
   <!-- TABLE -->
-  <div class="table-wrapper border">
-    <div class="table-responsive">
-      <table class="custom-table">
-        <thead>
-          <tr>
-            <th>
-              <label class="custom-checkbox">
-                <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll($event)" />
-              </label>
-            </th>
-
-            <th>Full Name and Email Address</th>
-            <th>Plan</th>
-            <th>Country Extd. Exp Dt.</th>
-            <th>Reg. Date Activ. Date</th>
-            <th>Alert</th>
-            <th>Status</th>
-            <th>Type</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <!-- LOADING -->
-          @if (isLoading) {
-            @for (i of [1, 2, 3, 4, 5]; track i) {
-              <tr>
-                <td colspan="8">
-                  <div class="skeleton-"></div>
-                </td>
-              </tr>
-            }
-          }
-
-          <!-- DATA -->
-          @if (!isLoading && grants.length > 0) {
-            @for (item of grants; track item.memberId) {
-              <tr>
-                <td>
-                  <label class="custom-checkbox">
-                    <input type="checkbox" [(ngModel)]="item.selected" (change)="onItemChange()" />
-                  </label>
-                </td>
-
-                <td>
-                  <div>{{ item.firstName }} {{ item.lastName }}</div>
-                  <div>{{ item.email }}</div>
-                </td>
-
-                <td>
-                  {{ item.plan }}
-                </td>
-
-                <td>
-                  {{ item.country }} |
-                  {{ item.expiryDate | date: 'yyyy-MM-dd' }}
-                </td>
-
-                <td>
-                  {{ item.registrationDate | date: 'yyyy-MM-dd' }}
-                  |
-                  {{ item.activationDate | date: 'yyyy-MM-dd' }}
-                </td>
-
-                <td>-</td>
-
-                <td>
-                  <span class="status">
-                    {{ item.memberStatus | uppercase }}
-                  </span>
-                </td>
-
-                <td>
-                  {{ item.memberType }}
-                </td>
-
-                <td class="icon-cell" (click)="goToEdit(item.memberId)">
-                  <i class="bi bi-pencil-square"></i>
-                </td>
-              </tr>
-            }
-          }
-
-          <!-- NO DATA -->
-          @if (!isLoading && grants.length === 0) {
-            <tr>
-              <td colspan="8" class="no-data">No Data Found</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </div>
-
+  <app-table-column
+    [columns]="columns"
+    [data]="grants"
+    [isLoading]="isLoading"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [totalCount]="totalCount"
+    (pageChange)="changePage($event)"
+    (pageSizeChange)="onPageSizeChangeHandler($event)"
+  >
+    <ng-template #cellTemplate let-item let-col="col">
+      @switch (col.key) {
+        @case ('nameEmail') {
+          <div>{{ item.firstName }} {{ item.lastName }}</div>
+          <div>{{ item.email }}</div>
+        }
+        @case ('countryExpiry') {
+          {{ item.country }} | {{ item.expiryDate | date: 'yyyy-MM-dd' }}
+        }
+        @case ('regActivation') {
+          {{ item.registrationDate | date: 'yyyy-MM-dd' }} |
+          {{ item.activationDate | date: 'yyyy-MM-dd' }}
+        }
+        @case ('status') {
+          <span class="table-status">{{ item.memberStatus | uppercase }}</span>
+        }
+        @case ('edit') {
+          <i class="bi bi-pencil-square table-icon-cell" (click)="goToEdit(item.memberId)"></i>
+        }
+      }
+    </ng-template>
+  </app-table-column>
   <!-- FOOTER -->
   <div class="footer-section">
     <!-- LEFT -->

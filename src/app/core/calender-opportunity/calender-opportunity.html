@@ -93,7 +93,6 @@
   <br />
 
   <!-- TABLE -->
-  <!-- TABLE -->
   <app-table-column
     [columns]="columns"
     [data]="grants"
@@ -118,11 +117,12 @@
             {{ item.status }}
           </span>
         }
-        @case ('edit') {
-          <i class="bi bi-pencil-square icon-cell" (click)="goToEdit(item.grantIndex)"></i>
-        }
-        @case ('copy') {
-          <i class="bi bi-copy table-icon-cell" (click)="copyUrl(item)"></i>
+        @case ('actions') {
+          <div class="action-icons">
+            <button class="btn" (click)="goToEdit(item.grantIndex)">Edit <i class="bi bi-pencil-square table-icon-cell"></i></button>
+            <button class="btn" (click)="copyUrl(item)">Copy <i class="bi bi-copy table-icon-cell"></i></button>
+            <button class="btn" (click)="openUrl(item)">Open <i class="bi bi-box-arrow-up-right table-icon-cell"></i></button>
+          </div>
         }
       }
     </ng-template>

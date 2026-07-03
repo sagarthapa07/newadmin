@@ -56,8 +56,7 @@ export class CalenderOpportunity {
     { key: 'deadLineDate', label: 'Deadline', customTemplate: true },
     { key: 'viewCount', label: 'View' },
     { key: 'status', label: 'Status', customTemplate: true },
-    { key: 'edit', label: 'Edit', customTemplate: true },
-    { key: 'copy', label: 'Copy', customTemplate: true },
+    { key: 'actions', label: 'Actions', customTemplate: true },
   ];
 
   @ViewChild('picker') picker!: DatePicker;
@@ -324,14 +323,21 @@ export class CalenderOpportunity {
     this.getData();
   }
 
-  copyUrl(item: any) {
+  getFullUrl(item: any): string | null {
     if (!item?.friendlyUrl) {
       console.error('friendlyUrl missing', item);
+      return null;
+    }
+    return `${environment.copyURl}/${item.friendlyUrl}`;
+  }
+
+  copyUrl(item: any) {
+    const fullUrl = this.getFullUrl(item);
+    if (!fullUrl) {
       this.alertType = 'error';
       this.alertMessage = 'URL not found for this grant.';
       return;
     }
-    const fullUrl = `${environment.copyURl}/${item.friendlyUrl}`;
 
     navigator.clipboard.writeText(fullUrl).then(
       () => {
@@ -345,6 +351,17 @@ export class CalenderOpportunity {
         this.alertMessage = 'Failed to copy URL.';
       },
     );
+  }
+  openUrl(item: any) {
+    const fullUrl = this.getFullUrl(item);
+    if (!fullUrl) {
+      this.alertType = 'error';
+      this.alertMessage = 'URL not found for this grant.';
+      return;
+    }
+
+    console.log('Open ho gya hai', fullUrl);
+    window.open(fullUrl, '_blank');
   }
 
   onAlertClose() {

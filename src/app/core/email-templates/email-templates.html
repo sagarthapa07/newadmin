@@ -1,0 +1,152 @@
+<app-header></app-header>
+<Section class="header-section">
+  <app-alert-message
+    *ngIf="successMessage"
+    [type]="'success'"
+    [message]="successMessage"
+    (close)="successMessage = ''"
+  >
+  </app-alert-message>
+
+  <app-alert-message
+    *ngIf="errorMessage"
+    [type]="'error'"
+    [message]="errorMessage"
+    (close)="errorMessage = ''"
+  >
+  </app-alert-message>
+  <section class="page-wrapper">
+    <div class="page-header">
+      <h4>Modify Email Template</h4>
+    </div>
+
+    <div class="card-box">
+      <app-alert-message
+        *ngIf="successMessage"
+        [type]="'success'"
+        [message]="successMessage"
+        (close)="successMessage = ''"
+      >
+      </app-alert-message>
+
+      <app-alert-message
+        *ngIf="errorMessage"
+        [type]="'error'"
+        [message]="errorMessage"
+        (close)="errorMessage = ''"
+      >
+      </app-alert-message>
+
+      <h5 class="section-title">Modify Email Template</h5>
+
+      <form [formGroup]="templateForm">
+        <div class="row">
+          <!-- Left Side Form Section -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Template Info</label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="templateInfo"
+                  placeholder="Template Info"
+                />
+                @if (isFieldInvalid('templateInfo')) {
+                  <div class="error">Please enter template info.</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Sender Email</label>
+              <div class="input-wrapper">
+                <select class="form-control" formControlName="emailIndex">
+                  <option value="" disabled selected hidden>Select Sender Email</option>
+                  @for (item of emailSettingsList; track item.emailIndex) {
+                    <option [value]="item.emailIndex">{{ item.senderEmail }}</option>
+                  }
+                </select>
+                @if (isFieldInvalid('emailIndex')) {
+                  <div class="error">Please select sender email.</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Applicable Tags</label>
+              <div class="input-wrapper">
+                <textarea
+                  rows="3"
+                  class="form-control"
+                  formControlName="applicabletags"
+                  placeholder="Applicable Tags"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Email Header / Subject</label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="emailHeader"
+                  placeholder="Email Header / Subject"
+                />
+                @if (isFieldInvalid('emailHeader')) {
+                  <div class="error">Please enter email header.</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Recipient Type</label>
+              <div class="input-wrapper">
+                <select class="form-control" formControlName="recipientType">
+                  <option value="" disabled selected hidden>Select Recipient Type</option>
+                  <option value="Client">Client</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Manager">Manager</option>
+                </select>
+                @if (isFieldInvalid('recipientType')) {
+                  <div class="error">Please select recipient type.</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Email Module</label>
+              <div class="input-wrapper">
+                <select class="form-control" formControlName="emailModule">
+                  <option value="" disabled selected hidden>Select Email Module</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Support">Support</option>
+                  <option value="Marketing">Marketing</option>
+                </select>
+                @if (isFieldInvalid('emailModule')) {
+                  <div class="error">Please select email module.</div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side Rich Text Editor -->
+          <div class="col-md-6">
+            <label class="editor-label">Email Template</label>
+            <app-editor formControlName="templateString"></app-editor>
+
+            @if (isEditorEmpty()) {
+              <div class="error">Please enter email template content.</div>
+            }
+          </div>
+        </div>
+
+        <div class="buttons d-flex justify-content-end">
+          <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+          <button type="button" class="btn btn-update" (click)="onSave()">Update</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</Section>
