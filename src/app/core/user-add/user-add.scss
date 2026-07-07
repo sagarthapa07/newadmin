@@ -1,38 +1,5 @@
 .page-wrapper {
-  padding: 0 4px;
-}
-
-.page-header {
-  margin-bottom: 16px;
-
-  h4 {
-    font-size: var(--fs-h3);
-    font-weight: var(--fw-600);
-    color: var(--text-color);
-    margin-bottom: 4px;
-  }
-
-  .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: #98a2b3;
-
-    span {
-      cursor: pointer;
-    }
-
-    .sep {
-      cursor: default;
-    }
-
-    .active {
-      color: var(--primary-color);
-      font-weight: 500;
-      cursor: default;
-    }
-  }
+  padding: 24px;
 }
 
 .card-box {
@@ -44,7 +11,7 @@
 
 .section-title {
   font-size: 16px;
-  font-weight: var(--fw-600);
+  font-weight: 600;
   color: var(--text-color);
   margin-bottom: 24px;
 }
@@ -52,31 +19,23 @@
 .row {
   display: flex;
   gap: 32px;
+  margin-bottom: 18px;
   flex-wrap: wrap;
 }
 
 .col-md-6 {
   flex: 1 1 45%;
-  min-width: 300px;
+  min-width: 280px;
 }
 
-.form-group {
-  margin-bottom: 18px;
+.col-md-12 {
+  flex: 1 1 100%;
 }
 
-.form-group label {
+label {
   display: block;
   font-size: 14px;
-  font-weight: var(--fw-600);
-  color: #344054;
-  margin-bottom: 6px;
-}
-
-/* Right side heading — same style/size as left "label"s */
-.editor-label {
-  display: block;
-  font-size: 14px;
-  font-weight: var(--fw-600);
+  font-weight: 600;
   color: #344054;
   margin-bottom: 6px;
 }
@@ -100,6 +59,10 @@
 .form-control:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.12);
+}
+
+.form-control::placeholder {
+  color: #98a2b3;
 }
 
 textarea.form-control {
@@ -149,9 +112,15 @@ textarea.form-control {
   opacity: 0.9;
 }
 
+.btn-update:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .row {
     flex-direction: column;
+    gap: 12px;
   }
 
   .col-md-6 {
@@ -159,25 +128,35 @@ textarea.form-control {
   }
 }
 
-::ng-deep app-editor {
-  display: block;
+.page-header {
+  margin-bottom: 16px;
 
-  .ck-editor__editable {
-    min-height: 400px;
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid #d0d5dd !important;
-    border-top: none !important;
-    border-radius: 0 0 6px 6px;
+  h4 {
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-600);
+    color: var(--text-color);
+    margin-bottom: 4px;
   }
 
-  .ck-toolbar {
-    border: 1px solid #d0d5dd !important;
-    border-bottom: none !important;
-    border-radius: 6px 6px 0 0;
-  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #98a2b3;
 
-  .ck-editor__top {
-    border-radius: 6px 6px 0 0;
+    span {
+      cursor: pointer;
+    }
+
+    .sep {
+      cursor: default;
+    }
+
+    .active {
+      color: var(--primary-color);
+      font-weight: 500;
+      cursor: default;
+    }
   }
 }

@@ -1,0 +1,243 @@
+<app-header></app-header>
+
+<section class="page-wrapper header-section">
+  <div class="page-header">
+    <h4>Add Plan</h4>
+  </div>
+  <div class="card-box">
+    <app-alert-message
+      *ngIf="successMessage"
+      [type]="'success'"
+      [message]="successMessage"
+      (close)="successMessage = ''"
+    >
+    </app-alert-message>
+
+    <app-alert-message
+      *ngIf="errorMessage"
+      [type]="'error'"
+      [message]="errorMessage"
+      (close)="errorMessage = ''"
+    >
+    </app-alert-message>
+
+    <form [formGroup]="planForm">
+      <div class="plan-grid">
+        <!-- LEFT COLUMN : Plan Detail -->
+        <div class="form-column">
+          <h5 class="section-title">Plan Detail</h5>
+
+          <div class="field-block">
+            <label>Plan Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="planName"
+              placeholder="Plan Name"
+            />
+            <div class="error" *ngIf="isFieldInvalid('planName')">Please enter plan name.</div>
+          </div>
+
+          <div class="field-block">
+            <label>Plan Code</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="planCode"
+              placeholder="Plan Code"
+            />
+            <div class="error" *ngIf="isFieldInvalid('planCode')">Please enter plan code.</div>
+          </div>
+
+          <div class="field-block">
+            <label>Plan Type</label>
+            <select class="form-control" formControlName="planType">
+              <option value="" disabled selected>Select...</option>
+              <option *ngFor="let type of planTypeOptions" [value]="type">{{ type }}</option>
+            </select>
+            <div class="error" *ngIf="isFieldInvalid('planType')">Please select a plan type.</div>
+          </div>
+
+          <div class="field-block">
+            <label>Plan Expiry</label>
+            <select class="form-control" formControlName="planExpiry">
+              <option value="" disabled selected>Select...</option>
+              <option *ngFor="let exp of planExpiryOptions" [value]="exp">{{ exp }}</option>
+            </select>
+            <div class="error" *ngIf="isFieldInvalid('planExpiry')">Please select plan expiry.</div>
+          </div>
+
+          <div class="field-block">
+            <label>Validity</label>
+            <div class="date-range-row">
+              <input type="date" class="form-control" formControlName="validFrom" />
+              <input type="date" class="form-control" formControlName="validTo" />
+            </div>
+            <div
+              class="error"
+              *ngIf="planForm.errors?.['dateRangeInvalid'] && planForm.get('validTo')?.touched"
+            >
+              Valid To date must be after Valid From date.
+            </div>
+          </div>
+
+          <div class="field-block">
+            <label>Status</label>
+            <select class="form-control" formControlName="status">
+              <option value="" disabled selected>Select...</option>
+              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+            </select>
+            <div class="error" *ngIf="isFieldInvalid('status')">Please select status.</div>
+          </div>
+
+          <div class="field-block">
+            <label>Remark</label>
+            <textarea
+              rows="3"
+              class="form-control"
+              formControlName="planRemark"
+              placeholder="Remark"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN : Pricing & Settings -->
+        <div class="form-column">
+          <h5 class="section-title">Pricing &amp; Settings</h5>
+
+          <div class="row-pair">
+            <div class="field-block">
+              <label>Duration</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="duration"
+                placeholder="Duration"
+              />
+              <div class="error" *ngIf="isFieldInvalid('duration')">Enter valid duration.</div>
+            </div>
+
+            <div class="field-block">
+              <label>Duration Unit</label>
+              <select class="form-control" formControlName="durationUnit">
+                <option value="" disabled selected>Select...</option>
+                <option *ngFor="let unit of durationUnitOptions" [value]="unit">{{ unit }}</option>
+              </select>
+              <div class="error" *ngIf="isFieldInvalid('durationUnit')">Select duration unit.</div>
+            </div>
+          </div>
+
+          <div class="row-pair">
+            <div class="field-block">
+              <label>Plan Amount</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="planAmount"
+                placeholder="Plan Amount"
+              />
+              <div class="error" *ngIf="isFieldInvalid('planAmount')">Enter valid amount.</div>
+            </div>
+
+            <div class="field-block">
+              <label>Currency</label>
+              <select class="form-control" formControlName="planCurrency">
+                <option value="" disabled selected>Select...</option>
+                <option *ngFor="let c of currencyOptions" [value]="c">{{ c }}</option>
+              </select>
+              <div class="error" *ngIf="isFieldInvalid('planCurrency')">Select currency.</div>
+            </div>
+          </div>
+
+          <div class="field-block">
+            <label>Misc Settings</label>
+
+            <div class="checkbox-row">
+              <input type="checkbox" id="use14DaysTrial" formControlName="use14DaysTrial" />
+              <label for="use14DaysTrial" class="checkbox-label">Use 14 Days Trial</label>
+            </div>
+
+            <div class="checkbox-row">
+              <input type="checkbox" id="monthlyPlan" formControlName="monthlyPlan" />
+              <label for="monthlyPlan" class="checkbox-label">Monthly Plan</label>
+            </div>
+
+            <div class="checkbox-row">
+              <input type="checkbox" id="autoRenewalPlan" formControlName="autoRenewalPlan" />
+              <label for="autoRenewalPlan" class="checkbox-label">Auto Renewal Plan</label>
+            </div>
+
+            <div class="field-block" *ngIf="planForm.get('use14DaysTrial')?.value">
+              <label>Trial Plan Days</label>
+              <select class="form-control" formControlName="trialPlanDays">
+                <option value="" disabled selected>Select Trial Plan Days</option>
+                <option *ngFor="let d of trialPlanDaysOptions" [value]="d">{{ d }}</option>
+              </select>
+              <div class="error" *ngIf="isFieldInvalid('trialPlanDays')">
+                Please select trial plan days.
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Methods : ab API driven -->
+          <div class="field-block">
+            <label>Payment Methods</label>
+            <div class="multiselect-wrapper">
+              <div
+                class="multiselect-control"
+                [class.has-chips]="selectedPaymentMethods.length"
+                (click)="togglePaymentDropdown()"
+              >
+                <!-- Jab kuch select nahi hai -->
+                <span *ngIf="!selectedPaymentMethods.length">
+                  {{ loadingPaymentMethods ? 'Loading...' : 'Select payment methods...' }}
+                </span>
+
+                <!-- Chips -->
+                <span
+                  class="chip"
+                  *ngFor="let method of selectedPaymentMethods"
+                  (click)="$event.stopPropagation()"
+                >
+                  {{ method.label }}
+                  <i class="chip-remove" (click)="removePaymentMethod(method.id, $event)">×</i>
+                </span>
+
+                <i class="bi bi-chevron-down dropdown-icon"></i>
+              </div>
+
+              <div class="multiselect-options" *ngIf="showPaymentDropdown">
+                <div *ngIf="loadingPaymentMethods" class="multiselect-option">
+                  Loading payment methods...
+                </div>
+
+                <div
+                  *ngIf="!loadingPaymentMethods && !paymentMethodOptions.length"
+                  class="multiselect-option"
+                >
+                  No payment methods found
+                </div>
+
+                <div
+                  class="multiselect-option"
+                  *ngFor="let method of paymentMethodOptions"
+                  (click)="togglePaymentMethod(method.id)"
+                >
+                  <input type="checkbox" [checked]="isPaymentMethodSelected(method.id)" readonly />
+                  <span>{{ method.label }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons d-flex justify-content-end">
+        <button type="button" class="btn btn-cancel" (click)="onCancel()">Back</button>
+        <button type="button" class="btn btn-update" [disabled]="isSaving" (click)="onSave()">
+          {{ isSaving ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

@@ -35,12 +35,6 @@ import {
   providedIn: 'root',
 })
 export class Api {
-  // OTHER APIs
-  private uploadUrl =
-    'https://2m3attvzvf.execute-api.us-east-1.amazonaws.com/US-Release-Domain-RestAPI-Live-UploadFile';
-
-  private donorUrl = 'https://adminapi.grantsforus.app/api';
-
   constructor(private http: HttpClient) {}
 
   getGrants(payload: any): Observable<any> {
@@ -58,7 +52,7 @@ export class Api {
   }
 
   apiUpload(payload: any) {
-    return this.http.post(this.uploadUrl, payload);
+    return this.http.post(environment.uploadUrl, payload);
   }
 
   insertGrant(payload: any) {
@@ -69,7 +63,7 @@ export class Api {
 
   searchDonors(donorType: string, searchText: string): Observable<any> {
     return this.http.get<any>(
-      `${this.donorUrl}/USDonors/GetUSDonorsByType?donorType=${donorType}&searchText=${searchText}`,
+      `${environment.donorUrl}/USDonors/GetUSDonorsByType?donorType=${donorType}&searchText=${searchText}`,
     );
   }
 
@@ -263,10 +257,7 @@ export class Api {
   }
 
   getAllMembers(payload: any): Observable<any> {
-    return this.http.post(
-      'https://ang-dnd.fundsforngospremium.com/api/Member/GetAllMembers',
-      payload,
-    );
+    return this.http.post(environment.getAllmember, payload);
   }
 
   getMemberById(memberId: number): Observable<any> {
@@ -278,7 +269,7 @@ export class Api {
   }
 
   getAllPlans() {
-    return this.http.get('https://ang-dnd.fundsforngospremium.com/api/Plan/GetAllPlans');
+    return this.http.get(environment.getplans);
   }
 
   getInvoiceById(invoiceId: number): Observable<any> {
@@ -323,5 +314,25 @@ export class Api {
     return this.http.get(`${environment.baseUrl}/Email/GetEmailTemplateById?id=${id}`);
   }
 
-  
+  addUpdateEmailTemplate(payload: any) {
+    return this.http.post(`${environment.baseUrl}/Email/AddUpdateEmailTemplate`, payload);
+  }
+
+  addUpdateEmailSetting(payload: any) {
+    return this.http.post(`${environment.baseUrl}/Email/AddUpdateEmailSetting`, payload);
+  }
+
+  addUpdateUserRecord(payload: any) {
+    return this.http.post(`${environment.baseUrl}/UserManagement/AddUpdateUserRecord`, payload);
+  }
+
+  addUpdatePlanRecord(payload: any) {
+    return this.http.post(`${environment.baseUrl}/api/Plan/AddUpdatePlans`, payload);
+  }
+
+  getPlanByPlanIndex(planIndex: number): Observable<any> {
+    return this.http.get<any>(
+      `${environment.baseUrl}/api/Plan/GetPlanByPlanIndex?PlanIndex=${planIndex}`,
+    );
+  }
 }

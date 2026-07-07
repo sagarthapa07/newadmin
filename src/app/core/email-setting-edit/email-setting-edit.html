@@ -1,0 +1,104 @@
+<app-header></app-header>
+
+<section class="page-wrapper header-section">
+  <div class="page-header">
+    <h4>Edit Email Setting</h4>
+  </div>    
+  <div class="card-box">
+    <app-alert-message
+      *ngIf="successMessage"
+      [type]="'success'"
+      [message]="successMessage"
+      (close)="successMessage = ''"
+    >
+    </app-alert-message>
+
+    <app-alert-message
+      *ngIf="errorMessage"
+      [type]="'error'"
+      [message]="errorMessage"
+      (close)="errorMessage = ''"
+    >
+    </app-alert-message>
+
+    <form [formGroup]="settingForm">
+      <div class="row">
+        <div class="col-md-6">
+          <label>Sender Name</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="senderName"
+            placeholder="Sender Name"
+          />
+          <div class="error" *ngIf="isFieldInvalid('senderName')">Please enter sender name.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label>Sender Email</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="senderEmail"
+            placeholder="Sender Email"
+          />
+          <div class="error" *ngIf="isFieldInvalid('senderEmail')">
+            Please enter a valid sender email.
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <label>Sender Password</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="senderPassword"
+            placeholder="Sender Password"
+          />
+          <div class="error" *ngIf="isFieldInvalid('senderPassword')">
+            Please enter sender password.
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label>Mail Server</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="mailServer"
+            placeholder="Mail Server"
+          />
+          <div class="error" *ngIf="isFieldInvalid('mailServer')">Please enter mail server.</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <label>SMTP Port</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="smtpport"
+            placeholder="SMTP Port"
+          />
+          <div class="error" *ngIf="isFieldInvalid('smtpport')">Please enter SMTP port.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label>Enable SSL</label>
+          <select class="form-control" formControlName="enableSsl">
+            <option value="True">Yes</option>
+            <option value="False">No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="buttons d-flex justify-content-end">
+        <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-update" (click)="onSave()">Update</button>
+      </div>
+    </form>
+  </div>
+</section>

@@ -4,6 +4,7 @@ import * as CryptoJS from 'crypto-js';
 import { environment } from '../../../environments/environment';
 import * as moment from 'moment';
 import 'moment-timezone';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -19,7 +20,6 @@ export class Common {
 
     return true;
   }
-
 
   public getCookie(key: string) {
     return this.Cookie.get(key);
@@ -51,9 +51,9 @@ export class Common {
   }
 
   //The set method is use for encrypt the value.
-  encrypt(key: any, value: any) {
-    return CryptoJS.AES.encrypt(JSON.stringify(value), key).toString();
-  }
+  // encrypt(key: any, value: any) {
+  //   return CryptoJS.AES.encrypt(JSON.stringify(value), key).toString();
+  // }
 
   //The get method is use for decrypt the value.
   decrypt(key: string, value: string): string {

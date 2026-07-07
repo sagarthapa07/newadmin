@@ -19,9 +19,6 @@
               </div>
             </a>
           </li>
-
-          <!-- Components -->
-
           <li class="nav-link">
             <a
               href="#"
@@ -42,7 +39,6 @@
 
           <li [ngbCollapse]="!isOpen('components1')" class="submenu-wrapper">
             <div class="submenu">
-              <!-- Email Configurations -->
               <a
                 href="#"
                 class="d-flex align-items-center justify-content-between submenu-parent"
@@ -51,21 +47,13 @@
                 <span>Email Configurations</span>
               </a>
               <div *ngIf="isSubOpen('email-config')" class="sub-submenu">
-                <a
-                  class="mx-5"
-                  routerLink="/masters/email-settings"
-                  (click)="onLeafClick()"
+                <a class="mx-5" routerLink="/masters/email-settings" (click)="onLeafClick()"
                   >Email Setting</a
                 >
-                <a
-                  class="mx-5"
-                  routerLink="/masters/email-templates"
-                  (click)="onLeafClick()"
+                <a class="mx-5" routerLink="/masters/email-templates" (click)="onLeafClick()"
                   >Email Template</a
                 >
               </div>
-
-              <!-- User Management -->
               <a
                 href="#"
                 class="d-flex align-items-center justify-content-between submenu-parent"
@@ -74,15 +62,9 @@
                 <span>User Management</span>
               </a>
               <div *ngIf="isSubOpen('user-mgmt')" class="sub-submenu">
-                <a class="mx-5" routerLink="/masters/users" (click)="onLeafClick()"
-                  >User List</a
-                >
-                <a class="mx-5" routerLink="/masters/user/:id" (click)="onLeafClick()"
-                  >Add User</a
-                >
+                <a class="mx-5" routerLink="/masters/users" (click)="onLeafClick()">User List</a>
+                <a class="mx-5" routerLink="/user-add" (click)="onLeafClick()">Add User</a>
               </div>
-
-              <!-- Products -->
               <a
                 href="#"
                 class="d-flex align-items-center justify-content-between submenu-parent"

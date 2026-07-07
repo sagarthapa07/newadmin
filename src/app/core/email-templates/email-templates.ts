@@ -2,9 +2,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Editor } from '../../shared/component/editor/editor';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
 import { Api } from '../Services/api';
+import { Auth } from '../Services/auth';
 import { Header } from '../../shared/component/header/header';
 
 @Component({
@@ -14,33 +16,34 @@ import { Header } from '../../shared/component/header/header';
   styleUrl: './email-templates.scss',
 })
 export class EmailTemplates {
-  @Input() templateId: number | null = null; 
+  @Input() templateId: number | null = null;
   @Output() cancelled = new EventEmitter<void>();
 
   templateForm: FormGroup;
   successMessage = '';
   errorMessage = '';
-  emailSettingsList: any[] = []; // Sender Email dropdown ke liye
+  emailSettingsList: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private api: Api,
+    private auth: Auth,
+    private http: HttpClient,
   ) {
     this.templateForm = this.fb.group({
       templateInfo: ['', Validators.required],
-      emailIndex: ['', Validators.required], // Sender Email dropdown yahi bind hoga
+      emailIndex: ['', Validators.required],
       applicabletags: [''],
       emailHeader: ['', Validators.required],
       recipientType: ['', Validators.required],
       emailModule: ['', Validators.required],
-      templateString: ['', Validators.required], // right side rich text editor
+      templateString: ['', Validators.required],
     });
   }
 
   ngOnInit() {
-    // agar route se id aa rahi ho
     const idFromRoute = this.route.snapshot.paramMap.get('id');
     if (idFromRoute) {
       this.templateId = Number(idFromRoute);
@@ -51,6 +54,19 @@ export class EmailTemplates {
     if (this.templateId) {
       this.loadTemplate(this.templateId);
     }
+  }
+  getClientIP() {
+    return this.http.get<any>('https://api.ipify.org?format=json');
+  }
+
+  getUserMail(): string {
+    const user = this.auth.getUser();
+    return user?.emailId || '';
+  }
+
+  getUserId(): number {
+    const user = this.auth.getUser();
+    return user?.userIndex || 0;
   }
 
   isFieldInvalid(field: string): boolean {
@@ -67,10 +83,12 @@ export class EmailTemplates {
     return !plainText;
   }
 
-  // Sender Email dropdown ke liye email-settings list laate hain
   loadEmailSettings() {
+    const userMail = this.getUserMail();
+    const userId = this.getUserId();
+
     this.api
-      .getAllEmailSettings({ pageIndex: 1, pageSize: 100, userId: 5, userMail: '', clientIP: '' })
+      .getAllEmailSettings({ pageIndex: 1, pageSize: 100, userId, userMail, clientIP: '' })
       .subscribe({
         next: (res: any) => {
           this.emailSettingsList = res.settings || [];
@@ -121,33 +139,49 @@ export class EmailTemplates {
     }
 
     const form = this.templateForm.value;
+    const userMail = this.getUserMail();
+    const userId = this.getUserId();
 
+    this.getClientIP().subscribe({
+      next: (ipRes: any) => {
+        this.saveTemplate(form, userId, userMail, ipRes?.ip || '');
+      },
+      error: () => {
+        this.saveTemplate(form, userId, userMail, '');
+      },
+    });
+  }
+
+  private saveTemplate(form: any, userId: number, userMail: string, clientIP: string) {
     const payload: any = {
+      userIndex: userId,
+      userEmail: userMail,
       templateIndex: this.templateId || 0,
       templateInfo: form.templateInfo,
       templateString: form.templateString,
       emailIndex: form.emailIndex,
+      webModule: '',
       applicabletags: form.applicabletags,
       emailHeader: form.emailHeader,
       recipientType: form.recipientType,
       emailModule: form.emailModule,
+      userId: userId,
+      userMail: userMail,
+      clientIP: clientIP,
     };
 
-    // ⚠️ Update/Insert API abhi diya nahi gaya — jaise mile, yaha wire kar denge
-    console.log('Payload ready to save:', payload);
-
-    // this.api.updateEmailTemplate(payload).subscribe({
-    //   next: (res: any) => {
-    //     if (res.successCode === 1) {
-    //       this.successMessage = 'Template updated successfully';
-    //     } else {
-    //       this.errorMessage = 'Update failed';
-    //     }
-    //   },
-    //   error: (err) => {
-    //     console.error(err);
-    //     this.errorMessage = 'Update failed';
-    //   },
-    // });
+    this.api.addUpdateEmailTemplate(payload).subscribe({
+      next: (res: any) => {
+        if (res.successCode === 1) {
+          this.successMessage = 'Template updated successfully';
+        } else {
+          this.errorMessage = 'Update failed';
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Update failed';
+      },
+    });
   }
 }

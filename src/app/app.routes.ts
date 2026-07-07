@@ -19,6 +19,11 @@ import { EmailTemp } from './core/email-temp/email-temp';
 import { UserList } from './core/user-list/user-list';
 import { BusinessPlans } from './core/business-plans/business-plans';
 import { EmailTemplates } from './core/email-templates/email-templates';
+import { EmailSettingEdit } from './core/email-setting-edit/email-setting-edit';
+import { UserEdit } from './core/user-edit/user-edit';
+import { UserAdd } from './core/user-add/user-add';
+import { BusinessPlansAdd } from './core/business-plans-add/business-plans-add';
+import { BusinessPlanEdit } from './core/business-plan-edit/business-plan-edit';
 
 export const routes: Routes = [
   {
@@ -144,8 +149,33 @@ export const routes: Routes = [
   },
 
   {
-    path: 'email-templates/edit/:id',
+    path: 'masters/email-templates/edit/:id',
     component: EmailTemplates,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'masters/email-setting-edit/:id',
+    component: EmailSettingEdit,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'user-edit/:id',
+    component: UserEdit,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'masters/user-add',
+    component: UserAdd,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'masters/business-plan-add',
+    component: BusinessPlansAdd,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'masters/business-plan-edit/:id',
+    component: BusinessPlanEdit,
     canActivate: [AuthGuard],
   },
 ];

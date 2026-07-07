@@ -2,14 +2,14 @@ import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Header } from '../../shared/component/header/header';
 import { Api } from '../Services/api';
-import { Auth } from '../Services/auth'; // apna actual path daalna
+import { Auth } from '../Services/auth';
 import {
   TableColumnComponent,
   TableColumn,
 } from '../../shared/component/table-column/table-column';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-email-temp',
@@ -32,7 +32,6 @@ export class EmailTemp {
     { key: 'templateInfo', label: 'Template Info' },
     { key: 'emailHeader', label: 'Email Header' },
     { key: 'recipientType', label: 'Recipient Type' },
-    { key: 'emailModule', label: 'Module' },
     { key: 'edit', label: 'Edit', customTemplate: true },
   ];
 
@@ -96,11 +95,8 @@ export class EmailTemp {
       clientIP: clientIP,
     };
 
-    console.log('Payload sent to API:', payload);
-
     this.api.getAllEmailTemplates(payload).subscribe({
       next: (res: any) => {
-        console.log('API response:', res);
         this.emailTemplates = res.templates || [];
         this.totalCount = res.recCount || 0;
         this.isLoading = false;

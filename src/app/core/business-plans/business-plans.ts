@@ -1,12 +1,15 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Header } from '../../shared/component/header/header';
 import { Api } from '../Services/api';
 import { Auth } from '../Services/auth'; // apna actual path daalna
-import { TableColumnComponent, TableColumn } from '../../shared/component/table-column/table-column';
+import {
+  TableColumnComponent,
+  TableColumn,
+} from '../../shared/component/table-column/table-column';
 
 @Component({
   selector: 'app-business-plans',
@@ -47,6 +50,7 @@ export class BusinessPlans {
     private api: Api,
     private auth: Auth,
     private http: HttpClient,
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -100,6 +104,7 @@ export class BusinessPlans {
     this.api.planAdvanceSearch(payload).subscribe({
       next: (res: any) => {
         console.log('API response:', res);
+        console.log('First plan object:', res.result?.[0]);
         this.plans = res.result || [];
         this.totalCount = res.recCount || 0;
         this.isLoading = false;
@@ -155,7 +160,10 @@ export class BusinessPlans {
   }
 
   goToEdit(id: number) {
-    // apna route yaha daalo, jaise:
-    // this.router.navigate(['/business-plans/edit', id]);
+    if (!id) {
+      console.error('Plan ID missing', id);
+      return;
+    }
+    this.router.navigate(['/masters/business-plan-edit', id]);
   }
 }

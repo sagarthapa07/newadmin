@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Header } from '../../shared/component/header/header';
 import { Api } from '../Services/api';
@@ -49,6 +49,7 @@ export class UserList {
     private api: Api,
     private auth: Auth,
     private http: HttpClient,
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -157,7 +158,10 @@ export class UserList {
   }
 
   goToEdit(id: number) {
-    // apna route yaha daalo, jaise:
-    // this.router.navigate(['/user-list/edit', id]);
-  }
+    if (!id) {
+      console.error('User ID missing', id);
+      return;
+    }
+    this.router.navigate(['/user-edit', id]);
+  } 
 }

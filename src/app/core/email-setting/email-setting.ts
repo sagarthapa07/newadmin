@@ -9,6 +9,7 @@ import {
   TableColumnComponent,
   TableColumn,
 } from '../../shared/component/table-column/table-column';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-email-setting',
@@ -46,6 +47,7 @@ export class EmailSetting {
     private api: Api,
     private auth: Auth,
     private http: HttpClient,
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -182,6 +184,10 @@ export class EmailSetting {
   }
 
   goToEdit(id: number) {
-    // apna route yaha daalo
+    if (!id) {
+      console.error('Email Setting ID missing', id);
+      return;
+    }
+    this.router.navigate(['/email-setting-edit', id]);
   }
 }
