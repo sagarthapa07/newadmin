@@ -21,11 +21,11 @@
 .search-box {
   display: flex;
   align-items: center;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 6px 10px;
   min-width: 220px;
-  background: #fff;
+  background: var(--white);
 }
 
 .search-box input {
@@ -63,11 +63,20 @@
   background: #374151;
 }
 
-.filter-btn {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 6px 12px;
-  background: var(--btn-bg-color);
-  cursor: pointer;
-  white-space: nowrap;
+
+.header-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.sender-name-link {
+  color: var(--primary-color);
+  cursor: default;
+  transition: text-decoration 0.15s ease;
+  font-weight: var(--fw-600);
+  &:hover {
+    text-decoration: underline;
+  }
 }

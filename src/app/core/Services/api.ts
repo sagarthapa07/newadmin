@@ -327,12 +327,12 @@ export class Api {
   }
 
   addUpdatePlanRecord(payload: any) {
-    return this.http.post(`${environment.baseUrl}/api/Plan/AddUpdatePlans`, payload);
+    return this.http.post(`${environment.baseUrl}/Plan/AddUpdatePlans`, payload);
   }
 
   getPlanByPlanIndex(planIndex: number): Observable<any> {
     return this.http.get<any>(
-      `${environment.baseUrl}/api/Plan/GetPlanByPlanIndex?PlanIndex=${planIndex}`,
+      `${environment.baseUrl}/Plan/GetPlanByPlanIndex?PlanIndex=${planIndex}`,
     );
   }
 }

@@ -1,20 +1,20 @@
-.member-container {
-  padding: 20px;
-  background: #f5f5f5;
+.card-box {
+  background: var(--card-bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 24px 28px;
 }
 
-.member-card,
-.invoice-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  padding: 25px;
-  margin-bottom: 25px;
-}
+.page-header {
+  margin-bottom: 40px;
+  padding: 10px 0px;
+  border-bottom: 1px solid var(--btn-border-color);
 
-.page-title {
-  margin-bottom: 30px;
-  font-size: var(--fs-24);
-  font-weight: var(--fw-700);
+  h4 {
+    font-size: var(--fs-20);
+    font-weight: var(--fw-600);
+    color: var(--text-color);
+  }
 }
 
 .member-grid {
@@ -25,9 +25,12 @@
 
 .left-panel h5,
 .right-panel h5 {
-  margin-bottom: 20px;
+  font-size: var(--fs-15);
+  font-weight: var(--fw-700);
+  color: var(--text-color);
   padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .form-row {
@@ -40,6 +43,7 @@
 .form-row label {
   min-width: 130px;
   font-weight: var(--fw-500);
+  color: var(--text-color);
 }
 
 .double-input {
@@ -52,47 +56,80 @@
   flex: 1;
 }
 
-.btn-section {
+.input-wrapper {
+  flex: 1;
   display: flex;
-  justify-content: flex-end;
-  margin-top: 30px;
+  flex-direction: column;
+}
+
+.form-control {
+  width: 100%;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: var(--placeholder-text);
+  color: var(--text-color);
+  outline: none;
+  transition: var(--tran-02);
+  background: var(--white);
+}
+
+.form-control:hover {
+  border-color: var(--border-color);
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.12);
+}
+
+.form-control.ng-invalid.ng-touched {
+  border-color: #f04438;
+}
+
+.state-dropdown {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  background-color: var(--white);
+  font-size: var(--placeholder-text);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.error-msg {
+  color: #f04438;
+  font-size: var(--fs-13);
+  margin-top: 4px;
+}
+
+.buttons {
+  border-top: 1px solid var(--btn-border-color);
+  padding-top: 20px;
+  margin-top: 12px;
   gap: 10px;
 }
-.btn-save,
-.btn-back,
-.btn-cancel,
-.btn-mailchimp,
-.btn-invoice {
-  color: white;
-  font-weight: var(--fw-500);
+
+.btn-cancel {
+  border: 1px solid #d0d5dd;
+  background: var(--white);
+  color: var(--text-color);
+  padding: 9px 22px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--tran-02);
 }
 
-.invoice-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-}
-
-.invoice-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.invoice-table th {
-  background: #f4f4f4;
-  text-align: left;
-  padding: 12px;
-}
-
-.invoice-table td {
-  padding: 12px;
-  border-top: 1px solid #ddd;
-}
-
-.no-data {
-  text-align: center;
-  padding: 20px;
+.btn-cancel:hover {
+  background: #f8f9fa;
 }
 
 @media (max-width: 992px) {
@@ -113,96 +150,5 @@
     flex-direction: column;
   }
 }
-.btn {
-  //   display: flex;
-  gap: 10px;
-  background-image: linear-gradient(-180deg, #37aee2 0%, #1e96c8 100%);
-  text-decoration: none;
-  border: 0;
-  cursor: pointer;
-  font-weight: 500;
-}
-.btn-invoice {
-  display: flex;
-  gap: 10px;
-}
-
-.select-wrapper {
-  position: relative;
-}
-
-.select-wrapper .bi-chevron-down {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-.select-wrapper select {
-  appearance: none;
-  padding-right: 35px;
-}
-
-.state-dropdown {
-  width: 100%;
-  height: 42px;
-  padding: 0 14px;
-  border: 1px solid #d8d8d8;
-  border-radius: 6px;
-  background-color: #fff;
-  font-size: 15px;
-  outline: none;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-}
 
 
-
-
-.input-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.error-msg {
-  color: red;
-  font-size: 14px;
-  margin-top: 4px;
-}
-
-.form-control.ng-invalid.ng-touched {
-  border: 1px solid red;
-}
-
-// .state-dropdown:focus {
-//   border-color: #4a90e2;
-//   box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
-// }
-
-// ::ng-deep .ng-select {
-//   width: 100%;
-// }
-
-// ::ng-deep .ng-select-container {
-//   min-height: 42px !important;
-//   border-radius: 6px !important;
-// }
-
-// ::ng-deep .ng-dropdown-panel-items {
-//   max-height: 100px !important;
-// }
-
-// ::ng-deep .ng-option {
-//   padding: 10px !important;
-// }
-
-// ::ng-deep .ng-option.ng-option-selected {
-//   background: #0d6efd !important;
-//   color: white !important;
-// }

@@ -15,15 +15,18 @@ import { AuthGuard } from './core/guards/auth-guard';
 import { Invoice } from './core/invoice/invoice';
 import { InvoiceDetails } from './core/invoice-details/invoice-details';
 import { EmailSetting } from './core/email-setting/email-setting';
-import { EmailTemp } from './core/email-temp/email-temp';
 import { UserList } from './core/user-list/user-list';
 import { BusinessPlans } from './core/business-plans/business-plans';
-import { EmailTemplates } from './core/email-templates/email-templates';
+
 import { EmailSettingEdit } from './core/email-setting-edit/email-setting-edit';
 import { UserEdit } from './core/user-edit/user-edit';
 import { UserAdd } from './core/user-add/user-add';
 import { BusinessPlansAdd } from './core/business-plans-add/business-plans-add';
 import { BusinessPlanEdit } from './core/business-plan-edit/business-plan-edit';
+import { EmailSettingAdd } from './core/email-setting-add/email-setting-add';
+import { EmailTemplatesAdd } from './core/email-templates-add/email-templates-add';
+import { EmailTemp } from './core/email-temp/email-temp';
+import { EmailTemplates } from './core/email-templates/email-templates';
 
 export const routes: Routes = [
   {
@@ -176,6 +179,16 @@ export const routes: Routes = [
   {
     path: 'masters/business-plan-edit/:id',
     component: BusinessPlanEdit,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'masters/email-setting-add',
+    component: EmailSettingAdd,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'masters/email-templates-add',
+    component: EmailTemplatesAdd,
     canActivate: [AuthGuard],
   },
 ];

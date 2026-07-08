@@ -99,12 +99,8 @@ export class BusinessPlans {
       clientIP: clientIP,
     };
 
-    console.log('Payload sent to API:', payload);
-
     this.api.planAdvanceSearch(payload).subscribe({
       next: (res: any) => {
-        console.log('API response:', res);
-        console.log('First plan object:', res.result?.[0]);
         this.plans = res.result || [];
         this.totalCount = res.recCount || 0;
         this.isLoading = false;

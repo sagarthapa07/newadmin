@@ -1,3 +1,38 @@
+.page-header {
+  margin-bottom: 20px;
+  padding: 10px 0px;
+  border-bottom: 1px solid var(--btn-border-color);
+
+  h4 {
+    font-size: var(--fs-20);
+    font-weight: var(--fw-600);
+    color: var(--text-color);
+    margin-bottom: 4px;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-color-light);
+
+    span {
+      cursor: pointer;
+    }
+
+    .sep {
+      cursor: default;
+    }
+
+    .active {
+      color: var(--primary-color);
+      font-weight: 500;
+      cursor: default;
+    }
+  }
+}
+
 .card-box {
   background: var(--card-bg-color);
   border: 1px solid var(--border-color);
@@ -7,24 +42,23 @@
 
 .row {
   display: flex;
-  gap: 32px;
-  margin-bottom: 18px;
   flex-wrap: wrap;
 }
 
 .col-md-6 {
   flex: 1 1 45%;
-  min-width: 280px;
+  min-width: 300px;
 }
 
-.col-md-12 {
-  flex: 1 1 100%;
+.form-group {
+  margin-bottom: 18px;
 }
 
-label {
+.form-group label,
+.editor-label {
   display: block;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: var(--fw-600);
   color: var(--text-color);
   margin-bottom: 6px;
 }
@@ -48,10 +82,6 @@ label {
 .form-control:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.12);
-}
-
-.form-control::placeholder {
-  color: var(--placeholder-color);
 }
 
 textarea.form-control {
@@ -89,7 +119,6 @@ textarea.form-control {
 @media (max-width: 768px) {
   .row {
     flex-direction: column;
-    gap: 12px;
   }
 
   .col-md-6 {
@@ -97,37 +126,25 @@ textarea.form-control {
   }
 }
 
-.page-header {
-  margin-bottom: 20px;
-  padding: 10px 0px;
-  border-bottom: 1px solid var(--btn-border-color);
+::ng-deep app-editor {
+  display: block;
 
-  h4 {
-    font-size: var(--fs-20);
-    font-weight: var(--fw-600);
-    color: var(--text-color);
-    margin-bottom: 4px;
+  .ck-editor__editable {
+    min-height: 400px;
+    max-height: 440px;
+    overflow-y: auto;
+    border: 1px solid #d0d5dd !important;
+    border-top: none !important;
+    border-radius: 0 0 6px 6px;
   }
 
-  .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--text-color-light);
+  .ck-toolbar {
+    border: 1px solid #d0d5dd !important;
+    border-bottom: none !important;
+    border-radius: 6px 6px 0 0;
+  }
 
-    span {
-      cursor: pointer;
-    }
-
-    .sep {
-      cursor: default;
-    }
-
-    .active {
-      color: var(--primary-color);
-      font-weight: 500;
-      cursor: default;
-    }
+  .ck-editor__top {
+    border-radius: 6px 6px 0 0;
   }
 }

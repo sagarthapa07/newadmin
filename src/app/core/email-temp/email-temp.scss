@@ -71,3 +71,10 @@
   cursor: pointer;
   white-space: nowrap;
 }
+
+.header-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 10px;
+}

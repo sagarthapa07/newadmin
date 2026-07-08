@@ -1,19 +1,8 @@
-.page-wrapper {
-  padding: 24px;
-}
-
 .card-box {
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: var(--card-bg-color);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 24px 28px;
-}
-
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-color);
-  margin-bottom: 24px;
 }
 
 .row {
@@ -36,7 +25,7 @@ label {
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: #344054;
+  color: var(--text-color);
   margin-bottom: 6px;
 }
 
@@ -45,15 +34,15 @@ label {
   border: 1px solid #d0d5dd;
   border-radius: 6px;
   padding: 9px 12px;
-  font-size: 14px;
-  color: #344054;
+  font-size: var(--placeholder-text);
+  color: var(--text-color);
   outline: none;
-  transition: all 0.2s ease;
-  background: #fff;
+  transition: var(--tran-02);
+  background: var(--white);
 }
 
 .form-control:hover {
-  border-color: #98a2b3;
+  border-color: var(--border-color);
 }
 
 .form-control:focus {
@@ -62,7 +51,7 @@ label {
 }
 
 .form-control::placeholder {
-  color: #98a2b3;
+  color: var(--placeholder-color);
 }
 
 textarea.form-control {
@@ -76,7 +65,7 @@ textarea.form-control {
 }
 
 .buttons {
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--btn-border-color);
   padding-top: 20px;
   margin-top: 12px;
   gap: 10px;
@@ -84,32 +73,17 @@ textarea.form-control {
 
 .btn-cancel {
   border: 1px solid #d0d5dd;
-  background: #fff;
-  color: #344054;
+  background: var(--white);
+  color: var(--text-color);
   padding: 9px 22px;
   border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--tran-02);
 }
 
 .btn-cancel:hover {
   background: #f8f9fa;
-}
-
-.btn-update {
-  background: var(--primary-color);
-  color: #fff;
-  border: none;
-  padding: 9px 26px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-update:hover {
-  opacity: 0.9;
 }
 
 @media (max-width: 768px) {
@@ -124,10 +98,12 @@ textarea.form-control {
 }
 
 .page-header {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  padding: 10px 0px;
+  border-bottom: 1px solid var(--btn-border-color);
 
   h4 {
-    font-size: var(--fs-h3);
+    font-size: var(--fs-20);
     font-weight: var(--fw-600);
     color: var(--text-color);
     margin-bottom: 4px;
@@ -138,7 +114,7 @@ textarea.form-control {
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: #98a2b3;
+    color: var(--text-color-light);
 
     span {
       cursor: pointer;

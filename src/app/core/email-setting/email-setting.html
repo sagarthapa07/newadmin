@@ -31,7 +31,13 @@
           </div>
         </div>
 
-        <button class="filter-btn" (click)="onSearch()">Search</button>
+        <button class="button" (click)="onSearch()"><i class="bi bi-search"></i> <span>Search</span></button>
+      </div>
+      <div class="header-right">
+        <button class="button" (click)="goToAdd()">
+          <i class="fa-solid fa-plus"></i>
+          Add New
+        </button>
       </div>
     </div>
   </div>
@@ -51,6 +57,9 @@
   >
     <ng-template #cellTemplate let-item let-col="col">
       @switch (col.key) {
+        @case ('senderName') {
+          <span class="sender-name-link">{{ item.senderName }}</span>
+        }
         @case ('enableSsl') {
           <span class="table-status" [ngClass]="item.enableSsl === 'True' ? 'paid' : 'pending'">
             {{ item.enableSsl === 'True' ? 'Yes' : 'No' }}

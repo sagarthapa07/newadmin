@@ -32,12 +32,12 @@
           </div>
         </div>
 
-        <button class="filter-btn" (click)="onSearch()">Search</button>
+        <button class="filter-btn" (click)="onSearch()"><i class="bi bi-search"></i> Search</button>
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="header-right">
-        <button class="btn filter-btn w-100" routerLink="/email-templates/add-new">
+        <button class="btn filter-btn w-100" (click)="goToAdd()">
           <i class="fa-solid fa-plus"></i>
           Add New
         </button>

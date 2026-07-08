@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Editor } from '../../shared/component/editor/editor';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
@@ -10,24 +10,21 @@ import { Auth } from '../Services/auth';
 import { Header } from '../../shared/component/header/header';
 
 @Component({
-  selector: 'app-email-templates',
+  selector: 'app-email-templates-add',
   imports: [CommonModule, ReactiveFormsModule, Editor, AlertMessage, Header],
-  templateUrl: './email-templates.html',
-  styleUrl: './email-templates.scss',
+  templateUrl: './email-templates-add.html',
+  styleUrl: './email-templates-add.scss',
 })
-export class EmailTemplates {
-  @Input() templateId: number | null = null;
-  @Output() cancelled = new EventEmitter<void>();
-
+export class EmailTemplatesAdd {
   templateForm: FormGroup;
   successMessage = '';
   errorMessage = '';
+  isSaving = false;
   emailSettingsList: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
     private api: Api,
     private auth: Auth,
     private http: HttpClient,
@@ -44,17 +41,9 @@ export class EmailTemplates {
   }
 
   ngOnInit() {
-    const idFromRoute = this.route.snapshot.paramMap.get('id');
-    if (idFromRoute) {
-      this.templateId = Number(idFromRoute);
-    }
-
     this.loadEmailSettings();
-
-    if (this.templateId) {
-      this.loadTemplate(this.templateId);
-    }
   }
+
   getClientIP() {
     return this.http.get<any>('https://api.ipify.org?format=json');
   }
@@ -75,12 +64,17 @@ export class EmailTemplates {
   }
 
   isEditorEmpty(): boolean {
-    const value = this.templateForm.get('templateString')?.value || '';
+    const control = this.templateForm.get('templateString');
+    const value = control?.value || '';
     const plainText = value
       .replace(/<[^>]*>/g, '')
       .replace(/&nbsp;/g, '')
       .trim();
-    return !plainText;
+    return !plainText && !!(control?.dirty || control?.touched);
+  }
+  showEditorError(): boolean {
+    const control = this.templateForm.get('templateString');
+    return this.isEditorEmpty() && !!(control?.dirty || control?.touched);
   }
 
   loadEmailSettings() {
@@ -99,36 +93,7 @@ export class EmailTemplates {
       });
   }
 
-  loadTemplate(id: number) {
-    this.api.getEmailTemplateById(id).subscribe({
-      next: (res: any) => {
-        if (res.successCode === 1 && res.template) {
-          this.fillForm(res.template);
-        } else {
-          this.errorMessage = 'Template not found';
-        }
-      },
-      error: (err) => {
-        console.error(err);
-        this.errorMessage = 'Failed to load template';
-      },
-    });
-  }
-
-  fillForm(data: any) {
-    this.templateForm.patchValue({
-      templateInfo: data.templateInfo,
-      emailIndex: data.emailIndex,
-      applicabletags: data.applicabletags,
-      emailHeader: data.emailHeader,
-      recipientType: data.recipientType,
-      emailModule: data.emailModule,
-      templateString: data.templateString,
-    });
-  }
-
   onCancel() {
-    this.cancelled.emit();
     this.router.navigate(['/masters/email-templates']);
   }
 
@@ -153,10 +118,12 @@ export class EmailTemplates {
   }
 
   private saveTemplate(form: any, userId: number, userMail: string, clientIP: string) {
+    this.isSaving = true;
+
     const payload: any = {
       userIndex: userId,
       userEmail: userMail,
-      templateIndex: this.templateId || 0,
+      templateIndex: 0,
       templateInfo: form.templateInfo,
       templateString: form.templateString,
       emailIndex: form.emailIndex,
@@ -172,17 +139,22 @@ export class EmailTemplates {
 
     this.api.addUpdateEmailTemplate(payload).subscribe({
       next: (res: any) => {
+        this.isSaving = false;
+
         if (res.successCode === 1) {
-          this.successMessage = 'Template updated successfully';
+          this.successMessage = 'Template created successfully';
+          setTimeout(() => {
+            this.router.navigate(['/email-templates']);
+          }, 1000);
         } else {
-          this.errorMessage = 'Update failed';
+          this.errorMessage = 'Template creation failed';
         }
       },
       error: (err) => {
+        this.isSaving = false;
         console.error(err);
-        this.errorMessage = 'Update failed';
+        this.errorMessage = 'Template creation failed';
       },
     });
   }
-  
 }

@@ -74,7 +74,7 @@
         </div>
 
         <div style="margin-right: 20px">
-          <button class="btn filter-btn w-100" routerLink="/calendar-opportunity/add-new">
+          <button class="btn filter-btn w-100" routerLink="/premium-members/add-member">
             <i class="fa-solid fa-plus"></i>
             Add New
           </button>
@@ -118,61 +118,4 @@
       }
     </ng-template>
   </app-table-column>
-  <!-- FOOTER -->
-  <div class="footer-section">
-    <!-- LEFT -->
-    <div class="footer-left">
-      <span> Total records : {{ totalCount }} </span>
-
-      <span class="mx-2"> Rows per page: </span>
-
-      <select class="page-select" [(ngModel)]="pageSize" (change)="changePage(1)">
-        <option [value]="10">10</option>
-        <option [value]="25">25</option>
-        <option [value]="50">50</option>
-      </select>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="footer-right">
-      <!-- FIRST -->
-      <button class="page-btn" (click)="changePage(1)">««</button>
-
-      <!-- PREV -->
-      <button class="page-btn" (click)="changePage(pageIndex - 1)">Prev</button>
-
-      <!-- FIRST PAGE -->
-      <button class="page-btn" [class.active]="pageIndex === 1" (click)="changePage(1)">1</button>
-
-      <!-- DOTS -->
-      @if (pageIndex > 4) {
-        <span>...</span>
-      }
-
-      <!-- MIDDLE PAGES -->
-      @for (p of visiblePages; track p) {
-        <button class="page-btn" [class.active]="pageIndex === p" (click)="changePage(p)">
-          {{ p }}
-        </button>
-      }
-
-      <!-- DOTS -->
-      @if (pageIndex < totalPages - 3) {
-        <span>...</span>
-      }
-
-      <!-- LAST PAGE -->
-      <button
-        class="page-btn"
-        [class.active]="pageIndex === totalPages"
-        (click)="changePage(totalPages)"
-      >
-        {{ totalPages }}
-      </button>
-
-      <button class="page-btn" (click)="changePage(pageIndex + 1)">Next</button>
-
-      <button class="page-btn" (click)="changePage(totalPages)">»»</button>
-    </div>
-  </div>
 </section>

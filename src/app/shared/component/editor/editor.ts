@@ -151,6 +151,56 @@ export class Editor implements AfterViewInit, ControlValueAccessor {
       Undo,
     ],
 
+    // toolbar: {
+    //   shouldNotGroupWhenFull: true,
+    //   items: [
+    //     // ROW 1
+    //     'undo',
+    //     'redo',
+    //     '|',
+    //     'heading',
+    //     'style',
+    //     '|',
+    //     'bold',
+    //     'italic',
+    //     'underline',
+    //     '|',
+    //     'link',
+    //     'alignment',
+    //     '|',
+    //     'bulletedList',
+    //     'numberedList',
+    //     'todoList',
+    //     '|',
+    //     'outdent',
+    //     'indent',
+    //     'fontSize',
+    //     'fontFamily',
+
+    //     '-', //New line k liye use hoti h ye
+
+    //     //ROW 2
+
+    //     'fontColor',
+    //     'fontBackgroundColor',
+    //     '|',
+    //     'highlight',
+    //     '|',
+    //     'blockQuote',
+    //     '|',
+    //     'insertTable',
+    //     'imageInsert',
+    //     'mediaEmbed',
+    //     '|',
+    //     'horizontalLine',
+    //     'pageBreak',
+    //     '|',
+    //     'sourceEditing',
+    //     'code',
+    //     'codeBlock',
+    //   ],
+    // },
+
     toolbar: {
       shouldNotGroupWhenFull: true,
       items: [
@@ -171,16 +221,16 @@ export class Editor implements AfterViewInit, ControlValueAccessor {
         'bulletedList',
         'numberedList',
         'todoList',
-        '|',
+
+        '-',
+
+        // ROW 2
         'outdent',
         'indent',
+        '|',
         'fontSize',
         'fontFamily',
-
-        '-', //New line k liye use hoti h ye
-
-        //ROW 2
-
+        '|',
         'fontColor',
         'fontBackgroundColor',
         '|',
@@ -200,7 +250,6 @@ export class Editor implements AfterViewInit, ControlValueAccessor {
         'codeBlock',
       ],
     },
-
     heading: {
       options: [
         { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },

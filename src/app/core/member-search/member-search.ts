@@ -3,7 +3,7 @@ import { Header } from '../../shared/component/header/header';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Api } from '../Services/api';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Export } from '../Services/export';
 import {
   TableColumnComponent,
@@ -12,7 +12,7 @@ import {
 
 @Component({
   selector: 'app-member-search',
-  imports: [CommonModule, FormsModule, Header, TableColumnComponent],
+  imports: [CommonModule, FormsModule, Header, TableColumnComponent, RouterLink],
   templateUrl: './member-search.html',
   styleUrl: './member-search.scss',
 })

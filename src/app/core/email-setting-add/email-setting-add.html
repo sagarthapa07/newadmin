@@ -17,9 +17,8 @@
 <section class="page-wrapper header-section">
   <div class="card-box">
     <div class="page-header">
-      <h4>Edit Email Setting</h4>
+      <h4>Add Email Setting</h4>
     </div>
-
     <form [formGroup]="settingForm">
       <div class="row">
         <div class="col-md-6">
@@ -96,7 +95,9 @@
 
       <div class="buttons d-flex justify-content-end">
         <button type="button" class="button btn-cancel" (click)="onCancel()">Cancel</button>
-        <button type="button" class="button" (click)="onSave()">Update</button>
+        <button type="button" class="button" [disabled]="isSaving" (click)="onSave()">
+          {{ isSaving ? 'Saving...' : 'Save' }}
+        </button>
       </div>
     </form>
   </div>

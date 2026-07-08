@@ -130,7 +130,7 @@ export class UserEdit {
   }
 
   onCancel() {
-    this.router.navigate(['/user-list']);
+    this.router.navigate(['/masters/users']);
   }
 
   onSave() {
@@ -182,8 +182,6 @@ export class UserEdit {
         return;
       }
     }
-
-    console.log('Payload sent to API:', payload);
 
     this.api.addUpdateUserRecord(payload).subscribe({
       next: (res: any) => {

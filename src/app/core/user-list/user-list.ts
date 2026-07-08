@@ -98,7 +98,6 @@ export class UserList {
       clientIP: clientIP,
     };
 
-    console.log('Payload sent to API:', payload);
 
     this.api.getUserRecords(payload).subscribe({
       next: (res: any) => {

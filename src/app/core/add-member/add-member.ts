@@ -1,27 +1,31 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Api } from '../Services/api';
+import { Auth } from '../Services/auth';
 import { Router } from '@angular/router';
 import { Header } from '../../shared/component/header/header';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { Validators } from '@angular/forms';
+import { AlertMessage } from '../../shared/component/alert-message/alert-message';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-member',
-  imports: [Header, ReactiveFormsModule, NgSelectModule],
+  imports: [CommonModule, Header, ReactiveFormsModule, AlertMessage],   // NgSelectModule hataya
   templateUrl: './add-member.html',
   styleUrl: './add-member.scss',
 })
 export class AddMember {
   memberForm!: FormGroup;
+  successMessage = '';
+  errorMessage = '';
+  isSaving = false;
 
   states: any[] = [];
   plans: any[] = [];
-  invoices: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private api: Api,
+    private auth: Auth,
     private router: Router,
   ) {}
 
@@ -54,12 +58,10 @@ export class AddMember {
   loadStates() {
     this.api.getAllStates().subscribe({
       next: (res: any) => {
-        console.log('States Response = ', res);
-
         this.states = res.states || res.result || [];
       },
       error: (err) => {
-        console.log(err);
+        console.error('Failed to load states', err);
       },
     });
   }
@@ -67,19 +69,57 @@ export class AddMember {
   loadPlans() {
     this.api.getAllPlans().subscribe({
       next: (res: any) => {
-        console.log('Plans Response = ', res);
         this.plans = res.result || [];
       },
       error: (err) => {
-        console.log(err);
+        console.error('Failed to load plans', err);
       },
     });
   }
+
+  getUserMail(): string {
+    return this.auth.getUser()?.emailId || '';
+  }
+
+  getUserId(): number {
+    return this.auth.getUser()?.userIndex || 0;
+  }
+
+  onCancel() {
+    this.router.navigate(['/premium-members/memberModule']);
+  }
+
   onSave() {
     if (this.memberForm.invalid) {
       this.memberForm.markAllAsTouched();
       return;
     }
-    console.log(this.memberForm.value);
+
+    this.isSaving = true;
+    const form = this.memberForm.value;
+
+    const payload: any = {
+      ...form,
+      userId: this.getUserId(),
+      userMail: this.getUserMail(),
+    };
+
+    // ⚠️ Api service mein addUpdateMember (ya jo bhi naam ho) method call karna padega yahan
+    this.api.addUpdateMember(payload).subscribe({
+      next: (res: any) => {
+        this.isSaving = false;
+        if (res.successCode === 1) {
+          this.successMessage = 'Member saved successfully';
+          setTimeout(() => this.router.navigate(['/members']), 1000);
+        } else {
+          this.errorMessage = 'Member save failed';
+        }
+      },
+      error: (err) => {
+        this.isSaving = false;
+        console.error(err);
+        this.errorMessage = 'Member save failed';
+      },
+    });
   }
 }

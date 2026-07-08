@@ -1,20 +1,19 @@
-.member-container {
-  padding: 20px;
-  background: #f5f5f5;
-}
-
 .member-card,
 .invoice-card {
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--card-bg-color);
+  border: 1px solid var(--border-color);
   padding: 25px;
   margin-bottom: 25px;
+  border-radius: 8px;
 }
 
 .page-title {
-  margin-bottom: 30px;
-  font-size: var(--fs-24);
-  font-weight: var(--fw-700);
+  margin-bottom: 40px;
+  font-size: var(--fs-20);
+  font-weight: var(--fw-600);
+  color: var(--text-color);
+  padding: 15px 0px;
+  border-bottom: 1px solid var(--btn-border-color);
 }
 
 .member-grid {
@@ -27,7 +26,10 @@
 .right-panel h5 {
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-color);
+  font-size: var(--fs-15);
+  font-weight: var(--fw-700);
+  color: var(--text-color);
 }
 
 .form-row {
@@ -40,6 +42,17 @@
 .form-row label {
   min-width: 130px;
   font-weight: var(--fw-500);
+  color: var(--text-color);
+}
+.form-row input {
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: var(--placeholder-text);
+  color: var(--text-color);
+  outline: none;
+  transition: var(--tran-02);
+  background: var(--white);
 }
 
 .double-input {
@@ -48,9 +61,25 @@
   flex: 1;
 }
 
-.double-input input {
+.double-input input,
+select {
   flex: 1;
-}     
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: var(--placeholder-text);
+  color: var(--text-color);
+  outline: none;
+  transition: var(--tran-02);
+  background: var(--white);
+}
+
+.form-control {
+  font-size: var(--placeholder-text);
+  color: var(--text-color);
+  background: var(--white);
+  border: 1px solid var(--btn-border-color);
+}
 
 .btn-section {
   display: flex;
@@ -58,13 +87,14 @@
   margin-top: 30px;
   gap: 10px;
 }
+
 .btn-save,
-.btn-back,
 .btn-cancel,
 .btn-mailchimp,
 .btn-invoice {
-  color: white;
+  color: var(--white);
   font-weight: var(--fw-500);
+  font-size: var(--placeholder-text);
 }
 
 .invoice-header {
@@ -72,27 +102,37 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
+
+  h3 {
+    font-size: var(--fs-20);
+    font-weight: var(--fw-600);
+    color: var(--text-color);
+  }
 }
 
 .invoice-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: var(--placeholder-text);
+  color: var(--text-color);
 }
 
 .invoice-table th {
-  background: #f4f4f4;
+  background: var(--btn-bg-color);
   text-align: left;
   padding: 12px;
+  font-weight: var(--fw-600);
 }
 
 .invoice-table td {
   padding: 12px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--border-color);
 }
 
 .no-data {
   text-align: center;
   padding: 20px;
+  color: var(--text-color-light);
 }
 
 @media (max-width: 992px) {
@@ -113,15 +153,20 @@
     flex-direction: column;
   }
 }
+
 .btn {
-  //   display: flex;
   gap: 10px;
-  background-image: linear-gradient(-180deg, #37aee2 0%, #1e96c8 100%);
+  background-image: linear-gradient(
+    -180deg,
+    var(--primary-color) 0%,
+    var(--primary-color-dark) 100%
+  );
   text-decoration: none;
   border: 0;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: var(--fw-500);
 }
+
 .btn-invoice {
   display: flex;
   gap: 10px;
@@ -137,6 +182,7 @@
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
+  color: var(--placeholder-color);
 }
 
 .select-wrapper select {
@@ -148,9 +194,22 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23545454' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 14px;
   padding-right: 30px;
+  font-size: var(--placeholder-text);
+  color: var(--text-color);
+}
+.invoice-table a {
+  color: var(--primary-color);
+  font-weight: var(--fw-500);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--tran-02);
+}
+
+.invoice-table a:hover {
+  text-decoration: underline;
 }

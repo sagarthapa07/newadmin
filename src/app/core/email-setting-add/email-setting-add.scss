@@ -5,6 +5,13 @@
   padding: 24px 28px;
 }
 
+.section-title {
+  font-size: 16px;
+  font-weight: var(--fw-600);
+  color: var(--text-color);
+  margin-bottom: 24px;
+}
+
 .row {
   display: flex;
   gap: 32px;
@@ -17,15 +24,11 @@
   min-width: 280px;
 }
 
-.col-md-12 {
-  flex: 1 1 100%;
-}
-
 label {
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-color);
+  color: #344054;
   margin-bottom: 6px;
 }
 
@@ -37,7 +40,7 @@ label {
   font-size: var(--placeholder-text);
   color: var(--text-color);
   outline: none;
-  transition: var(--tran-02);
+  transition: all 0.2s ease;
   background: var(--white);
 }
 
@@ -48,14 +51,6 @@ label {
 .form-control:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.12);
-}
-
-.form-control::placeholder {
-  color: var(--placeholder-color);
-}
-
-textarea.form-control {
-  resize: vertical;
 }
 
 .error {
@@ -73,13 +68,13 @@ textarea.form-control {
 
 .btn-cancel {
   border: 1px solid #d0d5dd;
-  background: var(--white);
+  background: #fff;
   color: var(--text-color);
   padding: 9px 22px;
   border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
-  transition: var(--tran-02);
+  transition: all 0.2s ease;
 }
 
 .btn-cancel:hover {
@@ -101,7 +96,6 @@ textarea.form-control {
   margin-bottom: 20px;
   padding: 10px 0px;
   border-bottom: 1px solid var(--btn-border-color);
-
   h4 {
     font-size: var(--fs-20);
     font-weight: var(--fw-600);
@@ -114,7 +108,7 @@ textarea.form-control {
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: var(--text-color-light);
+    color: var(--text-color);
 
     span {
       cursor: pointer;

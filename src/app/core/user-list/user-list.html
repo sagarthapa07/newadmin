@@ -32,12 +32,12 @@
           </div>
         </div>
 
-        <button class="filter-btn" (click)="onSearch()">Search</button>
+        <button class="filter-btn" (click)="onSearch()"><i class="bi bi-search"></i> Search</button>
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="header-right">
-        <button class="btn filter-btn w-100" routerLink="/user-add">
+        <button class="btn filter-btn w-100" routerLink="/masters/user-add">
           <i class="fa-solid fa-plus"></i>
           Add New
         </button>
@@ -61,7 +61,7 @@
     <ng-template #cellTemplate let-item let-col="col">
       @switch (col.key) {
         @case ('userStatus') {
-          <span class="table-status" [ngClass]="item.userStatus === 'ACTIVE' ? 'paid' : 'pending'">
+          <span class="table-status" [ngClass]="item.userStatus === 'ACTIVE' ? 'badge bg-success' : 'pending'">
             {{ item.userStatus }}
           </span>
         }

@@ -4,7 +4,9 @@
   --white:#fff;
   --body-color: #f8f9fd;
   --sidebar-color: #f7f8f9;
+  --card-bg-color:#f7f8f9;
   --primary-color: #0095c0;
+  --primary-color-dark: #0180a3;
   --primary-color-light: #f6f5ff;
   --toggle-color: #dddd;
   --text-color-light: #545454;
@@ -25,8 +27,8 @@
 
   /* Font Sizes */
   --header-text: 22px;
-  --body-text: 16px;
   --placeholder-text: 14px;
+  --title-text:16px;
 
   /* Extra Small */
   --fs-10: 10px;
@@ -86,6 +88,48 @@
   font-size: var(--fs-12);
   font-weight: var(--fw-700);
 }
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; // Icon aur text ke beech gap
+
+  background-color: var(--primary-color);
+  color: var(--body-color);
+
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 8px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  box-shadow: none;
+  outline: none;
+}
+
+.button:hover {
+  background-color: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
+}
+
+.button:focus,
+.button:focus-visible,
+.button:active {
+  outline: none;
+  box-shadow: none;
+}
+
+.button i {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+
+
 
 
 /* Importing Bootstrap SCSS file. */

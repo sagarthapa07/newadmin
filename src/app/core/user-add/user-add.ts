@@ -76,7 +76,7 @@ export class UserAdd {
   }
 
   onCancel() {
-    this.router.navigate(['/user-list']);
+    this.router.navigate(['/masters/users']);
   }
 
   onSave() {
@@ -128,8 +128,6 @@ export class UserAdd {
       userMail: userMail,
       clientIP: clientIP,
     };
-
-    console.log('Payload sent to API (Add User):', payload);
 
     this.api.addUpdateUserRecord(payload).subscribe({
       next: (res: any) => {

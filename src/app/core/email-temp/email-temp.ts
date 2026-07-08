@@ -126,7 +126,6 @@ export class EmailTemp {
 
   onSearch() {
     const value = this.searchText.trim();
-
     this.searchHistory = this.searchHistory.filter((x) => x !== value);
     if (value) {
       this.searchHistory.unshift(value);
@@ -150,12 +149,16 @@ export class EmailTemp {
       this.getData();
     }
   }
+  goToAdd() {
+    console.log('yhaaa hun mai ');
+    this.router.navigate(['masters/email-templates-add']);
+  }
 
   goToEdit(id: number) {
     if (!id) {
       console.error('Template ID missing', id);
       return;
     }
-    this.router.navigate(['/email-templates/edit', id]);
+    this.router.navigate(['/masters/email-templates/edit', id]);
   }
 }

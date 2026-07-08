@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Header } from '../../shared/component/header/header';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
@@ -9,22 +9,20 @@ import { Api } from '../Services/api';
 import { Auth } from '../Services/auth';
 
 @Component({
-  selector: 'app-email-setting-edit',
+  selector: 'app-email-setting-add',
   imports: [CommonModule, ReactiveFormsModule, Header, AlertMessage],
-  templateUrl: './email-setting-edit.html',
-  styleUrl: './email-setting-edit.scss',
+  templateUrl: './email-setting-add.html',
+  styleUrl: './email-setting-add.scss',
 })
-export class EmailSettingEdit {
-  emailIndex: number | null = null;
+export class EmailSettingAdd {
   settingForm: FormGroup;
   successMessage = '';
   errorMessage = '';
-  isLoading = false;
+  isSaving = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
     private api: Api,
     private auth: Auth,
     private http: HttpClient,
@@ -37,14 +35,6 @@ export class EmailSettingEdit {
       smtpport: ['', Validators.required],
       enableSsl: ['True', Validators.required],
     });
-  }
-
-  ngOnInit() {
-    const idFromRoute = this.route.snapshot.paramMap.get('id');
-    if (idFromRoute) {
-      this.emailIndex = Number(idFromRoute);
-      this.loadSetting(this.emailIndex);
-    }
   }
 
   getClientIP() {
@@ -64,42 +54,6 @@ export class EmailSettingEdit {
   isFieldInvalid(field: string): boolean {
     const control = this.settingForm.get(field);
     return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-  loadSetting(id: number) {
-    this.isLoading = true;
-    const userMail = this.getUserMail();
-    const userId = this.getUserId();
-
-    this.api
-      .getAllEmailSettings({ pageIndex: 1, pageSize: 100, userId, userMail, clientIP: '' })
-      .subscribe({
-        next: (res: any) => {
-          const list = res.settings || [];
-          const found = list.find((x: any) => x.emailIndex === id);
-          if (found) {
-            this.fillForm(found);
-          } else {
-            this.errorMessage = 'Email setting not found';
-          }
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error(err);
-          this.errorMessage = 'Failed to load email setting';
-          this.isLoading = false;
-        },
-      });
-  }
-
-  fillForm(data: any) {
-    this.settingForm.patchValue({
-      senderName: data.senderName,
-      senderEmail: data.senderEmail,
-      senderPassword: data.senderPassword,
-      mailServer: data.mailServer,
-      smtpport: data.smtpport,
-      enableSsl: data.enableSsl,
-    });
   }
 
   onCancel() {
@@ -127,8 +81,10 @@ export class EmailSettingEdit {
   }
 
   private saveSetting(form: any, userId: number, userMail: string, clientIP: string) {
+    this.isSaving = true;
+
     const payload: any = {
-      emailIndex: this.emailIndex || 0,
+      emailIndex: 0,
       senderName: form.senderName,
       senderEmail: form.senderEmail,
       senderPassword: form.senderPassword,
@@ -142,15 +98,21 @@ export class EmailSettingEdit {
 
     this.api.addUpdateEmailSetting(payload).subscribe({
       next: (res: any) => {
+        this.isSaving = false;
+
         if (res.successCode === 1) {
-          this.successMessage = 'Email setting updated successfully';
+          this.successMessage = 'Email setting created successfully';
+          setTimeout(() => {
+            this.router.navigate(['/email-setting']);
+          }, 1000);
         } else {
-          this.errorMessage = 'Update failed';
+          this.errorMessage = 'Email setting creation failed';
         }
       },
       error: (err) => {
+        this.isSaving = false;
         console.error(err);
-        this.errorMessage = 'Update failed';
+        this.errorMessage = 'Email setting creation failed';
       },
     });
   }

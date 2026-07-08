@@ -1,25 +1,24 @@
 <app-header></app-header>
+<app-alert-message
+  *ngIf="successMessage"
+  [type]="'success'"
+  [message]="successMessage"
+  (close)="successMessage = ''"
+>
+</app-alert-message>
 
+<app-alert-message
+  *ngIf="errorMessage"
+  [type]="'error'"
+  [message]="errorMessage"
+  (close)="errorMessage = ''"
+>
+</app-alert-message>
 <section class="page-wrapper header-section">
-  <div class="page-header">
-    <h4>Add Plan</h4>
-  </div>
   <div class="card-box">
-    <app-alert-message
-      *ngIf="successMessage"
-      [type]="'success'"
-      [message]="successMessage"
-      (close)="successMessage = ''"
-    >
-    </app-alert-message>
-
-    <app-alert-message
-      *ngIf="errorMessage"
-      [type]="'error'"
-      [message]="errorMessage"
-      (close)="errorMessage = ''"
-    >
-    </app-alert-message>
+    <div class="page-header">
+      <h4>Add Plan</h4>
+    </div>
 
     <form [formGroup]="planForm">
       <div class="plan-grid">
@@ -233,8 +232,8 @@
       </div>
 
       <div class="buttons d-flex justify-content-end">
-        <button type="button" class="btn btn-cancel" (click)="onCancel()">Back</button>
-        <button type="button" class="btn btn-update" [disabled]="isSaving" (click)="onSave()">
+        <button type="button" class="button btn-cancel" (click)="onCancel()">Back</button>
+        <button type="button" class="button" [disabled]="isSaving" (click)="onSave()">
           {{ isSaving ? 'Saving...' : 'Save' }}
         </button>
       </div>

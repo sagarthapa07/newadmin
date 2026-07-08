@@ -166,7 +166,7 @@ export class BusinessPlansAdd implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/business-plans']);
+    this.router.navigate(['/masters/plans']);
   }
 
   onSave(): void {

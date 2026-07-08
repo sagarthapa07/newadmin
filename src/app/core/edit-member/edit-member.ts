@@ -162,4 +162,7 @@ export class EditMemberComponent implements OnInit {
 
     return plan ? plan.index : 0;
   }
+  gotoCancel() {
+    this.router.navigate(['/premium-members/memberModule']);
+  }
 }

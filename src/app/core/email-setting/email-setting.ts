@@ -28,7 +28,7 @@ export class EmailSetting {
   showSuggestions = false;
 
   columns: TableColumn[] = [
-    { key: 'senderName', label: 'Sender Name' },
+    { key: 'senderName', label: 'Sender Name', customTemplate: true },
     { key: 'senderEmail', label: 'Sender Email' },
     { key: 'mailServer', label: 'Mail Server' },
     { key: 'smtpport', label: 'SMTP Port' },
@@ -90,9 +90,6 @@ export class EmailSetting {
           userMail: userMail,
           clientIP: ipRes?.ip || '',
         };
-
-        console.log('Payload sent to API:', payload);
-
         this.api.getAllEmailSettings(payload).subscribe({
           next: (res: any) => {
             console.log('API response:', res);
@@ -182,12 +179,15 @@ export class EmailSetting {
       this.getData();
     }
   }
+  goToAdd() {
+    this.router.navigate(['/masters/email-setting-add']);
+  }
 
   goToEdit(id: number) {
     if (!id) {
       console.error('Email Setting ID missing', id);
       return;
     }
-    this.router.navigate(['/email-setting-edit', id]);
+    this.router.navigate(['masters/email-setting-edit', id]);
   }
 }

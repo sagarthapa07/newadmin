@@ -18,7 +18,7 @@
   <section class="page-wrapper">
     <div class="card-box">
       <div class="page-header">
-        <h4>Edit Email Template</h4>
+        <h4>Add Email Template</h4>
       </div>
       <app-alert-message
         *ngIf="successMessage"
@@ -133,7 +133,11 @@
             <label class="editor-label">Email Template</label>
             <app-editor formControlName="templateString"></app-editor>
 
-            @if (isEditorEmpty()) {
+            @if (
+              isEditorEmpty() &&
+              (templateForm.get('templateString')?.touched ||
+                templateForm.get('templateString')?.dirty)
+            ) {
               <div class="error">Please enter email template content.</div>
             }
           </div>
@@ -141,7 +145,9 @@
 
         <div class="buttons d-flex justify-content-end">
           <button type="button" class="button btn-cancel" (click)="onCancel()">Cancel</button>
-          <button type="button" class="button" (click)="onSave()">Update</button>
+          <button type="button" class="button" [disabled]="isSaving" (click)="onSave()">
+            {{ isSaving ? 'Saving...' : 'Save' }}
+          </button>
         </div>
       </form>
     </div>
