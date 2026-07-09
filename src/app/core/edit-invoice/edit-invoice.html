@@ -35,7 +35,8 @@
             <label>Selected Plan:</label>
 
             <div class="field-group single">
-              <select formControlName="plan">
+              <select formControlName="plan" (change)="onPlanChange($event)">
+                <option value="" disabled selected>Select</option>
                 @for (plan of plans; track plan.index) {
                   <option [value]="plan.name">
                     {{ plan.name }}
@@ -294,109 +295,149 @@
               <span>Check to send email.</span>
             </div>
           </div>
-
-          <button class="btn btn-primary" type="button" (click)="saveInvoice()">Save</button>
         }
+
+        <div class="tab-nav-row">
+          <button
+            type="button"
+            class="button button-secondary"
+            [disabled]="isFirstTab"
+            (click)="goToPrevTab()"
+          >
+            <i class="bi bi-chevron-left"></i> Back
+          </button>
+
+          @if (!isLastTab) {
+            <button type="button" class="button button-primary" (click)="goToNextTab()">
+              Next <i class="bi bi-chevron-right"></i>
+            </button>
+          } @else {
+            <button type="button" class="button button-primary" (click)="saveInvoice()">
+              Save <i class="bi bi-bookmark"></i>
+            </button>
+          }
+        </div>
       </form>
     </div>
 
     <!-- RIGHT -->
 
     <div class="member-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title-group">
+          <h5>Personal Details</h5>
+          <span class="member-id">Member ID: #{{ memberId }}</span>
+        </div>
+
+        <button type="button" class="btn-edit" (click)="toggleEditMode()">
+          <i class="bi" [class.bi-pencil]="!isEditMode" [class.bi-x-lg]="isEditMode"></i>
+          {{ isEditMode ? 'Cancel' : 'Edit' }}
+        </button>
+      </div>
+
       <form [formGroup]="memberForm">
-        <!-- Member Name -->
-        <div class="form-row">
-          <label>Member's name:</label>
+        <form [formGroup]="memberForm">
+          <!-- Member Name -->
+          <div class="form-row">
+            <label>Member's name:</label>
 
-          <div class="field-group">
-            <input type="text" formControlName="firstName" />
-            <input type="text" formControlName="lastName" />
+            <div class="field-group">
+              <input type="text" formControlName="firstName" />
+              <input type="text" formControlName="lastName" />
+            </div>
           </div>
-        </div>
 
-        <!-- Location -->
-        <div class="form-row">
-          <label>Location:</label>
+          <!-- Location -->
+          <div class="form-row">
+            <label>Location:</label>
 
-          <div class="field-group">
-            <select formControlName="country">
-              @for (c of country; track $index) {
-                <option [value]="c.country">{{ c.country }}</option>
+            <div class="field-group">
+              <select formControlName="country">
+                @for (c of country; track $index) {
+                  <option [value]="c.country">{{ c.country }}</option>
+                }
+              </select>
+
+              <select formControlName="state">
+                @for (state of states; track $index) {
+                  <option [value]="state.stateName">{{ state.stateName }}</option>
+                }
+              </select>
+
+              <input type="text" formControlName="zipCode" />
+              <input type="text" formControlName="city" />
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="form-row">
+            <label>Address</label>
+            <textarea formControlName="billingAddress" rows="1"></textarea>
+          </div>
+
+          <!-- Remark -->
+          <div class="form-row">
+            <label>Remark</label>
+            <textarea formControlName="remarks" rows="1"></textarea>
+          </div>
+
+          <!-- Plan -->
+          <div class="form-row">
+            <label>Current Plan</label>
+            <select formControlName="plan">
+              @for (plan of plans; track plan.index) {
+                <option [value]="plan.name">
+                  {{ plan.name }}
+                </option>
               }
             </select>
-
-            <select formControlName="state">
-              @for (state of states; track $index) {
-                <option [value]="state.stateName">{{ state.stateName }}</option>
-              }
-            </select>
-
-            <input type="text" formControlName="zipCode" />
-            <input type="text" formControlName="city" />
           </div>
-        </div>
 
-        <!-- Address -->
-        <div class="form-row">
-          <label>Address</label>
-          <textarea formControlName="billingAddress" rows="1"></textarea>
-        </div>
+          <!-- Email -->
+          <div class="form-row">
+            <label>Email</label>
+            <input type="text" formControlName="email" />
+          </div>
 
-        <!-- Remark -->
-        <div class="form-row">
-          <label>Remark</label>
-          <textarea formControlName="remarks" rows="1"></textarea>
-        </div>
+          <!-- Password -->
+          <div class="form-row">
+            <label>Password</label>
+            <input type="text" formControlName="password" />
+          </div>
 
-        <!-- Plan -->
-        <div class="form-row">
-          <label>Current Plan</label>
-          <select formControlName="plan">
-            @for (plan of plans; track plan.index) {
-              <option [value]="plan.name">
-                {{ plan.name }}
-              </option>
-            }
-          </select>
-        </div>
+          <!-- Phone -->
+          <div class="form-row">
+            <label>Phone</label>
+            <input type="text" formControlName="contactNo" />
+          </div>
 
-        <!-- Email -->
-        <div class="form-row">
-          <label>Email</label>
-          <input type="text" formControlName="email" />
-        </div>
+          <!-- Status -->
+          <div class="form-row">
+            <label>Status</label>
+            <input type="text" formControlName="memberStatus" />
+          </div>
 
-        <!-- Password -->
-        <div class="form-row">
-          <label>Password</label>
-          <input type="text" formControlName="password" />
-        </div>
+          <!-- Registration Date -->
+          <div class="form-row">
+            <label>Registration Date</label>
+            <input type="date" formControlName="registrationDate" />
+          </div>
 
-        <!-- Phone -->
-        <div class="form-row">
-          <label>Phone</label>
-          <input type="text" formControlName="contactNo" />
-        </div>
+          <!-- Activation Date -->
+          <div class="form-row">
+            <label>Activation Date</label>
+            <input type="date" formControlName="activationDate" />
+          </div>
+        </form>
 
-        <!-- Status -->
-        <div class="form-row">
-          <label>Status</label>
-          <input type="text" formControlName="memberStatus" />
-        </div>
-
-        <!-- Registration Date -->
-        <div class="form-row">
-          <label>Registration Date</label>
-          <input type="date" formControlName="registrationDate" />
-        </div>
-
-        <!-- Activation Date -->
-        <div class="form-row">
-          <label>Activation Date</label>
-          <input type="date" formControlName="activationDate" />
-        </div>
-
-        <button type="button" class="btn btn-primary" (click)="saveMember()">Save</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="saveMember()"
+          [disabled]="!isEditMode"
+        >
+          Save
+        </button>
       </form>
     </div>
   </div>

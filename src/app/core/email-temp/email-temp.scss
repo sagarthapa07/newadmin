@@ -9,23 +9,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .header-left {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
 }
 
 .search-box {
   display: flex;
   align-items: center;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 6px 10px;
-  min-width: 220px;
-  background: #fff;
+  flex: 0 0 250px;
+  background: var(--white);
 }
 
 .search-box input {
@@ -50,6 +53,8 @@
   padding: 6px 0;
   z-index: 999;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .suggestion-item {
@@ -63,18 +68,79 @@
   background: #374151;
 }
 
-.filter-btn {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 6px 12px;
-  background: var(--btn-bg-color);
-  cursor: pointer;
-  white-space: nowrap;
-}
-
 .header-right {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   margin-right: 10px;
+}
+
+/* ============ RESPONSIVE ============ */
+
+@media (max-width: 992px) {
+  .header-row {
+    gap: 12px;
+  }
+
+  .header-left {
+    flex: 1 1 100%;
+  }
+
+  .header-right {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .heading {
+    font-size: var(--fs-h4);
+  }
+
+  .header-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-left {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .search-box {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .header-left .button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .header-right {
+    width: 100%;
+  }
+
+  .header-right .button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .heading {
+    font-size: var(--fs-16);
+  }
+
+  .search-box {
+    height: 38px;
+    padding: 8px 10px;
+  }
+
+  .suggestion-item {
+    font-size: var(--fs-13);
+    padding: 10px 12px;
+  }
 }

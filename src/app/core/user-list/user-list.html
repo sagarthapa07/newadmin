@@ -32,12 +32,14 @@
           </div>
         </div>
 
-        <button class="filter-btn" (click)="onSearch()"><i class="bi bi-search"></i> Search</button>
+        <button class="button button-primary" (click)="onSearch()">
+          <i class="bi bi-search"></i> <span>Search</span>
+        </button>
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="header-right">
-        <button class="btn filter-btn w-100" routerLink="/masters/user-add">
+        <button class="button button-primary" routerLink="/masters/user-add">
           <i class="fa-solid fa-plus"></i>
           Add New
         </button>
@@ -60,8 +62,13 @@
   >
     <ng-template #cellTemplate let-item let-col="col">
       @switch (col.key) {
+        @case ('userType') {
+          <span class="user-type-badge" [ngClass]="getUserTypeClass(item.userType)">
+            {{ item.userType }}
+          </span>
+        }
         @case ('userStatus') {
-          <span class="table-status" [ngClass]="item.userStatus === 'ACTIVE' ? 'badge bg-success' : 'pending'">
+          <span class="table-status" [ngClass]="getStatusClass(item.userStatus)">
             {{ item.userStatus }}
           </span>
         }

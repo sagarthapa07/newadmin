@@ -2,10 +2,12 @@
 
 <section class="header-section">
   <div class="heading">
-    <span>Member Invoice Search </span>
+    <span>Member Invoice Search</span>
   </div>
+
   <div class="header-sec">
     <div class="header-row">
+      <!-- LEFT: Search -->
       <div class="header-left">
         <div class="search-box">
           <div class="search-wrapper">
@@ -30,22 +32,22 @@
           </div>
         </div>
 
-        <button class="filter-btn" (click)="onSearch()"><i class="bi bi-search"></i> Search</button>
+        <button class="button button-primary" (click)="onSearch()">
+          <i class="bi bi-search"></i> <span>Search</span>
+        </button>
       </div>
-      <div class="header-right">
-        <div>
-          <button class="btn filter-btn" (click)="exportSelectedInvoices()">
-            <i class="bi bi-file-arrow-down"></i>
-            <span>Export</span>
-          </button>
-        </div>
 
-        <div style="margin-right: 20px">
-          <button class="btn filter-btn w-100" routerLink="/premium-members/add-member">
-            <i class="fa-solid fa-plus"></i>
-            Add New
-          </button>
-        </div>
+      <!-- RIGHT: Export + Add New -->
+      <div class="header-right">
+        <button class="button button-primary" (click)="exportSelectedInvoices()">
+          <i class="bi bi-file-arrow-down"></i>
+          <span>Export</span>
+        </button>
+
+        <button class="button button-primary" routerLink="/premium-members/add-member">
+          <i class="fa-solid fa-plus"></i>
+          <span>Add New</span>
+        </button>
       </div>
     </div>
   </div>
@@ -62,8 +64,11 @@
   >
     <ng-template #cellTemplate let-item let-col="col">
       @switch (col.key) {
+        @case ('email') {
+          <span class="link-text">{{ item.email }}</span>
+        }
         @case ('invoiceNumber') {
-          <a href="javascript:void(0)" (click)="openInvoice(item.memberId, item.invoiceId)">
+          <a href="javascript:void(0)" class="link-text" (click)="openInvoice(item.memberId, item.invoiceId)">
             {{ item.invoiceNumber }}
           </a>
         }

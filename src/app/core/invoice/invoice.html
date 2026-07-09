@@ -34,7 +34,7 @@
     <ng-template #cellTemplate let-item let-col="col">
       @switch (col.key) {
         @case ('invoiceNumber') {
-          <a href="javascript:void(0)" (click)="goToInvoice(item.invoiceIndex)">
+          <a href="javascript:void(0)" class="link-text" (click)="goToInvoice(item.invoiceIndex)">
             {{ item.invoiceNumber }}
           </a>
         }

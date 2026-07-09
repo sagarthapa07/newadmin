@@ -50,12 +50,6 @@ export class Common {
     }
   }
 
-  //The set method is use for encrypt the value.
-  // encrypt(key: any, value: any) {
-  //   return CryptoJS.AES.encrypt(JSON.stringify(value), key).toString();
-  // }
-
-  //The get method is use for decrypt the value.
   decrypt(key: string, value: string): string {
     const bytes = CryptoJS.AES.decrypt(value, key);
     return bytes.toString(CryptoJS.enc.Utf8);

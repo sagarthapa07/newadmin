@@ -32,12 +32,14 @@
           </div>
         </div>
 
-        <button class="filter-btn" (click)="onSearch()"><i class="bi bi-search"></i> Search</button>
+        <button class="button button-primary" (click)="onSearch()">
+          <i class="bi bi-search"></i> <span>Search</span>
+        </button>
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="header-right">
-        <button class="btn filter-btn w-100" (click)="goToAdd()">
+        <button class="button button-primary" (click)="goToAdd()">
           <i class="fa-solid fa-plus"></i>
           Add New
         </button>

@@ -162,4 +162,16 @@ export class BusinessPlans {
     }
     this.router.navigate(['/masters/business-plan-edit', id]);
   }
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Active':
+        return 'status-active';
+      case 'Draft':
+        return 'status-draft';
+      case 'Publish':
+        return 'status-Publish';
+      default:
+        return 'status-default';
+    }
+  }
 }

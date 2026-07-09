@@ -29,7 +29,7 @@ export class MemberSearch {
 
   columns: TableColumn[] = [
     { key: 'name', label: 'Full Name' },
-    { key: 'email', label: 'Email Address' },
+    { key: 'email', label: 'Email Address', customTemplate: true },
     { key: 'transactionId', label: 'Transaction ID' },
     { key: 'paymentId', label: 'Payment ID' },
     { key: 'payerEmail', label: 'Payer Email' },

@@ -1,10 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
   /* Colors  */
-  --white:#fff;
+  --white: #fff;
   --body-color: #f8f9fd;
   --sidebar-color: #f7f8f9;
-  --card-bg-color:#f7f8f9;
+  --card-bg-color: #f7f8f9;
   --primary-color: #0095c0;
   --primary-color-dark: #0180a3;
   --primary-color-light: #f6f5ff;
@@ -18,7 +18,7 @@
   --header2-bkg-color: #edf8ff;
   --nav-color: #1d93be;
   --border-color: #e2e4e6;
-  --btn-border-color:#ddd;
+  --btn-border-color: #ddd;
   --btn-bg-color: #e9edf0;
   --box-bg-color: #d6dbe0;
   --placeholder-color: #6b7280;
@@ -28,7 +28,7 @@
   /* Font Sizes */
   --header-text: 22px;
   --placeholder-text: 14px;
-  --title-text:16px;
+  --title-text: 16px;
 
   /* Extra Small */
   --fs-10: 10px;
@@ -78,27 +78,22 @@
   --tran-05: all 0.5s ease;
 }
 
-
 .header-section {
   margin: 30px 12px 0 80px;
 }
-
 
 .heading {
   font-size: var(--fs-12);
   font-weight: var(--fw-700);
 }
 
+/* Base Button */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; // Icon aur text ke beech gap
+  gap: 8px;
 
-  background-color: var(--primary-color);
-  color: var(--body-color);
-
-  border: 1px solid var(--primary-color);
   border-radius: 8px;
   padding: 8px 20px;
   cursor: pointer;
@@ -108,11 +103,7 @@
   transition: all 0.25s ease;
   box-shadow: none;
   outline: none;
-}
-
-.button:hover {
-  background-color: var(--primary-color-dark);
-  border-color: var(--primary-color-dark);
+  border: 1px solid transparent;
 }
 
 .button:focus,
@@ -128,9 +119,30 @@
   align-items: center;
 }
 
+/* Primary Button */
+.button-primary {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border-color: var(--primary-color);
+}
 
+.button-primary:hover {
+  background-color: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
+}
 
+/* White / Outline Button */
+.button-secondary {
+  background-color: var(--white);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
 
+.button-secondary:hover {
+  background-color: var(--sidebar-color);
+  color: var(--primary-color-dark);
+  border-color: var(----primary-color-dark);
+}
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
@@ -138,13 +150,10 @@
   display: block !important;
 }
 
-
 .ngx-pe-cropper-wrapper img {
   display: block !important;
   max-width: 100%;
 }
-
-
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';

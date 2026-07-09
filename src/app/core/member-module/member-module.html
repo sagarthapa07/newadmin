@@ -10,8 +10,6 @@
       <!-- LEFT COLUMN -->
       <div class="header-left">
         <div class="search-box">
-          <!-- <i class="fa-solid fa-magnifying-glass icons" (click)="onSearch()"></i> -->
-
           <div class="search-wrapper">
             <input
               type="text"
@@ -24,7 +22,7 @@
 
             @if (showSuggestions && searchHistory.length) {
               <div class="suggestions">
-                @for (item of searchHistory.slice(0, 2); track item) {
+                @for (item of searchHistory.slice(0, 5); track item) {
                   <div class="suggestion-item" (click)="selectSuggestion(item)">
                     {{ item }}
                   </div>
@@ -33,24 +31,22 @@
             }
           </div>
         </div>
-        <div class="">
-          <select class="search-box" [(ngModel)]="selectedStatus">
-            <option [ngValue]="null">Select</option>
-            <option value="New">New</option>
-            <option value="Active">Active</option>
-            <option value="Expired">Expired</option>
-            <option value="Blocked">Blocked</option>
-          </select>
-        </div>
-        <div>
-          <select class="search-box" [(ngModel)]="selectedPlanId">
-            <option [ngValue]="0">Select a Plan</option>
-            <option [ngValue]="1">Testing</option>
-            <option [ngValue]="2">GrantsforUS Member Plan</option>
-          </select>
-        </div>
 
-        <div class="col-lg-5 col-md-6 col-12">
+        <select class="search-box" [(ngModel)]="selectedStatus">
+          <option [ngValue]="null">Select</option>
+          <option value="New">New</option>
+          <option value="Active">Active</option>
+          <option value="Expired">Expired</option>
+          <option value="Blocked">Blocked</option>
+        </select>
+
+        <select class="search-box" [(ngModel)]="selectedPlanId">
+          <option [ngValue]="0">Select a Plan</option>
+          <option [ngValue]="1">Testing</option>
+          <option [ngValue]="2">GrantsforUS Member Plan</option>
+        </select>
+
+        <div class="multiselect-wrapper">
           <ng-multiselect-dropdown
             [settings]="countieSettings"
             [data]="singleStateDropdown.data"
@@ -61,24 +57,22 @@
           </ng-multiselect-dropdown>
         </div>
 
-        <button class="filter-btn" (click)="onFilterSearch()">Search</button>
+        <button class="button button-primary" (click)="onFilterSearch()">
+          <i class="bi bi-search"></i> <span>Search</span>
+        </button>
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="header-right">
-        <div>
-          <button class="btn filter-btn" (click)="exportSelectedMembers()">
-            <i class="bi bi-file-arrow-down"></i>
-            <span>Export</span>
-          </button>
-        </div>
+        <button class="button button-primary" (click)="exportSelectedMembers()">
+          <i class="bi bi-file-arrow-down"></i>
+          <span>Export</span>
+        </button>
 
-        <div style="margin-right: 20px">
-          <button class="btn filter-btn w-100" routerLink="/premium-members/add-member">
-            <i class="fa-solid fa-plus"></i>
-            Add New
-          </button>
-        </div>
+        <button class="button button-primary" routerLink="/premium-members/add-member">
+          <i class="fa-solid fa-plus"></i>
+          Add New
+        </button>
       </div>
     </div>
   </div>
@@ -110,7 +104,14 @@
           {{ item.activationDate | date: 'yyyy-MM-dd' }}
         }
         @case ('status') {
-          <span class="table-status">{{ item.memberStatus | uppercase }}</span>
+          <span class="table-status" [ngClass]="getStatusClass(item.memberStatus)">
+            {{ item.memberStatus | uppercase }}
+          </span>
+        }
+        @case ('memberType') {
+          <span class="member-type-badge" [ngClass]="getMemberTypeClass(item.memberType)">
+            {{ item.memberType }}
+          </span>
         }
         @case ('edit') {
           <i class="bi bi-pencil-square table-icon-cell" (click)="goToEdit(item.memberId)"></i>

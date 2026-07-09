@@ -12,7 +12,10 @@ import { ViewChild } from '@angular/core';
 import { DropdownItem } from '../../datatype';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { Export } from '../Services/export';
-import { TableColumn, TableColumnComponent } from '../../shared/component/table-column/table-column';
+import {
+  TableColumn,
+  TableColumnComponent,
+} from '../../shared/component/table-column/table-column';
 
 @Component({
   selector: 'app-member-module',
@@ -57,7 +60,7 @@ export class MemberModule {
     { key: 'countryExpiry', label: 'Country Extd. Exp Dt.', customTemplate: true },
     { key: 'regActivation', label: 'Reg. Date Activ. Date', customTemplate: true },
     { key: 'status', label: 'Status', customTemplate: true },
-    { key: 'memberType', label: 'Type' },
+    { key: 'memberType', label: 'Type', customTemplate: true },
     { key: 'edit', label: 'Edit', customTemplate: true },
   ];
 
@@ -111,6 +114,32 @@ export class MemberModule {
     data: [],
     selected: [],
   };
+
+  getStatusClass(status: string): string {
+    switch ((status || '').toUpperCase()) {
+      case 'ACTIVE':
+        return 'status-active';
+      case 'NEW':
+        return 'status-new';
+      case 'EXPIRED':
+        return 'status-expired';
+      case 'BLOCKED':
+        return 'status-blocked';
+      default:
+        return 'status-default';
+    }
+  }
+
+  getMemberTypeClass(memberType: string): string {
+    switch (memberType) {
+      case '_PAID_REG_':
+        return 'type-paid';
+      case '_FREE_REG_':
+        return 'type-free';
+      default:
+        return 'type-default';
+    }
+  }
 
   getData() {
     this.isLoading = true;

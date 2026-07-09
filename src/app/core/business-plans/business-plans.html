@@ -32,12 +32,14 @@
           </div>
         </div>
 
-        <button class="filter-btn" (click)="onSearch()"><i class="bi bi-search"></i> Search</button>
+        <button class="button button-primary" (click)="onSearch()">
+          <i class="bi bi-search"></i> <span>Search</span>
+        </button>
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="header-right">
-        <button class="btn filter-btn w-100" routerLink="/masters/business-plan-add">
+        <button class="button button-primary" routerLink="/masters/business-plan-add">
           <i class="fa-solid fa-plus"></i>
           Add New
         </button>
@@ -70,7 +72,7 @@
           {{ item.validFrom | date: 'dd MMM yyyy' }} - {{ item.validTo | date: 'dd MMM yyyy' }}
         }
         @case ('status') {
-          <span class="table-status" [ngClass]="item.status === 'Active' ? 'paid' : 'pending'">
+          <span class="table-status" [ngClass]="getStatusClass(item.status)">
             {{ item.status }}
           </span>
         }

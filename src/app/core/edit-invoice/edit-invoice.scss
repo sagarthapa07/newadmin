@@ -42,10 +42,6 @@
   border-bottom: 2px solid var(--primary-color);
 }
 
-.invoice-left form {
-  padding: 25px;
-}
-
 .form-row {
   display: flex;
   align-items: flex-start;
@@ -164,8 +160,6 @@ textarea {
   align-self: flex-end;
 }
 
-/* SELECTS */
-
 select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23545454' stroke-width='2' d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
@@ -174,13 +168,11 @@ select {
   padding-right: 35px !important;
 }
 
-/* TAB CONTENT */
 
 .invoice-left form {
-  min-height: 600px;
+   padding: 25px;
 }
 
-/* MOBILE */
 
 @media (max-width: 1200px) {
   .edit-invoice-container {
@@ -297,7 +289,6 @@ select {
   background: var(--white);
 }
 
-/* Choose File button */
 .attach-file input[type='file']::file-selector-button {
   background: var(--btn-bg-color);
   border: 1px solid var(--btn-border-color);
@@ -312,6 +303,12 @@ select {
 .attach-file input[type='file']::file-selector-button:hover {
   background: var(--hover-color);
 }
+
+
+
+
+
+
 
 .sidebar-header {
   display: flex;
@@ -363,8 +360,56 @@ select {
 .member-sidebar input:disabled,
 .member-sidebar select:disabled,
 .member-sidebar textarea:disabled {
-  background: var(--btn-bg-color);
+  // background: var(--btn-bg-color);
   color: var(--text-color-light);
-  cursor: not-allowed;
-  opacity: 0.7;
+  // cursor: not-allowed;
+  opacity: 1;
+} 
+
+
+
+
+
+.tab-nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--btn-border-color);
+}
+
+.btn-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--white);
+  border: 1px solid var(--btn-border-color);
+  color: var(--text-color);
+  padding: 8px 18px;
+  border-radius: 4px;
+  font-size: var(--placeholder-text);
+  font-weight: var(--fw-500);
+  cursor: pointer;
+  transition: var(--tran-02);
+
+  &:hover:not(:disabled) {
+    background: var(--btn-bg-color);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.btn-next-tab {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--white);
+
+  &:hover:not(:disabled) {
+    background: var(--primary-color-dark);
+    border-color: var(--primary-color-dark);
+  }
 } 

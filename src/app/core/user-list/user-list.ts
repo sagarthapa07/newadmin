@@ -31,7 +31,7 @@ export class UserList {
     { key: 'fullName', label: 'Full Name' },
     { key: 'userName', label: 'User Name' },
     { key: 'emailId', label: 'Email' },
-    { key: 'userType', label: 'User Type' },
+    { key: 'userType', label: 'User Type', customTemplate: true },
     { key: 'userStatus', label: 'Status', customTemplate: true },
     { key: 'creationdate', label: 'Created On', customTemplate: true },
     { key: 'edit', label: 'Edit', customTemplate: true },
@@ -56,6 +56,38 @@ export class UserList {
     const data = localStorage.getItem('userListSearchHistory');
     this.searchHistory = data ? JSON.parse(data) : [];
     this.getData();
+  }
+
+  getUserTypeClass(userType: string): string {
+    switch (userType) {
+      case 'Manager':
+        return 'type-manager';
+      case 'Data Operator':
+        return 'type-data-operator';
+      case 'Admin':
+        return 'type-admin';
+      case 'Super-Admin':
+        return 'type-super-admin';
+      case 'Technical':
+        return 'type-technical';
+      case 'Support':
+        return 'type-support';
+      default:
+        return 'type-default';
+    }
+  }
+
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'ACTIVE':
+        return 'status-active';
+      case 'INACTIVE':
+        return 'status-inactive';
+      case 'BLOCKED':
+        return 'status-blocked';
+      default:
+        return 'status-default';
+    }
   }
 
   getClientIP() {
@@ -98,10 +130,8 @@ export class UserList {
       clientIP: clientIP,
     };
 
-
     this.api.getUserRecords(payload).subscribe({
       next: (res: any) => {
-        console.log('API response:', res);
         this.users = res.result || [];
         this.totalCount = res.recCount || 0;
         this.isLoading = false;
@@ -162,5 +192,5 @@ export class UserList {
       return;
     }
     this.router.navigate(['/user-edit', id]);
-  } 
+  }
 }
