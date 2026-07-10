@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Common } from './common';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
-  private apiUrl = 'https://ang-dnd.fundsforngospremium.com/api/UserManagement/AutheticateUser';
 
   constructor(
     private http: HttpClient,
@@ -18,7 +18,7 @@ export class Auth {
 
   // API call
   login(data: any) {
-    return this.http.post<any>(this.apiUrl, data);
+    return this.http.post<any>(environment.apiUrl, data);
   }
 
   isLoggedIn(): boolean {

@@ -4,26 +4,25 @@
     [type]="'success'"
     [message]="successMessage"
     (close)="successMessage = ''"
-  >
-  </app-alert-message>
+  ></app-alert-message>
 
   <app-alert-message
     *ngIf="errorMessage"
     [type]="'error'"
     [message]="errorMessage"
     (close)="errorMessage = ''"
-  >
-  </app-alert-message>
+  ></app-alert-message>
+
   <form [formGroup]="opportunityForm">
-    <div class="row mt-5">
-      <!-- Left Side From Section -->
-      <div class="col-md-6">
+    <div class="detail-grid">
+      <!-- LEFT COLUMN -->
+      <div class="detail-col">
         <h5 class="section-title">Opportunity Detail</h5>
         <hr />
 
-        <div class="form-group">
-          <label>Title:</label>
-          <div class="input-wrapper">
+        <div class="form-row">
+          <label>Title</label>
+          <div class="field-wrapper">
             <input type="text" class="form-control" formControlName="title" placeholder="Title" />
             @if (isFieldInvalid('title')) {
               <div class="error">Please Enter a Title.</div>
@@ -32,10 +31,9 @@
         </div>
 
         @if (!data?.id) {
-          <div class="form-group">
-            <label>Friendly URL:</label>
-
-            <div class="input-wrapper">
+          <div class="form-row">
+            <label>Friendly URL</label>
+            <div class="field-wrapper">
               <input
                 type="text"
                 class="form-control"
@@ -43,16 +41,16 @@
                 placeholder="Friendly URL"
                 readonly
               />
-
               @if (isFieldInvalid('friendlyURLText')) {
                 <div class="error">Please Enter a friendlyURL</div>
               }
             </div>
           </div>
         }
-        <div class="form-group">
-          <label>Link URL:</label>
-          <div class="input-wrapper">
+
+        <div class="form-row">
+          <label>Link URL</label>
+          <div class="field-wrapper">
             <input
               type="text"
               class="form-control"
@@ -65,39 +63,39 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Post Date:</label>
-          <div class="input-wrapper">
-            <input type="date" class="form-control date-input" formControlName="postDate" />
+        <div class="form-row">
+          <label>Post Date</label>
+          <div class="field-wrapper">
+            <input type="date" class="form-control" formControlName="postDate" />
             @if (isFieldInvalid('postDate')) {
               <div class="error">Please Enter a PostDate.</div>
             }
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Deadline Date:</label>
-          <div class="deadline-input-wrapper">
-            <input type="date" class="form-control date-input" formControlName="deadlineDate" />
+        <div class="form-row">
+          <label>Deadline Date</label>
+          <div class="field-wrapper deadline-field">
+            <input type="date" class="form-control" formControlName="deadlineDate" />
             @if (isFieldInvalid('deadlineDate')) {
               <div class="error">Please Enter a DeadlineDate.</div>
             }
-          </div>
 
-          <div class="form-check ongoing-box">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              formControlName="isOngoing"
-              id="ongoing"
-            />
-            <label class="form-check-label" for="ongoing"> OnGoing Opportunity </label>
+            <div class="form-check ongoing-box">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                formControlName="isOngoing"
+                id="ongoing"
+              />
+              <label class="form-check-label" for="ongoing">OnGoing Opportunity</label>
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Short Info:</label>
-          <div class="input-wrapper">
+        <div class="form-row">
+          <label>Short Info</label>
+          <div class="field-wrapper">
             <textarea
               rows="3"
               class="form-control"
@@ -110,17 +108,18 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Donor Type:</label>
-          <select class="form-control" formControlName="donorType">
-            <option value="US Donors">US Donors</option>
-          </select>
+        <div class="form-row">
+          <label>Donor Type</label>
+          <div class="field-wrapper">
+            <select class="form-control" formControlName="donorType">
+              <option value="US Donors">US Donors</option>
+            </select>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Donor Agency:</label>
-
-          <div class="input-wrapper" #dropdownContainer>
+        <div class="form-row">
+          <label>Donor Agency</label>
+          <div class="field-wrapper" #dropdownContainer>
             <input
               type="text"
               class="form-control"
@@ -139,24 +138,22 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Donor Agency (if not listed above):</label>
-          <div class="input-wrapper">
+        <div class="form-row">
+          <label>Donor Agency (other)</label>
+          <div class="field-wrapper">
             <input
               type="text"
               class="form-control"
               formControlName="donorAgencyOther"
-              placeholder="Doner Agency"
+              placeholder="Donor Agency"
             />
             <div class="error" *ngIf="isFieldInvalid('donorAgencyOther')">Please fill link url</div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Grant Type:</label>
-
-          <div class="input-wrapper" #grantTypeContainer>
-            <!-- Selected Value -->
+        <div class="form-row">
+          <label>Grant Type</label>
+          <div class="field-wrapper" #grantTypeContainer>
             <input
               type="text"
               class="form-control"
@@ -165,7 +162,6 @@
               readonly
               (click)="showGrantTypeDropdown = !showGrantTypeDropdown"
             />
-            <!-- Dropdown -->
             <ul class="dropdown-list" *ngIf="showGrantTypeDropdown">
               <li *ngFor="let item of grantTypeList" (click)="selectDropdown('grantType', item)">
                 {{ item }}
@@ -174,9 +170,9 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Grant Duration:</label>
-          <div class="input-wrapper" #grantDurationContainer>
+        <div class="form-row">
+          <label>Grant Duration</label>
+          <div class="field-wrapper" #grantDurationContainer>
             <input
               type="text"
               class="form-control"
@@ -196,9 +192,9 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Grant Size:</label>
-          <div class="input-wrapper" #grantSizeContainer>
+        <div class="form-row">
+          <label>Grant Size</label>
+          <div class="field-wrapper" #grantSizeContainer>
             <input
               type="text"
               class="form-control"
@@ -215,50 +211,44 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="mt-4">Image:</label>
-          <div class="image-upload-wrapper">
-            <app-image-cropper
-              [imageSrc]="previewUrl"
-              [dirPath]="'img.USGrants'"
-              [recType]="'CU'"
-              (onCropped)="onImageCropped($event)"
-            >
-            </app-image-cropper>
+        <div class="form-row">
+          <label>Image</label>
+          <div class="field-wrapper">
+            <div class="image-upload-wrapper">
+              <app-image-cropper
+                [imageSrc]="previewUrl"
+                [dirPath]="'img.USGrants'"
+                [recType]="'CU'"
+                (onCropped)="onImageCropped($event)"
+              ></app-image-cropper>
 
-            <!-- Thumbnail + click to preview -->
-            <img
-              *ngIf="previewUrl"
-              [src]="previewUrl"
-              class="preview-image"
-              (click)="openImageModal()"
-              title="Click to view"
-            />
+              <img
+                *ngIf="previewUrl"
+                [src]="previewUrl"
+                class="preview-image"
+                (click)="openImageModal()"
+                title="Click to view"
+              />
+            </div>
           </div>
         </div>
 
-        <!-- Image Preview Modal -->
-        <div class="img-modal-overlay" *ngIf="showImageModal" (click)="closeImageModal()">
-          <div class="img-modal-box" (click)="$event.stopPropagation()">
-            <button class="img-modal-close" (click)="closeImageModal()">&#10005;</button>
-            <img [src]="fullImageUrl || previewUrl" class="img-modal-full" />
+        <div class="form-row">
+          <label>Status</label>
+          <div class="field-wrapper">
+            <select class="form-control" formControlName="status">
+              <option value="" disabled selected hidden>Select Status</option>
+              <option>Draft</option>
+              <option>Published</option>
+              <option>Expired</option>
+            </select>
+            <div class="error" *ngIf="isFieldInvalid('status')">Please select status</div>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label>Status:</label>
-          <select class="form-control" formControlName="status">
-            <option value="" disabled selected hidden>Select Status</option>
-            <option>Draft</option>
-            <option>Published</option>
-            <option>Expired</option>
-          </select>
-          <div class="error" *ngIf="isFieldInvalid('status')">Please select status</div>
         </div>
       </div>
 
-      <!-- right Side Section text area  -->
-      <div class="col-md-6">
+      <!-- RIGHT COLUMN -->
+      <div class="detail-col">
         <h5 class="section-title">Letter Text</h5>
         <hr />
         <app-editor formControlName="letterText"></app-editor>
@@ -267,21 +257,29 @@
           <div class="error">Please enter letter text.</div>
         }
       </div>
-      <div class="buttons d-flex justify-content-between">
-        <div>
-          <button type="submit" class="btn btn-next" (click)="gotoPreview()">
-            <i class="bi bi-eye"></i>Preview
-          </button>
-        </div>
-        <div>
-          <button type="button" class="btn btn-next mx-2" (click)="onSave()">
-            <i class="bi bi-bookmark-check"></i> Save
-          </button>
-          <button type="button" class="btn btn-next" (click)="goToGeoLocation()">
-            <i class="bi bi-fast-forward"></i>Next
-          </button>
-        </div>
+    </div>
+
+    <div class="buttons">
+      <button type="submit" class="button button-secondary" (click)="gotoPreview()">
+        <i class="bi bi-eye"></i> Preview
+      </button>
+
+      <div class="buttons-right">
+        <button type="button" class="button button-secondary" (click)="onSave()">
+          <i class="bi bi-bookmark-check"></i> Save
+        </button>
+        <button type="button" class="button button-primary" (click)="goToGeoLocation()">
+          <i class="bi bi-fast-forward"></i> Next
+        </button>
       </div>
     </div>
   </form>
+
+  <!-- Image Preview Modal -->
+  <div class="img-modal-overlay" *ngIf="showImageModal" (click)="closeImageModal()">
+    <div class="img-modal-box" (click)="$event.stopPropagation()">
+      <button class="img-modal-close" (click)="closeImageModal()">&#10005;</button>
+      <img [src]="fullImageUrl || previewUrl" class="img-modal-full" />
+    </div>
+  </div>
 </Section>

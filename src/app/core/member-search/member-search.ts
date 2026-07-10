@@ -164,4 +164,12 @@ export class MemberSearch {
 
     this.exportService.exportToExcel(excelData, 'Member_Invoice_Search', 'Invoices');
   }
+
+  goToEdit(memberId: number | undefined) {
+    if (!memberId) {
+      console.error('Member ID missing', memberId);
+      return;
+    }
+    this.router.navigate(['/premium-members/edit-member', memberId]);
+  }
 }

@@ -12,6 +12,8 @@ import { ViewChild } from '@angular/core';
 import { DropdownItem } from '../../datatype';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { Export } from '../Services/export';
+import { Auth } from '../Services/auth';
+import { HttpClient } from '@angular/common/http';
 import {
   TableColumn,
   TableColumnComponent,
@@ -52,7 +54,9 @@ export class MemberModule {
   stateModeMap: Record<string, boolean> = {};
   selectedSubCounties: Record<string, string[]> = {};
   selectedStatus: string | null = null;
-  selectedPlanId = 0;
+  plans: any[] = [];
+  selectedPlanId: string = '0';
+  clientIP: string | null = null;
 
   columns: TableColumn[] = [
     { key: 'nameEmail', label: 'Full Name and Email Address', customTemplate: true },
@@ -97,13 +101,26 @@ export class MemberModule {
     private cdr: ChangeDetectorRef,
     private route: Router,
     private exportService: Export,
+    private auth: Auth,
+    private http: HttpClient,
   ) {}
 
   ngOnInit() {
+    this.loadClientIP();
     this.getData();
     this.loadStates();
+    this.loadPlans();
     const data = localStorage.getItem('searchHistory');
     this.searchHistory = data ? JSON.parse(data) : [];
+  }
+
+  loadPlans() {
+    this.api.getAllPlans().subscribe({
+      next: (res: any) => {
+        this.plans = res.result || [];
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   onFilterSearch() {
@@ -144,25 +161,38 @@ export class MemberModule {
   getData() {
     this.isLoading = true;
 
+    const user = this.auth.getUser();
+
     const payload = {
       memberStatus: this.selectedStatus || null,
       pageIndex: this.pageIndex,
       pageSize: this.pageSize,
-      palnId: this.selectedPlanId || 0,
+      palnId: this.selectedPlanId,
       searchText: this.searchText || null,
       state: this.selectedState.length ? this.selectedState[0] : null,
+      userId: user?.userIndex ?? null,
+      userMail: user?.emailId ?? null,
+      clientIP: this.clientIP,
     };
 
     this.api.getAllMembers(payload).subscribe({
       next: (res: any) => {
         this.grants = res.result || [];
-        this.totalCount = res.result?.length || 0;
+        this.totalCount = res.totalCount || 0; // pichla bug bhi fix — length nahi, actual total lo
         this.isLoading = false;
       },
       error: (err) => {
         console.error(err);
         this.isLoading = false;
       },
+    });
+  }
+  loadClientIP() {
+    this.http.get<any>('https://api.ipify.org?format=json').subscribe({
+      next: (res) => {
+        this.clientIP = res.ip;
+      },
+      error: (err) => console.error('IP fetch failed', err),
     });
   }
 

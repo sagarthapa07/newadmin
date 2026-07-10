@@ -84,6 +84,18 @@ export class CalenderOpportunity {
     const data = localStorage.getItem('searchHistory');
     this.searchHistory = data ? JSON.parse(data) : [];
   }
+
+  getStatusClass(status: string): string {
+    switch ((status || '').toUpperCase()) {
+      case 'PUBLISHED':
+        return 'status-published';
+      case 'DRAFT':
+        return 'status-draft';
+      default:
+        return 'status-default';
+    }
+  }
+
   getData() {
     this.isLoading = true;
 

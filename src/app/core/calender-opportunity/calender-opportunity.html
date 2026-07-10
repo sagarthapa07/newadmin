@@ -38,7 +38,7 @@
           </div>
         </div>
 
-        <button class="filter-btn">
+        <button class="button button-primary">
           <i class="bi bi-funnel mx-1"></i>
           <span>Filter</span>
         </button>
@@ -74,14 +74,14 @@
         </div>
 
         <div>
-          <button class="btn filter-btn" (click)="exportSelectedGrants()">
+          <button class="button button-secondary" (click)="exportSelectedGrants()">
             <i class="bi bi-file-arrow-down"></i>
             <span>Export</span>
           </button>
         </div>
 
-        <div style="margin-right: 20px">
-          <button class="btn filter-btn w-100" routerLink="/calendar-opportunity/add-new">
+        <div>
+          <button class="button button-primary" routerLink="/calendar-opportunity/add-new">
             <i class="fa-solid fa-plus"></i>
             Add New
           </button>
@@ -113,15 +113,21 @@
           {{ item.deadLineDate | date: 'dd MMM yyyy' }}
         }
         @case ('status') {
-          <span class="status" [ngClass]="item.status === 'Published' ? 'paid' : 'pending'">
+          <span class="status" [ngClass]="getStatusClass(item.status)">
             {{ item.status }}
           </span>
         }
         @case ('actions') {
           <div class="action-icons">
-            <button class="btn" (click)="goToEdit(item.grantIndex)">Edit <i class="bi bi-pencil-square table-icon-cell"></i></button>
-            <button class="btn" (click)="copyUrl(item)">Copy <i class="bi bi-copy table-icon-cell"></i></button>
-            <button class="btn" (click)="openUrl(item)">Open <i class="bi bi-box-arrow-up-right table-icon-cell"></i></button>
+            <button class="btn" (click)="goToEdit(item.grantIndex)">
+              Edit <i class="bi bi-pencil-square table-icon-cell"></i>
+            </button>
+            <button class="btn" (click)="copyUrl(item)">
+              Copy <i class="bi bi-copy table-icon-cell"></i>
+            </button>
+            <button class="btn" (click)="openUrl(item)">
+              Open <i class="bi bi-box-arrow-up-right table-icon-cell"></i>
+            </button>
           </div>
         }
       }

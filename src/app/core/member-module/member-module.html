@@ -41,9 +41,10 @@
         </select>
 
         <select class="search-box" [(ngModel)]="selectedPlanId">
-          <option [ngValue]="0">Select a Plan</option>
-          <option [ngValue]="1">Testing</option>
-          <option [ngValue]="2">GrantsforUS Member Plan</option>
+          <option [ngValue]="'0'">Select a Plan</option>
+          @for (plan of plans; track plan.index) {
+            <option [ngValue]="plan.index">{{ plan.name }}</option>
+          }
         </select>
 
         <div class="multiselect-wrapper">

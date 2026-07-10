@@ -65,10 +65,16 @@
     <ng-template #cellTemplate let-item let-col="col">
       @switch (col.key) {
         @case ('email') {
-          <span class="link-text">{{ item.email }}</span>
+          <a href="javascript:void(0)" class="link-text" (click)="goToEdit(item.memberId)">
+            {{ item.email }}
+          </a>
         }
         @case ('invoiceNumber') {
-          <a href="javascript:void(0)" class="link-text" (click)="openInvoice(item.memberId, item.invoiceId)">
+          <a
+            href="javascript:void(0)"
+            class="link-text"
+            (click)="openInvoice(item.memberId, item.invoiceId)"
+          >
             {{ item.invoiceNumber }}
           </a>
         }
