@@ -7,7 +7,9 @@ export interface Issue {
   id: number;
   name: string;
   subIssues: SubIssue[];
+  loaded?: boolean;
 }
+
 export const ISSUES: Issue[] = [
 ];
 

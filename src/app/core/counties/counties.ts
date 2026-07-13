@@ -5,6 +5,8 @@ import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-d
 import { Api } from '../Services/api';
 import { County, DropdownItem, GetCountiesResponse, State } from '../../datatype';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
+import { HttpClient } from '@angular/common/http';
+import { Common } from '../Services/common';
 
 @Component({
   selector: 'app-counties',
@@ -23,12 +25,16 @@ export class CountiesComponent implements OnInit {
   constructor(
     private api: Api,
     private cd: ChangeDetectorRef,
+    private common: Common,
+    private http: HttpClient,
   ) {}
 
   showPasteModal = false;
   pasteText = '';
   successMessage = '';
   errorMessage = '';
+
+  clientIP: string = '';
 
   fullStatesList: string[] = [];
   withCountiesList: string[] = [];
@@ -82,6 +88,7 @@ export class CountiesComponent implements OnInit {
   countiySubCountyMap: Record<string, string[]> = {};
 
   ngOnInit(): void {
+    this.fetchClientIP();
     this.api.getAllStates().subscribe((res: any) => {
       const states = res.states || [];
       const mapped = states.map((s: State) => ({
@@ -99,7 +106,42 @@ export class CountiesComponent implements OnInit {
       }
     });
   }
+  private fetchClientIP(): void {
+    this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe({
+      next: (res) => {
+        this.clientIP = res.ip;
+      },
+      error: (err) => {
+        console.error('IP fetch failed', err);
+        this.clientIP = '';
+      },
+    });
+  }
+  private getUserInfoFromCookie(): { userIndex: number; emailId: string } {
+    const rawCookie = this.common.getCookie('_US_ADMIN_AUTH_');
 
+    if (!rawCookie) {
+      return { userIndex: 0, emailId: '' };
+    }
+
+    try {
+      const decrypted = this.common.decryptData(rawCookie);
+
+      if (!decrypted) {
+        return { userIndex: 0, emailId: '' };
+      }
+
+      const userData = JSON.parse(decrypted);
+
+      return {
+        userIndex: userData.userIndex,
+        emailId: userData.emailId,
+      };
+    } catch (e) {
+      console.error('Cookie parse error', e);
+      return { userIndex: 0, emailId: '' };
+    }
+  }
   loadSavedCounties(): void {
     const stateTokens = this.stateString?.match(/[\[\{][^\]\}]+[\]\}]/g) || [];
     this.api.getSelectedCounties(this.grantId!).subscribe({
@@ -123,7 +165,7 @@ export class CountiesComponent implements OnInit {
           const countyName = token.slice(0, lastComma).trim();
           const stateName = token.slice(lastComma + 1).trim();
           if (!countyMap[stateName]) countyMap[stateName] = [];
-          countyMap[stateName].push(`${countyName}, ${stateName}`);
+          countyMap[stateName].push(countyName);
         });
         const allStateNames = stateTokens.map((t) => t.slice(1, -1).trim());
         const hasCounties = !!this.countyString;
@@ -238,9 +280,10 @@ export class CountiesComponent implements OnInit {
   }
 
   onSingleStateChange() {
+    console.log('=== onSingleStateChange CALLED ===');
     const selected = this.singleStateDropdown.selected;
+    console.log('selected:', selected);
 
-    // Agar deselect hua toh selectedState clear karo aur return
     if (!selected.length) {
       this.selectedState = [];
       this.activeStatesForCounties = null;
@@ -250,7 +293,13 @@ export class CountiesComponent implements OnInit {
     const stateObj: DropdownItem = selected[0];
     const stateName = stateObj.item_text;
 
+    if (!this.stateModeMap.hasOwnProperty(stateName)) {
+      this.stateModeMap[stateName] = false;
+    }
+
+    console.log('stateModeMap[stateName] BEFORE assign:', this.stateModeMap[stateName]);
     this.singleFullStateMode = this.stateModeMap[stateName];
+    console.log('singleFullStateMode SET TO:', this.singleFullStateMode);
 
     this.selectedState = [stateName];
     this.activeStatesForCounties = stateName;
@@ -264,16 +313,22 @@ export class CountiesComponent implements OnInit {
   }
 
   onSingleToggleChange(event: Event) {
+    console.log('=== onSingleToggleChange CALLED ===');
     const checked = (event.target as HTMLInputElement).checked;
+    console.log('checkbox checked value:', checked);
+
     this.singleFullStateMode = checked;
     const state = this.activeStatesForCounties;
+    console.log('activeStatesForCounties:', state);
     if (!state) return;
 
     this.stateModeMap[state] = checked;
+    console.log('stateModeMap AFTER update:', { ...this.stateModeMap });
 
     if (checked) {
       this.selectedSubCounties[state] = [];
     }
+
 
     this.cd.detectChanges();
   }
@@ -303,15 +358,7 @@ export class CountiesComponent implements OnInit {
     if (!this.stateModeMap.hasOwnProperty(stateName)) {
       this.stateModeMap[stateName] = false;
     }
-
-    // if (this.stateModeMap[stateName] === true) {
-    //   if (!this.fullStatesList.includes(stateName)) this.fullStatesList.push(stateName);
-    //   this.withCountiesList = this.withCountiesList.filter((s) => s !== stateName);
-    // } else {
-    //   if (!this.withCountiesList.includes(stateName)) this.withCountiesList.push(stateName);
-    //   this.fullStatesList = this.fullStatesList.filter((s) => s !== stateName);
-    // }
-
+    
     this.loadCountiesForState(stateName);
 
     if (!this.selectedSubCounties[stateName]) {
@@ -412,7 +459,13 @@ export class CountiesComponent implements OnInit {
   }
 
   saveStatesAndCounties(): void {
-    if (!this.grantId) return;
+    if (!this.grantId) {
+      this.errorMessage = 'Grant ID missing hai — save nahi ho sakta';
+      setTimeout(() => (this.errorMessage = ''), 3000);
+      return;
+    }
+
+    const userInfo = this.getUserInfoFromCookie(); // ADD THIS — ek hi baar nikal lo, sabme reuse hoga
 
     const usGrantCounties: any[] = [];
     const USGrantStates: any[] = [];
@@ -437,7 +490,7 @@ export class CountiesComponent implements OnInit {
           countryIndex: 230,
           countryName: 'United States',
           countyIndex,
-          countyName: county,
+          countyName: `${county}, ${state}`, // Bug 1 FIX
           stateIndex: this.stateIndexMap[state],
           stateName: state,
         });
@@ -448,9 +501,7 @@ export class CountiesComponent implements OnInit {
     // ALL MODE
     // =====================
     if (this.grantMode === 'all') {
-      // Saari states [] bracket mein
       const allStateNames = Object.keys(this.stateIndexMap);
-
       const stateString = allStateNames.map((s) => `[${s}]`).join('-');
 
       const tagsPayload = {
@@ -458,8 +509,9 @@ export class CountiesComponent implements OnInit {
         GrantIndex: this.grantId.toString(),
         StCtType: '[ALL STATES]-[ALL COUNTIES]',
         StateString: stateString,
-        userEmail: 'ritu@fundsforngos.org',
-        userIndex: 5,
+        userEmail: userInfo.emailId, // CHANGED
+        userIndex: userInfo.userIndex, // CHANGED
+        clientIP: this.clientIP, // ADD THIS
       };
 
       allStateNames.forEach((state) => buildStatePayload(state));
@@ -467,11 +519,11 @@ export class CountiesComponent implements OnInit {
       const statesPayload = {
         USGrantStates,
         grantIndex: this.grantId.toString(),
-        userEmail: 'ritu@fundsforngos.org',
-        userIndex: 5,
+        userEmail: userInfo.emailId, // CHANGED
+        userIndex: userInfo.userIndex, // CHANGED
+        clientIP: this.clientIP, // ADD THIS
       };
 
-      // All mode: sirf 2 APIs
       this.api.updateGrantTags(this.grantId!, tagsPayload).subscribe({
         next: () => {
           this.api.insertGrantStatesJSON(statesPayload).subscribe({
@@ -503,7 +555,7 @@ export class CountiesComponent implements OnInit {
       if (!isFullState) {
         const counties = this.selectedSubCounties[state] || [];
         buildCountyPayload(state, counties);
-        countyString = counties.map((c) => `[${c}]`).join('-');
+        countyString = usGrantCounties.map((c) => `[${c.countyName}]`).join('-'); // FIX: countyName already has state
       }
 
       const stCtType = '[SELECTED STATES]-[SELECTED COUNTIES]';
@@ -513,22 +565,25 @@ export class CountiesComponent implements OnInit {
         GrantIndex: this.grantId.toString(),
         StCtType: stCtType,
         StateString: stateString,
-        userEmail: 'ritu@fundsforngos.org',
-        userIndex: 5,
+        userEmail: userInfo.emailId,
+        userIndex: userInfo.userIndex,
+        clientIP: this.clientIP,
       };
 
       const statesPayload = {
         USGrantStates,
         grantIndex: this.grantId.toString(),
-        userEmail: 'ritu@fundsforngos.org',
-        userIndex: 5,
+        userEmail: userInfo.emailId,
+        userIndex: userInfo.userIndex,
+        clientIP: this.clientIP,
       };
 
       const countiesPayload = {
         grantIndex: this.grantId.toString(),
         usGrantCounties,
-        userIndex: 5,
-        userEmail: 'ritu@fundsforngos.org',
+        userIndex: userInfo.userIndex,
+        userEmail: userInfo.emailId,
+        clientIP: this.clientIP,
       };
 
       this.saveTags(tagsPayload, statesPayload, countiesPayload);
@@ -542,7 +597,8 @@ export class CountiesComponent implements OnInit {
       let hasFullStates = false;
       let hasWithCounties = false;
 
-      const stateStringParts: string[] = [];
+      const withCountiesParts: string[] = [];
+      const fullStateParts: string[] = [];
 
       this.selectedState.forEach((state) => {
         buildStatePayload(state);
@@ -552,21 +608,20 @@ export class CountiesComponent implements OnInit {
           (this.stateModeMap[state] !== false && !this.selectedSubCounties[state]?.length);
 
         if (isFullState) {
-          stateStringParts.push(`[${state}]`);
+          fullStateParts.push(`[${state}]`);
           hasFullStates = true;
         } else {
-          stateStringParts.push(`{${state}}`);
+          withCountiesParts.push(`{${state}}`);
           hasWithCounties = true;
           const counties = this.selectedSubCounties[state] || [];
           buildCountyPayload(state, counties);
         }
       });
 
-      const stateString = stateStringParts.join('-');
+      const stateString = [...withCountiesParts, ...fullStateParts].join('-');
 
-      const countyString = usGrantCounties
-        .map((c) => `[${c.countyName}, ${c.stateName}]`)
-        .join('-');
+      const countyString = usGrantCounties.map((c) => `[${c.countyName}]`).join('-');
+
       const stCtType =
         hasFullStates && hasWithCounties
           ? '[SELECTED STATES]-[MIXED COUNTIES]'
@@ -577,22 +632,25 @@ export class CountiesComponent implements OnInit {
         GrantIndex: this.grantId.toString(),
         StCtType: stCtType,
         StateString: stateString,
-        userEmail: 'ritu@fundsforngos.org',
-        userIndex: 5,
+        userEmail: userInfo.emailId,
+        userIndex: userInfo.userIndex,
+        clientIP: this.clientIP,
       };
 
       const statesPayload = {
         USGrantStates,
         grantIndex: this.grantId.toString(),
-        userEmail: 'ritu@fundsforngos.org',
-        userIndex: 5,
+        userEmail: userInfo.emailId,
+        userIndex: userInfo.userIndex,
+        clientIP: this.clientIP,
       };
 
       const countiesPayload = {
         grantIndex: this.grantId.toString(),
         usGrantCounties,
-        userIndex: 5,
-        userEmail: 'ritu@fundsforngos.org',
+        userIndex: userInfo.userIndex,
+        userEmail: userInfo.emailId,
+        clientIP: this.clientIP,
       };
 
       this.saveTags(tagsPayload, statesPayload, countiesPayload);

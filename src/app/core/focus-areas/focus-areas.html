@@ -32,7 +32,9 @@
 
         <div class="paste-actions">
           <button class="btn-remove" (click)="closePasteModal()">Cancel</button>
-          <button class="btn-done" (click)="generateFromText()">Generate</button>
+          <button class="btn-done" [disabled]="pasteLoading" (click)="generateFromText()">
+            {{ pasteLoading ? 'Loading...' : 'Generate' }}
+          </button>
         </div>
       </div>
     </div>

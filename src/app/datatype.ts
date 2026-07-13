@@ -136,6 +136,19 @@ export interface GetFocusSubAreasResponse {
   myList: FocusSubArea[];
 }
 
+// ================== ISSUE / SUB-ISSUE (UI MODEL for Focus Area component) ==================
+export interface SubIssue {
+  id: number;
+  name: string;
+}
+
+export interface Issue {
+  id: number;
+  name: string;
+  subIssues: SubIssue[];
+  loaded?: boolean;
+}
+
 // ================== BENEFICIARY ==================
 export interface Beneficiary {
   beneficiaryIndex: number;
@@ -294,21 +307,20 @@ export interface GetSelectedFocusAreasResponse {
 
 export interface SaveFocusAreaRow {
   grantIndex: number;
-  subIssueIndex: number;
-  subIssueName: string;
   issueIndex: number;
   issueName: string;
-  userIndex: number | null;
-  userEmail: string | null;
+  subIssueIndex: number;
+  subIssueName: string;
 }
 
 export interface SaveFocusAreasPayload {
+  grantID: number;
   focusAreas: SaveFocusAreaRow[];
-  grantID: string;
-  issueID: number;
-  userEmail: string;
-  userIndex: number;
+  userId: number;
+  userMail: string;
+  clientIP: string;
 }
+
 
 export interface SubEntity {
   subEntIndex: number;
@@ -355,6 +367,7 @@ export interface InsertBeneficiariesPayload {
   grantIndex: string;
   grantBeneficiaries: InsertBeneficiaryRow[];
 }
+
 export interface FocusGroupState {
   beneficiaries: string[];
   entities: Record<string, string[]>;
