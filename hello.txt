@@ -1,214 +1,1087 @@
-Jab mai single mai Full State k sath Single mark krta hun tab mera payload mai
-StCtType
-: 
-"[SELECTED STATES]-[SELECTED COUNTIES]"
-  ye jana chahiye and isske sath state string mai ese jana chahiye 
-StateString: "[Alabama]"
-
-ye thik hai and sath mai ye wali api bhi chalni chahiye
-"https://ang-dnd.fundsforngospremium.com/api/USGrantStates/InsertUSGrantStatesJSON"
-payload ese jayega 
 {
-    "USGrantStates": [
-        {
-            "countryIndex": 230,
-            "grantIndex": 48809,
-            "recordIndex": 0,
-            "stateIndex": 101,
-            "stateName": "Alabama"
+
+
+
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { Api } from '../Services/api';
+import { County, DropdownItem, GetCountiesResponse, State } from '../../datatype';
+import { AlertMessage } from '../../shared/component/alert-message/alert-message';
+import { HttpClient } from '@angular/common/http';
+import { Common } from '../Services/common';
+
+@Component({
+  selector: 'app-counties',
+  standalone: true,
+  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule, AlertMessage],
+  templateUrl: './counties.html',
+  styleUrl: './counties.scss',
+})
+export class CountiesComponent implements OnInit {
+  @Input() grantId?: number;
+  @Input() stCtType?: string;
+  @Input() stateString?: string;
+  @Input() countyString?: string;
+  @Output() tabChange = new EventEmitter<number>();
+
+  constructor(
+    private api: Api,
+    private cd: ChangeDetectorRef,
+    private common: Common,
+    private http: HttpClient,
+  ) {}
+
+  showPasteModal = false;
+  pasteText = '';
+  successMessage = '';
+  errorMessage = '';
+
+  clientIP: string = '';
+
+  fullStatesList: string[] = [];
+  withCountiesList: string[] = [];
+
+  grantMode: 'single' | 'multiple' | 'all' = 'multiple';
+
+  activeStatesForCounties: string | null = null;
+  singleFullStateMode = false;
+  multipleFullStateMode = false;
+  selectedState: string[] = [];
+  selectedSubCounties: Record<string, string[]> = {};
+  multipleActiveState: string | null = null;
+  stateModeMap: Record<string, boolean> = {};
+  stateIndexMap: Record<string, number> = {};
+  countyIndexMap: Record<string, number> = {};
+  countryIndexMap: Record<string, number> = {};
+  countryNameMap: Record<string, string> = {};
+  countryIndex = 230;
+  singleStateDropdown: { data: DropdownItem[]; selected: DropdownItem[] } = {
+    data: [],
+    selected: [],
+  };
+
+  countiesKeyDropDowns: {
+    states: { label: string; data: DropdownItem[]; selected: DropdownItem[] };
+  } = {
+    states: { label: 'Select States', data: [], selected: [] },
+  };
+
+  multipleStatesDropdown: { data: DropdownItem[]; selected: DropdownItem[] } = {
+    data: [],
+    selected: [],
+  };
+
+  readonly multiSelectSettings: IDropdownSettings = {
+    singleSelection: false,
+    idField: 'item_id',
+    textField: 'item_text',
+    itemsShowLimit: 3,
+    allowSearchFilter: true,
+    enableCheckAll: false,
+  };
+
+  countieSettings: IDropdownSettings = {
+    singleSelection: true,
+    idField: 'item_id',
+    textField: 'item_text',
+    allowSearchFilter: true,
+  };
+
+  countiySubCountyMap: Record<string, string[]> = {};
+
+  ngOnInit(): void {
+    this.fetchClientIP();
+    this.api.getAllStates().subscribe((res: any) => {
+      const states = res.states || [];
+      const mapped = states.map((s: State) => ({
+        item_id: s.stateIndex,
+        item_text: s.stateName,
+      }));
+      this.countiesKeyDropDowns.states.data = [...mapped];
+      this.multipleStatesDropdown.data = [...mapped];
+      this.singleStateDropdown.data = [...mapped];
+      states.forEach((s: State) => {
+        this.stateIndexMap[s.stateName] = s.stateIndex;
+      });
+      if (this.grantId) {
+        this.loadSavedCounties();
+      }
+    });
+  }
+  private fetchClientIP(): void {
+    this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe({
+      next: (res) => {
+        this.clientIP = res.ip;
+      },
+      error: (err) => {
+        console.error('IP fetch failed', err);
+        this.clientIP = '';
+      },
+    });
+  }
+  private getUserInfoFromCookie(): { userIndex: number; emailId: string } {
+    const rawCookie = this.common.getCookie('_US_ADMIN_AUTH_');
+
+    if (!rawCookie) {
+      return { userIndex: 0, emailId: '' };
+    }
+
+    try {
+      const decrypted = this.common.decryptData(rawCookie);
+
+      if (!decrypted) {
+        return { userIndex: 0, emailId: '' };
+      }
+
+      const userData = JSON.parse(decrypted);
+
+      return {
+        userIndex: userData.userIndex,
+        emailId: userData.emailId,
+      };
+    } catch (e) {
+      console.error('Cookie parse error', e);
+      return { userIndex: 0, emailId: '' };
+    }
+  }
+  loadSavedCounties(): void {
+    const stateTokens = this.stateString?.match(/[\[\{][^\]\}]+[\]\}]/g) || [];
+    this.api.getSelectedCounties(this.grantId!).subscribe({
+      next: (res) => {
+        if (this.stCtType === '[ALL STATES]-[ALL COUNTIES]') {
+          this.grantMode = 'all';
+          return;
         }
-    ],
-    "grantIndex": "48809",
-    "userEmail": "ritu@fundsforngos.org",
-    "userIndex": 5
-}
+        const isSelectedStates =
+          this.stCtType === '[SELECTED STATES]-[MIXED COUNTIES]' ||
+          this.stCtType === '[SELECTED STATES]-[SELECTED COUNTIES]';
 
+        if (!isSelectedStates) return;
+        const countyTokens =
+          this.countyString?.match(/\[([^\]]+)\]/g)?.map((t) => t.slice(1, -1).trim()) || [];
 
+        const countyMap: Record<string, string[]> = {};
+        countyTokens.forEach((token) => {
+          const lastComma = token.lastIndexOf(',');
+          if (lastComma === -1) return;
+          const countyName = token.slice(0, lastComma).trim();
+          const stateName = token.slice(lastComma + 1).trim();
+          if (!countyMap[stateName]) countyMap[stateName] = [];
+          countyMap[stateName].push(countyName);
+        });
+        const allStateNames = stateTokens.map((t) => t.slice(1, -1).trim());
+        const hasCounties = !!this.countyString;
 
-and jab mai multiple states select krru Full State
-k sath tab mera 
-StCtType
-: 
-"[SELECTED STATES]-[SELECTED COUNTIES]"
-ye ese hi jana chahiye and 
-StateString
-: 
-"[Alabama]-[Alaska]-[Arizona]-[Arkansas]"
+        // selectedState set karo
+        this.selectedState = [...allStateNames];
 
-state stirng bhi iss type mai jana chahiye jisme [] bracket use ho   ye bracket tab use hote hai jab mai Full State option k sath use krta hun.... 
+        // SINGLE
+        if (allStateNames.length === 1) {
+          this.grantMode = 'single';
+          const state = allStateNames[0];
+          this.activeStatesForCounties = state;
+          this.singleStateDropdown.selected = [
+            { item_id: this.stateIndexMap[state], item_text: state },
+          ];
 
-and aab jab mai kisi single state ko 
-With Counties option k sath bhejta hun with counties bhi select krta hun tab mere teen api chelnge 
-"
-https://ang-dnd.fundsforngospremium.com/api/GEOCounties/GetGEOCountiesForStates?StateID=101"
-"
-https://ang-dnd.fundsforngospremium.com/api/USGrants/UpdateUSGrantsTags?id=48809"
-"https://ang-dnd.fundsforngospremium.com/api/USGrantCounties/InsertUSGrantCountiesJSON"
+          if (hasCounties) {
+            this.singleFullStateMode = false;
+            this.loadCountiesForState(state, () => {
+              this.selectedSubCounties[state] = countyMap[state] || [];
+              this.cd.detectChanges();
+            });
+          } else {
+            this.singleFullStateMode = true;
+            this.selectedSubCounties[state] = [];
+            this.loadCountiesForState(state);
+          }
 
+          // MULTIPLE
+        } else {
+          this.grantMode = 'multiple';
 
-and tab mera payload jyega 
+          // dropdown selected set karo
+          this.multipleStatesDropdown.selected = this.multipleStatesDropdown.data.filter((item) =>
+            allStateNames.includes(item.item_text),
+          );
 
-{
-    "CountyString": "[Baldwin County, Alabama]-[Bullock County, Alabama]-[Cherokee County, Alabama]-[Barbour County, Alabama]-[Butler County, Alabama]-[Chilton County, Alabama]",
-    "GrantIndex": "48809",
-    "StCtType": "[SELECTED STATES]-[SELECTED COUNTIES]",
-    "StateString": "{Alabama}",
-    "userEmail": "ritu@fundsforngos.org",
-    "userIndex": 5
-}
-
-isme difference hai upper mai sare counties k name  rhega and "StateString": "{Alabama}", mai {} bracket kaa issme mai curly bracket use krenge kyun ki ye humne with counties button mai kiya hai jisme humne countie bhi seleted kiye hai thik hai 
-and issme mere states wali api ka payload jayega 
-{
-    "USGrantStates": [
-        {
-            "countryIndex": 230,
-            "grantIndex": 48809,
-            "recordIndex": 0,
-            "stateIndex": 101,
-            "stateName": "Alabama"
+          if (!hasCounties) {
+            // Full State — saari states, koi county nahi
+            this.multipleFullStateMode = true;
+            allStateNames.forEach((state) => {
+              this.selectedSubCounties[state] = [];
+              this.loadCountiesForState(state);
+            });
+            this.multipleActiveState = allStateNames[0];
+          } else {
+            this.multipleFullStateMode = false;
+            let firstLoaded = false;
+            allStateNames.forEach((state) => {
+              this.loadCountiesForState(state, () => {
+                this.selectedSubCounties[state] = countyMap[state] || [];
+                // pehli state jo load ho woh active ho
+                if (!firstLoaded) {
+                  firstLoaded = true;
+                  this.multipleActiveState = state;
+                }
+                this.cd.detectChanges();
+              });
+            });
+          }
         }
-    ],
-    "grantIndex": "48809",
-    "userEmail": "ritu@fundsforngos.org",
-    "userIndex": 5
+      },
+      error: (err) => {
+        console.error('Load Counties Error:', err);
+      },
+    });
+
+    this.fullStatesList = stateTokens
+      .filter((t) => t.startsWith('[') && t.endsWith(']'))
+      .map((t) => t.slice(1, -1).trim());
+
+    this.withCountiesList = stateTokens
+      .filter((t) => t.startsWith('{') && t.endsWith('}'))
+      .map((t) => t.slice(1, -1).trim());
+  }
+
+  loadCountiesForState(stateName: string, callback?: () => void): void {
+    const stateId = this.stateIndexMap[stateName];
+    if (!stateId) return;
+    this.api.getCountiesByState(stateId).subscribe((res: GetCountiesResponse) => {
+      const counties = res.usgeoCounties || [];
+      this.countiySubCountyMap[stateName] = counties.map((c: County) => c.countyName);
+      counties.forEach((c: County) => {
+        this.countyIndexMap[`${c.countyName}||${stateName}`] = c.countyIndex;
+      });
+      if (callback) {
+        callback();
+      }
+      this.cd.detectChanges();
+    });
+  }
+
+  goToFocusGroup() {
+    this.tabChange.emit(4);
+  }
+
+  goToSeo() {
+    this.tabChange.emit(6);
+  }
+
+  openPasteModal() {
+    this.pasteText = '';
+    this.showPasteModal = true;
+  }
+
+  closePasteModal() {
+    this.showPasteModal = false;
+  }
+
+  setGrantMode(mode: 'single' | 'multiple' | 'all') {
+    this.grantMode = mode;
+  }
+
+  onSingleStateChange() {
+    console.log('=== onSingleStateChange CALLED ===');
+    const selected = this.singleStateDropdown.selected;
+    console.log('selected:', selected);
+
+    if (!selected.length) {
+      this.selectedState = [];
+      this.activeStatesForCounties = null;
+      return;
+    }
+
+    const stateObj: DropdownItem = selected[0];
+    const stateName = stateObj.item_text;
+
+    if (!this.stateModeMap.hasOwnProperty(stateName)) {
+      this.stateModeMap[stateName] = false;
+    }
+
+    console.log('stateModeMap[stateName] BEFORE assign:', this.stateModeMap[stateName]);
+    this.singleFullStateMode = this.stateModeMap[stateName];
+    console.log('singleFullStateMode SET TO:', this.singleFullStateMode);
+
+    this.selectedState = [stateName];
+    this.activeStatesForCounties = stateName;
+    this.loadCountiesForState(stateName);
+
+    if (!this.selectedSubCounties[stateName]) {
+      this.selectedSubCounties[stateName] = [];
+    }
+
+    this.cd.detectChanges();
+  }
+
+  onSingleToggleChange(event: Event) {
+    console.log('=== onSingleToggleChange CALLED ===');
+    const checked = (event.target as HTMLInputElement).checked;
+    console.log('checkbox checked value:', checked);
+
+    this.singleFullStateMode = checked;
+    const state = this.activeStatesForCounties;
+    console.log('activeStatesForCounties:', state);
+    if (!state) return;
+
+    this.stateModeMap[state] = checked;
+    console.log('stateModeMap AFTER update:', { ...this.stateModeMap });
+
+    if (checked) {
+      this.selectedSubCounties[state] = [];
+    }
+
+
+    this.cd.detectChanges();
+  }
+
+  // AFTER
+  onMultipleStateChange() {
+    const selected: DropdownItem[] = this.multipleStatesDropdown.selected;
+    const selectedNames = selected.map((i) => i.item_text);
+
+    if (!selected.length) {
+      this.multipleActiveState = null;
+      this.selectedState = [];
+      this.fullStatesList = [];
+      this.withCountiesList = [];
+      return;
+    }
+
+    this.fullStatesList = this.fullStatesList.filter((s) => selectedNames.includes(s));
+    this.withCountiesList = this.withCountiesList.filter((s) => selectedNames.includes(s));
+
+    const lastSelected = selected[selected.length - 1];
+    const stateName = lastSelected.item_text;
+
+    this.selectedState = selectedNames;
+    this.multipleActiveState = stateName;
+
+    if (!this.stateModeMap.hasOwnProperty(stateName)) {
+      this.stateModeMap[stateName] = false;
+    }
+    
+    this.loadCountiesForState(stateName);
+
+    if (!this.selectedSubCounties[stateName]) {
+      this.selectedSubCounties[stateName] = [];
+    }
+
+    this.cd.detectChanges();
+  }
+
+  setStateMode(state: string, isFullState: boolean) {
+    this.stateModeMap[state] = isFullState;
+
+    if (isFullState) {
+      this.selectedSubCounties[state] = [];
+    }
+  }
+
+  toggleCounty(state: string, county: string, checked: boolean) {
+    if (!this.selectedSubCounties[state]) this.selectedSubCounties[state] = [];
+    if (checked) {
+      if (!this.selectedSubCounties[state].includes(county)) {
+        this.selectedSubCounties[state].push(county);
+      }
+    } else {
+      this.selectedSubCounties[state] = this.selectedSubCounties[state].filter((c) => c !== county);
+    }
+  }
+
+  clearAllSelections() {
+    this.selectedState = [];
+    this.selectedSubCounties = {};
+    this.countiesKeyDropDowns.states.selected = [];
+    this.multipleStatesDropdown.selected = [];
+    this.multipleActiveState = null;
+    this.activeStatesForCounties = null;
+  }
+
+  generateCountiesFromText() {
+    const text = this.pasteText.toLowerCase();
+    const states = Object.keys(this.countiySubCountyMap);
+    const detected = states.filter((s) => text.includes(s.toLowerCase()));
+
+    if (!detected.length) {
+      alert('No state found');
+      return;
+    }
+
+    const state = detected[0];
+    this.selectedState = [state];
+    this.activeStatesForCounties = state;
+    this.selectedSubCounties[state] = [...this.countiySubCountyMap[state]];
+    this.showPasteModal = false;
+  }
+
+  removeMultipleState(state: string) {
+    this.selectedState = this.selectedState.filter((s) => s !== state);
+    delete this.selectedSubCounties[state];
+
+    // Yeh do lines add karo
+    this.fullStatesList = this.fullStatesList.filter((s) => s !== state);
+    this.withCountiesList = this.withCountiesList.filter((s) => s !== state);
+
+    this.multipleStatesDropdown.selected = this.multipleStatesDropdown.selected.filter(
+      (item: DropdownItem) => item.item_text !== state,
+    );
+    this.singleStateDropdown.selected = this.singleStateDropdown.selected.filter(
+      (item: DropdownItem) => item.item_text !== state,
+    );
+
+    if (this.multipleActiveState === state) {
+      this.multipleActiveState = this.selectedState.slice(-1)[0] || null;
+    }
+  }
+
+  removeMultipleCounty(state: string, county: string) {
+    this.selectedSubCounties[state] =
+      this.selectedSubCounties[state]?.filter((c) => c !== county) || [];
+  }
+
+  isAllMultipleCountiesSelected(state: string): boolean {
+    const all = this.countiySubCountyMap[state] || [];
+    const selected = this.selectedSubCounties[state] || [];
+    return all.length > 0 && all.length === selected.length;
+  }
+
+  toggleSelectAllMultiple(state: string, checked: boolean) {
+    if (checked) {
+      this.selectedSubCounties[state] = [...(this.countiySubCountyMap[state] || [])];
+    } else {
+      this.selectedSubCounties[state] = [];
+      this.selectedState = this.selectedState.filter((s) => s !== state);
+      delete this.selectedSubCounties[state];
+      this.multipleStatesDropdown.selected = this.multipleStatesDropdown.selected.filter(
+        (item: DropdownItem) => item.item_text !== state,
+      );
+      this.multipleActiveState = this.selectedState.slice(-1)[0] || null;
+    }
+  }
+
+  saveStatesAndCounties(): void {
+    if (!this.grantId) {
+      this.errorMessage = 'Grant ID missing hai — save nahi ho sakta';
+      setTimeout(() => (this.errorMessage = ''), 3000);
+      return;
+    }
+
+    const userInfo = this.getUserInfoFromCookie(); // ADD THIS — ek hi baar nikal lo, sabme reuse hoga
+
+    const usGrantCounties: any[] = [];
+    const USGrantStates: any[] = [];
+    const addedStates = new Set<string>();
+
+    const buildStatePayload = (state: string) => {
+      if (addedStates.has(state)) return;
+      addedStates.add(state);
+      USGrantStates.push({
+        countryIndex: 230,
+        grantIndex: this.grantId,
+        recordIndex: 0,
+        stateIndex: this.stateIndexMap[state] ?? 0,
+        stateName: state,
+      });
+    };
+
+    const buildCountyPayload = (state: string, counties: string[]) => {
+      counties.forEach((county) => {
+        const countyIndex = this.countyIndexMap[`${county}||${state}`] || 0;
+        usGrantCounties.push({
+          countryIndex: 230,
+          countryName: 'United States',
+          countyIndex,
+          countyName: `${county}, ${state}`, // Bug 1 FIX
+          stateIndex: this.stateIndexMap[state],
+          stateName: state,
+        });
+      });
+    };
+
+    // =====================
+    // ALL MODE
+    // =====================
+    if (this.grantMode === 'all') {
+      const allStateNames = Object.keys(this.stateIndexMap);
+      const stateString = allStateNames.map((s) => `[${s}]`).join('-');
+
+      const tagsPayload = {
+        CountyString: '',
+        GrantIndex: this.grantId.toString(),
+        StCtType: '[ALL STATES]-[ALL COUNTIES]',
+        StateString: stateString,
+        userEmail: userInfo.emailId, // CHANGED
+        userIndex: userInfo.userIndex, // CHANGED
+        clientIP: this.clientIP, // ADD THIS
+      };
+
+      allStateNames.forEach((state) => buildStatePayload(state));
+
+      const statesPayload = {
+        USGrantStates,
+        grantIndex: this.grantId.toString(),
+        userEmail: userInfo.emailId, // CHANGED
+        userIndex: userInfo.userIndex, // CHANGED
+        clientIP: this.clientIP, // ADD THIS
+      };
+
+      this.api.updateGrantTags(this.grantId!, tagsPayload).subscribe({
+        next: () => {
+          this.api.insertGrantStatesJSON(statesPayload).subscribe({
+            next: () => {
+              this.successMessage = 'Saved successfully!';
+              setTimeout(() => (this.successMessage = ''), 4000);
+            },
+            error: () => (this.errorMessage = 'States save failed'),
+          });
+        },
+        error: () => (this.errorMessage = 'Tags save failed'),
+      });
+      return;
+    }
+
+    // =====================
+    // SINGLE MODE
+    // =====================
+    if (this.grantMode === 'single') {
+      const state = this.selectedState[0];
+      if (!state) return;
+
+      buildStatePayload(state);
+
+      const isFullState = this.singleFullStateMode;
+      const stateString = isFullState ? `[${state}]` : `{${state}}`;
+
+      let countyString = '';
+      if (!isFullState) {
+        const counties = this.selectedSubCounties[state] || [];
+        buildCountyPayload(state, counties);
+        countyString = usGrantCounties.map((c) => `[${c.countyName}]`).join('-'); // FIX: countyName already has state
+      }
+
+      const stCtType = '[SELECTED STATES]-[SELECTED COUNTIES]';
+
+      const tagsPayload = {
+        CountyString: countyString,
+        GrantIndex: this.grantId.toString(),
+        StCtType: stCtType,
+        StateString: stateString,
+        userEmail: userInfo.emailId,
+        userIndex: userInfo.userIndex,
+        clientIP: this.clientIP,
+      };
+
+      const statesPayload = {
+        USGrantStates,
+        grantIndex: this.grantId.toString(),
+        userEmail: userInfo.emailId,
+        userIndex: userInfo.userIndex,
+        clientIP: this.clientIP,
+      };
+
+      const countiesPayload = {
+        grantIndex: this.grantId.toString(),
+        usGrantCounties,
+        userIndex: userInfo.userIndex,
+        userEmail: userInfo.emailId,
+        clientIP: this.clientIP,
+      };
+
+      this.saveTags(tagsPayload, statesPayload, countiesPayload);
+      return;
+    }
+
+    // =====================
+    // MULTIPLE MODE
+    // =====================
+    if (this.grantMode === 'multiple') {
+      let hasFullStates = false;
+      let hasWithCounties = false;
+
+      const withCountiesParts: string[] = [];
+      const fullStateParts: string[] = [];
+
+      this.selectedState.forEach((state) => {
+        buildStatePayload(state);
+
+        const isFullState =
+          this.stateModeMap[state] === true ||
+          (this.stateModeMap[state] !== false && !this.selectedSubCounties[state]?.length);
+
+        if (isFullState) {
+          fullStateParts.push(`[${state}]`);
+          hasFullStates = true;
+        } else {
+          withCountiesParts.push(`{${state}}`);
+          hasWithCounties = true;
+          const counties = this.selectedSubCounties[state] || [];
+          buildCountyPayload(state, counties);
+        }
+      });
+
+      const stateString = [...withCountiesParts, ...fullStateParts].join('-');
+
+      const countyString = usGrantCounties.map((c) => `[${c.countyName}]`).join('-');
+
+      const stCtType =
+        hasFullStates && hasWithCounties
+          ? '[SELECTED STATES]-[MIXED COUNTIES]'
+          : '[SELECTED STATES]-[SELECTED COUNTIES]';
+
+      const tagsPayload = {
+        CountyString: countyString,
+        GrantIndex: this.grantId.toString(),
+        StCtType: stCtType,
+        StateString: stateString,
+        userEmail: userInfo.emailId,
+        userIndex: userInfo.userIndex,
+        clientIP: this.clientIP,
+      };
+
+      const statesPayload = {
+        USGrantStates,
+        grantIndex: this.grantId.toString(),
+        userEmail: userInfo.emailId,
+        userIndex: userInfo.userIndex,
+        clientIP: this.clientIP,
+      };
+
+      const countiesPayload = {
+        grantIndex: this.grantId.toString(),
+        usGrantCounties,
+        userIndex: userInfo.userIndex,
+        userEmail: userInfo.emailId,
+        clientIP: this.clientIP,
+      };
+
+      this.saveTags(tagsPayload, statesPayload, countiesPayload);
+    }
+  }
+
+  saveTags(tagsPayload: any, statesPayload: any, countiesPayload: any) {
+    this.api.updateGrantTags(this.grantId!, tagsPayload).subscribe({
+      next: () => this.saveStates(statesPayload, countiesPayload),
+      error: () => (this.errorMessage = 'Tags save failed'),
+    });
+  }
+
+  saveStates(statesPayload: any, countiesPayload: any) {
+    this.api.insertGrantStatesJSON(statesPayload).subscribe({
+      next: () => {
+        if (!countiesPayload.usGrantCounties.length) {
+          this.successMessage = 'Saved successfully!';
+          setTimeout(() => (this.successMessage = ''), 4000);
+          return;
+        }
+        this.saveCounties(countiesPayload);
+      },
+      error: () => {
+        this.errorMessage = 'States save failed';
+      },
+    });
+  }
+
+  // AFTER
+  onActiveStateToggleChange(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    console.log('Toggle changed to:', checked);
+    console.log('multipleActiveState:', this.multipleActiveState);
+    console.log('stateModeMap before:', { ...this.stateModeMap });
+
+    if (!this.multipleActiveState) return;
+
+    const state = this.multipleActiveState;
+    this.stateModeMap[state] = checked;
+    if (checked) {
+      this.selectedSubCounties[state] = [];
+      if (!this.fullStatesList.includes(state)) this.fullStatesList.push(state);
+      this.withCountiesList = this.withCountiesList.filter((s) => s !== state);
+    } else {
+      if (!this.withCountiesList.includes(state)) this.withCountiesList.push(state);
+      this.fullStatesList = this.fullStatesList.filter((s) => s !== state);
+    }
+
+    this.cd.detectChanges();
+    console.log('stateModeMap after:', { ...this.stateModeMap });
+  }
+  onMultipleToggleChange(event: Event) {
+    this.multipleFullStateMode = (event.target as HTMLInputElement).checked;
+
+    if (this.multipleActiveState) {
+      this.stateModeMap[this.multipleActiveState] = this.multipleFullStateMode;
+      if (this.multipleFullStateMode) {
+        this.selectedSubCounties[this.multipleActiveState] = [];
+      }
+    }
+  }
+  saveCounties(countiesPayload: any) {
+    this.api.insertGrantCounties(countiesPayload).subscribe({
+      next: () => {
+        this.successMessage = 'Saved successfully!';
+        setTimeout(() => (this.successMessage = ''), 4000);
+      },
+      error: () => (this.errorMessage = 'Counties save failed'),
+    });
+  }
 }
 
 
-ese jayega payload and aab mere counties wale ka payload batata hun jisme counites k name jaynge 
-{
-    "grantIndex": "48809",
-    "usGrantCounties": [
-        {
-            "countryIndex": 230,
-            "countryName": "United States",
-            "countyIndex": 2,
-            "countyName": "Baldwin County, Alabama",
-            "stateIndex": 101,
-            "stateName": "Alabama"
-        },
-        {
-            "countryIndex": 230,
-            "countryName": "United States",
-            "countyIndex": 6,
-            "countyName": "Bullock County, Alabama",
-            "stateIndex": 101,
-            "stateName": "Alabama"
-        },
-        {
-            "countryIndex": 230,
-            "countryName": "United States",
-            "countyIndex": 10,
-            "countyName": "Cherokee County, Alabama",
-            "stateIndex": 101,
-            "stateName": "Alabama"
-        } 
-    ],
-    "userIndex": 5,
-    "userEmail": "ritu@fundsforngos.org"
-}   ese jayega mera 
 
-and aab mai kya krta hun ki nmultiple states with counties seletec kr k btata hun kya payload jana chahiye 
-
-see aab mere payload mai maine ek bhi ese full counties select nhi kiya hai sare mere with counties honge and issme bhi changes dekhna...
-{
-    "CountyString": "[Baldwin County, Alabama]-[Bullock County, Alabama]-[Cherokee County, Alabama]-[Barbour County, Alabama]-[Butler County, Alabama]-[Chilton County, Alabama]-[Tolland County, Connecticut]-[Litchfield County, Connecticut]-[Bay County, Florida]-[Calhoun County, Florida]-[Collier County, Florida]-[Kalawao County, Hawaii]-[Honolulu County, Hawaii]",
-    "GrantIndex": "48809",
-    "StCtType": "[SELECTED STATES]-[SELECTED COUNTIES]",
-    "StateString": "{Alabama}-{Connecticut}-{Florida}-{Hawaii}",
-    "userEmail": "ritu@fundsforngos.org",
-    "userIndex": 5
 }
 
 
-upper mai sare counties k name  rhega and 
-"StateString": "{Alabama}-{Connecticut}-{Florida}-{Hawaii}",   ye bhi ese hi jayega {} bracket mai kyun ki iss state k maine counties mark kiye haai
-CountyString
-: 
-"[Baldwin County, Alabama]-[Bullock County, Alabama]-[Cherokee County, Alabama]-[Barbour County, Alabama]-[Butler County, Alabama]-[Chilton County, Alabama]-[Tolland County, Connecticut]-[Litchfield County, Connecticut]-[Bay County, Florida]-[Calhoun County, Florida]-[Collier County, Florida]-[Kalawao County, Hawaii]-[Honolulu County, Hawaii]
-
-
-
-and aab mera ek aur condition what if ki mai dono select krru 
-pehele With counties k select krru and fir krru full states 	tab mera payload kese jayega 
-
-{
-    "CountyString": "[Baldwin County, Alabama]-[Bullock County, Alabama]-[Cherokee County, Alabama]-[Barbour County, Alabama]-[Butler County, Alabama]-[Chilton County, Alabama]-[Tolland County, Connecticut]-[Litchfield County, Connecticut]-[Bay County, Florida]-[Calhoun County, Florida]-[Collier County, Florida]-[Kalawao County, Hawaii]-[Honolulu County, Hawaii]",
-    "GrantIndex": "48809",
-    "StCtType": "[SELECTED STATES]-[MIXED COUNTIES]",
-    "StateString": "{Alabama}-{Connecticut}-{Florida}-{Hawaii}-[Kentucky]-[Louisiana]-[Maine]-[Maryland]-[Massachusetts]-[Michigan]",
-    "userEmail": "ritu@fundsforngos.org",
-    "userIndex": 5
-}
-
-aab issme ye difference hai ki counties k names bhi aagye 
-
-{
-    "CountyString": "[Baldwin County, Alabama]-[Bullock County, Alabama]-[Cherokee County, Alabama]-[Barbour County, Alabama]-[Butler County, Alabama]-[Chilton County, Alabama]-[Tolland County, Connecticut]-[Litchfield County, Connecticut]-[Bay County, Florida]-[Calhoun County, Florida]-[Collier County, Florida]-[Kalawao County, Hawaii]-[Honolulu County, Hawaii]",
-
-
-aur "StCtType": "[SELECTED STATES]-[MIXED COUNTIES]",
-ye type change hogya kyun mai maine mixed use kiye like pehele with counites wale seletec kiya and fir full states wale select kiya 
-
-and ek aur change ye hai ki issme maine "StateString": "{Alabama}-{Connecticut}-{Florida}-{Hawaii}-[Kentucky]-[Louisiana]-[Maine]-[Maryland]-[Massachusetts]-[Michigan]",   ye bheja hai dekho jo {} wale bracket k hai woh woh state hai jiske maine counties bhi mark kiye hai and [] ye bracket mai woh state k name hai jo full state mai marked kiye hai 
-
-
-and ek last contidition ye hai ki jab mai all states seeted krru tab mera do api chalne chahiye "
-https://ang-dnd.fundsforngospremium.com/api/USGrants/UpdateUSGrantsTags?id=48809"
-"
-https://ang-dnd.fundsforngospremium.com/api/USGrantStates/InsertUSGrantStatesJSON"   ye do aur inme mera payload ese jana chahiye 
-
-{
-    "CountyString": "",
-    "GrantIndex": "48809",
-    "StCtType": "[ALL STATES]-[ALL COUNTIES]",
-    "StateString": "[Alabama]-[Alaska]-[Arizona]-[Arkansas]-[California]-[Colorado]-[Connecticut]-[Delaware]-[Florida]-[Georgia]-[Hawaii]-[Idaho]-[Illinois]-[Indiana]-[Iowa]-[Kansas]-[Kentucky]-[Louisiana]-[Maine]-[Maryland]-[Massachusetts]-[Michigan]-[Minnesota]-[Mississippi]-[Missouri]-[Montana]-[Nebraska]-[Nevada]-[New Hampshire]-[New Jersey]-[New Mexico]-[New York]-[North Carolina]-[North Dakota]-[Ohio]-[Oklahoma]-[Oregon]-[Pennsylvania]-[Rhode Island]-[South Carolina]-[South Dakota]-[Tennessee]-[Texas]-[Utah]-[Vermont]-[Virginia]-[Washington]-[West Virginia]-[Wisconsin]-[Wyoming]",
-    "userEmail": "ritu@fundsforngos.org",
-    "userIndex": 5
-}
-
-
-{
-    "USGrantStates": [
-        {
-            "countryIndex": 230,
-            "grantIndex": 48809,
-            "recordIndex": 0,
-            "stateIndex": 101,
-            "stateName": "Alabama"
-        },
-        {
-            "countryIndex": 230,
-            "grantIndex": 48809,
-            "recordIndex": 0,
-            "stateIndex": 102,
-            "stateName": "Alaska"
-        },
-        {
-            "countryIndex": 230,
-            "grantIndex": 48809,
-            "recordIndex": 0,
-            "stateIndex": 104,
-            "stateName": "Arizona"
-        },
-    ],
-    "grantIndex": "48809",
-    "userEmail": "ritu@fundsforngos.org",
-    "userIndex": 5
-}     
 
 
 
 
 
 
-ese jana chahiye mere payload thik kr k do sab aabhi ka code analyse krro and mereko new code btao kya kya hanata hai kya kya add krna hai 
 
 
 
 
 
+<section>
+  <app-alert-message
+    *ngIf="successMessage"
+    [type]="'success'"
+    [message]="successMessage"
+    (close)="successMessage = ''"
+  >
+  </app-alert-message>
 
+  <app-alert-message
+    *ngIf="errorMessage"
+    [type]="'error'"
+    [message]="errorMessage"
+    (close)="errorMessage = ''"
+  >
+  </app-alert-message>
+  <div class="row mt-4">
+    <div class="col-6">
+      <h5>Select States/Counties</h5>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+      <button class="btn border" (click)="openPasteModal()">Paste Here</button>
+    </div>
+    <div class="paste-overlay" *ngIf="showPasteModal">
+      <div class="paste-modal" (click)="$event.stopPropagation()">
+        <h3>Paste States/Counties here</h3>
+
+        <textarea
+          [(ngModel)]="pasteText".
+          placeholder="Paste your article or long text is correct form in here..."
+        ></textarea>
+
+        <div class="paste-actions">
+          <button class="btn-remove" (click)="closePasteModal()">Cancel</button>
+          <button class="btn-done" (click)="generateCountiesFromText()">Generate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="grant-coverage-card">
+      <h5>Select Grant Coverage</h5>
+
+      <!-- Toggle buttons -->
+      <div class="mode-toggle">
+        <label>
+          <input
+            type="radio"
+            name="grantMode"
+            [checked]="grantMode === 'single'"
+            (change)="setGrantMode('single')"
+          />
+          Single State
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="grantMode"
+            [checked]="grantMode === 'multiple'"
+            (change)="setGrantMode('multiple')"
+          />
+          Multiple States
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="grantMode"
+            [checked]="grantMode === 'all'"
+            (change)="setGrantMode('all')"
+          />
+          All States
+        </label>
+      </div>
+
+      <!-- SINGLE STATE -->
+      <div *ngIf="grantMode === 'single'" class="mt-3">
+        <div class="row align-items-center">
+          <!-- DROPDOWN COLUMN -->
+          <div class="col-lg-5 col-md-6 col-12">
+            <label class="fw-semibold mb-1">
+              {{ countiesKeyDropDowns.states.label }}
+            </label>
+
+            <ng-multiselect-dropdown
+              [settings]="countieSettings"
+              [data]="singleStateDropdown.data"
+              [(ngModel)]="singleStateDropdown.selected"
+              (onSelect)="onSingleStateChange()"
+              (onDeSelect)="onSingleStateChange()"
+              (onSelectAll)="onSingleStateChange()"
+              (onDeSelectAll)="onSingleStateChange()"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+
+          <!-- SWITCH COLUMN -->
+          <div class="col-lg-3 col-md-4 col-12 d-flex align-items-center">
+            <div class="custom-switch ms-lg-3 mt-3 mt-md-0">
+              <label class="switch mb-0">
+                <input
+                  type="checkbox"
+                  [checked]="singleFullStateMode"
+                  (change)="onSingleToggleChange($event)"
+                />
+                <span class="slider"></span>
+              </label>
+
+              <span class="switch-label ms-2">
+                {{ singleFullStateMode ? 'Full State' : 'With Counties' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- SUB GRID -->
+        <div
+          class="row"
+          *ngIf="
+            grantMode === 'single' &&
+            singleStateDropdown.selected.length &&
+            activeStatesForCounties &&
+            !singleFullStateMode
+          "
+        >
+          <div class="col-12">
+            <div class="county-grid-container">
+              <!-- SELECT ALL -->
+              <div class="select-all-row">
+                <label class="sub-checkbox fw-bold">
+                  <input
+                    type="checkbox"
+                    [checked]="
+                      activeStatesForCounties &&
+                      isAllMultipleCountiesSelected(activeStatesForCounties)
+                    "
+                    (change)="
+                      toggleSelectAllMultiple(activeStatesForCounties, $event.target.checked)
+                    "
+                  />
+
+                  <span>Select All Counties</span>
+                </label>
+              </div>
+
+              <!-- COUNTIES GRID -->
+              <div class="county-grid">
+                <label
+                  class="sub-checkbox county-item"
+                  *ngFor="let sub of countiySubCountyMap[activeStatesForCounties]"
+                >
+                  <input
+                    type="checkbox"
+                    [checked]="selectedSubCounties[activeStatesForCounties]?.includes(sub)"
+                    (change)="toggleCounty(activeStatesForCounties, sub, $event.target.checked)"
+                  />
+                  <span>{{ sub }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SELECTED RESULT -->
+        <div class="row mt-4">
+          <div class="col-md-3 col-12">
+            <h6>State Name</h6>
+
+            <div *ngFor="let state of selectedState">
+              <span class="chip">
+                {{ state }}
+                <span class="remove" (click)="removeMultipleState(state)"> × </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-md-9 col-12">
+            <h6>County Name</h6>
+            <div *ngFor="let state of selectedState">
+              <!-- Full State mode -->
+              <span *ngIf="singleFullStateMode" class="chip"> All Counties </span>
+              <!-- With Counties mode -->
+              <span class="chip" *ngFor="let county of selectedSubCounties[state]">
+                {{ county }}, {{ state }}
+                <span class="remove" (click)="removeMultipleCounty(state, county)"> × </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MULTIPLE STATES -->
+      <div *ngIf="grantMode === 'multiple'" class="mt-3">
+        <!-- DROPDOWN + TOGGLE -->
+        <div class="row align-items-center">
+          <div class="col-md-5 col-12">
+            <label class="fw-semibold mb-1">Select States</label>
+
+            <ng-multiselect-dropdown
+              [settings]="multiSelectSettings"
+              [data]="multipleStatesDropdown.data"
+              [(ngModel)]="multipleStatesDropdown.selected"
+              (ngModelChange)="onMultipleStateChange()"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+
+          <!-- TOGGLE -->
+          <div class="col-md-3 col-12 d-flex align-items-center">
+            <div class="custom-switch ms-md-3 mt-3 mt-md-0">
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  [checked]="multipleActiveState && stateModeMap[multipleActiveState] === true"
+                  (change)="onActiveStateToggleChange($event)"
+                />
+                <span class="slider"></span>
+              </label>
+              <span class="switch-label ms-2">
+                {{
+                  multipleActiveState && stateModeMap[multipleActiveState]
+                    ? 'Full State'
+                    : 'With Counties'
+                }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="multipleActiveState">
+          <div class="row">
+            <div class="col-12">
+              <div class="county-grid-container" *ngIf="!stateModeMap[multipleActiveState]">
+                <!-- SELECT ALL -->
+                <div class="select-all-row">
+                  <label class="sub-checkbox fw-bold">
+                    <input
+                      type="checkbox"
+                      [checked]="
+                        multipleActiveState && isAllMultipleCountiesSelected(multipleActiveState)
+                      "
+                      (change)="toggleSelectAllMultiple(multipleActiveState, $event.target.checked)"
+                    />
+                    <span>Select All Counties</span>
+                  </label>
+                </div>
+
+                <!-- COUNTIES GRID -->
+                <div class="county-grid">
+                  <label
+                    class="sub-checkbox county-item"
+                    *ngFor="let county of countiySubCountyMap[multipleActiveState]"
+                  >
+                    <input
+                      type="checkbox"
+                      [checked]="selectedSubCounties[multipleActiveState]?.includes(county)"
+                      (change)="toggleCounty(multipleActiveState, county, $event.target.checked)"
+                    />
+                    <span>{{ county }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4" *ngIf="selectedState.length">
+          <div class="col-md-8 col-12">
+            <div class="result-table">
+              <div class="result-table-header">
+                <span class="col-state-name">State Name</span>
+                <span class="col-county-name">County Name</span>
+              </div>
+
+              <div class="result-table-row" *ngFor="let state of withCountiesList">
+                <div class="col-state-name">
+                  <span class="chip state-chip">
+                    {{ state }}
+                    <span class="remove" (click)="removeMultipleState(state)"> × </span>
+                  </span>
+                </div>
+                <div class="col-county-name">
+                  <span class="chip" *ngFor="let county of selectedSubCounties[state]">
+                    {{ county }}
+                    <span class="remove" (click)="removeMultipleCounty(state, county)"> × </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-12">
+            <div class="result-table">
+              <div class="result-table-header">
+                <span class="col-state-name">State Name</span>
+                <span class="col-county-name">County Selected</span>
+              </div>
+
+              <div class="result-table-row" *ngFor="let state of fullStatesList">
+                <div class="col-state-name">
+                  <span class="chip state-chip">
+                    {{ state }}
+                    <span class="remove" (click)="removeMultipleState(state)"> × </span>
+                  </span>
+                </div>
+                <div class="col-county-name">
+                  <span class="all-selected-text">All Selected</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALL STATES -->
+      <div *ngIf="grantMode === 'all'" class="mt-3">
+        <p class="text-success">All states and counties selected</p>
+      </div>
+    </div>
+  </div>
+  <!-- FOOTER BUTTONS -->
+  <div class="buttons d-flex justify-content-between">
+    <div>
+      <button type="button" class="btn btn-next" (click)="clearAllSelections()">Clear all</button>
+    </div>
+    <div>
+      <button type="button" class="btn btn-save mx-2" (click)="saveStatesAndCounties()">
+        <i class="bi bi-bookmark-check"></i> Save
+      </button>
+      <button type="button" class="btn btn-next mx-2" (click)="goToFocusGroup()">
+        <i class="bi bi-skip-backward"></i> Back
+      </button>
+      <button type="button" class="btn btn-next" (click)="goToSeo()">
+        Next <i class="bi bi-skip-forward"></i>
+      </button>
+    </div>
+  </div>
+</section>
 
 
 
@@ -219,6 +1092,5 @@ ese jana chahiye mere payload thik kr k do sab aabhi ka code analyse krro and me
 
 
 Sabse pehele kaa Login krna hai 
-Image cropper ko Center krrna hai
 Mera Counties wala Section krna hai 
 mera aab Onsave mai ko password jata hai woh bhi encrypte jana chahiye  
