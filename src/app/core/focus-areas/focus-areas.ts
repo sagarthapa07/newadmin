@@ -463,10 +463,14 @@ export class FocusAreaComponent implements OnInit, OnChanges {
     this.api.saveFocusAreas(payload).subscribe({
       next: (res) => {
         console.log('Removed Success', res);
-      },  
+      },
       error: (err) => {
         console.log('Remove Error', err);
       },
     });
+  }
+
+  get filteredSelectedEntries(): [number, number[]][] {
+    return this.selectedEntries.filter((entry) => (entry[1]?.length ?? 0) > 0);
   }
 }
