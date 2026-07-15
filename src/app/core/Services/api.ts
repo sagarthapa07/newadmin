@@ -218,7 +218,12 @@ export class Api {
   insertGrantStatesJSON(payload: any) {
     return this.http.post(`${environment.baseUrl}/USGrantStates/InsertUSGrantStatesJSON`, payload);
   }
-
+  insertGrantCounties(payload: any) {
+    return this.http.post(
+      `${environment.baseUrl}/USGrantCounties/InsertUSGrantCountiesJSON`,
+      payload,
+    );
+  }
   getAllStates(): Observable<GetStatesResponse> {
     return this.http.get<GetStatesResponse>(`${environment.baseUrl}/States/GetAllStates`);
   }
@@ -235,12 +240,6 @@ export class Api {
     );
   }
 
-  insertGrantCounties(payload: any) {
-    return this.http.post(
-      `${environment.baseUrl}/USGrantCounties/InsertUSGrantCountiesJSON`,
-      payload,
-    );
-  }
   // SEO / SOCIAL APIs
 
   getSeoSocial(refId: number) {

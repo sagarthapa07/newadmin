@@ -1090,7 +1090,606 @@ export class CountiesComponent implements OnInit {
 
 
 
+All state and Selected State ko Select krega Design mai (Togglle button aayega)
 
-Sabse pehele kaa Login krna hai 
-Mera Counties wala Section krna hai 
-mera aab Onsave mai ko password jata hai woh bhi encrypte jana chahiye  
+Sabse upper toggle button (Selected States/All States)
+
+
+yha filter aayega Single Hai ya Multiple hai
+
+Single State on Multiple States ka option aayega 
+If Single Option hua issme Dropdown hoga dropdown mai states aayenge and dropdown mai mera kisi ek hi state ko select krne ka option ho 
+issme simple jaise mai kisi ek state ko select krta hun toh mera usska Counties Sectiuon khul krr ajana chaiye jaise ho Counties ka section open hoga jisme mera uss state k counties k name honge and ussme check boxes ho select krne k liye and right side mai mera Select all ka option ho jaise hi Sellect all ka option mai click krru toh mera counties ki option jge ye show krega "All counties in this state will be included"  and save krunga toh mera full counties jayega jisme mera payload jayega ese updateGrantTags  iss wale function mai 
+
+
+{
+    "CountyString": "",
+    "GrantIndex": "48809",
+    "StCtType": "[SELECTED STATES]-[SELECTED COUNTIES]",
+    "StateString": "[Arizona]",
+    "userId": 5, //YE aage se aayega coocies se Dynamic
+    "userMail": "test@test.org", //YE aage se aayega coocies se Dynamic
+    "clientIP": "115.247.76.82" //YE aage se aayega coocies se Dynamic
+}
+
+aur "insertGrantStatesJSON" wale function ka Payload jayega 
+
+{
+    "USGrantStates": [
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 104,
+            "stateName": "Arizona"
+        }
+    ],
+    "grantIndex": "48809",
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+DONO Api sath mai chelnge issme mera counties nhi jayega woh counties wali api nhi chlegi issme 
+
+and jab mai kisi ek state ko select kr k uss k counties ko send krta hun Toh mera payload jayega es 
+"updateGrantTags"  iss wale function mai 
+
+{
+    "CountyString": "[Adair County, Iowa, Iowa]-[Appanoose County, Iowa, Iowa]-[Black Hawk County, Iowa, Iowa]-[Calhoun County, Iowa, Iowa]-[Buchanan County, Iowa, Iowa]-[Cedar County, Iowa, Iowa]-[Chickasaw County, Iowa, Iowa]",
+    "GrantIndex": "48809",
+    "StCtType": "[SELECTED STATES]-[SELECTED COUNTIES]",
+    "StateString": "{Iowa}",
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+aur "insertGrantStatesJSON" wale function ka Payload jayega 
+{
+    "USGrantStates": [
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 118,
+            "stateName": "Iowa"
+        }
+    ],
+    "grantIndex": "48809",
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+
+aur "insertGrantCounties" wale function ka Payload jayega 
+
+{
+    "grantIndex": "48809",
+    "usGrantCounties": [
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 798,
+            "countyName": "Adair County, Iowa",
+            "stateIndex": 118,
+            "stateName": "Iowa"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 801,
+            "countyName": "Appanoose County, Iowa",
+            "stateIndex": 118,
+            "stateName": "Iowa"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 804,
+            "countyName": "Black Hawk County, Iowa",
+            "stateIndex": 118,
+            "stateName": "Iowa"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 810,
+            "countyName": "Calhoun County, Iowa",
+            "stateIndex": 118,
+            "stateName": "Iowa"
+        },
+    ],
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+yese jayega payload kyun ki issme counties bhi jayega 
+
+
+
+
+
+
+
+Fir if "Multiple states" hoga toh 
+
+
+Niche Design Filters khul jaynge Like With 
+
+Select State to View
+issme States honge DropDown mai Jo ek ek kr k select honge states
+
+
+issme Opption aayega Toggle button wala :-
+[Toggle button mai kya hoga With Counties OR full State ka option issme If Toogle button mera With Counites hai toh mera Counites section Show hogaa OR Full State aayega mera Counties wala section show nhi hoga mera issme mera Full States jaygea ]
+
+
+Multiple states ka main function hai ki mai multiple states ko select krr pau ek sat mai 
+ issme mereko chahiye ki mai state ko select krru and mera counties section open ho aur ye counties ka section open hone se pehele check ho jaye toogle button Full state hai ya with counties hai aagar with counties hai tbhi open hoyega ye nhi toh nhi hoga 
+
+and issme bhi counties mai select all ka option hoga jab mai select all krunga toh ye mera counties ki jge All counties in this state will be included " show krega 
+
+
+
+and IF maine Toogle button on Kiya mtlb full States tab mera counties ka option nhi open hoga wha pe All counties in this state will be included. ka hi show hoyegaa and mai bas states ko mark krte rhungaa 
+
+and issme dropdown mai ek chij aur hai isske jo maine Dromdown mai ussme bhi check lagana hai ki woh jaise ek A state ko select krre and Fir uss k bad B ko select krre toh use pehele woh check krre ki maine A mai counties ko mark kiya hai ya nhi If maine Mark kiya hai uss state k counties ko Tab hi mera Woh checked reh warna uncheck ho jayega ese hi sabhi mai ho C ko check krru fir issme bhi check ho maine B mai counties mark kiya hai ya nhi if nhi kiya hai toh uncheckd ho jaye agar kiya hai toh checked hi rhe...
+
+
+aab btata hun multiple states ka payload kese jayega 
+
+
+ye hai IF Sare States jayenge toh mtlb toggle button full states k sath mai 
+
+updateGrantTags wale function mai 
+
+{
+    "CountyString": "",
+    "GrantIndex": "48809",
+    "StCtType": "[SELECTED STATES]-[SELECTED COUNTIES]",
+    "StateString": "[Iowa]-[Kansas]-[Louisiana]",
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+insertGrantStatesJSON wale function mai 
+
+{
+    "USGrantStates": [
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 118,
+            "stateName": "Iowa"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 119,
+            "stateName": "Kansas"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        }
+    ],
+    "grantIndex": "48809",
+    "userId": 5,
+    "userMail": "ritu@fundsforngos.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+yese jayega isska mltb hai issme only states hi jayenge issme ek chij hai ki like maine jiske full states markd hai woh counties k name [Iowa]-[Kansas]-[Louisiana]  ese brackt mai jayega isske full states marked hai if kisi state k counties k sath marked hai toh {Iowa}-{Kansas}-{Louisiana}  ese jayega thik h
+
+aab second payload 
+
+updateGrantTags wale function mai 
+{
+    "CountyString": "[Acadia Parish, Louisiana, Louisiana]-[Assumption Parish, Louisiana, Louisiana]-[Bienville Parish, Louisiana, Louisiana]-[Calcasieu Parish, Louisiana, Louisiana]-[Allegany County, Maryland, Maryland]-[Baltimore County, Maryland, Maryland]-[Carroll County, Maryland, Maryland]-[Dorchester County, Maryland, Maryland]-[Alamosa County, Colorado, Colorado]-[Baca County, Colorado, Colorado]-[Broomfield County, Colorado, Colorado]",
+    "GrantIndex": "48809",
+    "StCtType": "[SELECTED STATES]-[SELECTED COUNTIES]",
+    "StateString": "{Louisiana}-{Maryland}-{Colorado}",
+    "userId": 5,
+    "userMail": "ritu@fundsforngos.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+insertGrantStatesJSON wale function mai 
+
+{
+    "USGrantStates": [
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 107,
+            "stateName": "Colorado"
+        }
+    ],
+    "grantIndex": "48809",
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+
+insertGrantCounties wale function mai 
+{
+    "grantIndex": "48809",
+    "usGrantCounties": [
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1122,
+            "countyName": "Acadia Parish, Louisiana",
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1125,
+            "countyName": "Assumption Parish, Louisiana",
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1128,
+            "countyName": "Bienville Parish, Louisiana",
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1131,
+            "countyName": "Calcasieu Parish, Louisiana",
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1202,
+            "countyName": "Allegany County, Maryland",
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1204,
+            "countyName": "Baltimore County, Maryland",
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1208,
+            "countyName": "Carroll County, Maryland",
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1211,
+            "countyName": "Dorchester County, Maryland",
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 252,
+            "countyName": "Alamosa County, Colorado",
+            "stateIndex": 107,
+            "stateName": "Colorado"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 255,
+            "countyName": "Baca County, Colorado",
+            "stateIndex": 107,
+            "stateName": "Colorado"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 258,
+            "countyName": "Broomfield County, Colorado",
+            "stateIndex": 107,
+            "stateName": "Colorado"
+        }
+    ],
+    "userId": 5,
+    "userMail": "ritu@fundsforngos.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+ese jayega issme dekho states k name "{Louisiana}-{Maryland}-{Colorado}" and [SELECTED STATES]-[SELECTED COUNTIES]  ese gya hai 
+
+
+aab jab mixed jati hai kuch maine full states select kiye and kuch-kuch maine With counties select kiye hai tab mera payload kese jayega 
+
+
+updateGrantTags wale function mai 
+{
+    "CountyString": "[Acadia Parish, Louisiana, Louisiana]-[Assumption Parish, Louisiana, Louisiana]-[Bienville Parish, Louisiana, Louisiana]-[Calcasieu Parish, Louisiana, Louisiana]-[Allegany County, Maryland, Maryland]-[Baltimore County, Maryland, Maryland]-[Carroll County, Maryland, Maryland]-[Dorchester County, Maryland, Maryland]",
+    "GrantIndex": "48809",
+    "StCtType": "[SELECTED STATES]-[MIXED COUNTIES]",
+    "StateString": "{Louisiana}-{Maryland}-[Colorado]-[Illinois]-[Wyoming]",
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+insertGrantStatesJSON wale function mai 
+{
+    "USGrantStates": [
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 107,
+            "stateName": "Colorado"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 116,
+            "stateName": "Illinois"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 157,
+            "stateName": "Wyoming"
+        }
+    ],
+    "grantIndex": "48809",
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+
+insertGrantCounties wale function mai 
+{
+    "grantIndex": "48809",
+    "usGrantCounties": [
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1122,
+            "countyName": "Acadia Parish, Louisiana",
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1125,
+            "countyName": "Assumption Parish, Louisiana",
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1128,
+            "countyName": "Bienville Parish, Louisiana",
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1131,
+            "countyName": "Calcasieu Parish, Louisiana",
+            "stateIndex": 121,
+            "stateName": "Louisiana"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1202,
+            "countyName": "Allegany County, Maryland",
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1204,
+            "countyName": "Baltimore County, Maryland",
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1208,
+            "countyName": "Carroll County, Maryland",
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        },
+        {
+            "countryIndex": 230,
+            "countryName": "United States",
+            "countyIndex": 1211,
+            "countyName": "Dorchester County, Maryland",
+            "stateIndex": 123,
+            "stateName": "Maryland"
+        }
+    ],
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+
+ye hai issme dekho mera states kese jate hai {Louisiana}-{Maryland}-[Colorado]-[Illinois]-[Wyoming] 
+ese jayenge and     "StCtType": "[SELECTED STATES]-[MIXED COUNTIES]",  ese jayega 
+
+
+
+
+ye hogya mixed Counties and states kaa flow 
+
+
+and at last mera JAb starting mai hi "all states" mark krr deta hai user and save krta hai toh mera 
+
+
+
+updateGrantTags wale function mai 
+{
+    "CountyString": "",
+    "GrantIndex": "48809",
+    "StCtType": "[ALL STATES]-[ALL COUNTIES]",
+    "StateString": "[Alabama]-[Alaska]-[Arizona]-[Arkansas]-[California]-[Colorado]-[Connecticut]-[Delaware]-[Florida]-[Georgia]-[Hawaii]-[Idaho]-[Illinois]-[Indiana]-[Iowa]-[Kansas]-[Kentucky]-[Louisiana]-[Maine]-[Maryland]-[Massachusetts]-[Michigan]-[Minnesota]-[Mississippi]-[Missouri]-[Montana]-[Nebraska]-[Nevada]-[New Hampshire]-[New Jersey]-[New Mexico]-[New York]-[North Carolina]-[North Dakota]-[Ohio]-[Oklahoma]-[Oregon]-[Pennsylvania]-[Rhode Island]-[South Carolina]-[South Dakota]-[Tennessee]-[Texas]-[Utah]-[Vermont]-[Virginia]-[Washington]-[West Virginia]-[Wisconsin]-[Wyoming]-[District of Columbia]",
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+
+
+
+
+
+insertGrantStatesJSON wale function mai 
+
+{
+    "USGrantStates": [
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 101,
+            "stateName": "Alabama"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 102,
+            "stateName": "Alaska"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 104,
+            "stateName": "Arizona"
+        },
+        {
+            "countryIndex": 230,
+            "grantIndex": 48809,
+            "recordIndex": 0,
+            "stateIndex": 105,
+            "stateName": "Arkansas"
+        },
+
+    ],
+    "grantIndex": "48809",
+    "userId": 5,
+    "userMail": "test@test.org",
+    "clientIP": "115.247.76.82"
+}
+
+
+
+
+
+
+
+
+
+AAB design batata hun tumhe mai 
+
+TOp pe Toogle button 
+
+Niche aayega Filter Section aayega jiseme do chije hongi single state OR multiple States 
+
+IF Single state hoga 
+
+Niche State mark krne ka khulega and isske State ko mark krta hai Counties ka khulega 
+
+and Sabse niche jo jo select hua woh Show hogaa
+
+
+IF Multiple Ko select krta hai 
+
+Toh niche aayega filter section jisme State ko mark krne k liye hoga and right side mai toggle button hogaa 
+
+and niche couties ka sction aayega 
+
+
+and last mai fi User Top pe hi select krr deta hai all states  toh fir aayega 
+All states and counties will be included for this opportunity.  ye likh ahuaa bas 
+
+
+
+
+and miche aab show krne ka section hoga Jha par do section honge ek mai with counties wala and ek mai hoga all counities marked wala all counties marked wala section mai states aayenge aage all counties aayega 
+
+niche buttons aayenge save wale 
+
+

@@ -260,7 +260,7 @@ export class FocusAreaComponent implements OnInit, OnChanges {
     }
 
     if (this.changedMap.size === 0) {
-      this.showSuccessMessage('Kuch naya change nahi hai save karne ke liye');
+      this.showSuccessMessage('No changes detected');
       return;
     }
 

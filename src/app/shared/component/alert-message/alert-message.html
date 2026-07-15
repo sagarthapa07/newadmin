@@ -3,25 +3,11 @@
   class="toast-message"
   [ngClass]="{
     'success-toast': type === 'success',
-    'error-toast': type === 'error'
+    'error-toast': type === 'error',
   }"
 >
-
   <div class="toast-header">
-
-    <strong>
-      {{ type === 'success' ? 'SUCCESS' : 'ERROR' }}
-    </strong>
-
-    <button
-      class="close-btn"
-      (click)="onClose()"
-    >
-      ×
-    </button>
-  </div>
-  <div class="toast-body">
     {{ message }}
+    <button class="close-btn" (click)="onClose()">×</button>
   </div>
-
 </div>

@@ -1,17 +1,17 @@
 .toast-message {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 40px;
+  right: 12px;
   width: 350px;
   background: white;
   z-index: 999999;
   padding: 14px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .success-toast {
-  border-left: 6px solid #22c55e;
+  border-left: 6px solid var(--primary-color);
 }
 
 .error-toast {
@@ -39,7 +39,6 @@
 }
 
 @keyframes slideIn {
-
   from {
     opacity: 0;
     transform: translateX(100%);
