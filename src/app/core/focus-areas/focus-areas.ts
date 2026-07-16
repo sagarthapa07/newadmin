@@ -17,6 +17,8 @@ import { Issue, SubIssue } from '../edit/issues.data';
 import { Common } from '../Services/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { Output, EventEmitter } from '@angular/core';
+
 
 @Component({
   selector: 'app-focus-area',
@@ -28,6 +30,7 @@ import { environment } from '../../../environments/environment';
 export class FocusAreaComponent implements OnInit, OnChanges {
   @ViewChild('issueContainer') issueContainer!: ElementRef;
   @Input() grantId?: number;
+  @Output() tabChange = new EventEmitter<number>();
 
   issues: Issue[] = [];
   activeIssue: Issue | null = null;
@@ -357,11 +360,11 @@ export class FocusAreaComponent implements OnInit, OnChanges {
   }
 
   goToGeoLocation() {
-    this.router.navigate(['/geo-location']);
+    this.tabChange.emit(2);
   }
 
   goToFocusGroup() {
-    this.router.navigate(['/focus-group']);
+    this.tabChange.emit(4);
   }
 
   // ===== PASTE MODAL LOGIC =====

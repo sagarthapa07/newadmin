@@ -164,8 +164,7 @@ export class CountiesComponent implements OnInit {
 
   private hasValidSelection(stateName: string): boolean {
     return (
-      this.stateModeMap[stateName] === true ||
-      (this.selectedCounties[stateName]?.length ?? 0) > 0
+      this.stateModeMap[stateName] === true || (this.selectedCounties[stateName]?.length ?? 0) > 0
     );
   }
 

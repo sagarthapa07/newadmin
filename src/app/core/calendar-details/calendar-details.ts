@@ -1,5 +1,6 @@
-  import { Component, ElementRef, ViewChild, HostListener, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, ViewChild, HostListener, SimpleChanges } from '@angular/core';
   import { CommonModule } from '@angular/common';
+  import { Location } from '@angular/common';
 
   import {
     FormBuilder,
@@ -100,6 +101,11 @@
       'More than $100 Million',
     ];
 
+    // character counter for the Short Info textarea (UI-only helper)
+    get shortInfoLength(): number {
+      return this.opportunityForm.get('shortInfo')?.value?.length || 0;
+    }
+
     @HostListener('document:mousedown', ['$event'])
     onClickOutside(event: MouseEvent) {
       // Donor Dropdown
@@ -128,6 +134,7 @@
       private router: Router,
       private api: Api,
       private fileUploadService: FileUpload,
+      private location: Location,
     ) {
       this.opportunityForm = this.fb.group({
         title: ['', Validators.required],
@@ -165,6 +172,26 @@
 
     gotoPreview() {
       this.router.navigate(['/preview']);
+    }
+
+    goBack() {
+      this.location.back();
+    }
+
+    clearAll() {
+      this.opportunityForm.reset({
+        donorType: 'US Donors',
+        isOngoing: false,
+      });
+      this.previewUrl = '';
+      this.fullImageUrl = '';
+      this.resizeImages = [];
+      this.selectedGrantType = '';
+      this.selectedGrantDuration = '';
+      this.selectedGrantSize = '';
+      this.showGrantTypeDropdown = false;
+      this.showGrantDurationDropdown = false;
+      this.showGrantSizeDropdown = false;
     }
 
     selectDropdown(type: 'grantType' | 'grantDuration' | 'grantSize', item: string) {

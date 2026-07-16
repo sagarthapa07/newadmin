@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { Api } from '../Services/api';
 import { SimpleChanges } from '@angular/core';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
@@ -23,7 +22,7 @@ type GeoKey = 'cities' | 'township' | 'insular' | 'states';
 @Component({
   selector: 'app-geo-location',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule, AlertMessage],
+  imports: [CommonModule, FormsModule, AlertMessage],
   templateUrl: './geo-location.html',
   styleUrl: './geo-location.scss',
 })
@@ -50,17 +49,6 @@ export class GeoLocationComponent implements OnInit {
     return key === 'township' || key === 'cities';
   }
 
-  readonly multiSelectSettings: IDropdownSettings = {
-    singleSelection: false,
-    idField: 'item_id',
-    textField: 'item_text',
-    selectAllText: 'Select All',
-    unSelectAllText: 'UnSelect All',
-    itemsShowLimit: 2,
-    allowSearchFilter: true,
-    enableCheckAll: false,
-  };
-
   geoDropdowns: {
     township: {
       label: string;
@@ -84,7 +72,7 @@ export class GeoLocationComponent implements OnInit {
     };
   } = {
     township: {
-      label: 'Town Ship',
+      label: 'Township',
       data: [],
       selected: [],
     },
@@ -106,6 +94,30 @@ export class GeoLocationComponent implements OnInit {
   };
 
   geoKeys: GeoKey[] = [];
+
+  // ---- search text per card ----
+  searchText: Record<GeoKey, string> = {
+    township: '',
+    insular: '',
+    cities: '',
+    states: '',
+  };
+
+  // ---- selected-summary panel state ----
+  summaryCollapsed: Record<GeoKey, boolean> = {
+    township: false,
+    insular: false,
+    cities: false,
+    states: false,
+  };
+  summaryShowAll: Record<GeoKey, boolean> = {
+    township: false,
+    insular: false,
+    cities: false,
+    states: false,
+  };
+  summaryPreviewCount = 3;
+
   ngOnInit(): void {
     this.geoKeys = Object.keys(this.geoDropdowns) as GeoKey[];
     this.loadGeoData(() => {
@@ -252,6 +264,81 @@ export class GeoLocationComponent implements OnInit {
     );
   }
 
+  // ---------------------------------------------------------------------
+  // SEARCH + SELECT ALL (per card)
+  // ---------------------------------------------------------------------
+  filteredItems(key: GeoKey): DropdownItem[] {
+    const term = (this.searchText[key] || '').toLowerCase().trim();
+    const data = this.geoDropdowns[key].data || [];
+    if (!term) return data;
+    return data.filter((item) => item.item_text.toLowerCase().includes(term));
+  }
+
+  isItemSelected(key: GeoKey, item: DropdownItem): boolean {
+    return this.geoDropdowns[key].selected.some((s) => s.item_id === item.item_id);
+  }
+
+  toggleGeoItem(key: GeoKey, item: DropdownItem, checked: boolean) {
+    if (checked) {
+      if (!this.isItemSelected(key, item)) {
+        this.geoDropdowns[key].selected = [...this.geoDropdowns[key].selected, item];
+      }
+    } else {
+      this.geoDropdowns[key].selected = this.geoDropdowns[key].selected.filter(
+        (s) => s.item_id !== item.item_id,
+      );
+    }
+  }
+
+  isAllFilteredSelected(key: GeoKey): boolean {
+    const items = this.filteredItems(key);
+    if (!items.length) return false;
+    return items.every((item) => this.isItemSelected(key, item));
+  }
+
+  toggleSelectAll(key: GeoKey, checked: boolean) {
+    const items = this.filteredItems(key);
+    if (checked) {
+      const existingIds = new Set(this.geoDropdowns[key].selected.map((s) => s.item_id));
+      const toAdd = items.filter((item) => !existingIds.has(item.item_id));
+      this.geoDropdowns[key].selected = [...this.geoDropdowns[key].selected, ...toAdd];
+    } else {
+      const idsToRemove = new Set(items.map((item) => item.item_id));
+      this.geoDropdowns[key].selected = this.geoDropdowns[key].selected.filter(
+        (s) => !idsToRemove.has(s.item_id),
+      );
+    }
+  }
+
+  // ---------------------------------------------------------------------
+  // SELECTED SUMMARY PANEL
+  // ---------------------------------------------------------------------
+  totalSelectedCount(): number {
+    return (Object.keys(this.geoDropdowns) as GeoKey[]).reduce(
+      (sum, key) => sum + this.geoDropdowns[key].selected.length,
+      0,
+    );
+  }
+
+  toggleSummaryCollapse(key: GeoKey) {
+    this.summaryCollapsed[key] = !this.summaryCollapsed[key];
+  }
+
+  toggleSummaryShowAll(key: GeoKey) {
+    this.summaryShowAll[key] = !this.summaryShowAll[key];
+  }
+
+  clearGeoCategory(key: GeoKey) {
+    this.geoDropdowns[key].selected = [];
+    this.summaryShowAll[key] = false;
+  }
+
+  visibleSummaryChips(key: GeoKey): DropdownItem[] {
+    const selected = this.geoDropdowns[key].selected;
+    if (this.summaryShowAll[key]) return selected;
+    return selected.slice(0, this.summaryPreviewCount);
+  }
+
   openPasteModal() {
     this.pasteText = '';
     this.showPasteModal = true;
@@ -260,12 +347,36 @@ export class GeoLocationComponent implements OnInit {
   closePasteModal() {
     this.showPasteModal = false;
   }
+
+  // ---------------------------------------------------------------------
+  // AUTO SELECTION FROM PASTED TEXT
+  // Scans the pasted text and auto-checks any township / insular area /
+  // city / state whose name appears in it (case-insensitive match).
+  // ---------------------------------------------------------------------
   generateFromText() {
     if (!this.pasteText.trim()) {
       return;
     }
     const text = this.pasteText.toLowerCase();
-    console.log('Text processed:', text);
+
+    (Object.keys(this.geoDropdowns) as GeoKey[]).forEach((key) => {
+      const data = this.geoDropdowns[key].data;
+      const newlySelected = [...this.geoDropdowns[key].selected];
+
+      data.forEach((item) => {
+        const name = item.item_text.toLowerCase();
+        if (name.length < 3) return; // skip too-short names to avoid false matches
+
+        const alreadyIn = newlySelected.some((s) => s.item_id === item.item_id);
+        if (!alreadyIn && text.includes(name)) {
+          newlySelected.push(item);
+        }
+      });
+
+      this.geoDropdowns[key].selected = newlySelected;
+    });
+
+    this.cd.detectChanges();
     this.showPasteModal = false;
   }
 

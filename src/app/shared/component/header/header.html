@@ -1,5 +1,10 @@
-<div class="layout" [class.sidebar-closed]="isSidebarClosed">
-  <nav class="sidebar" [class.close]="isSidebarClosed" (mouseleave)="closeAllMenus()">
+<div class="app-shell">
+  <nav
+    class="sidebar"
+    [class.close]="!isSidebarExpanded()"
+    (mouseenter)="onSidebarEnter()"
+    (mouseleave)="onSidebarLeave()"
+  >
     <header>
       <div class="image-text">
         <img class="logo small-logo" src="../../../../assets/logo1.png" alt="small logo" />
@@ -132,10 +137,19 @@
           </li>
         </ul>
       </div>
+
       <div class="menu-footer">
         <ul>
+          <li class="nav-link">
+            <a routerLink="/settings" class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <i class="fa-solid fa-gear icons"></i>
+                <span class="text nav-text">Settings</span>
+              </div>
+            </a>
+          </li>
           <li class="nav-link logout">
-            <a href="#" (click)="logout()" class="">
+            <a href="#" (click)="logout()">
               <div class="d-flex align-items-center">
                 <i class="fa-solid fa-arrow-right-from-bracket icons"></i>
                 <span class="text nav-text">Logout</span>
@@ -146,16 +160,79 @@
       </div>
     </div>
   </nav>
-</div>
 
-<div class="content">
-  <section class="home">
-    <div class="breadcrumb">
-      <span routerLink="/"><i class="bi bi-house-fill"></i>Home</span>
-      <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
-        <span class="separator">/</span>
-        <span [routerLink]="crumb.url" [class.active]="last">{{ crumb.label }}</span>
-      </ng-container>
-    </div>
-  </section>
+  <!-- MAIN AREA: top bar shifts in sync with the sidebar's expanded state -->
+  <div class="main-area" [class.main-area-expanded]="isSidebarExpanded()">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+          <i class="bi bi-list"></i>
+        </button>
+
+        <div class="breadcrumb">
+          <span class="crumb crumb-home" routerLink="/">
+            <i class="bi bi-house-fill"></i> Home
+          </span>
+          <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
+            <i class="bi bi-chevron-right separator"></i>
+            <span class="crumb" [routerLink]="crumb.url" [class.active]="last">{{
+              crumb.label
+            }}</span>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            placeholder="Search anything..."
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+
+        <div class="notif-wrapper">
+          <button class="icon-btn" (click)="toggleNotifications()" aria-label="Notifications">
+            <i class="bi bi-bell"></i>
+            <span class="icon-badge" *ngIf="notifications.length">{{ notifications.length }}</span>
+          </button>
+
+          <div class="dropdown-panel notif-panel" *ngIf="showNotifications">
+            <div class="dropdown-panel-head">Notifications</div>
+            <div class="notif-item" *ngFor="let n of notifications">{{ n }}</div>
+            <div class="dropdown-empty" *ngIf="!notifications.length">No new notifications</div>
+          </div>
+        </div>
+
+        <button class="icon-btn" (click)="toggleDarkMode()" aria-label="Toggle dark mode">
+          <i class="bi" [ngClass]="isDarkMode ? 'bi-sun' : 'bi-moon-stars'"></i>
+        </button>
+
+        <div class="profile-wrapper">
+          <button class="profile-btn" (click)="toggleProfileMenu()">
+            <span class="avatar"><i class="bi bi-person-circle"></i></span>
+            <span class="profile-text">
+              <strong>{{ userName }}</strong>
+              <small>{{ userRole }}</small>
+            </span>
+            <i class="bi bi-chevron-down profile-caret"></i>
+          </button>
+
+          <div class="dropdown-panel profile-panel" *ngIf="showProfileMenu">
+            <a class="dropdown-item" routerLink="/profile" (click)="showProfileMenu = false">
+              <i class="bi bi-person"></i> My Profile
+            </a>
+            <a class="dropdown-item" routerLink="/settings" (click)="showProfileMenu = false">
+              <i class="bi bi-lock"></i> Change Passoword
+            </a>
+            <a class="dropdown-item dropdown-item-danger" href="#" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
 </div>

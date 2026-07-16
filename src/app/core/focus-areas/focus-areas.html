@@ -1,21 +1,29 @@
 <section class="focus-area-wrapper">
-  <app-alert-message *ngIf="toastMessage" [type]="'success'" [message]="toastMessage" (close)="toastMessage = ''">
+  <app-alert-message
+    *ngIf="toastMessage"
+    [type]="'success'"
+    [message]="toastMessage"
+    (close)="toastMessage = ''"
+  >
   </app-alert-message>
 
-  <app-alert-message *ngIf="errorMessage" [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
+  <app-alert-message
+    *ngIf="errorMessage"
+    [type]="'error'"
+    [message]="errorMessage"
+    (close)="errorMessage = ''"
+  >
   </app-alert-message>
 
   <!-- HEADER -->
   <div class="focus-header d-flex justify-content-between align-items-start flex-wrap gap-2">
     <div class="">
-      <h5 class="mb-1">
-        <i class="bi bi-bullseye me-2"></i>Select Focus Areas
-      </h5>
+      <h5 class="mb-1"><i class="bi bi-bullseye me-2"></i>Select Focus Areas</h5>
       <p class="sub-text mb-0">Choose the focus areas that best match this opportunity.</p>
     </div>
 
     <button class="button button-secondary" (click)="openPasteModal()">
-      <i class="bi bi-clipboard-check"></i> Paste Here
+      <i class="bi bi-magic"></i> Auto Selection
     </button>
   </div>
 
@@ -24,11 +32,18 @@
     <div class="paste-modal" (click)="$event.stopPropagation()">
       <h3>Paste Article / Content</h3>
 
-      <textarea [(ngModel)]="pasteText" placeholder="Paste your article or long text here..."></textarea>
+      <textarea
+        [(ngModel)]="pasteText"
+        placeholder="Paste your article or long text here..."
+      ></textarea>
 
       <div class="paste-actions">
         <button class="button button-secondary" (click)="closePasteModal()">Cancel</button>
-        <button class="button button-primary" [disabled]="pasteLoading" (click)="generateFromText()">
+        <button
+          class="button button-primary"
+          [disabled]="pasteLoading"
+          (click)="generateFromText()"
+        >
           {{ pasteLoading ? 'Loading...' : 'Generate' }}
         </button>
       </div>
@@ -40,14 +55,22 @@
     <!-- LEFT: ISSUE GRID -->
     <div class="col-lg-9">
       <div class="issue-grid" #issueContainer>
-        <div class="issue-box" *ngFor="let issue of issues" [class.selected]="hasAnySelected(issue)"
-          (click)="onClickIssue(issue); $event.stopPropagation()">
+        <div
+          class="issue-box"
+          *ngFor="let issue of issues"
+          [class.selected]="hasAnySelected(issue)"
+          (click)="onClickIssue(issue); $event.stopPropagation()"
+        >
           <span class="issue-dot" [class.active]="hasAnySelected(issue)"></span>
           <span class="issue-text">{{ issue.name }}</span>
 
           <!-- SUB ISSUE POPOVER -->
-          <div class="subissue-popover" *ngIf="activeIssue?.id === issue.id" (click)="$event.stopPropagation()"
-            (mousedown)="$event.stopPropagation()">
+          <div
+            class="subissue-popover"
+            *ngIf="activeIssue?.id === issue.id"
+            (click)="$event.stopPropagation()"
+            (mousedown)="$event.stopPropagation()"
+          >
             <!-- HEADER -->
             <div class="popup-header">
               {{ issue.name }}
@@ -59,7 +82,11 @@
 
               <div class="subissue-grid">
                 <label class="sub-checkbox" *ngFor="let sub of issue.subIssues || []">
-                  <input type="checkbox" [checked]="isSubSelected(issue, sub)" (change)="toggleSub(issue, sub)" />
+                  <input
+                    type="checkbox"
+                    [checked]="isSubSelected(issue, sub)"
+                    (change)="toggleSub(issue, sub)"
+                  />
                   <div *ngIf="!issue.subIssues?.length">Loading sub issues...</div>
                   <span>{{ sub.name }}</span>
                 </label>
@@ -69,14 +96,20 @@
             <!-- SELECT ALL -->
             <div class="popup-select-all">
               <label class="sub-checkbox">
-                <input type="checkbox" [checked]="isAllSelected(issue)" (change)="toggleSelectAll(issue)" />
+                <input
+                  type="checkbox"
+                  [checked]="isAllSelected(issue)"
+                  (change)="toggleSelectAll(issue)"
+                />
                 <span>Select All</span>
               </label>
             </div>
 
             <!-- FOOTER -->
             <div class="popup-footer">
-              <button class="button button-secondary" (click)="clearIssue(issue.id)">✕ Remove</button>
+              <button class="button button-secondary" (click)="clearIssue(issue.id)">
+                ✕ Remove
+              </button>
               <button class="button button-primary" (click)="saveSelectedIssues()">Done</button>
             </div>
           </div>
@@ -106,7 +139,11 @@
                 <span class="issue-icon"><i class="bi bi-bookmark-star-fill"></i></span>
                 <strong>{{ getIssueName(entry[0]) }}</strong>
               </div>
-              <span class="remove-issue" (click)="removeWholeIssue(entry[0])" title="Remove entire issue">
+              <span
+                class="remove-issue"
+                (click)="removeWholeIssue(entry[0])"
+                title="Remove entire issue"
+              >
                 Remove
               </span>
             </div>
@@ -133,19 +170,21 @@
   </div>
 
   <!-- BOTTOM ACTION BAR -->
-  <div class="bottom-actions d-flex justify-content-between align-items-center mt-4">
-    <button type="button" class="button button-secondary" (click)="clearAll()">
-      <i class="bi bi-trash"></i> Clear all
+  <div class="section-footer mb-5">
+    <button type="button" class="btn btn-clear" (click)="clearAll()">
+      <i class="bi bi-trash3"></i> Clear All
     </button>
 
-    <div class="d-flex gap-2">
-      <button type="submit" class="button button-primary" (click)="saveSelectedIssues()">
-        <i class="bi bi-bookmark-check"></i> Save
-      </button>
-      <button type="button" class="button button-secondary" (click)="goToGeoLocation()">
+    <div class="section-footer-right">
+      <button type="button" class="btn btn-back" (click)="goToGeoLocation()">
         <i class="bi bi-skip-backward"></i> Back
       </button>
-      <button type="button" class="button button-primary" (click)="goToFocusGroup()">
+
+      <button type="submit" class="btn btn-save" (click)="saveSelectedIssues()">
+        <i class="bi bi-bookmark-check"></i> Save
+      </button>
+
+      <button type="button" class="btn btn-next" (click)="goToFocusGroup()">
         Next <i class="bi bi-skip-forward"></i>
       </button>
     </div>

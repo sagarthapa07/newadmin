@@ -47,7 +47,7 @@ export class BreadcrumbService {
       const isDynamicId = /^\d+$/.test(path) || /^[0-9a-fA-F-]{8,}$/.test(path);
       if (isDynamicId) return;
 
-      // Dashboard ko skip karo — Home already dashboard ko represent karta hai
+
       if (path === 'dashboard') return;
 
       const label = SEGMENT_LABELS[path] || this.toTitleCase(path);

@@ -1,47 +1,112 @@
-// photo-editor.component.scss
-
 .upload-area {
-  display: flex; align-items: center; gap: 12px; margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 0;
+  min-height: 96px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px dashed var(--border-color, #ccc);
+  border-radius: 10px;
+  background: var(--body-color, #f8f9fd);
+  transition: var(--tran-02, all 0.2s ease);
+
+  &.drag-over {
+    border-color: var(--primary-color, #0095c0);
+    background: var(--header2-bkg-color, #edf8ff);
+  }
 }
+
 .upload-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 8px 16px; background: #fff; border: 1px solid #ccc;
-  border-radius: 4px; cursor: pointer; font-size: 13px;
-  font-family: sans-serif; transition: background .15s;
-  &:hover { background: #eee; }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 16px 20px;
+  width: 100%;
+  cursor: pointer;
+  text-align: center;
 }
-.file-name { font-size: 13px; color: #666; font-family: sans-serif; }
+
+.upload-icon {
+  color: var(--primary-color, #0095c0);
+  margin-bottom: 4px;
+}
+
+.upload-text {
+  font-size: 14px;
+  color: var(--text-color, #222);
+  font-family: sans-serif;
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+.upload-hint {
+  font-size: 12px;
+  color: var(--placeholder-color, #6b7280);
+  font-family: sans-serif;
+}
+
+.file-name {
+  font-size: 12px;
+  color: var(--text-color-light, #545454);
+  font-family: sans-serif;
+  padding: 0 12px 12px;
+  text-align: center;
+  word-break: break-all;
+}
 
 .modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 9999; backdrop-filter: blur(2px);
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+
+  &.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
+
 .modal {
-  background: #2b2b2b; border-radius: 6px;
-  width: 660px; max-width: 96vw;
-  display: flex; flex-direction: column;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-  overflow: hidden; user-select: none;
+  background: #2b2b2b;
+  border-radius: 6px;
+  width: 660px;
+  max-width: 96vw;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  user-select: none;
 }
 .modal-header {
   padding: 11px 16px; background: #1a1a1a;
   border-bottom: 1px solid #444;
   color: #ddd; font-size: 13px; font-weight: 600; font-family: sans-serif;
+  flex-shrink: 0;
 }
 
-// ── Canvas ────────────────────────────────────────────────────
 .canvas-wrap {
   position: relative;
-  width: 100%; height: 400px;
+  width: 100%;
+  height: min(400px, 55vh);
   background: #111;
   overflow: hidden;
   cursor: grab;
+  flex-shrink: 1;
   &:active { cursor: grabbing; }
 }
 
-// ── Image Layer ───────────────────────────────────────────────
 .img-layer {
   position: absolute;
   top: 50%; left: 50%;
@@ -56,7 +121,6 @@
   }
 }
 
-// ── CROP FRAME ★ key trick: box-shadow for dark outside ───────
 .crop-frame {
   position: absolute;
   border: 2px solid rgba(255,255,255,0.9);
@@ -65,7 +129,6 @@
   cursor: move;
   z-index: 10;
 
-  // Rule-of-thirds grid via pseudo element
   &::before {
     content: '';
     position: absolute; inset: 0;
@@ -77,7 +140,6 @@
   }
 }
 
-// ── Grid lines (backup, in case ::before doesn't show) ────────
 .gl {
   position: absolute; pointer-events: none;
   background: rgba(255,255,255,0.2);
@@ -85,7 +147,6 @@
   &.v { top:0; bottom:0; width:1px; }
 }
 
-// ── Resize Handles ────────────────────────────────────────────
 .rh {
   position: absolute;
   width: 12px; height: 12px;
@@ -104,7 +165,6 @@
   &.br { bottom:-6px; right:-6px; cursor: se-resize; }
 }
 
-// ── Size Label ────────────────────────────────────────────────
 .crop-label {
   position: absolute;
   bottom: -26px; left: 50%;
@@ -115,11 +175,11 @@
   white-space: nowrap; pointer-events: none; z-index: 11;
 }
 
-// ── Toolbar ───────────────────────────────────────────────────
 .toolbar {
   display: flex; align-items: center; justify-content: center;
   gap: 2px; padding: 10px 14px;
   background: #222; border-top: 1px solid #3a3a3a; flex-wrap: wrap;
+  flex-shrink: 0;
 }
 .tbtn {
   width: 36px; height: 36px;
@@ -131,15 +191,18 @@
 .ztxt { font-size:12px; color:#888; font-family:monospace; min-width:40px; text-align:center; }
 .div  { width:1px; height:24px; background:#444; margin:0 4px; }
 
-// ── Footer ────────────────────────────────────────────────────
 .modal-footer {
   display: flex; justify-content: flex-end; gap: 10px;
   padding: 12px 16px; background: #1a1a1a; border-top: 1px solid #3a3a3a;
+  flex-shrink: 0;
 }
 .btn-close {
-  padding: 7px 20px; border-radius: 4px;
+  padding: 10px 30px; border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid #555; background: transparent;
-  color: #ccc; font-size: 13px; font-family: sans-serif; cursor: pointer;
+  color: #ccc; font-size: 13px; font-weight: 600; font-family: sans-serif; cursor: pointer;
   &:hover { background: #3a3a3a; color: #fff; }
 }
 .btn-apply {
@@ -149,10 +212,8 @@
   &:hover { background: #1976d2; }
 }
 
-// ── Output ────────────────────────────────────────────────────
 .output {
   margin-top: 20px;
   p { font-size:13px; color:#555; margin-bottom:8px; font-family:sans-serif; }
   img { max-width:400px; border:1px solid #ddd; border-radius:4px; display:block; }
 }
-

@@ -1,287 +1,736 @@
-  /* HEADER BUTTONS */
-  .header-btn {
-    gap: 5px;
-  }
+// ==========================================================================
+// Geo Location — uses global :root tokens from styles.scss only.
+// ==========================================================================
 
-  .header-btn .btn {
-    font-size: var(--fs-14);
-    font-weight: var(--fw-400);
-    height: 37px;
-    padding: 0 14px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
+.geo-page {
+  padding: 4px 0 20px;
+}
 
-  .header-btn .btn:hover {
-    color: var(--primary-color);
-  }
+// ---------------------------------------------------------------------
+// HEADER
+// ---------------------------------------------------------------------
+.geo-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-bottom: 18px;
+}
 
-  .header-btn .btn.active {
-    background: var(--btn-bg-color);
-    font-weight: var(--fw-500);
-    border-color: var(--btn-bg-color);
-    color: var(--primary-color);
-  }
+.geo-head-title {
+  margin: 0 0 4px;
+  font-size: var(--header-text);
+  font-weight: var(--fw-700);
+  color: var(--text-color-dark);
+}
 
-  /* SECTION */
-  .section-title {
-    font-weight: var(--fw-600);
-    font-size: var(--header-text);
-    margin-bottom: 30px;
-  }
+.geo-head-subtitle {
+  margin: 0;
+  font-size: var(--fs-14);
+  color: var(--placeholder-color);
+}
 
-  /* FORM */
-  .form-group {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 12px;
-  }
+.geo-auto-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 16px;
+  min-width: 280px;
+  cursor: pointer;
+  transition: var(--tran-02);
+}
 
-  .form-group label {
-    width: 180px;
-    font-weight: 500;
-  }
+.geo-auto-card:hover {
+  border-color: var(--nav-color);
+  background: var(--header2-bkg-color);
+}
 
-  .form-group input,
-  .form-group select {
-    height: 35px;
-  }
+.geo-auto-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 8px;
+  background: var(--header2-bkg-color);
+  color: var(--svgIcon-color);
+  font-size: 16px;
+}
 
-  textarea {
-    resize: none;
-  }
+.geo-auto-text strong {
+  display: block;
+  font-size: var(--fs-14);
+  color: var(--text-color-dark);
+  margin-bottom: 2px;
+}
 
-  .form-group input::placeholder {
-    font-size: var(--placeholder-text);
-    color: var(--placeholder-color);
-  }
+.geo-auto-text p {
+  margin: 0;
+  font-size: var(--fs-13);
+  color: var(--placeholder-color);
+  line-height: 1.35;
+}
 
-  select.form-control {
-    font-size: var(--placeholder-text);
-    color: var(--text-color);
-  }
+.geo-auto-arrow {
+  align-self: center;
+  color: var(--placeholder-color);
+}
 
-  /* DATE */
-  .date-input {
-    width: 350px;
-    margin-left: -33px;
-  }
+.geo-divider {
+  height: 2px;
+  background: var(--nav-color);
+  opacity: 0.35;
+  margin-bottom: 22px;
+}
 
-  .deadline-group {
-    flex-wrap: wrap;
-  }
+// ---------------------------------------------------------------------
+// GRID
+// ---------------------------------------------------------------------
+.geo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: start;
+}
 
-  /* ONGOING CHECKBOX */
-  .ongoing-box {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: 10px;
-  }
+// ---------------------------------------------------------------------
+// CATEGORY CARD
+// ---------------------------------------------------------------------
+.geo-card {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
 
-  .ongoing-box input {
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-  }
+.geo-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  .form-check-input:checked {
-    background-color: var(--nav-color);
-  }
+.geo-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 8px;
+  background: var(--header2-bkg-color);
+  color: var(--svgIcon-color);
+  font-size: 15px;
+}
 
-  /* BUTTONS */
-  .buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 20px 0;
-  }
+.geo-card-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 
-  .buttons .btn {
-    min-width: 90px;
-    padding: 10px 22px;
+.geo-card-name {
+  font-size: var(--fs-15);
+  font-weight: var(--fw-700);
+  color: var(--text-color-dark);
+}
+
+.geo-card-badge {
+  align-self: flex-start;
+  background: var(--header2-bkg-color);
+  color: var(--svgIcon-color);
+  font-size: var(--fs-11);
+  font-weight: var(--fw-600);
+  padding: 1px 8px;
+  border-radius: 10px;
+}
+
+.geo-add-new {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--nav-color);
+  font-size: var(--fs-13);
+  font-weight: var(--fw-600);
+  cursor: pointer;
+  margin-top: -22px;
+  margin-bottom: 12px;
+}
+
+.geo-add-new:hover {
+  text-decoration: underline;
+}
+
+.geo-search {
+  position: relative;
+  margin-top: 14px;
+  margin-bottom: 10px;
+}
+
+.geo-search i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--placeholder-color);
+  font-size: 13px;
+}
+
+.geo-search input {
+  width: 100%;
+  height: 36px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0 12px 0 30px;
+  font-size: var(--fs-13);
+  color: var(--text-color);
+}
+
+.geo-search input::placeholder {
+  color: var(--placeholder-color);
+}
+
+.geo-search input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 149, 192, 0.12);
+}
+
+.geo-select-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-13);
+  font-weight: var(--fw-600);
+  color: var(--text-color-dark);
+  padding-bottom: 10px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+}
+
+.geo-select-all input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--nav-color);
+  cursor: pointer;
+}
+
+.geo-list {
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+}
+
+.geo-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-14);
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.geo-item input {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  accent-color: var(--nav-color);
+  cursor: pointer;
+}
+
+.geo-empty {
+  font-size: var(--fs-13);
+  color: var(--placeholder-color);
+  font-style: italic;
+  padding: 6px 0;
+}
+
+// scrollbar (webkit)
+.geo-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.geo-list::-webkit-scrollbar-thumb {
+  background: var(--box-bg-color);
+  border-radius: 6px;
+}
+
+// ---------------------------------------------------------------------
+// SELECTED SUMMARY PANEL — matches Focus Areas' Selection Summary card
+// ---------------------------------------------------------------------
+.geo-summary {
+  background: var(--body-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.geo-summary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.geo-summary-title {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-700);
+  color: var(--text-color-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.geo-count-badge {
+  background: var(--nav-color);
+  color: var(--white);
+  font-size: var(--fs-11);
+  font-weight: var(--fw-600);
+  min-width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0 6px;
+}
+
+.geo-summary-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--danger-color);
+  font-size: var(--fs-13);
+  font-weight: var(--fw-500);
+  cursor: pointer;
+}
+
+.geo-summary-clear:hover {
+  text-decoration: underline;
+}
+
+.geo-summary-subtitle {
+  font-size: var(--fs-13);
+  color: var(--placeholder-color);
+  font-weight: var(--fw-500);
+  margin: 14px 0 10px;
+}
+
+.geo-summary-list {
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 4px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 16px;
+  align-items: start;
+}
+
+.geo-summary-card {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.geo-summary-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.geo-summary-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.geo-summary-card-title strong {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-700);
+  color: var(--text-color-dark);
+}
+
+.geo-summary-icon {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 6px;
+  background: var(--header2-bkg-color);
+  color: var(--svgIcon-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-12);
+}
+
+.geo-summary-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.geo-remove-category {
+  cursor: pointer;
+  color: var(--danger-color);
+  font-size: var(--fs-13);
+  font-weight: var(--fw-600);
+}
+
+.geo-remove-category:hover {
+  text-decoration: underline;
+}
+
+.geo-collapse-icon {
+  color: var(--placeholder-color);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.geo-summary-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.geo-empty-center {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 20px 0;
+  font-style: normal;
+}
+
+.geo-tip-box {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  background: var(--white);
+  border: 1px dashed var(--primary-color);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 16px;
+  font-size: var(--fs-13);
+  color: var(--text-color-light);
+}
+
+.geo-tip-box i {
+  color: var(--primary-color);
+  margin-top: 2px;
+}
+
+// ---------------------------------------------------------------------
+// CHIPS (shared: summary panel)
+// ---------------------------------------------------------------------
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary-color-light);
+  color: var(--text-color-dark);
+  padding: 5px 10px;
+  border-radius: 16px;
+  font-size: var(--fs-12);
+}
+
+.chip-more {
+  background: var(--header2-bkg-color);
+  color: var(--svgIcon-color);
+  font-weight: var(--fw-600);
+  cursor: pointer;
+}
+
+.remove {
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--danger-color);
+  line-height: 1;
+}
+
+// ---------------------------------------------------------------------
+// PASTE MODAL (Auto Selection)
+// ---------------------------------------------------------------------
+.paste-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.paste-modal {
+  background: var(--white);
+  width: 40%;
+  min-width: 320px;
+  max-width: 640px;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.paste-modal h3 {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-600);
+  color: var(--nav-color);
+  margin: 0;
+}
+
+.geo-modal-help {
+  margin: 0;
+  font-size: var(--fs-13);
+  color: var(--placeholder-color);
+}
+
+.paste-modal textarea {
+  width: 100%;
+  min-height: 200px;
+  resize: vertical;
+  padding: 10px;
+  font-size: var(--fs-14);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  outline: none;
+}
+
+.paste-modal textarea:focus {
+  border-color: var(--primary-color);
+}
+
+.paste-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-remove {
+  background: var(--btn-bg-color);
+  border: 1px solid var(--btn-border-color);
+  color: var(--text-color-light);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: var(--fw-600);
+  font-size: var(--fs-14);
+}
+
+.btn-remove:hover {
+  background: var(--hover-color);
+}
+
+.btn-done {
+  background: var(--nav-color);
+  border: 1px solid var(--nav-color);
+  color: var(--white);
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: var(--fw-600);
+  font-size: var(--fs-14);
+}
+
+.btn-done:hover {
+  background: var(--primary-color-dark);
+}
+
+// ---------------------------------------------------------------------
+// ADD NEW GEO MODAL
+// ---------------------------------------------------------------------
+.custom-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.custom-modal {
+  width: 420px;
+  max-width: 92vw;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h5 {
+  margin: 0;
+  font-weight: var(--fw-600);
+  color: var(--text-color-dark);
+}
+
+.close-btn {
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--placeholder-color);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-body .form-control {
+  height: 38px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+// ---------------------------------------------------------------------
+// FOOTER
+// ---------------------------------------------------------------------
+.geo-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px 0 4px;
+}
+
+.geo-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.geo-footer .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 90px;
+  padding: 9px 20px;
+  font-size: var(--fs-14);
+  font-weight: var(--fw-600);
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--tran-02);
+
+  i {
     font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+  }
+}
+
+.btn-clear {
+  background: var(--white);
+  color: var(--danger-color);
+  border-color: var(--btn-border-color);
+}
+
+.btn-clear:hover {
+  background: var(--body-color);
+  border-color: var(--danger-color);
+}
+
+.btn-back {
+  background: var(--white);
+  color: var(--text-color-light);
+  border-color: var(--btn-border-color);
+}
+
+.btn-back:hover {
+  background: var(--btn-bg-color);
+}
+
+.btn-save {
+  background: var(--white);
+  color: var(--nav-color);
+  border-color: var(--nav-color);
+}
+
+.btn-save:hover {
+  background: var(--header2-bkg-color);
+}
+
+.btn-next {
+  background: var(--nav-color);
+  color: var(--white);
+  border-color: var(--nav-color);
+}
+
+.btn-next:hover {
+  background: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
+}
+
+// ---------------------------------------------------------------------
+// RESPONSIVE
+// ---------------------------------------------------------------------
+@media (max-width: 1200px) {
+  .geo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .geo-summary-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .geo-grid {
+    grid-template-columns: 1fr;
   }
 
-  .btn-save {
-    background: var(--nav-color);
+  .geo-head {
+    flex-direction: column;
   }
 
-  .btn-save:hover {
-    background-color: #206898;
-  }
-
-  .btn-next {
-    background-color: var(--nav-color);
-  }
-
-  .btn-next:hover {
-    background-color: #206898;
-  }
-
-  /* GEO SECTION */
-  .geo-label {
-    font-size: var(--body-text);
-    font-weight: var(--fw-600);
-    color: var(--text-color);
-    margin-bottom: 4px;
-  }
-
-  .add-more {
-    color: var(--primary-color);
-    cursor: pointer;
-  }
-
-  /* CHIPS */
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    background: var(--box-bg-color);
-    padding: 6px 12px;
-    border-radius: 18px;
-    margin: 5px;
-    font-size: 13px;
-  }
-
-  .remove {
-    margin-left: 8px;
-    cursor: pointer;
-    color: var(--danger-color);
-    font-weight: bold;
-  }
-
-  /* MULTISELECT FIX */
-  :host ::ng-deep .multiselect-item-checkbox,
-  :host ::ng-deep .selected-item {
-    max-width: none !important;
-  }
-
-  :host ::ng-deep .multiselect-dropdown .selected-item {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 13px;
-    margin-top: 3px;
-  }
-
-  /* PASTE MODAL */
-  .paste-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
+  .geo-auto-card {
+    width: 100%;
+    min-width: 0;
   }
 
   .paste-modal {
-    background: #fff;
-    width: 40%;
-    min-width: 320px;
-    max-width: 640px;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
+    width: 92%;
+  }
+
+  .geo-footer {
     flex-direction: column;
-    gap: 12px;
+    align-items: stretch;
   }
 
-  .paste-modal textarea {
-    width: 100%;
-    min-height: 200px;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #d1d5db;
-  }
-
-  .paste-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-
-  .btn-remove {
-    background: #f3f4f6;
-    border: 1px solid #d1d5db;
-    color: #374151;
-    padding: 6px 14px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  .btn-done {
-    background: #0284c7;
-    border: none;
-    color: white;
-    padding: 6px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  /* MODAL */
-  .custom-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1050;
-  }
-
-  .custom-modal {
-    width: 450px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-  }
-
-  .modal-header {
-    display: flex;
+  .geo-footer-right {
     justify-content: space-between;
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
   }
 
-  .modal-body {
-    padding: 20px;
+  .geo-footer .btn {
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
   }
-
-  .modal-footer {
-    padding: 15px 20px;
-    text-align: right;
-    border-top: 1px solid #eee;
-  }
-
-  .close-btn {
-    cursor: pointer;
-    font-size: 20px;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 576px) {
-    .form-group {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .form-group label {
-      width: 100%;
-    }
-
-    .paste-modal {
-      width: 90%;
-    }
-  }
+}

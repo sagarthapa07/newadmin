@@ -40,6 +40,7 @@
       *ngIf="grantData"
       [hidden]="activeItem !== 3"
       [grantId]="grantData.id"
+      (tabChange)="setActive($event)"
     ></app-focus-area>
 
     <app-focus-groups
@@ -57,7 +58,9 @@
       [stCtType]="grantData.stCtType"
       [stateString]="grantData.stateString"
       [countyString]="grantData.countyString"
-    ></app-counties>
+      (tabChange)="setActive($event)"
+    >
+    </app-counties>
 
     <app-seo-social
       *ngIf="grantData"

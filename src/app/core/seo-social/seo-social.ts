@@ -126,6 +126,20 @@ export class SeoSocialComponent implements OnInit, OnChanges {
     });
   }
 
+  clearAll() {
+    this.opportunityForm.reset({
+      linkUrl: '',
+      'M-title': '',
+      'M-author': '',
+      'M-keywords': '',
+      shortInfo: '',
+      'F-Handler': '',
+      'T-Handler': '',
+      'G-Handler': '',
+      'I-Handler': '',
+    });
+  }
+
   goToCounties() {
     this.tabChange.emit(5);
   }

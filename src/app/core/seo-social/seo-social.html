@@ -1,117 +1,176 @@
-<section>
+<section class="ss-page">
   <app-alert-message [message]="toastMessage" [type]="toastType" (close)="toastMessage = ''">
   </app-alert-message>
-  <form [formGroup]="opportunityForm" (ngSubmit)="onSave()" class="mt-5">
-    <div class="row">
-      <!-- Left Side From Section -->
-      <div class="col-md-6">
-        <h5 class="section-title">SEO DETAILS</h5>
-        <hr />
-        <div class="form-group">
-          <label>Friendly URL:</label>
-          <input
-            type="url"
-            class="form-control"
-            formControlName="linkUrl"
-            placeholder="Friendly URL"
-          />
-        </div>
 
-        <div class="form-group">
-          <label>Meta Title:</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="M-title"
-            placeholder="Meta Title"
-          />
-        </div>
-
-        <div class="form-group">
-          <label>Meta Author:</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="M-author"
-            placeholder="Meta Author"
-          />
-        </div>
-
-        <div class="form-group">
-          <label>Meta Keywords:</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="M-keywords"
-            placeholder="Meta Keywords"
-          />
-        </div>
-        <div class="form-group">
-          <label>Meta Description:</label>
-          <textarea
-            rows="3"
-            class="form-control"
-            formControlName="shortInfo"
-            placeholder="Meta Description"
-          ></textarea>
+  <form [formGroup]="opportunityForm" (ngSubmit)="onSave()">
+    <div class="ss-card">
+      <!-- HEADER -->
+      <div class="focus-header d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+          <h5 class="mb-1"><i class="bi bi-globe2 me-2"></i>SEO & Social Media</h5>
+          <p class="sub-text mb-0">
+            Manage SEO information and social media references for your newsletter.
+          </p>
         </div>
       </div>
 
-      <!-- right Side Section text area  -->
-      <div class="col-md-6">
-        <h5 class="section-title">SOCIAL REFERENCES</h5>
-        <hr />
-        <div class="form-group">
-          <label>Facebook Handler:</label>
-          <input
-            type="url"
-            class="form-control"
-            formControlName="F-Handler"
-            placeholder="Facebook Handler"
-          />
-        </div>
+      <!-- BODY -->
+      <div class="ss-body">
+        <div class="row g-0">
+          <!-- LEFT - SEO DETAILS -->
+          <div class="col-lg-6 col-12 ss-col ss-col-left">
+            <h6 class="ss-section-title">SEO DETAILS</h6>
 
-        <div class="form-group">
-          <label>Twitter Handler:</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="T-Handler"
-            placeholder="Twitter Handler"
-          />
-        </div>
+            <div class="ss-field">
+              <span class="ss-field-icon"><i class="bi bi-link-45deg"></i></span>
+              <div class="ss-field-body">
+                <label>Friendly URL <span class="ss-required">*</span></label>
+                <input
+                  type="url"
+                  class="form-control"
+                  formControlName="linkUrl"
+                  placeholder="Enter friendly URL"
+                />
+                <p class="ss-help">This will be used to create a SEO friendly URL.</p>
+              </div>
+            </div>
 
-        <div class="form-group">
-          <label>Google Plus Handler:</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="G-Handler"
-            placeholder="Google Plus Handler"
-          />
-        </div>
+            <div class="ss-field">
+              <span class="ss-field-icon"><i class="bi bi-fonts"></i></span>
+              <div class="ss-field-body">
+                <label>Meta Title <span class="ss-required">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="M-title"
+                  placeholder="Enter meta title"
+                />
+                <p class="ss-help">Recommended: 50–60 characters</p>
+              </div>
+            </div>
 
-        <div class="form-group">
-          <label>Instagram Handler:</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="I-Handler"
-            placeholder="Instagram Handler"
-          />
+            <div class="ss-field">
+              <span class="ss-field-icon"><i class="bi bi-person"></i></span>
+              <div class="ss-field-body">
+                <label>Meta Author</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="M-author"
+                  placeholder="Enter meta author"
+                />
+                <p class="ss-help">Author name for this content</p>
+              </div>
+            </div>
+
+            <div class="ss-field">
+              <span class="ss-field-icon"><i class="bi bi-hash"></i></span>
+              <div class="ss-field-body">
+                <label>Meta Keywords</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="M-keywords"
+                  placeholder="Enter meta keywords"
+                />
+                <p class="ss-help">Separate keywords with commas</p>
+              </div>
+            </div>
+
+            <div class="ss-field">
+              <span class="ss-field-icon"><i class="bi bi-pencil-square"></i></span>
+              <div class="ss-field-body">
+                <label>Meta Description</label>
+                <textarea
+                  rows="3"
+                  class="form-control"
+                  formControlName="shortInfo"
+                  placeholder="Enter meta description"
+                  maxlength="160"
+                ></textarea>
+                <div class="ss-help ss-help-row">
+                  <span>Recommended: 120–160 characters</span>
+                  <span>{{ opportunityForm.get('shortInfo')?.value?.length || 0 }}/160</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT - SOCIAL REFERENCES -->
+          <div class="col-lg-6 col-12 ss-col ss-col-right">
+            <h6 class="ss-section-title">SOCIAL REFERENCES</h6>
+
+            <div class="ss-field">
+              <span class="ss-field-icon ss-brand-fb"><i class="bi bi-facebook"></i></span>
+              <div class="ss-field-body">
+                <label>Facebook Handler <i class="bi bi-info-circle ss-info"></i></label>
+                <input
+                  type="url"
+                  class="form-control"
+                  formControlName="F-Handler"
+                  placeholder="https://facebook.com/yourpage"
+                />
+                <p class="ss-help">Enter your Facebook page URL</p>
+              </div>
+            </div>
+
+            <div class="ss-field">
+              <span class="ss-field-icon ss-brand-tw"><i class="bi bi-twitter"></i></span>
+              <div class="ss-field-body">
+                <label>Twitter Handler <i class="bi bi-info-circle ss-info"></i></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="T-Handler"
+                  placeholder="https://twitter.com/yourprofile"
+                />
+                <p class="ss-help">Enter your Twitter profile URL</p>
+              </div>
+            </div>
+
+            <div class="ss-field">
+              <span class="ss-field-icon ss-brand-gp"><i class="bi bi-google"></i></span>
+              <div class="ss-field-body">
+                <label>Google Plus Handler <i class="bi bi-info-circle ss-info"></i></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="G-Handler"
+                  placeholder="https://plus.google.com/yourprofile"
+                />
+                <p class="ss-help">Enter your Google Plus profile URL</p>
+              </div>
+            </div>
+
+            <div class="ss-field">
+              <span class="ss-field-icon ss-brand-ig"><i class="bi bi-instagram"></i></span>
+              <div class="ss-field-body">
+                <label>Instagram Handler <i class="bi bi-info-circle ss-info"></i></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="I-Handler"
+                  placeholder="https://instagram.com/yourprofile"
+                />
+                <p class="ss-help">Enter your Instagram profile URL</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="buttons d-flex justify-content-between">
-        <div>
-          <button type="submit" class="btn btn-save">AI Generated</button>
-        </div>
-        <div>
-          <button type="button" class="btn btn-save mx-2" (click)="onSave()">
-            <i class="bi bi-bookmark-check"></i>
-            Save
-          </button>
-          <button type="button" class="btn btn-next mx-2" (click)="goToCounties()">
+
+      <!-- FOOTER -->
+      <div class="ss-footer">
+        <button type="button" class="btn btn-clear" (click)="clearAll()">
+          <i class="bi bi-trash3"></i> Clear All
+        </button>
+
+        <div class="ss-footer-right">
+          <button type="button" class="btn btn-back" (click)="goToCounties()">
             <i class="bi bi-skip-backward"></i> Back
+          </button>
+          <button type="button" class="btn btn-save" (click)="onSave()">
+            <i class="bi bi-bookmark-check"></i> Save
           </button>
           <button type="button" class="btn btn-next" (click)="goToCalenderArea()">
             Next <i class="bi bi-skip-forward"></i>

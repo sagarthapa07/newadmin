@@ -1,4 +1,4 @@
-<section>
+<section class="fg-page">
   <app-alert-message
     *ngIf="successMessage"
     [type]="'success'"
@@ -15,123 +15,148 @@
   >
   </app-alert-message>
 
-
-
-
-  <div class="mt-4">
-    <h5>Select Focus Groups</h5>
-    <hr />
-
-    <div class="row">
-      <!-- LEFT SIDE - Beneficiaries (col-4) -->
-      <div class="col-md-4">
-        <label class="fw-semibold mb-1">
-          {{ focusGroupKeyDropdowns.beneficiaries.label }}
-        </label>
-
-        <ng-multiselect-dropdown
-          [placeholder]="'Select...'"
-          [settings]="multiSelectSettings"
-          [data]="focusGroupKeyDropdowns.beneficiaries.data"
-          [(ngModel)]="focusGroupKeyDropdowns.beneficiaries.selected"
-          (onSelect)="onBeneficiaryChange()"
-          (onDeSelect)="onBeneficiaryChange()"
-          (onSelectAll)="onBeneficiaryChange()"
-          (onDeSelectAll)="onBeneficiaryChange()"
-          [ngModelOptions]="{ standalone: true }"
-          name="beneficiaries"
-        >
-        </ng-multiselect-dropdown>
-        <div class="row mt-4">
-          <div class="">
-            <h6>Beneficiaries Name</h6>
-            <span class="chip" *ngFor="let b of savedBeneficiaries">
-              {{ b }}
-              <span class="remove" (click)="removeBeneficiary(b)">×</span>
-            </span>
-          </div>
-        </div>
+  <div class="fg-card">
+    <!-- HEADER -->
+    <div class="focus-header d-flex justify-content-between align-items-start flex-wrap gap-2">
+      <div>
+        <h5 class="mb-1"><i class="bi bi-people-fill me-2"></i>Select Focus Groups</h5>
+        <p class="sub-text mb-0">
+          Choose the beneficiaries, entities and organizations relevant to this newsletter.
+        </p>
       </div>
-      <!-- RIGHT SIDE - Entities (col-8) -->
-      <div class="col-md-8">
-        <label class="fw-semibold mb-1">
-          {{ focusGroupKeyDropdowns.entities.label }}
-        </label>
+    </div>
 
-        <ng-multiselect-dropdown
-          [settings]="entitySettings"
-          [data]="focusGroupKeyDropdowns.entities.data"
-          [(ngModel)]="focusGroupKeyDropdowns.entities.selected"
-          (onSelect)="onEntityChange()"
-          (onDeSelect)="onEntityDeSelect($event)"
-          [ngModelOptions]="{ standalone: true }"
-          name="entities"
-        >
-        </ng-multiselect-dropdown>
+    <div class="fg-body">
+      <div class="row g-4">
+        <!-- LEFT SIDE - Beneficiaries -->
+        <div class="col-lg-4 col-12">
+          <div class="fg-panel">
+            <label class="fg-panel-label">
+              <i class="bi bi-people"></i>
+              {{ focusGroupKeyDropdowns.beneficiaries.label }}
+            </label>
 
-        <!-- SUB GRID -->
-        <div class="row mt-4" *ngIf="activeEntityForSubGrid">
-          <div class="col-12">
-            <h6>{{ activeEntityForSubGrid }}</h6>
-            <div class="sub-grid">
-              <label class="sub-checkbox" *ngFor="let sub of subEntitiesList">
-                <input
-                  type="checkbox"
-                  [checked]="selectedSubEntities[activeEntityForSubGrid]?.includes(sub.subEntName)"
-                  (change)="
-                    toggleSubEntity(activeEntityForSubGrid, sub.subEntName, $event.target.checked)
-                  "
-                />
-                <span>{{ sub.subEntName }}</span>
-              </label>
+            <ng-multiselect-dropdown
+              [placeholder]="'Select...'"
+              [settings]="multiSelectSettings"
+              [data]="focusGroupKeyDropdowns.beneficiaries.data"
+              [(ngModel)]="focusGroupKeyDropdowns.beneficiaries.selected"
+              (onSelect)="onBeneficiaryChange()"
+              (onDeSelect)="onBeneficiaryChange()"
+              (onSelectAll)="onBeneficiaryChange()"
+              (onDeSelectAll)="onBeneficiaryChange()"
+              [ngModelOptions]="{ standalone: true }"
+              name="beneficiaries"
+            >
+            </ng-multiselect-dropdown>
+
+            <div class="fg-subheading">
+              <h6>
+                Beneficiaries Name <span class="fg-count">({{ savedBeneficiaries.length }})</span>
+              </h6>
+            </div>
+            <div class="chip-wrap">
+              <span class="chip" *ngFor="let b of savedBeneficiaries">
+                {{ b }}
+                <span class="remove" (click)="removeBeneficiary(b)">×</span>
+              </span>
+              <span class="fg-empty" *ngIf="!savedBeneficiaries.length"
+                >No beneficiaries selected</span
+              >
             </div>
           </div>
         </div>
 
-        <!-- Entities Name + Sub Entities Name -->
-        <div class="row mt-4">
-          <!-- HEADERS -->
-          <div class="col-md-3 col-12">
-            <h6>Entities Name</h6>
-          </div>
+        <!-- RIGHT SIDE - Entities -->
+        <div class="col-lg-8 col-12">
+          <div class="fg-panel">
+            <label class="fg-panel-label">
+              <i class="bi bi-building"></i>
+              {{ focusGroupKeyDropdowns.entities.label }}
+            </label>
 
-          <div class="col-md-9 col-12">
-            <h6>Sub Entities Name</h6>
-          </div>
+            <ng-multiselect-dropdown
+              [settings]="entitySettings"
+              [data]="focusGroupKeyDropdowns.entities.data"
+              [(ngModel)]="focusGroupKeyDropdowns.entities.selected"
+              (onSelect)="onEntityChange()"
+              (onDeSelect)="onEntityDeSelect($event)"
+              [ngModelOptions]="{ standalone: true }"
+              name="entities"
+            >
+            </ng-multiselect-dropdown>
 
-          <!-- DATA -->
-          <ng-container *ngFor="let entity of objectKeys(selectedSubEntities)">
-            <!-- ENTITY COLUMN -->
-            <div class="col-md-3 col-12 mt-3">
-              <span class="chip entity-chip">
-                {{ entity }}
-                <span class="remove" (click)="removeEntity(entity)"> × </span>
-              </span>
+            <!-- SUB GRID -->
+            <div class="fg-sub-block" *ngIf="activeEntityForSubGrid">
+              <h6 class="fg-sub-block-title">{{ activeEntityForSubGrid }}</h6>
+              <div class="sub-grid">
+                <label class="sub-checkbox" *ngFor="let sub of subEntitiesList">
+                  <input
+                    type="checkbox"
+                    [checked]="
+                      selectedSubEntities[activeEntityForSubGrid]?.includes(sub.subEntName)
+                    "
+                    (change)="
+                      toggleSubEntity(activeEntityForSubGrid, sub.subEntName, $event.target.checked)
+                    "
+                  />
+                  <span>{{ sub.subEntName }}</span>
+                </label>
+              </div>
             </div>
 
-            <!-- SUB ENTITY COLUMN -->
-            <div class="col-md-9 col-12 mt-3">
-              <span class="chip" *ngFor="let sub of selectedSubEntities[entity]">
-                {{ sub }}
-                <span class="remove" (click)="removeSubEntity(entity, sub)"> × </span>
-              </span>
+            <!-- Entities Name + Sub Entities Name -->
+            <div class="fg-names row g-0">
+              <div class="col-md-3 col-12">
+                <h6>
+                  Entities Name
+                  <span class="fg-count">({{ objectKeys(selectedSubEntities).length }})</span>
+                </h6>
+              </div>
+              <div class="col-md-9 col-12">
+                <h6>Sub Entities Name</h6>
+              </div>
+
+              <ng-container *ngIf="objectKeys(selectedSubEntities).length; else noEntities">
+                <ng-container *ngFor="let entity of objectKeys(selectedSubEntities)">
+                  <div class="col-md-3 col-12 mt-3">
+                    <span class="chip entity-chip">
+                      {{ entity }}
+                      <span class="remove" (click)="removeEntity(entity)"> × </span>
+                    </span>
+                  </div>
+
+                  <div class="col-md-9 col-12 mt-3">
+                    <span class="chip" *ngFor="let sub of selectedSubEntities[entity]">
+                      {{ sub }}
+                      <span class="remove" (click)="removeSubEntity(entity, sub)"> × </span>
+                    </span>
+                  </div>
+                </ng-container>
+              </ng-container>
+              <ng-template #noEntities>
+                <div class="col-12 mt-3">
+                  <span class="fg-empty">No entities selected yet</span>
+                </div>
+              </ng-template>
             </div>
-          </ng-container>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- FOOTER BUTTONS -->
-    <div class="buttons d-flex justify-content-between">
-      <div>
-        <button type="button" class="btn btn-next" (click)="clearFocusGroup()">Clear all</button>
-      </div>
-      <div>
-        <button type="submit" class="btn btn-save mx-2" (click)="saveAllFocusGroup()">
-          <i class="bi bi-bookmark-check"></i>Save
+    <div class="fg-footer">
+      <button type="button" class="btn btn-clear" (click)="clearFocusGroup()">
+        <i class="bi bi-trash3"></i> Clear All
+      </button>
+
+      <div class="fg-footer-right">
+        <button type="button" class="btn btn-back" (click)="goToFocusGroup()">
+          <i class="bi bi-skip-backward"></i> Back
         </button>
-        <button type="button" class="btn btn-next mx-2" (click)="goToFocusGroup()">
-          <i class="bi bi-skip-backward"></i>Back
+        <button type="submit" class="btn btn-save" (click)="saveAllFocusGroup()">
+          <i class="bi bi-bookmark-check"></i> Save
         </button>
         <button type="button" class="btn btn-next" (click)="goToCounties()">
           Next <i class="bi bi-skip-forward"></i>

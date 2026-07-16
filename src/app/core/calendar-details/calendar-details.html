@@ -16,14 +16,25 @@
   <form [formGroup]="opportunityForm">
     <div class="detail-grid">
       <!-- LEFT COLUMN -->
-      <div class="detail-col">
-        <h5 class="section-title">Opportunity Detail</h5>
+      <div class="detail-col form-card">
+        <div class="card-header-row">
+          <span class="card-icon-badge badge-blue"><i class="bi bi-file-earmark-text"></i></span>
+          <div>
+            <h5 class="section-title">Opportunity Details</h5>
+            <p class="section-subtitle">Provide key information about this opportunity</p>
+          </div>
+        </div>
         <hr />
 
         <div class="form-row">
-          <label>Title</label>
+          <label><i class="bi bi-tag field-icon"></i> Title</label>
           <div class="field-wrapper">
-            <input type="text" class="form-control" formControlName="title" placeholder="Title" />
+            <input
+              type="text"
+              class="form-control"
+              formControlName="title"
+              placeholder="Enter opportunity title"
+            />
             @if (isFieldInvalid('title')) {
               <div class="error">Please Enter a Title.</div>
             }
@@ -32,7 +43,7 @@
 
         @if (!data?.id) {
           <div class="form-row">
-            <label>Friendly URL</label>
+            <label><i class="bi bi-link-45deg field-icon"></i> Friendly URL</label>
             <div class="field-wrapper">
               <input
                 type="text"
@@ -49,13 +60,13 @@
         }
 
         <div class="form-row">
-          <label>Link URL</label>
+          <label><i class="bi bi-link field-icon"></i> Link URL</label>
           <div class="field-wrapper">
             <input
               type="text"
               class="form-control"
               formControlName="linkUrl"
-              placeholder="Link URL"
+              placeholder="https://example.com/opportunity"
             />
             @if (isFieldInvalid('linkUrl')) {
               <div class="error">Please Enter a linkUrl.</div>
@@ -64,7 +75,7 @@
         </div>
 
         <div class="form-row">
-          <label>Post Date</label>
+          <label><i class="bi bi-calendar3 field-icon"></i> Post Date</label>
           <div class="field-wrapper">
             <input type="date" class="form-control" formControlName="postDate" />
             @if (isFieldInvalid('postDate')) {
@@ -74,7 +85,7 @@
         </div>
 
         <div class="form-row">
-          <label>Deadline Date</label>
+          <label><i class="bi bi-calendar3 field-icon"></i> Deadline Date</label>
           <div class="field-wrapper deadline-field">
             <input type="date" class="form-control" formControlName="deadlineDate" />
             @if (isFieldInvalid('deadlineDate')) {
@@ -94,14 +105,16 @@
         </div>
 
         <div class="form-row">
-          <label>Short Info</label>
+          <label><i class="bi bi-chat-square-text field-icon"></i> Short Info</label>
           <div class="field-wrapper">
             <textarea
               rows="3"
+              maxlength="500"
               class="form-control"
               formControlName="shortInfo"
-              placeholder="Short Info"
+              placeholder="Enter short information about this opportunity..."
             ></textarea>
+            <div class="char-counter">{{ shortInfoLength }}/500</div>
             @if (isFieldInvalid('shortInfo')) {
               <div class="error">Please Enter a ShortInfo.</div>
             }
@@ -109,23 +122,26 @@
         </div>
 
         <div class="form-row">
-          <label>Donor Type</label>
-          <div class="field-wrapper">
+          <label><i class="bi bi-people field-icon"></i> Donor Type</label>
+          <div class="field-wrapper has-chevron">
             <select class="form-control" formControlName="donorType">
               <option value="US Donors">US Donors</option>
             </select>
+            <i class="bi bi-chevron-down dropdown-chevron"></i>
           </div>
         </div>
 
         <div class="form-row">
-          <label>Donor Agency</label>
-          <div class="field-wrapper" #dropdownContainer>
+          <label><i class="bi bi-building field-icon"></i> Donor Agency</label>
+          <div class="field-wrapper has-chevron" #dropdownContainer>
             <input
               type="text"
               class="form-control"
               formControlName="donorAgency"
+              placeholder="Search donor agency..."
               (input)="onSearchDonor($event)"
             />
+            <i class="bi bi-chevron-down dropdown-chevron"></i>
             @if (isFieldInvalid('donorAgency')) {
               <div class="error">Please enter donor agency.</div>
             }
@@ -139,29 +155,30 @@
         </div>
 
         <div class="form-row">
-          <label>Donor Agency (other)</label>
+          <label><i class="bi bi-pencil field-icon"></i> Donor Agency (other)</label>
           <div class="field-wrapper">
             <input
               type="text"
               class="form-control"
               formControlName="donorAgencyOther"
-              placeholder="Donor Agency"
+              placeholder="Enter other donor agency"
             />
             <div class="error" *ngIf="isFieldInvalid('donorAgencyOther')">Please fill link url</div>
           </div>
         </div>
 
         <div class="form-row">
-          <label>Grant Type</label>
-          <div class="field-wrapper" #grantTypeContainer>
+          <label><i class="bi bi-check2-square field-icon"></i> Grant Type</label>
+          <div class="field-wrapper has-chevron" #grantTypeContainer>
             <input
               type="text"
               class="form-control"
               [value]="selectedGrantType"
-              placeholder="Select Grant Type"
+              placeholder="Select grant type"
               readonly
               (click)="showGrantTypeDropdown = !showGrantTypeDropdown"
             />
+            <i class="bi bi-chevron-down dropdown-chevron"></i>
             <ul class="dropdown-list" *ngIf="showGrantTypeDropdown">
               <li *ngFor="let item of grantTypeList" (click)="selectDropdown('grantType', item)">
                 {{ item }}
@@ -171,16 +188,17 @@
         </div>
 
         <div class="form-row">
-          <label>Grant Duration</label>
-          <div class="field-wrapper" #grantDurationContainer>
+          <label><i class="bi bi-clock field-icon"></i> Grant Duration</label>
+          <div class="field-wrapper has-chevron" #grantDurationContainer>
             <input
               type="text"
               class="form-control"
               [value]="selectedGrantDuration"
-              placeholder="Select Grant Duration"
+              placeholder="Select duration"
               readonly
               (click)="showGrantDurationDropdown = !showGrantDurationDropdown"
             />
+            <i class="bi bi-chevron-down dropdown-chevron"></i>
             <ul class="dropdown-list" *ngIf="showGrantDurationDropdown">
               <li
                 *ngFor="let item of grantDurationList"
@@ -193,16 +211,17 @@
         </div>
 
         <div class="form-row">
-          <label>Grant Size</label>
-          <div class="field-wrapper" #grantSizeContainer>
+          <label><i class="bi bi-currency-dollar field-icon"></i> Grant Size</label>
+          <div class="field-wrapper has-chevron" #grantSizeContainer>
             <input
               type="text"
               class="form-control"
               [value]="selectedGrantSize"
-              placeholder="Select Grant Size"
+              placeholder="Select size"
               readonly
               (click)="showGrantSizeDropdown = !showGrantSizeDropdown"
             />
+            <i class="bi bi-chevron-down dropdown-chevron"></i>
             <ul class="dropdown-list" *ngIf="showGrantSizeDropdown">
               <li *ngFor="let item of grantSizeList" (click)="selectDropdown('grantSize', item)">
                 {{ item }}
@@ -212,7 +231,7 @@
         </div>
 
         <div class="form-row">
-          <label>Image</label>
+          <label><i class="bi bi-image field-icon"></i> Image</label>
           <div class="field-wrapper">
             <div class="image-upload-wrapper">
               <app-image-cropper
@@ -234,22 +253,29 @@
         </div>
 
         <div class="form-row">
-          <label>Status</label>
-          <div class="field-wrapper">
+          <label><i class="bi bi-shield-check field-icon"></i> Status</label>
+          <div class="field-wrapper has-chevron">
             <select class="form-control" formControlName="status">
-              <option value="" disabled selected hidden>Select Status</option>
+              <option value="" disabled selected hidden>Select status</option>
               <option>Draft</option>
               <option>Published</option>
               <option>Expired</option>
             </select>
+            <i class="bi bi-chevron-down dropdown-chevron"></i>
             <div class="error" *ngIf="isFieldInvalid('status')">Please select status</div>
           </div>
         </div>
       </div>
 
       <!-- RIGHT COLUMN -->
-      <div class="detail-col">
-        <h5 class="section-title">Letter Text</h5>
+      <div class="detail-col form-card letter-col">
+        <div class="card-header-row">
+          <span class="card-icon-badge badge-green"><i class="bi bi-pencil-square"></i></span>
+          <div>
+            <h5 class="section-title">Letter Text</h5>
+            <p class="section-subtitle">Create or edit the content for this opportunity.</p>
+          </div>
+        </div>
         <hr />
         <app-editor formControlName="letterText"></app-editor>
 
@@ -260,16 +286,19 @@
     </div>
 
     <div class="buttons">
-      <button type="submit" class="button button-secondary" (click)="gotoPreview()">
-        <i class="bi bi-eye"></i> Preview
+      <button type="button" class="button button-danger" (click)="clearAll()">
+        <i class="bi bi-trash"></i> Clear All
       </button>
 
       <div class="buttons-right">
+        <button type="button" class="button button-secondary" (click)="goBack()">
+          <i class="bi bi-chevron-double-left"></i> Back
+        </button>
         <button type="button" class="button button-secondary" (click)="onSave()">
           <i class="bi bi-bookmark-check"></i> Save
         </button>
         <button type="button" class="button button-primary" (click)="goToGeoLocation()">
-          <i class="bi bi-fast-forward"></i> Next
+          Next <i class="bi bi-chevron-double-right"></i>
         </button>
       </div>
     </div>

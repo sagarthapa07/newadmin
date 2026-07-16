@@ -6,6 +6,9 @@ import {
   Output,
   EventEmitter,
   Input,
+  Renderer2,
+  AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImgResizeService } from '../../../core/Services/img-resize-service';
@@ -19,9 +22,12 @@ type ResizeHandle = 'tl' | 'tc' | 'tr' | 'ml' | 'mr' | 'bl' | 'bc' | 'br';
   templateUrl: './image-cropper.html',
   styleUrl: './image-cropper.scss',
 })
-export class ImageCropper {
+export class ImageCropper implements AfterViewInit, OnDestroy {
   @ViewChild('canvasWrap') canvasWrap!: ElementRef<HTMLDivElement>;
   @ViewChild('editorImg') editorImg!: ElementRef<HTMLImageElement>;
+  // ★ modal is always in the DOM (visibility via CSS class) so it can be
+  // safely moved to document.body once — see ngAfterViewInit below
+  @ViewChild('modalOverlay', { static: true }) modalOverlayRef!: ElementRef<HTMLDivElement>;
 
   // ★ Parent component ko resized images bhejne ke liye
   // Usage in parent: <app-photo-editor (onCropped)="cropImage($event)" [dirPath]="'img.Grants'" [recType]="'CU'" />
@@ -39,6 +45,7 @@ export class ImageCropper {
   fileName = '';
   outputSrc = '';
   isLoading = false; // Apply button pe loader
+  isDragOver = false; // drag-and-drop hover highlight
   resizeImages: any[] = []; // ImgResizeService ka result
 
   // image transform
@@ -62,7 +69,11 @@ export class ImageCropper {
   private startTY = 0;
   private startCrop = { x: 0, y: 0, w: 0, h: 0 };
 
-  constructor(private imgResizeService: ImgResizeService) {}
+  constructor(
+    private imgResizeService: ImgResizeService,
+    private renderer: Renderer2,
+  ) {}
+
   ngOnChanges() {
     if (this.imageSrc) {
       this.outputSrc = this.imageSrc;
@@ -70,10 +81,63 @@ export class ImageCropper {
     }
   }
 
+  // ★ Relocate the modal to document.body exactly once. This is what fixes
+  // the "pinned to top-left / not centered" bug: position:fixed positions
+  // itself relative to the nearest ancestor that has a transform/filter/
+  // perspective set on it, NOT the viewport, if such an ancestor exists
+  // anywhere up the tree. Moving the node to <body> guarantees there's no
+  // such ancestor in the way, so [inset:0] + flex centering works correctly.
+  ngAfterViewInit(): void {
+    if (this.modalOverlayRef?.nativeElement) {
+      this.renderer.appendChild(document.body, this.modalOverlayRef.nativeElement);
+    }
+  }
+
+  ngOnDestroy(): void {
+    const el = this.modalOverlayRef?.nativeElement;
+    if (el && el.parentNode === document.body) {
+      document.body.removeChild(el);
+    }
+  }
+
   // ── File Input ────────────────────────────────────────────────
   fileChange(e: Event) {
     const f = (e.target as HTMLInputElement).files?.[0];
     if (!f) return;
+    this.loadFile(f);
+  }
+
+  // ── Drag & Drop ───────────────────────────────────────────────
+  onDragOver(e: DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.isDragOver = true;
+  }
+
+  onDragLeave(e: DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.isDragOver = false;
+  }
+
+  onDrop(e: DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.isDragOver = false;
+
+    const file = e.dataTransfer?.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      console.warn('Dropped file is not an image:', file.type);
+      return;
+    }
+
+    this.loadFile(file);
+  }
+
+  // shared by both the file picker and drag-and-drop
+  private loadFile(f: File) {
     this.fileName = f.name;
     const reader = new FileReader();
     reader.onload = (ev) => {
@@ -276,6 +340,4 @@ export class ImageCropper {
     if (e.key === '+' || e.key === '=') this.doZoom(0.1);
     if (e.key === '-') this.doZoom(-0.1);
   }
-
-
 }
