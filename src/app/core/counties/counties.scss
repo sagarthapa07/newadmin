@@ -1,96 +1,27 @@
-$purple: #7c3aed;
-$purple-dark: #6d28d9;
-$purple-light: #f5f3ff;
-$purple-border: #ddd6fe;
-$border: #e5e7eb;
-$text-muted: #6b7280;
-$green: #16a34a;
-$green-light: #dcfce7;
-$blue: #2563eb;
-$blue-light: #dbeafe;
-
 .coverage-wrapper {
-  color: #111827;
+  color: var(--text-color-dark);
 }
 
 .page-header {
   margin-bottom: 20px;
 
   h4 {
-    font-weight: 700;
-    font-size: 1.4rem;
+    font-weight: var(--fw-700);
+    font-size: var(--fs-h4);
     margin-bottom: 4px;
   }
 
   .subtitle {
-    color: $text-muted;
-    font-size: 0.9rem;
+    color: var(--text-color-light);;
+    font-size: var(--fs-14);
     margin: 0;
   }
 }
 
-// ===== TOP TOGGLE (All States / Selected States) =====
-.toggle-card-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.toggle-card {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 20px;
-  border: 2px solid $border;
-  border-radius: 10px;
-  background: #fff;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: 0.15s;
-
-  &:hover {
-    border-color: $purple-border;
-  }
-
-  &.active {
-    border-color: $purple;
-    background: $purple-light;
-    color: $purple-dark;
-  }
-}
-
-// ===== RADIO DOT — shared by top toggle + selection-mode tiles =====
-.radio-dot {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid #cbd5e1;
-  flex-shrink: 0;
-  position: relative;
-  background: #fff;
-}
-
-.toggle-card.active .radio-dot,
-.option-tile.active .radio-dot {
-  border-color: $purple;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 3px;
-    border-radius: 50%;
-    background: $purple;
-  }
-}
-
-.all-states-msg {
-  padding: 16px 0;
-  font-size: 1rem;
-}
-
 // ===== GRID LAYOUT =====
+// toggle row now lives inside coverage-main, so its width naturally
+// matches the left column instead of stretching full-page-wide, and
+// the sidebar's "Total Selected" heading starts at the same top edge
 .coverage-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -100,6 +31,67 @@ $blue-light: #dbeafe;
   @media (max-width: 991px) {
     grid-template-columns: 1fr;
   }
+}
+
+// ===== TOP TOGGLE (All States / Selected States) =====
+.toggle-card-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.toggle-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border: 2px solid var(--border-color);;
+  border-radius: 10px;
+  background: var(--white);
+  font-weight: var(--fw-600);
+  font-size: var(--fs-15);
+  cursor: pointer;
+  transition: var(--tran-02);
+
+  &:hover {
+    border-color: var(--primary-color);
+  }
+
+  &.active {
+    border-color: var(--primary-color);
+    background: var(--primary-color-light);;
+    color: var(--primary-color-dark);
+  }
+}
+
+// ===== RADIO DOT — shared by top toggle + selection-mode tiles =====
+.radio-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--box-bg-color);
+  flex-shrink: 0;
+  position: relative;
+  background: var(--white);
+}
+
+.toggle-card.active .radio-dot,
+.option-tile.active .radio-dot {
+  border-color: var(--primary-color);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--primary-color);
+  }
+}
+
+.all-states-msg {
+  padding: 16px 0;
+  font-size: var(--fs-16);
 }
 
 .panel-row {
@@ -114,14 +106,14 @@ $blue-light: #dbeafe;
 }
 
 .panel-card {
-  border: 1px solid $border;
+  border: 1px solid var(--border-color);;
   border-radius: 12px;
   padding: 18px 20px;
-  background: #fff;
+  background: var(--white);
 
   h6 {
-    font-weight: 700;
-    font-size: 0.95rem;
+    font-weight: var(--fw-700);
+    font-size: var(--fs-15);
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -136,21 +128,21 @@ $blue-light: #dbeafe;
   gap: 10px;
   width: 100%;
   padding: 12px 14px;
-  border: 2px solid $border;
+  border: 2px solid var(--border-color);;
   border-radius: 8px;
-  background: #fff;
+  background: var(--white);
   cursor: pointer;
   text-align: left;
   margin-bottom: 10px;
-  transition: 0.15s;
+  transition: var(--tran-02);
 
   &:hover {
-    border-color: $purple-border;
+    border-color: var(--primary-color);
   }
 
   &.active {
-    border-color: $purple;
-    background: $purple-light;
+    border-color: var(--primary-color);
+    background: var(--primary-color-light);;
   }
 
   .option-text {
@@ -159,35 +151,35 @@ $blue-light: #dbeafe;
     gap: 2px;
 
     strong {
-      font-size: 0.92rem;
+      font-size: var(--fs-15);
     }
 
     small {
-      color: $text-muted;
-      font-size: 0.78rem;
+      color: var(--text-color-light);;
+      font-size: var(--fs-13);
     }
   }
 }
 
 // ===== AUTO SELECT PANEL =====
 .hint-text {
-  color: $text-muted;
-  font-size: 0.82rem;
+  color: var(--text-color-light);;
+  font-size: var(--fs-13);
   margin-bottom: 10px;
 }
 
 .paste-textarea {
   width: 100%;
   min-height: 90px;
-  border: 1px solid $border;
+  border: 1px solid var(--border-color);;
   border-radius: 8px;
   padding: 10px 12px;
-  font-size: 0.85rem;
+  font-size: var(--fs-14);
   resize: vertical;
 
   &:focus {
     outline: none;
-    border-color: $purple-border;
+    border-color: var(--primary-color);
   }
 }
 
@@ -203,34 +195,21 @@ $blue-light: #dbeafe;
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: var(--fs-14);
+  font-weight: var(--fw-500);
   cursor: pointer;
 
   input[type='checkbox'] {
-    accent-color: $purple;
+    accent-color: var(--primary-color);
     width: 15px;
     height: 15px;
   }
 }
 
-.btn-auto-select {
+.auto-select-btn {
   margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid $purple;
-  color: $purple-dark;
-  background: #fff;
-  border-radius: 8px;
-  padding: 6px 14px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-
-  &:hover {
-    background: $purple-light;
-  }
+  padding: 6px 14px !important;
+  font-size: var(--fs-14) !important;
 }
 
 // ===== STATE VIEW + COVERAGE TYPE =====
@@ -249,7 +228,7 @@ $blue-light: #dbeafe;
   flex-direction: column;
 
   label {
-    font-size: 0.85rem;
+    font-size: var(--fs-14);
     display: flex;
     align-items: center;
     gap: 4px;
@@ -257,22 +236,22 @@ $blue-light: #dbeafe;
 }
 
 .native-select {
-  border: 1px solid $border;
+  border: 1px solid var(--border-color);;
   border-radius: 8px;
   padding: 8px 12px;
-  font-size: 0.9rem;
-  background: #fff;
-  color: #111827;
+  font-size: var(--fs-15);
+  background: var(--white);
+  color: var(--text-color);
 
   &:focus {
     outline: none;
-    border-color: $purple-border;
+    border-color: var(--primary-color);
   }
 }
 
 .coverage-type-toggle {
   display: flex;
-  border: 1px solid $border;
+  border: 1px solid var(--border-color);;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -280,24 +259,24 @@ $blue-light: #dbeafe;
 .coverage-type-btn {
   flex: 1;
   border: none;
-  background: #fff;
+  background: var(--white);
   padding: 8px 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: var(--fs-14);
+  font-weight: var(--fw-600);
   cursor: pointer;
-  color: $text-muted;
-  border-right: 1px solid $border;
-  transition: 0.15s;
+  color: var(--text-color-light);;
+  border-right: 1px solid var(--border-color);;
+  transition: var(--tran-02);
 
   &:last-child {
     border-right: none;
   }
 
   &.active {
-    background: $purple-light;
-    color: $purple-dark;
-    font-weight: 700;
-    box-shadow: inset 0 0 0 2px $purple;
+    background: var(--primary-color-light);;
+    color: var(--primary-color-dark);
+    font-weight: var(--fw-700);
+    box-shadow: inset 0 0 0 2px var(--primary-color);
   }
 }
 
@@ -319,16 +298,16 @@ $blue-light: #dbeafe;
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid $border;
+  border: 1px solid var(--border-color);;
   border-radius: 8px;
   padding: 6px 10px;
-  font-size: 0.82rem;
-  color: $text-muted;
+  font-size: var(--fs-13);
+  color: var(--text-color-light);;
 
   input {
     border: none;
     outline: none;
-    font-size: 0.82rem;
+    font-size: var(--fs-13);
     width: 160px;
   }
 }
@@ -339,7 +318,7 @@ $blue-light: #dbeafe;
   gap: 8px 16px;
   max-height: 320px;
   overflow-y: auto;
-  border: 1px solid $border;
+  border: 1px solid var(--border-color);;
   border-radius: 8px;
   padding: 12px 16px;
 }
@@ -348,7 +327,7 @@ $blue-light: #dbeafe;
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.88rem;
+  font-size: var(--fs-14);
 }
 
 .sub-checkbox {
@@ -358,7 +337,7 @@ $blue-light: #dbeafe;
   cursor: pointer;
 
   input[type='checkbox'] {
-    accent-color: $purple;
+    accent-color: var(--primary-color);
     width: 15px;
     height: 15px;
   }
@@ -367,8 +346,8 @@ $blue-light: #dbeafe;
 // ===== SIDEBAR =====
 .coverage-sidebar {
   h6 {
-    font-weight: 700;
-    font-size: 0.95rem;
+    font-weight: var(--fw-700);
+    font-size: var(--fs-15);
     margin-bottom: 10px;
   }
 }
@@ -381,10 +360,10 @@ $blue-light: #dbeafe;
 }
 
 .stat-card {
-  border: 1px solid $border;
+  border: 1px solid var(--border-color);;
   border-radius: 10px;
   padding: 12px;
-  background: #fff;
+  background: var(--white);
 }
 
 .stat-top {
@@ -404,41 +383,41 @@ $blue-light: #dbeafe;
   flex-shrink: 0;
 
   i {
-    font-size: 0.85rem;
+    font-size: var(--fs-14);
   }
 
   &.badge-green {
-    background: $green-light;
-    color: $green;
+    background: var(--primary-color-light);
+    color: var(--primary-color);;
   }
 
-  &.badge-blue {
-    background: $blue-light;
-    color: $blue;
+  &.badge-accent {
+    background: var(--nav-color);
+    color: var(--nav-color);;
   }
 
-  &.badge-purple {
-    background: $purple-light;
-    color: $purple;
+  &.badge-primary {
+    background: var(--primary-color-light);;
+    color: var(--primary-color);
   }
 }
 
 .stat-num {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: var(--fs-20);
+  font-weight: var(--fw-700);
 }
 
 .stat-label {
-  font-size: 0.72rem;
-  color: $text-muted;
+  font-size: var(--fs-11);
+  color: var(--text-color-light);;
   line-height: 1.2;
 }
 
 .summary-card {
-  border: 1px solid $border;
+  border: 1px solid var(--border-color);;
   border-radius: 10px;
   padding: 16px 18px;
-  background: #fafafa;
+  background: var(--card-bg-color);
 }
 
 .summary-header {
@@ -455,9 +434,9 @@ $blue-light: #dbeafe;
 .clear-all-link {
   border: none;
   background: none;
-  color: #dc2626;
-  font-size: 0.8rem;
-  font-weight: 600;
+  color: var(--danger-color);;
+  font-size: var(--fs-13);
+  font-weight: var(--fw-600);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -468,15 +447,14 @@ $blue-light: #dbeafe;
   display: flex;
   align-items: center;
   gap: 6px;
-  color: $green;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: none;
+  color: var(--primary-color);;
+  font-size: var(--fs-13);
+  font-weight: var(--fw-700);
   margin: 14px 0 8px;
 }
 
 .summary-state-block {
-  border-bottom: 1px solid $border;
+  border-bottom: 1px solid var(--border-color);;
   padding-bottom: 8px;
   margin-bottom: 8px;
 
@@ -490,10 +468,10 @@ $blue-light: #dbeafe;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  font-size: 0.88rem;
+  font-size: var(--fs-15);
 
   .state-icon {
-    color: $green;
+    color: var(--primary-color);;
   }
 
   strong {
@@ -504,9 +482,9 @@ $blue-light: #dbeafe;
 .remove-state-link {
   border: none;
   background: none;
-  color: #dc2626;
-  font-size: 0.75rem;
-  font-weight: 600;
+  color: var(--danger-color);;
+  font-size: var(--fs-13);
+  font-weight: var(--fw-600);
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -522,11 +500,11 @@ $blue-light: #dbeafe;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.82rem;
+  font-size: var(--fs-13);
   padding: 3px 0;
 
   .bi-check-circle-fill {
-    color: $green;
+    color: var(--primary-color);;
   }
 
   span {
@@ -534,7 +512,7 @@ $blue-light: #dbeafe;
   }
 
   .remove-county {
-    color: #dc2626;
+    color: var(--danger-color);;
     cursor: pointer;
     opacity: 0.6;
 
@@ -548,11 +526,11 @@ $blue-light: #dbeafe;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.85rem;
+  font-size: var(--fs-14);
   padding: 6px 0;
 
   .state-icon {
-    color: $blue;
+    color: var(--nav-color);;
   }
 
   strong {
@@ -560,54 +538,18 @@ $blue-light: #dbeafe;
   }
 
   .all-included-text {
-    color: $blue;
-    font-size: 0.78rem;
-    font-weight: 600;
+    color: var(--nav-color);;
+    font-size: var(--fs-13);
+    font-weight: var(--fw-600);
   }
 
   .remove-county {
-    color: #dc2626;
+    color: var(--danger-color);;
     cursor: pointer;
     opacity: 0.6;
 
     &:hover {
       opacity: 1;
-    }
-  }
-}
-
-// ===== FOOTER BUTTONS =====
-.buttons {
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border-radius: 8px;
-    padding: 8px 18px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-  }
-
-  .btn-cancel {
-    border: 1px solid $border;
-    background: #fff;
-    color: #111827;
-  }
-
-  .btn-next {
-    border: 1px solid $border;
-    background: #fff;
-    color: #111827;
-  }
-
-  .btn-save {
-    border: none;
-    background: $purple;
-    color: #fff;
-
-    &:hover {
-      background: $purple-dark;
     }
   }
 }

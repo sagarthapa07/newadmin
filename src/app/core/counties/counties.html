@@ -1,18 +1,8 @@
 <section class="coverage-wrapper">
-  <app-alert-message
-    *ngIf="successMessage"
-    [type]="'success'"
-    [message]="successMessage"
-    (close)="successMessage = ''"
-  >
+  <app-alert-message *ngIf="successMessage" [type]="'success'" [message]="successMessage" (close)="successMessage = ''">
   </app-alert-message>
 
-  <app-alert-message
-    *ngIf="errorMessage"
-    [type]="'error'"
-    [message]="errorMessage"
-    (close)="errorMessage = ''"
-  >
+  <app-alert-message *ngIf="errorMessage" [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
   </app-alert-message>
 
   <div class="page-header">
@@ -20,172 +10,139 @@
     <p class="subtitle">Select states and counties to define the coverage for this opportunity.</p>
   </div>
 
-  <!-- TOP TOGGLE: All States / Selected States -->
-  <div class="toggle-card-row">
-    <button
-      type="button"
-      class="toggle-card"
-      [class.active]="grantMode === 'all'"
-      (click)="setGrantMode('all')"
-    >
-      <span class="radio-dot"></span>
-      All States
-    </button>
-    <button
-      type="button"
-      class="toggle-card"
-      [class.active]="grantMode === 'selected'"
-      (click)="setGrantMode('selected')"
-    >
-      <span class="radio-dot"></span>
-      Selected States
-    </button>
-  </div>
-
-  <!-- ALL STATES -->
-  <div *ngIf="grantMode === 'all'" class="all-states-msg">
-    <p class="text-success">All states and counties will be included for this opportunity.</p>
-  </div>
-
-  <!-- SELECTED STATES -->
-  <div *ngIf="grantMode === 'selected'" class="coverage-grid">
+  <div class="coverage-grid">
     <!-- LEFT COLUMN -->
     <div class="coverage-main">
-      <div class="panel-row">
-        <!-- SELECTION MODE -->
-        <div class="panel-card">
-          <h6>Selection Mode</h6>
+      <!-- TOP TOGGLE: All States / Selected States -->
+      <div class="toggle-card-row">
+        <button type="button" class="toggle-card" [class.active]="grantMode === 'all'" (click)="setGrantMode('all')">
+          <span class="radio-dot"></span>
+          All States
+        </button>
+        <button type="button" class="toggle-card" [class.active]="grantMode === 'selected'"
+          (click)="setGrantMode('selected')">
+          <span class="radio-dot"></span>
+          Selected States
+        </button>
+      </div>
 
-          <button
-            type="button"
-            class="option-tile"
-            [class.active]="selectionType === 'single'"
-            (click)="setSelectionType('single')"
-          >
-            <span class="radio-dot"></span>
-            <span class="option-text">
-              <strong>Single State</strong>
-            </span>
-          </button>
+      <!-- ALL STATES -->
+      <div *ngIf="grantMode === 'all'" class="all-states-msg">
+        <p class="text-success">All states and counties will be included for this opportunity.</p>
+      </div>
 
-          <button
-            type="button"
-            class="option-tile"
-            [class.active]="selectionType === 'multiple'"
-            (click)="setSelectionType('multiple')"
-          >
-            <span class="radio-dot"></span>
-            <span class="option-text">
-              <strong>Multiple States</strong>
-              <small>Select multiple states and define coverage.</small>
-            </span>
-          </button>
-        </div>
+      <!-- SELECTED STATES -->
+      <ng-container *ngIf="grantMode === 'selected'">
+        <div class="panel-row">
+          <!-- SELECTION MODE -->
+          <div class="panel-card">
+            <h6>Selection Mode</h6>
 
-        <!-- AUTO SELECTION -->
-        <div class="panel-card">
-          <h6>Auto Selection <i class="bi bi-info-circle text-muted"></i></h6>
-          <p class="hint-text">
-            Paste opportunity text to auto-detect and select states and counties.
-          </p>
+            <button type="button" class="option-tile" [class.active]="selectionType === 'single'"
+              (click)="setSelectionType('single')">
+              <span class="radio-dot"></span>
+              <span class="option-text">
+                <strong>Single State</strong>
+              </span>
+            </button>
 
-          <textarea
-            class="paste-textarea"
-            placeholder="Paste text here..."
-            [(ngModel)]="pasteText"
-          ></textarea>
-
-          <div class="auto-select-actions">
-            <label class="check-inline">
-              <input type="checkbox" [(ngModel)]="detectStatesEnabled" />
-              Detect States
-            </label>
-            <label class="check-inline">
-              <input type="checkbox" [(ngModel)]="detectCountiesEnabled" />
-              Detect Counties
-            </label>
-            <button type="button" class="btn-auto-select" (click)="autoSelectFromText()">
-              <i class="bi bi-stars"></i> Auto Select
+            <button type="button" class="option-tile" [class.active]="selectionType === 'multiple'"
+              (click)="setSelectionType('multiple')">
+              <span class="radio-dot"></span>
+              <span class="option-text">
+                <strong>Multiple States</strong>
+                <small>Select multiple states and define coverage.</small>
+              </span>
             </button>
           </div>
-        </div>
-      </div>
 
-      <!-- STATE VIEW + COVERAGE TYPE -->
-      <div class="panel-card">
-        <div class="view-row">
-          <div class="view-col">
-            <label class="fw-semibold mb-1">Select State to View</label>
-            <select class="native-select" [(ngModel)]="viewingStateName" (change)="onStateViewChange()">
-              <option [ngValue]="null" disabled>Select a state</option>
-              <option *ngFor="let s of allStateNames" [ngValue]="s">{{ s }}</option>
-            </select>
-          </div>
+          <!-- AUTO SELECTION -->
+          <div class="panel-card">
+            <h6>Auto Selection <i class="bi bi-info-circle text-muted"></i></h6>
+            <p class="hint-text">
+              Paste opportunity text to auto-detect and select states and counties.
+            </p>
 
-          <div class="view-col" *ngIf="activeState">
-            <label class="fw-semibold mb-1">
-              Coverage Type <i class="bi bi-info-circle text-muted"></i>
-            </label>
-            <div class="coverage-type-toggle">
-              <button
-                type="button"
-                class="coverage-type-btn"
-                [class.active]="!stateModeMap[activeState]"
-                (click)="toggleFullState(activeState, false)"
-              >
-                With Counties
-              </button>
-              <button
-                type="button"
-                class="coverage-type-btn"
-                [class.active]="stateModeMap[activeState]"
-                (click)="toggleFullState(activeState, true)"
-              >
-                Full State
+            <textarea class="paste-textarea" placeholder="Paste text here..." [(ngModel)]="pasteText"></textarea>
+
+            <div class="auto-select-actions">
+              <label class="check-inline">
+                <input type="checkbox" [(ngModel)]="detectStatesEnabled" />
+                Detect States
+              </label>
+              <label class="check-inline">
+                <input type="checkbox" [(ngModel)]="detectCountiesEnabled" />
+                Detect Counties
+              </label>
+              <button type="button" class="button button-secondary auto-select-btn" (click)="autoSelectFromText()">
+                <i class="bi bi-stars"></i> Auto Select
               </button>
             </div>
           </div>
         </div>
 
-        <!-- FULL STATE MESSAGE -->
-        <p *ngIf="activeState && stateModeMap[activeState]" class="text-success mt-3">
-          All counties in this state will be included.
-        </p>
-
-        <!-- COUNTIES GRID -->
-        <div *ngIf="activeState && !stateModeMap[activeState]" class="county-panel mt-3">
-          <div class="county-panel-header">
-            <h6>Counties in {{ activeState }}</h6>
-            <div class="county-search">
-              <i class="bi bi-search"></i>
-              <input type="text" placeholder="Search counties..." [(ngModel)]="countySearchText" />
+        <!-- STATE VIEW + COVERAGE TYPE -->
+        <div class="panel-card">
+          <div class="view-row">
+            <div class="view-col">
+              <label class="fw-semibold mb-1">Select State to View</label>
+              <select class="native-select" [(ngModel)]="viewingStateName" (change)="onStateViewChange()">
+                <option [ngValue]="null" disabled>Select a state</option>
+                <option *ngFor="let s of allStateNames" [ngValue]="s">{{ s }}</option>
+              </select>
             </div>
-            <label class="check-inline">
-              <input
-                type="checkbox"
-                [checked]="isAllCountiesSelected(activeState)"
-                (change)="toggleSelectAllCounties(activeState, $event.target.checked)"
-              />
-              Select All
-            </label>
+
+            <div class="view-col" *ngIf="activeState">
+              <label class="fw-semibold mb-1">
+                Coverage Type <i class="bi bi-info-circle text-muted"></i>
+              </label>
+              <div class="coverage-type-toggle">
+                <button type="button" class="coverage-type-btn" [class.active]="!stateModeMap[activeState]"
+                  (click)="toggleFullState(activeState, false)">
+                  With Counties
+                </button>
+                <button type="button" class="coverage-type-btn" [class.active]="stateModeMap[activeState]"
+                  (click)="toggleFullState(activeState, true)">
+                  Full State
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div class="county-grid">
-            <label class="sub-checkbox county-item" *ngFor="let county of filteredCounties">
-              <input
-                type="checkbox"
-                [checked]="selectedCounties[activeState]?.includes(county)"
-                (change)="toggleCounty(activeState, county, $event.target.checked)"
-              />
-              <span>{{ county }}</span>
-            </label>
+          <!-- FULL STATE MESSAGE -->
+          <p *ngIf="activeState && stateModeMap[activeState]" class="text-success mt-3">
+            All counties in this state will be included.
+          </p>
+
+          <!-- COUNTIES GRID -->
+          <div *ngIf="activeState && !stateModeMap[activeState]" class="county-panel mt-3">
+            <div class="county-panel-header">
+              <h6>Counties in {{ activeState }}</h6>
+              <div class="county-search">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search counties..." [(ngModel)]="countySearchText" />
+              </div>
+              <label class="check-inline">
+                <input type="checkbox" [checked]="isAllCountiesSelected(activeState)"
+                  (change)="toggleSelectAllCounties(activeState, $event.target.checked)" />
+                Select All
+              </label>
+            </div>
+
+            <div class="county-grid">
+              <label class="sub-checkbox county-item" *ngFor="let county of filteredCounties">
+                <input type="checkbox" [checked]="selectedCounties[activeState]?.includes(county)"
+                  (change)="toggleCounty(activeState, county, $event.target.checked)" />
+                <span>{{ county }}</span>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
     </div>
 
-    <!-- RIGHT COLUMN — SIDEBAR -->
-    <div class="coverage-sidebar">
+    <!-- RIGHT COLUMN — SIDEBAR (starts at the same height as the toggle row) -->
+    <div class="coverage-sidebar" *ngIf="grantMode === 'selected'">
       <h6>Total Selected</h6>
       <div class="stat-row">
         <div class="stat-card">
@@ -197,14 +154,14 @@
         </div>
         <div class="stat-card">
           <div class="stat-top">
-            <span class="stat-icon-badge badge-blue"><i class="bi bi-signpost-2-fill"></i></span>
+            <span class="stat-icon-badge badge-accent"><i class="bi bi-signpost-2-fill"></i></span>
             <span class="stat-num">{{ fullStatesCount }}</span>
           </div>
           <div class="stat-label">Full States</div>
         </div>
         <div class="stat-card">
           <div class="stat-top">
-            <span class="stat-icon-badge badge-purple"><i class="bi bi-check-circle"></i></span>
+            <span class="stat-icon-badge badge-primary"><i class="bi bi-check-circle"></i></span>
             <span class="stat-num">{{ totalStatesCount }}</span>
           </div>
           <div class="stat-label">Total States Selected</div>
@@ -226,25 +183,18 @@
 
           <div class="summary-state-block" *ngFor="let state of withCountiesStates">
             <div class="summary-state-row" (click)="toggleSummaryExpand(state)">
-              <i
-                class="bi"
-                [class.bi-chevron-down]="!isSummaryCollapsed(state)"
-                [class.bi-chevron-right]="isSummaryCollapsed(state)"
-              ></i>
+              <i class="bi" [class.bi-chevron-down]="!isSummaryCollapsed(state)"
+                [class.bi-chevron-right]="isSummaryCollapsed(state)"></i>
               <i class="bi bi-geo-alt-fill state-icon"></i>
               <strong>{{ state }}</strong>
-              <button
-                type="button"
-                class="remove-state-link"
-                (click)="$event.stopPropagation(); removeState(state)"
-              >
+              <button type="button" class="remove-state-link" (click)="$event.stopPropagation(); removeState(state)">
                 <i class="bi bi-trash"></i> Remove State
               </button>
             </div>
 
             <div class="summary-county-list" *ngIf="!isSummaryCollapsed(state)">
               <div class="summary-county-row" *ngFor="let county of selectedCounties[state]">
-                <i class="bi bi-check-circle-fill text-success"></i>
+                <i class="bi bi-check-circle-fill"></i>
                 <span>{{ county }}</span>
                 <i class="bi bi-trash remove-county" (click)="removeCounty(state, county)"></i>
               </div>
@@ -271,13 +221,15 @@
   <!-- FOOTER BUTTONS -->
   <div class="buttons d-flex justify-content-between mt-4">
     <div>
-      <button type="button" class="btn btn-cancel" (click)="clearAllSelections()">Cancel</button>
+      <button type="button" class="button button-secondary" (click)="clearAllSelections()">
+        Cancel
+      </button>
     </div>
-    <div>
-      <button type="button" class="btn btn-next mx-2" (click)="goToFocusGroup()">
+    <div class="d-flex gap-2">
+      <button type="button" class="button button-secondary" (click)="goToFocusGroup()">
         <i class="bi bi-skip-backward"></i> Back
       </button>
-      <button type="button" class="btn btn-save" (click)="saveStatesAndCounties()">
+      <button type="button" class="button button-primary" (click)="saveStatesAndCounties()">
         <i class="bi bi-bookmark-check"></i> Review &amp; Save
       </button>
     </div>

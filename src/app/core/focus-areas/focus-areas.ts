@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Api } from '../Services/api';
-import { lastValueFrom } from 'rxjs';
+import { forkJoin, lastValueFrom } from 'rxjs';
 import {
   FocusSubArea,
   GetFocusSubAreasResponse,
@@ -31,11 +31,10 @@ export class FocusAreaComponent implements OnInit, OnChanges {
 
   issues: Issue[] = [];
   activeIssue: Issue | null = null;
-  hoverTimer: number | undefined;
   selectedMap = new Map<number, number[]>();
   showPasteModal = false;
   pasteText = '';
-  pasteLoading = false; // NEW: true while sub-issues load on modal open
+  pasteLoading = false; // true while sub-issues load on modal open (fallback only, usually already cached)
   selectedNames = new Map<number, { id: number; name: string }[]>();
   toastMessage = '';
   errorMessage = '';
@@ -83,12 +82,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
     }
   }
 
-  onHoverIssue(issue: Issue) {
-    this.hoverTimer = setTimeout(() => {
-      this.activeIssue = issue;
-    }, 500);
-  }
-
   loadFocusAreas() {
     this.api.getFocusAreas().subscribe({
       next: (res) => {
@@ -99,7 +92,36 @@ export class FocusAreaComponent implements OnInit, OnChanges {
             subIssues: [],
             loaded: false,
           }));
+
+          // Prefetch all sub-issues in parallel right away so clicking
+          // an issue later opens the popover instantly (no per-click API wait).
+          this.preloadAllSubIssues();
         }
+      },
+    });
+  }
+
+  private preloadAllSubIssues(): void {
+    if (!this.issues.length) return;
+
+    const requests = this.issues.map((issue) => this.api.getFocusSubAreas(issue.id));
+
+    forkJoin(requests).subscribe({
+      next: (results: GetFocusSubAreasResponse[]) => {
+        results.forEach((res, index) => {
+          const issue = this.issues[index];
+          if (res.successCode === 1) {
+            issue.subIssues = res.myList.map((sub: FocusSubArea) => ({
+              id: sub.subIssueIndex,
+              name: sub.subIssueName,
+            }));
+            issue.loaded = true;
+          }
+        });
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Preload sub issues failed', err);
       },
     });
   }
@@ -135,12 +157,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
     }, 3000);
   }
 
-  onLeaveIssue() {
-    if (this.hoverTimer !== undefined) {
-      clearTimeout(this.hoverTimer);
-    }
-  }
-
   loadSubIssues(issue: Issue) {
     this.api.getFocusSubAreas(issue.id).subscribe({
       next: (res) => {
@@ -159,12 +175,10 @@ export class FocusAreaComponent implements OnInit, OnChanges {
   }
 
   onClickIssue(issue: Issue) {
-    if (this.hoverTimer !== undefined) {
-      clearTimeout(this.hoverTimer);
-    }
-
     this.activeIssue = issue;
 
+    // Fallback: if preload hasn't finished yet (e.g. slow network),
+    // load this specific issue's sub-issues on demand.
     if (!issue.loaded) {
       this.loadSubIssues(issue);
     }
@@ -350,7 +364,7 @@ export class FocusAreaComponent implements OnInit, OnChanges {
     this.router.navigate(['/focus-group']);
   }
 
-  // ===== PASTE MODAL LOGIC (UPDATED) =====
+  // ===== PASTE MODAL LOGIC =====
 
   async openPasteModal() {
     this.pasteText = '';
@@ -366,24 +380,29 @@ export class FocusAreaComponent implements OnInit, OnChanges {
   }
 
   private async loadAllSubIssuesForPaste(): Promise<void> {
-    for (const issue of this.issues) {
-      if (!issue.subIssues || issue.subIssues.length === 0) {
-        try {
-          const res: GetFocusSubAreasResponse = await lastValueFrom(
-            this.api.getFocusSubAreas(issue.id),
-          );
+    // Most issues are already preloaded by preloadAllSubIssues() on init,
+    // so this only fetches whatever is still missing — and does it in
+    // parallel instead of one-by-one, so it's fast even as a fallback.
+    const pending = this.issues.filter((issue) => !issue.subIssues || issue.subIssues.length === 0);
 
-          if (res.successCode === 1) {
-            issue.subIssues = res.myList.map((sub: FocusSubArea) => ({
-              id: sub.subIssueIndex,
-              name: sub.subIssueName,
-            }));
-            issue.loaded = true;
-          }
-        } catch (error) {
-          console.error(`Error loading sub areas for issue ${issue.id}`, error);
+    if (!pending.length) return;
+
+    const requests = pending.map((issue) => this.api.getFocusSubAreas(issue.id));
+
+    try {
+      const results: GetFocusSubAreasResponse[] = await lastValueFrom(forkJoin(requests));
+      results.forEach((res, index) => {
+        const issue = pending[index];
+        if (res.successCode === 1) {
+          issue.subIssues = res.myList.map((sub: FocusSubArea) => ({
+            id: sub.subIssueIndex,
+            name: sub.subIssueName,
+          }));
+          issue.loaded = true;
         }
-      }
+      });
+    } catch (error) {
+      console.error('Error loading sub areas for paste modal', error);
     }
   }
 
