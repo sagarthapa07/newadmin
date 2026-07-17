@@ -67,6 +67,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { breadcrumb: 'edit' },
   },
+  {
+    path: 'calendar-opportunity/edit/preview/:id',
+    component: Preview,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'edit' },
+  },
 
   {
     path: 'calendar-opportunity/edit/add-new',

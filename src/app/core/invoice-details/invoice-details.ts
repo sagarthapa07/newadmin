@@ -1,25 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, DatePipe, Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Header } from '../../shared/component/header/header';
 import { Api } from '../Services/api';
 import { Footer } from '../../shared/component/footer/footer';
 
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 @Component({
   selector: 'app-invoice-details',
   standalone: true,
-  imports: [CommonModule, DatePipe, Header],
+  imports: [CommonModule, DatePipe, Header, Footer],
   templateUrl: './invoice-details.html',
   styleUrl: './invoice-details.scss',
 })
 export class InvoiceDetails implements OnInit {
+  @ViewChild('invoiceCard') invoiceCardRef!: ElementRef<HTMLDivElement>;
+
   invoiceId!: number;
   invoice: any = {};
   isLoading = false;
+  isGeneratingPdf = false;
 
   constructor(
     private route: ActivatedRoute,
     private api: Api,
+    private location: Location,
   ) {}
 
   ngOnInit(): void {
@@ -38,7 +45,6 @@ export class InvoiceDetails implements OnInit {
 
     this.api.getInvoiceById(this.invoiceId).subscribe({
       next: (res: any) => {
-        console.log('Invoice Details =>', res);
         this.invoice = res.invoice || res.result || res;
         this.isLoading = false;
       },
@@ -50,7 +56,81 @@ export class InvoiceDetails implements OnInit {
     });
   }
 
+
+  get subtotal(): number {
+    return Number(this.invoice?.planAmount) || 0;
+  }
+
+  get discount(): number {
+    return Number(this.invoice?.discount) || 0;
+  }
+
+  get taxPercent(): number {
+    return Number(this.invoice?.taxPercent) || 0;
+  }
+
+  get tax(): number {
+    if (this.invoice?.tax != null) return Number(this.invoice.tax) || 0;
+    return (this.subtotal * this.taxPercent) / 100;
+  }
+
+  get total(): number {
+    return this.subtotal - this.discount + this.tax;
+  }
+
+  get amountDue(): number {
+    return this.invoice?.amountDue != null ? Number(this.invoice.amountDue) || 0 : this.total;
+  }
+
+
+  goBack(): void {
+    this.location.back();
+  }
+
   printInvoice() {
     window.print();
+  }
+
+  async downloadPdf(): Promise<void> {
+    if (!this.invoiceCardRef?.nativeElement || this.isGeneratingPdf) return;
+
+    this.isGeneratingPdf = true;
+    try {
+      const element = this.invoiceCardRef.nativeElement;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
+      pdf.save(`Invoice-${this.invoice?.invoiceNumber || this.invoiceId}.pdf`);
+    } catch (err) {
+      console.error('PDF generation failed:', err);
+    } finally {
+      this.isGeneratingPdf = false;
+    }
+  }
+
+  sendEmail(): void {
+    const to = this.invoice?.payerEmail || '';
+    const subject = encodeURIComponent(
+      `Invoice ${this.invoice?.invoiceNumber || ''} — FundsforNGOs`,
+    );
+    const body = encodeURIComponent(
+      `Hi ${this.invoice?.firstName || ''},\n\n` +
+        `Here are your invoice details:\n\n` +
+        `Invoice #: ${this.invoice?.invoiceNumber || ''}\n` +
+        `Invoice Date: ${this.invoice?.invoiceDate || ''}\n` +
+        `Amount Due: ${this.amountDue.toFixed(2)} USD\n\n` +
+        `Thank you for your business.\n\nFUNDSFORNGOS, LLC`,
+    );
+
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
   }
 }

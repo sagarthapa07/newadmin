@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -7,6 +7,8 @@ import { Common } from '../../core/Services/common';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
 import { CommonModule } from '@angular/common';
 
+const REMEMBERED_USER_KEY = 'gfu_remembered_username';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -14,14 +16,17 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
 })
-export class Login {
+export class Login implements OnInit {
   loading = false;
   successMessage = '';
   errorMessage = '';
+  showPassword = false;
+  currentYear = new Date().getFullYear();
 
   loginForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
+    rememberMe: new FormControl(true),
   });
 
   constructor(
@@ -30,7 +35,64 @@ export class Login {
     private common: Common,
   ) {}
 
-  onSubmit() {
+  ngOnInit(): void {
+    // pre-fill the username if it was remembered from a previous login
+    const rememberedUser = localStorage.getItem(REMEMBERED_USER_KEY);
+    if (rememberedUser) {
+      this.loginForm.patchValue({ name: rememberedUser, rememberMe: true });
+    }
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  goToForgotPassword(): void {
+    this.router.navigate(['/forgot-password']);
+  }
+
+  // onSubmit() {
+  //   if (this.loginForm.invalid) return;
+
+  //   this.loading = true;
+
+  //   this.successMessage = '';
+  //   this.errorMessage = '';
+
+  //   const { name, password, rememberMe } = this.loginForm.value;
+  //   const payload = {
+  //     userName: name,
+  //     userPassword: this.common.encryptData(password!),
+  //   };
+
+  //   this.auth.login(payload).subscribe({
+  //     next: (res) => {
+  //       this.loading = false;
+
+  //       if (res.successCode === 1) {
+  //         this.auth.setSession(res.result);
+
+  //         if (rememberMe) {
+  //           localStorage.setItem(REMEMBERED_USER_KEY, name || '');
+  //         } else {
+  //           localStorage.removeItem(REMEMBERED_USER_KEY);
+  //         }
+
+  //         this.router.navigate(['/']);
+  //       } else {
+  //         this.errorMessage = res.message;
+  //       }
+  //     },
+
+  //     error: () => {
+  //       this.loading = false;
+  //       this.errorMessage = 'Server Error';
+  //     },
+  //   });
+  // }
+
+
+   onSubmit() {
     if (this.loginForm.invalid) return;
 
     this.loading = true;
@@ -71,4 +133,5 @@ export class Login {
       },
     });
   }
+
 }

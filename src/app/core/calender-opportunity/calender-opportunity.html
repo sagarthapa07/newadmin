@@ -5,10 +5,6 @@
   (close)="onAlertClose()"
 ></app-alert-message>
 <section class="header-section">
-  <div class="heading">
-    <span>Calendar Opportunity</span>
-  </div>
-
   <div class="header-sec">
     <div class="header-row">
       <!-- LEFT COLUMN -->
@@ -55,6 +51,10 @@
               placeholder="Select date range"
               (click)="toggle()"
             />
+
+            <button type="button" class="clear-btn" (click)="clearDateFilter($event)">
+              <i class="bi bi-x-lg"></i>
+            </button>
 
             <button class="btn calendar-btn" type="button" (click)="picker.applySelection()">
               <i class="bi bi-calendar3"></i>

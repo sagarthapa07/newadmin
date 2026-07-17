@@ -1,129 +1,196 @@
 <app-header></app-header>
-<div class="preview-wrapper container">
+
+<div class="state-wrapper" *ngIf="loading">
+  <p>Loading opportunity...</p>
+</div>
+
+<div class="state-wrapper" *ngIf="!loading && errorMsg">
+  <p>{{ errorMsg }}</p>
+</div>
+<header class="grant-header">
+  <div class="grant-topbar">
+    <div class="grant-container grant-topbar-inner">
+      <div class="grant-user-menu">
+        <a href="#">Vinay KD <i class="bi bi-caret-down-fill"></i></a>
+        <a href="#">Support</a>
+        <a href="#">Sign out</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grant-navbar">
+    <div class="grant-container grant-navbar-inner">
+      <div class="grant-logo">
+        <img src="../../../assets/logo (3).png" />
+      </div>
+
+      <nav class="grant-menu">
+        <a>Dashboard</a>
+
+        <a>
+          Grants
+          <i class="bi bi-caret-down-fill"></i>
+        </a>
+
+        <a>Advanced Search</a>
+
+        <a>Set Your Grant Alerts</a>
+
+        <a>
+          States / Counties
+          <i class="bi bi-caret-down-fill"></i>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="grant-breadcrumb">
+    <div class="grant-container">
+      <span>Home</span>
+
+      <span>/</span>
+
+      <span>Funding Grants</span>
+
+      <span>/</span>
+
+      <span class="active"> {{ data.title }} </span>
+    </div>
+  </div>
+</header>
+<div class="preview-wrapper" *ngIf="!loading && !errorMsg && data">
   <!-- LEFT -->
   <div class="left">
-    <!-- TOP CARD -->
     <div class="top-card">
       <div class="top-inner">
         <img
-          src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          [src]="data.imageUrl || data.logoUrl || 'assets/images/no-image.png'"
+          [alt]="data.title"
           class="logo"
         />
 
         <div class="top-content">
-          <h2>ai test 4</h2>
-          <div class="meta mt-4">
-            <span><b>Important Dates:</b></span>
-            <p><i class="bi bi-calendar"></i><b>Post Date:</b> January 2, 2026</p>
-            <p><i class="bi bi-calendar-x"></i><b>Deadline Date:</b> January 1, 2027</p>
-            <p>
-              <i class="bi bi-building"></i> <b>Donor Name:</b> Ajinomoto Philippines Corporation
+          <div class="title-row">
+            <h2>{{ data.title }}</h2>
+            <button class="fav-btn" (click)="toggleFavorite()" type="button">
+              <i class="bi" [ngClass]="isFavorite ? 'bi-heart-fill' : 'bi-heart'"></i>
+            </button>
+          </div>
+
+          <div class="meta">
+            <p class="meta-label">Important Dates:</p>
+
+            <p class="meta-row no-border">
+              <b>Post Date:</b>
+              <span>{{
+                data.postDate ? (data.postDate | date: 'MMMM d, y') : 'Not Available'
+              }}</span>
             </p>
-            <p><i class="bi bi-wallet2"></i> <b>Grant Size:</b> Not Available</p>
-            <p><i class="bi bi-tag"></i> <b>Category:</b></p>
-            <p><i class="bi bi-globe"></i> <b>Reference URL:</b> Opportunity is not available.</p>
+            <p class="meta-row">
+              <b>Deadline Date:</b>
+              <span>{{
+                data.deadLineDate ? (data.deadLineDate | date: 'MMMM d, y') : 'Not Available'
+              }}</span>
+            </p>
+            <p class="meta-row">
+              <b>Donor Name:</b> <span>{{ data.donorName || 'Not Available' }}</span>
+            </p>
+            <p class="meta-row">
+              <b>Grant Size:</b> <span>{{ data.grantSize || 'Not Available' }}</span>
+            </p>
+            <p class="meta-row">
+              <b>Grant Duration:</b>
+              <span>{{ data.grantDuration || 'Grant Duration Not Mentioned' }}</span>
+            </p>
+            <p class="meta-row">
+              <b>Category:</b> <span>{{ data.category || 'N/A' }}</span>
+            </p>
+            <p class="meta-row url-row">
+              <b>Reference URL:</b>
+              <a
+                *ngIf="data.referenceUrl; else noUrl"
+                [href]="data.referenceUrl"
+                target="_blank"
+                rel="noopener"
+              >
+                {{ data.referenceUrl }}
+              </a>
+              <ng-template #noUrl><span>Opportunity is not available.</span></ng-template>
+
+              <button class="btn-copy" (click)="copyUrl()" *ngIf="data.referenceUrl" type="button">
+                {{ urlCopied ? 'Copied!' : 'Copy Url' }}
+              </button>
+            </p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- CONTENT -->
     <div class="content-card">
-      <div class="intro">
-        <span class="fw-semibold"
-          >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit fugiat maxime similique
-          in tempora reiciendis dolorem, dolor porro ratione exercitationem.</span
-        >
+      <div class="intro" *ngIf="data.shortDescription">
+        <p>{{ data.shortDescription }}</p>
       </div>
-      <hr />
-      <p>
-        This scholarship offers full financial support for high-achieving Filipino students to
-        pursue master's degrees in science, nutrition, and engineering at top Japanese universities.
-        It aims to develop leaders who can contribute to the advancement of science and technology
-        in Asia and the world.
-      </p>
 
-      <p>
-        The program provides a comprehensive grant scope that includes full coverage of university
-        examination, admission, and tuition fees at designated Japanese . Beyond academic costs, the
-        scholarship covers medical and psychological examinations, as well as mandatory Japanese
-        language training prior to departure. Scholars also receive round-trip airfare from the
-        Philippines to Japan to facilitate their studies.
-      </p>
+      <div class="rich-text" [innerHTML]="description"></div>
 
-      <p>
-        The primary objectives of the initiative are to cultivate highly skilled leaders capable of
-        driving innovation in Asia throughout the twenty-first century. By providing access to
-        esteemed Japanese universities such as the University of Tokyo and Kyoto University, the
-        foundation seeks to contribute to global scientific advancement. The program also aims to
-        strengthen the academic and cultural ties between the exchange.
-      </p>
+      <ng-container *ngIf="data.fundingInformation">
+        <h5>Funding Information</h5>
+        <p>{{ data.fundingInformation }}</p>
+      </ng-container>
 
-      <p>
-        Funding information includes a structured stipend of ¥180,000 for up to two years during the
-        master’s course and ¥150,000 per month for one year as a research student. This financial
-        support is designed to cover living expenses while the student is enrolled in a full-time
-        graduate program. Additional financial assistance forms are required as part of the
-        application to verify the applicant's need for support.
-      </p>
-      <p>
-        Eligible developments include postgraduate studies leading to a master’s degree in
-        science-related fields at seven specific partner universities in Japan. The program supports
-        students who are transitioning from undergraduate studies or early-career professionals
-        seeking advanced research opportunities. Supported projects must fall within the domains of
-        food technology, engineering, chemistry, or nutrition science.
-      </p>
-      <p>
-        Ineligibility criteria apply to individuals who are currently residing overseas or those
-        already receiving other scholarship support. The scholarship may be suspended or terminated
-        if a recipient provides false information, fails to pass entrance examinations within the
-        specified timeframe, or exhibits academic performance. Furthermore, those who fail to arrive
-        in Japan by the appointed date or violate university regulations are excluded funding.
-      </p>
-      <p>
-        Application include the submission of typed application forms, certified transcripts of
-        records, and a certified true copy of the applicant's university diploma. Candidates must
-        also provide two recommendation forms from university professors or academic in sealed.
-        Additionally, must a brief research proposal, documents supporting financial need, and proof
-        of Japanese or.
-      </p>
-      <p>For more information, visit Ajinomoto Philippines Corporation.</p>
+      <ng-container *ngIf="data.eligibilityCriteria?.length">
+        <h5>Eligibility Criteria</h5>
+        <ul>
+          <li *ngFor="let item of data.eligibilityCriteria">{{ item }}</li>
+        </ul>
+      </ng-container>
+
+      <ng-container *ngIf="data.ineligibility?.length">
+        <h5>Ineligibility</h5>
+        <ul>
+          <li *ngFor="let item of data.ineligibility">{{ item }}</li>
+        </ul>
+      </ng-container>
     </div>
   </div>
 
   <!-- RIGHT -->
   <div class="right">
-    <!-- Focus Area -->
-    <div class="side-box">
+    <div class="side-box" *ngIf="focusAreas.length">
       <h4>Focus Area(s) of Interest</h4>
       <div class="chip-box">
-        <span class="chip"><i class="fas fa-check-circle"></i> Religion</span>
-        <span class="chip"><i class="fas fa-check-circle"></i> Innovation</span>
-        <span class="chip"><i class="fas fa-check-circle"></i> COVID-19</span>
-        <span class="chip"><i class="fas fa-check-circle"></i> Spirituality</span>
+        <span class="chip" *ngFor="let area of focusAreas">{{ area }}</span>
       </div>
     </div>
 
-    <!-- Countries -->
-    <div class="side-box">
-      <h4>Focus Country(ies)</h4>
+    <div class="side-box" *ngIf="counties.length">
+      <h4>Focus County(ies)</h4>
       <div class="chip-box scroll">
-        <span class="chip"><i class="fas fa-check-circle"></i> Algeria</span>
-        <span class="chip"><i class="fas fa-check-circle"></i> Angola</span>
-        <span class="chip"><i class="fas fa-check-circle"></i> Benin</span>
-        <span class="chip"><i class="fas fa-check-circle"></i> Botswana</span>
-        <span class="chip"><i class="fas fa-check-circle"></i> Burkina Faso</span>
+        <span class="chip" *ngFor="let county of visibleCounties">{{ county }}</span>
       </div>
+      <button
+        class="view-all-btn"
+        *ngIf="counties.length > visibleLimit"
+        (click)="toggleCounties()"
+        type="button"
+      >
+        {{ showAllCounties ? 'View less' : 'View all (' + counties.length + ')' }}
+      </button>
     </div>
 
-    <!-- Counties -->
-    <div class="side-box">
-      <h4>Focus County(ies)/State(s)</h4>
-      <div class="chip-box scroll">
-        <span class="chip"><i class="fas fa-check-circle"></i> Clay County, Arkansas</span>
-        <span class="chip"><i class="fas fa-check-circle"></i> Baxter County, Arkansas</span>
-        <span class="chip"><i class="fas fa-check-circle"></i> Calhoun County, Arkansas</span>
+    <div class="side-box" *ngIf="states.length">
+      <h4>Focus State(s)</h4>
+      <div class="chip-box">
+        <span class="chip" *ngFor="let state of visibleStates">{{ state }}</span>
       </div>
+      <button
+        class="view-all-btn"
+        *ngIf="states.length > visibleLimit"
+        (click)="toggleStates()"
+        type="button"
+      >
+        {{ showAllStates ? 'View less' : 'View all (' + states.length + ')' }}
+      </button>
     </div>
   </div>
 </div>

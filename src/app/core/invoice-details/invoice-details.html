@@ -1,187 +1,150 @@
 <app-header></app-header>
 
-<section class="header-section ">
-  <div class="invoice-card">
-    <!-- ================= HEADER ================= -->
+<section class="invoice-page">
+  <!-- TOOLBAR -->
+  <div class="invoice-toolbar">
+    <button type="button" class="back-btn" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h5 class="toolbar-title">Invoice Preview</h5>
 
-    <div class="invoice-header">
-      <div class="company-logo">
-        <img src="https://grants.fundsforngospremium.com/assets/logo.png" alt="logo" />
-      </div>
-
-      <div class="invoice-title">
-        <h1>INVOICE</h1>
-      </div>
+    <div class="toolbar-actions">
+      <button type="button" class="button button-secondary" (click)="downloadPdf()" [disabled]="isGeneratingPdf">
+        <i class="bi bi-file-earmark-arrow-down"></i>
+        {{ isGeneratingPdf ? 'Generating...' : 'Download PDF' }}
+      </button>
+      <button type="button" class="button button-secondary" (click)="sendEmail()">
+        <i class="bi bi-envelope"></i> Send Email
+      </button>
+      <button type="button" class="button button-primary" (click)="printInvoice()">
+        <i class="bi bi-printer-fill"></i> Print
+      </button>
     </div>
+  </div>
 
-    <hr />
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner-border" role="status"></div>
+    <p>Loading invoice...</p>
+  </div>
 
-    <!-- ================= TOP DETAILS ================= -->
-
-    <div class="invoice-info">
-      <!-- Company -->
-
-      <div class="company-address">
-        <h5>FUNDSFORNGOS, LLC</h5>
-
-        <p>140 Broadway</p>
-
-        <p>46th Floor</p>
-
-        <p>New York, NY 10005</p>
-
-        <p>United States</p>
-
-        <p><b>Tel:</b> +1 855 666 2396</p>
+  <!-- INVOICE CARD (this is what gets captured for the PDF / printed) -->
+  <div class="invoice-card-wrapper" *ngIf="!isLoading">
+    <div class="invoice-card" #invoiceCard>
+      <!-- ================= HEADER ================= -->
+      <div class="invoice-header">
+        <div class="company-logo">
+          <img src="https://grants.fundsforngospremium.com/assets/logo.png" alt="logo" />
+        </div>
+        <div class="invoice-title">
+          <h1>INVOICE</h1>
+        </div>
       </div>
 
-      <!-- Customer -->
+      <!-- ================= TOP DETAILS ================= -->
+      <div class="invoice-info">
+        <!-- Billed From -->
+        <div class="info-block">
+          <span class="info-label">Billed From</span>
+          <h5>FUNDSFORNGOS, LLC</h5>
+          <p>140 Broadway, 46th Floor</p>
+          <p>New York, NY 10005</p>
+          <p>United States</p>
+          <p class="phone-line"><i class="bi bi-telephone-fill"></i> +1 855 666 2396</p>
+        </div>
 
-      <div class="customer-details">
-        <p>
-          <b>{{ invoice.firstName }} {{ invoice.lastName }}</b>
-        </p>
+        <!-- Billed To -->
+        <div class="info-block">
+          <span class="info-label">Billed To</span>
+          <h5>{{ invoice.firstName }} {{ invoice.lastName }}</h5>
+          <p>{{ invoice.address }}</p>
+          <p *ngIf="invoice.city">{{ invoice.city }}</p>
+          <p *ngIf="invoice.mobile">Ph: {{ invoice.mobile }}</p>
+          <p *ngIf="invoice.payerEmail">Email: {{ invoice.payerEmail }}</p>
+        </div>
 
-        <p>{{ invoice.address }}</p>
-
-        <p>{{ invoice.city }}</p>
-
-        <p>Ph : {{ invoice.mobile }}</p>
-
-        <p>Email : {{ invoice.payerEmail }}</p>
+        <!-- Invoice meta box -->
+        <div class="invoice-meta-box">
+          <div class="meta-row">
+            <span class="meta-label">Invoice #</span>
+            <span class="meta-value">{{ invoice.invoiceNumber }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Invoice Date</span>
+            <span class="meta-value">{{ invoice.invoiceDate | date: 'MMMM dd, yyyy' }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Due Date</span>
+            <span class="meta-value">{{ (invoice.dueDate || invoice.invoiceDate) | date: 'MMMM dd, yyyy' }}</span>
+          </div>
+          <div class="meta-row amount-due-row">
+            <span class="meta-label">Amount Due</span>
+            <span class="meta-value amount-due-value">{{ amountDue | number: '1.2-2' }} USD</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Invoice -->
-
-      <div class="invoice-details">
-        <p>
-          <b>Invoice#</b>
-          {{ invoice.invoiceNumber }}
-        </p>
-
-        <p>
-          <b>Invoice Date :</b>
-          {{ invoice.invoiceDate | date: 'MMMM dd, yyyy' }}
-        </p>
-
-        <p>
-          <b>Amount :</b>
-          {{ invoice.planAmount }} USD
-        </p>
-      </div>
-    </div>
-
-    <!-- ================= TABLE ================= -->
-
-    <div class="invoice-table">
-      <table>
-        <thead>
-          <tr>
-            <th>ITEM</th>
-            <th>DESCRIPTION</th>
-            <th>PLAN DURATION</th>
-            <th>UNIT COST</th>
-            <th>QTY</th>
-            <th>LINE TOTAL</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr>
-            <td>Subscription</td>
-
-            <td>
-              {{ invoice.planName }}
-            </td>
-
-            <td>
-              {{ invoice.planStartDate | date: 'MMMM dd, yyyy' }}
-              -
-              {{ invoice.planExpiryDate | date: 'MMMM dd, yyyy' }}
-            </td>
-
-            <td>
-              {{ invoice.planAmount }}
-            </td>
-
-            <td>1</td>
-
-            <td>
-              {{ invoice.planAmount }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ================= PAYMENT ================= -->
-
-    <div class="payment-section">
-      <div class="payment-left">
-        <p>
-          <b>Payment Method:</b>
-
-          {{ invoice.paymentMode }}
-        </p>
-      </div>
-
-      <div class="payment-right">
+      <!-- ================= TABLE ================= -->
+      <div class="invoice-table">
         <table>
-          <tr>
-            <td>Total</td>
-
-            <td>{{ invoice.planAmount }} USD</td>
-          </tr>
-
-          <tr>
-            <td><b>Net Amount</b></td>
-
-            <td>
-              <b>{{ invoice.planAmount }} USD</b>
-            </td>
-          </tr>
+          <thead>
+            <tr>
+              <th>ITEM</th>
+              <th>DESCRIPTION</th>
+              <th>PLAN DURATION</th>
+              <th>UNIT COST</th>
+              <th>QTY</th>
+              <th>LINE TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Subscription</td>
+              <td>{{ invoice.planName }}</td>
+              <td>
+                {{ invoice.planStartDate | date: 'MMMM dd, yyyy' }} -
+                {{ invoice.planExpiryDate | date: 'MMMM dd, yyyy' }}
+              </td>
+              <td>{{ invoice.planAmount | number: '1.2-2' }}</td>
+              <td>1</td>
+              <td>{{ invoice.planAmount | number: '1.2-2' }}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
-    </div>
 
-    <!-- ================= FOOTER ================= -->
+      <!-- ================= PAYMENT ================= -->
+      <div class="payment-section">
+        <div class="payment-left">
+          <span class="info-label">Payment Method</span>
+          <p>{{ invoice.paymentMode }}</p>
+        </div>
 
-    <div class="invoice-footer">
-      <div class="footer-left">
-        <p>NOTE: This is a computer generated invoice and does not require signature.</p>
-
-        <p>
-          Primary URL :
-
-          <a href="https://grantsforus.io"> https://grantsforus.io </a>
-        </p>
-
-        <p>
-          Premium URL :
-
-          <a href="https://grantsforus.app"> https://grantsforus.app </a>
-        </p>
-
-        <p>
-          For any queries please contact us at
-
-          <a href="https://support.fundsforngos.org"> support.fundsforngos.org </a>
-        </p>
+        <div class="payment-right">
+          <table>
+            <tr>
+              <td>Subtotal</td>
+              <td>{{ subtotal | number: '1.2-2' }} USD</td>
+            </tr>
+            <tr>
+              <td>Discount</td>
+              <td>{{ discount | number: '1.2-2' }} USD</td>
+            </tr>
+            <tr>
+              <td>Tax ({{ taxPercent }}%)</td>
+              <td>{{ tax | number: '1.2-2' }} USD</td>
+            </tr>
+            <tr class="total-row">
+              <td><b>Total</b></td>
+              <td><b>{{ total | number: '1.2-2' }} USD</b></td>
+            </tr>
+            <tr class="due-row">
+              <td><b>Amount Due</b></td>
+              <td><b>{{ amountDue | number: '1.2-2' }} USD</b></td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
-
-    <!-- ================= THANK YOU ================= -->
-
-    <div class="thankyou">THANK YOU FOR YOUR BUSINESS!</div>
-  </div>
-
-  <!-- ================= PRINT ================= -->
-
-  <div class="print-btn">
-    <button class="btn btn-primary" (click)="printInvoice()">
-      <i class="bi bi-printer-fill"></i>
-      Print
-    </button>
   </div>
 </section>
-<Footer></Footer>

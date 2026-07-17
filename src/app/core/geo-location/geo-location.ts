@@ -116,7 +116,7 @@ export class GeoLocationComponent implements OnInit {
     cities: false,
     states: false,
   };
-  summaryPreviewCount = 3;
+  summaryPreviewCount = 5;
 
   ngOnInit(): void {
     this.geoKeys = Object.keys(this.geoDropdowns) as GeoKey[];

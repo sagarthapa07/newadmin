@@ -1,4 +1,4 @@
-<section class="login-bg">
+<section class="login-page">
   <app-alert-message
     *ngIf="successMessage"
     type="success"
@@ -15,63 +15,84 @@
   >
   </app-alert-message>
 
-  <nav class="navbar px-3">
-    <img src="../../../assets/logo (3).png" alt="Logo" height="40" class="navbar-brand" />
+  <nav class="navbar">
+    <img src="../../../assets/logo (3).png" alt="GrantsforUS" class="navbar-brand" />
   </nav>
 
-  <div class="Login d-flex justify-content-center align-items-center">
-    <div class="row">
-      <div class="col-md-12 col-sm-12">
-        <div class="d-flex justify-content-center align-items-center rounded-4 mx-0 px-0">
-          <div class="card rounded-3">
-            <div class="d-flex align-items-center justify-content-center">
-              <img src="../../../assets/logo-icon1.png" alt="" />
-            </div>
+  <div class="login-right">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="../../../assets/logo-icon1.png" alt="" />
+      </div>
 
-            <div class="mt-3 text-center">
-              <h3 class="login-title">Login to your account</h3>
-              <h6 class="login-subtitle">Your Credentials</h6>
-            </div>
+      <h3 class="login-title">Login to your account</h3>
+      <p class="login-subtitle">Enter your credentials to continue</p>
+      <div class="title-underline mx-auto"></div>
 
-            <form
-              [formGroup]="loginForm"
-              (ngSubmit)="onSubmit()"
-              autocomplete="off"
-              novalidate
-              class="form d-flex flex-column align-items-center"
-            >
-              <div class="form-group">
-                <label for="name">User Name:</label>
-                <input
-                  type="text"
-                  id="name"
-                  class="form-control"
-                  placeholder="Enter Name"
-                  formControlName="name"
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="password">Password:</label>
-                <input
-                  type="password"
-                  id="password"
-                  class="form-control"
-                  placeholder="Enter Password"
-                  formControlName="password"
-                />
-              </div>
-              <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
-              <div class="mt-4">
-                <button class="btn login-btn" type="submit" [disabled]="loading">
-                  <span *ngIf="!loading"> Login </span>
-                  <span *ngIf="loading"> Logging... </span>
-                </button>
-              </div>
-            </form>
+      <form
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit()"
+        autocomplete="off"
+        novalidate
+        class="login-form"
+      >
+        <div class="form-group">
+          <label for="name">User Name</label>
+          <div class="input-with-icon">
+            <i class="bi bi-person"></i>
+            <input
+              type="text"
+              id="name"
+              class="form-control"
+              placeholder="Enter your user name"
+              formControlName="name"
+            />
           </div>
         </div>
-      </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-with-icon">
+            <i class="bi bi-lock"></i>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              class="form-control"
+              placeholder="Enter your password"
+              formControlName="password"
+            />
+            <i
+              class="bi toggle-eye"
+              [class.bi-eye]="!showPassword"
+              [class.bi-eye-slash]="showPassword"
+              (click)="togglePasswordVisibility()"
+              role="button"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            ></i>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember-check">
+            <input type="checkbox" formControlName="rememberMe" />
+            Remember me
+          </label>
+          <a class="forgot-link" (click)="goToForgotPassword()">Forgot password?</a>
+        </div>
+
+        <button class="button button-primary login-btn" type="submit" [disabled]="loading">
+          <ng-container *ngIf="!loading"> Login <i class="bi bi-arrow-right"></i> </ng-container>
+          <ng-container *ngIf="loading">
+            <span class="spinner-border spinner-border-sm"></span> Logging in...
+          </ng-container>
+        </button>
+        <p class="help-text">
+          Don't have access yet?
+          <a href="https://release.grantsforus.app/request-account" target="_blank" rel="noopener">
+            Request Account
+          </a>
+        </p>
+      </form>
     </div>
   </div>
 </section>

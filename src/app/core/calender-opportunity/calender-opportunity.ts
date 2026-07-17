@@ -126,10 +126,15 @@ export class CalenderOpportunity {
     });
   }
 
-  clearDateFilter() {
+  clearDateFilter(event?: MouseEvent) {
+    event?.stopPropagation();
     this.fromDate = null;
     this.toDate = null;
-    this.minToDate = null;
+    if (this.picker) {
+      this.picker.fromDate = null;
+      this.picker.toDate = null;
+    }
+    this.open = false;
     this.pageIndex = 1;
     this.getData();
   }

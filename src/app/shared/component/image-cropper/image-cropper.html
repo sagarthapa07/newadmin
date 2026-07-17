@@ -35,19 +35,20 @@
 
 <!--
   Modal — always in the DOM (no *ngIf/@if), visibility toggled purely via
-  the "show" class. This lets us relocate it to document.body exactly once
-  (see ngAfterViewInit in the TS) without Angular losing track of the view,
-  which is what makes position:fixed center on the real viewport instead of
-  getting trapped inside a transformed ancestor.
+  the "show" class, and relocated to document.body once (see ngAfterViewInit
+  in the TS). Class names are prefixed with "cropper-" specifically to avoid
+  colliding with Bootstrap's global .modal/.modal-header/.modal-footer rules
+  (Bootstrap's .modal sets position:fixed;top:0;left:0 — reusing that bare
+  class name was what pinned this box to the top-left corner).
 -->
 <div
-  class="modal-overlay"
+  class="cropper-overlay"
   [class.show]="showEditor"
   #modalOverlay
   (click)="overlayClick($event)"
 >
-  <div class="modal">
-    <div class="modal-header">Photo Editor</div>
+  <div class="cropper-modal">
+    <div class="cropper-modal-header">Photo Editor</div>
 
     <!-- Canvas -->
     <div
@@ -199,7 +200,7 @@
       </button>
     </div>
 
-    <div class="modal-footer">
+    <div class="cropper-modal-footer">
       <button class="btn-close" (click)="closeEditor()">Close</button>
       <button class="btn-apply" (click)="applyEdit()">Apply</button>
     </div>

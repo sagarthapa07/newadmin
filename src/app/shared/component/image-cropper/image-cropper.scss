@@ -1,3 +1,5 @@
+// photo-editor.component.scss
+
 .upload-area {
   display: flex;
   flex-direction: column;
@@ -60,7 +62,13 @@
   word-break: break-all;
 }
 
-.modal-overlay {
+// ── Modal overlay ─────────────────────────────────────────────
+// Renamed from .modal-overlay/.modal/.modal-header/.modal-footer to
+// cropper-prefixed names — Bootstrap ships a global .modal class with
+// `position: fixed; top: 0; left: 0;` baked in, and the bare class name
+// was leaking that rule into this box, pinning it to the corner instead
+// of letting the overlay's flex-centering position it.
+.cropper-overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -72,30 +80,36 @@
 
   &.show {
     display: flex;
-    justify-content: center;
-    align-items: center;
   }
 }
 
-.modal {
+.cropper-modal {
+  position: static; // explicit — guards against any future global .modal-like collision
   background: #2b2b2b;
   border-radius: 6px;
   width: 660px;
   max-width: 96vw;
-  max-height: 60vh;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
   overflow: hidden;
   user-select: none;
 }
-.modal-header {
-  padding: 11px 16px; background: #1a1a1a;
+.cropper-modal-header {
+  padding: 11px 16px;
+  background: #1a1a1a;
   border-bottom: 1px solid #444;
-  color: #ddd; font-size: 13px; font-weight: 600; font-family: sans-serif;
+  color: #ddd;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: sans-serif;
   flex-shrink: 0;
 }
 
+// ── Canvas ────────────────────────────────────────────────────
+// height is capped relative to viewport so the modal never grows taller
+// than it needs to on shorter screens — no wasted/extra vertical space
 .canvas-wrap {
   position: relative;
   width: 100%;
@@ -104,116 +118,249 @@
   overflow: hidden;
   cursor: grab;
   flex-shrink: 1;
-  &:active { cursor: grabbing; }
+  &:active {
+    cursor: grabbing;
+  }
 }
 
+// ── Image Layer ───────────────────────────────────────────────
 .img-layer {
   position: absolute;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform-origin: center center;
   pointer-events: none;
 
   img {
     display: block;
-    max-width: 600px; max-height: 360px;
+    max-width: 600px;
+    max-height: 360px;
     pointer-events: none;
     transform-origin: center center;
   }
 }
 
+// ── CROP FRAME ★ key trick: box-shadow for dark outside ───────
 .crop-frame {
   position: absolute;
-  border: 2px solid rgba(255,255,255,0.9);
+  border: 2px solid rgba(255, 255, 255, 0.9);
   // This single line creates the dark-outside effect
-  box-shadow: 0 0 0 9999px rgba(0,0,0,0.55);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
   cursor: move;
   z-index: 10;
 
+  // Rule-of-thirds grid via pseudo element
   &::before {
     content: '';
-    position: absolute; inset: 0;
+    position: absolute;
+    inset: 0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.18) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.18) 1px, transparent 1px);
+      linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
     background-size: 33.33% 33.33%;
     pointer-events: none;
   }
 }
 
+// ── Grid lines (backup, in case ::before doesn't show) ────────
 .gl {
-  position: absolute; pointer-events: none;
-  background: rgba(255,255,255,0.2);
-  &.h { left:0; right:0; height:1px; }
-  &.v { top:0; bottom:0; width:1px; }
+  position: absolute;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.2);
+  &.h {
+    left: 0;
+    right: 0;
+    height: 1px;
+  }
+  &.v {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+  }
 }
 
+// ── Resize Handles ────────────────────────────────────────────
 .rh {
   position: absolute;
-  width: 12px; height: 12px;
+  width: 12px;
+  height: 12px;
   background: #fff;
-  border: 2px solid rgba(0,0,0,0.35);
+  border: 2px solid rgba(0, 0, 0, 0.35);
   border-radius: 2px;
   z-index: 11;
 
-  &.tl { top:-6px;  left:-6px;  cursor: nw-resize; }
-  &.tc { top:-6px;  left:50%; transform:translateX(-50%); cursor: n-resize; width:24px; height:8px; }
-  &.tr { top:-6px;  right:-6px; cursor: ne-resize; }
-  &.ml { top:50%;  left:-6px;  transform:translateY(-50%); cursor: w-resize; width:8px; height:24px; }
-  &.mr { top:50%;  right:-6px; transform:translateY(-50%); cursor: e-resize; width:8px; height:24px; }
-  &.bl { bottom:-6px; left:-6px;  cursor: sw-resize; }
-  &.bc { bottom:-6px; left:50%; transform:translateX(-50%); cursor: s-resize; width:24px; height:8px; }
-  &.br { bottom:-6px; right:-6px; cursor: se-resize; }
+  &.tl {
+    top: -6px;
+    left: -6px;
+    cursor: nw-resize;
+  }
+  &.tc {
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: n-resize;
+    width: 24px;
+    height: 8px;
+  }
+  &.tr {
+    top: -6px;
+    right: -6px;
+    cursor: ne-resize;
+  }
+  &.ml {
+    top: 50%;
+    left: -6px;
+    transform: translateY(-50%);
+    cursor: w-resize;
+    width: 8px;
+    height: 24px;
+  }
+  &.mr {
+    top: 50%;
+    right: -6px;
+    transform: translateY(-50%);
+    cursor: e-resize;
+    width: 8px;
+    height: 24px;
+  }
+  &.bl {
+    bottom: -6px;
+    left: -6px;
+    cursor: sw-resize;
+  }
+  &.bc {
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: s-resize;
+    width: 24px;
+    height: 8px;
+  }
+  &.br {
+    bottom: -6px;
+    right: -6px;
+    cursor: se-resize;
+  }
 }
 
+// ── Size Label ────────────────────────────────────────────────
 .crop-label {
   position: absolute;
-  bottom: -26px; left: 50%;
+  bottom: -26px;
+  left: 50%;
   transform: translateX(-50%);
-  background: rgba(0,0,0,0.7);
-  color: #eee; font-size: 11px; font-family: monospace;
-  padding: 2px 8px; border-radius: 3px;
-  white-space: nowrap; pointer-events: none; z-index: 11;
+  background: rgba(0, 0, 0, 0.7);
+  color: #eee;
+  font-size: 11px;
+  font-family: monospace;
+  padding: 2px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 11;
 }
 
+// ── Toolbar ───────────────────────────────────────────────────
 .toolbar {
-  display: flex; align-items: center; justify-content: center;
-  gap: 2px; padding: 10px 14px;
-  background: #222; border-top: 1px solid #3a3a3a; flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 10px 14px;
+  background: #222;
+  border-top: 1px solid #3a3a3a;
+  flex-wrap: wrap;
   flex-shrink: 0;
 }
 .tbtn {
-  width: 36px; height: 36px;
-  display: flex; align-items: center; justify-content: center;
-  background: transparent; border: 1px solid transparent;
-  border-radius: 5px; color: #aaa; cursor: pointer; transition: all .12s;
-  &:hover { background: #3a3a3a; color: #fff; border-color: #555; }
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #aaa;
+  cursor: pointer;
+  transition: all 0.12s;
+  &:hover {
+    background: #3a3a3a;
+    color: #fff;
+    border-color: #555;
+  }
 }
-.ztxt { font-size:12px; color:#888; font-family:monospace; min-width:40px; text-align:center; }
-.div  { width:1px; height:24px; background:#444; margin:0 4px; }
+.ztxt {
+  font-size: 12px;
+  color: #888;
+  font-family: monospace;
+  min-width: 40px;
+  text-align: center;
+}
+.div {
+  width: 1px;
+  height: 24px;
+  background: #444;
+  margin: 0 4px;
+}
 
-.modal-footer {
-  display: flex; justify-content: flex-end; gap: 10px;
-  padding: 12px 16px; background: #1a1a1a; border-top: 1px solid #3a3a3a;
+// ── Footer ────────────────────────────────────────────────────
+.cropper-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #1a1a1a;
+  border-top: 1px solid #3a3a3a;
   flex-shrink: 0;
 }
 .btn-close {
-  padding: 10px 30px; border-radius: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #555; background: transparent;
-  color: #ccc; font-size: 13px; font-weight: 600; font-family: sans-serif; cursor: pointer;
-  &:hover { background: #3a3a3a; color: #fff; }
+  padding: 12px 30px;
+  border-radius: 4px;
+
+  border: 1px solid #555;
+  background: transparent;
+  color: #ccc;
+  font-size: 13px;
+  font-family: sans-serif;
+  cursor: pointer;
+  font-weight: 600;
+  &:hover {
+    background: #3a3a3a;
+    color: #fff;
+  }
 }
 .btn-apply {
-  padding: 7px 22px; border-radius: 4px; border: none;
-  background: #1565c0; color: #fff;
-  font-size: 13px; font-family: sans-serif; font-weight: 600; cursor: pointer;
-  &:hover { background: #1976d2; }
+  padding: 7px 22px;
+  border-radius: 4px;
+  border: none;
+  background: #1565c0;
+  color: #fff;
+  font-size: 13px;
+  font-family: sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover {
+    background: #1976d2;
+  }
 }
 
+// ── Output ────────────────────────────────────────────────────
 .output {
   margin-top: 20px;
-  p { font-size:13px; color:#555; margin-bottom:8px; font-family:sans-serif; }
-  img { max-width:400px; border:1px solid #ddd; border-radius:4px; display:block; }
+  p {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 8px;
+    font-family: sans-serif;
+  }
+  img {
+    max-width: 400px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: block;
+  }
 }
