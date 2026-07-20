@@ -24,6 +24,7 @@
               </div>
             </a>
           </li>
+
           <li class="nav-link">
             <a
               href="#"
@@ -34,6 +35,7 @@
                 <i class="fa-solid fa-puzzle-piece icons"></i>
                 <span class="text nav-text">Components</span>
               </div>
+
               <i
                 class="fa-solid icons chevron"
                 [class.fa-chevron-down]="!isOpen('components1')"
@@ -51,14 +53,18 @@
               >
                 <span>Email Configurations</span>
               </a>
-              <div *ngIf="isSubOpen('email-config')" class="sub-submenu">
-                <a class="mx-5" routerLink="/masters/email-settings" (click)="onLeafClick()"
-                  >Email Setting</a
-                >
-                <a class="mx-5" routerLink="/masters/email-templates" (click)="onLeafClick()"
-                  >Email Template</a
-                >
-              </div>
+
+              @if (isSubOpen('email-config')) {
+                <div class="sub-submenu">
+                  <a class="mx-5" routerLink="/masters/email-settings" (click)="onLeafClick()">
+                    Email Setting
+                  </a>
+                  <a class="mx-5" routerLink="/masters/email-templates" (click)="onLeafClick()">
+                    Email Template
+                  </a>
+                </div>
+              }
+
               <a
                 href="#"
                 class="d-flex align-items-center justify-content-between submenu-parent"
@@ -66,10 +72,18 @@
               >
                 <span>User Management</span>
               </a>
-              <div *ngIf="isSubOpen('user-mgmt')" class="sub-submenu">
-                <a class="mx-5" routerLink="/masters/users" (click)="onLeafClick()">User List</a>
-                <a class="mx-5" routerLink="/masters/user-add" (click)="onLeafClick()">Add User</a>
-              </div>
+
+              @if (isSubOpen('user-mgmt')) {
+                <div class="sub-submenu">
+                  <a class="mx-5" routerLink="/masters/users" (click)="onLeafClick()">
+                    User List
+                  </a>
+                  <a class="mx-5" routerLink="/masters/user-add" (click)="onLeafClick()">
+                    Add User
+                  </a>
+                </div>
+              }
+
               <a
                 href="#"
                 class="d-flex align-items-center justify-content-between submenu-parent"
@@ -77,11 +91,14 @@
               >
                 <span>Products</span>
               </a>
-              <div *ngIf="isSubOpen('products')" class="sub-submenu">
-                <a class="mx-5" routerLink="/masters/plans" (click)="onLeafClick()"
-                  >Business Plans</a
-                >
-              </div>
+
+              @if (isSubOpen('products')) {
+                <div class="sub-submenu">
+                  <a class="mx-5" routerLink="/masters/plans" (click)="onLeafClick()">
+                    Business Plans
+                  </a>
+                </div>
+              }
             </div>
           </li>
 
@@ -96,6 +113,7 @@
                 <i class="fa-solid fa-globe icons"></i>
                 <span class="text nav-text">Online Resources</span>
               </div>
+
               <i
                 class="fa-solid icons chevron"
                 [class.fa-chevron-down]="!isOpen('components2')"
@@ -103,9 +121,10 @@
               ></i>
             </a>
           </li>
+
           <li [ngbCollapse]="!isOpen('components2')" class="submenu-wrapper">
             <div class="submenu">
-              <a class="mx-5" routerLink="/calendar-opportunity">Calendar Opportunity</a>
+              <a class="mx-5" routerLink="/calendar-opportunity"> Calendar Opportunity </a>
             </div>
           </li>
 
@@ -120,6 +139,7 @@
                 <i class="fa-solid fa-people-group icons"></i>
                 <span class="text nav-text">Premium Members</span>
               </div>
+
               <i
                 class="fa-solid icons chevron"
                 [class.fa-chevron-down]="!isOpen('components3')"
@@ -127,11 +147,14 @@
               ></i>
             </a>
           </li>
+
           <li [ngbCollapse]="!isOpen('components3')" class="submenu-wrapper">
             <div class="submenu">
               <a class="mx-5" routerLink="/premium-members/memberModule">Member Module</a>
               <a class="mx-5" routerLink="/premium-members/add-member">Add New Member</a>
-              <a class="mx-5" routerLink="/premium-members/member-search">Member Advanced Search</a>
+              <a class="mx-5" routerLink="/premium-members/member-search">
+                Member Advanced Search
+              </a>
               <a class="mx-5" routerLink="/premium-members/invoice">Invoice Search</a>
             </div>
           </li>
@@ -148,6 +171,7 @@
               </div>
             </a>
           </li>
+
           <li class="nav-link logout">
             <a href="#" (click)="logout()">
               <div class="d-flex align-items-center">
@@ -161,7 +185,7 @@
     </div>
   </nav>
 
-  <!-- MAIN AREA: top bar shifts in sync with the sidebar's expanded state -->
+  <!-- MAIN AREA -->
   <div class="main-area" [class.main-area-expanded]="isSidebarExpanded()">
     <header class="topbar">
       <div class="topbar-left">
@@ -173,18 +197,21 @@
           <span class="crumb crumb-home" routerLink="/">
             <i class="bi bi-house-fill"></i> Home
           </span>
-          <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
+
+          @for (crumb of breadcrumbs; track crumb.url; let last = $last) {
             <i class="bi bi-chevron-right separator"></i>
-            <span class="crumb" [routerLink]="crumb.url" [class.active]="last">{{
-              crumb.label
-            }}</span>
-          </ng-container>
+
+            <span class="crumb" [routerLink]="crumb.url" [class.active]="last">
+              {{ crumb.label }}
+            </span>
+          }
         </div>
       </div>
 
       <div class="topbar-right">
         <div class="search-box">
           <i class="bi bi-search"></i>
+
           <input
             type="text"
             [(ngModel)]="searchText"
@@ -196,14 +223,29 @@
         <div class="notif-wrapper">
           <button class="icon-btn" (click)="toggleNotifications()" aria-label="Notifications">
             <i class="bi bi-bell"></i>
-            <span class="icon-badge" *ngIf="notifications.length">{{ notifications.length }}</span>
+
+            @if (notifications.length) {
+              <span class="icon-badge">
+                {{ notifications.length }}
+              </span>
+            }
           </button>
 
-          <div class="dropdown-panel notif-panel" *ngIf="showNotifications">
-            <div class="dropdown-panel-head">Notifications</div>
-            <div class="notif-item" *ngFor="let n of notifications">{{ n }}</div>
-            <div class="dropdown-empty" *ngIf="!notifications.length">No new notifications</div>
-          </div>
+          @if (showNotifications) {
+            <div class="dropdown-panel notif-panel">
+              <div class="dropdown-panel-head">Notifications</div>
+
+              @for (n of notifications; track n) {
+                <div class="notif-item">
+                  {{ n }}
+                </div>
+              }
+
+              @if (!notifications.length) {
+                <div class="dropdown-empty">No new notifications</div>
+              }
+            </div>
+          }
         </div>
 
         <button class="icon-btn" (click)="toggleDarkMode()" aria-label="Toggle dark mode">
@@ -212,25 +254,36 @@
 
         <div class="profile-wrapper">
           <button class="profile-btn" (click)="toggleProfileMenu()">
-            <span class="avatar"><i class="bi bi-person-circle"></i></span>
+            <span class="avatar">
+              <i class="bi bi-person-circle"></i>
+            </span>
+
             <span class="profile-text">
               <strong>{{ userName }}</strong>
               <small>{{ userRole }}</small>
             </span>
+
             <i class="bi bi-chevron-down profile-caret"></i>
           </button>
 
-          <div class="dropdown-panel profile-panel" *ngIf="showProfileMenu">
-            <a class="dropdown-item" routerLink="/profile" (click)="showProfileMenu = false">
-              <i class="bi bi-person"></i> My Profile
-            </a>
-            <a class="dropdown-item" routerLink="/settings" (click)="showProfileMenu = false">
-              <i class="bi bi-lock"></i> Change Passoword
-            </a>
-            <a class="dropdown-item dropdown-item-danger" href="#" (click)="logout()">
-              <i class="bi bi-box-arrow-right"></i> Logout
-            </a>
-          </div>
+          @if (showProfileMenu) {
+            <div class="dropdown-panel profile-panel">
+              <a class="dropdown-item" routerLink="/profile" (click)="showProfileMenu = false">
+                <i class="bi bi-person"></i>
+                My Profile
+              </a>
+
+              <a class="dropdown-item" routerLink="/settings" (click)="showProfileMenu = false">
+                <i class="bi bi-lock"></i>
+                Change Passoword
+              </a>
+
+              <a class="dropdown-item dropdown-item-danger" href="#" (click)="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Logout
+              </a>
+            </div>
+          }
         </div>
       </div>
     </header>

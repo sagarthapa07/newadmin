@@ -40,16 +40,13 @@ export class CountiesComponent implements OnInit {
     private http: HttpClient,
   ) {}
 
-  // ---------- top-level mode ----------
   grantMode: GrantMode = 'selected';
   selectionType: SelectionType = 'single';
 
-  // ---------- messages ----------
   successMessage = '';
   errorMessage = '';
   clientIP = '';
 
-  // ---------- states lookup ----------
   stateIndexMap: Record<string, number> = {};
   countyIndexMap: Record<string, number> = {};
 
@@ -57,22 +54,17 @@ export class CountiesComponent implements OnInit {
     return Object.keys(this.stateIndexMap).sort();
   }
 
-  // ---------- "Select State to View" — plain native select ----------
   viewingStateName: string | null = null;
 
-  // ---------- selection state ----------
-  selectedStates: string[] = []; // order-preserving list of chosen state names
-  activeState: string | null = null; // state currently open in the counties editor
-  stateModeMap: Record<string, boolean> = {}; // true = Full State, false = With Counties
-  countiesByState: Record<string, string[]> = {}; // full county list per state (cached)
-  selectedCounties: Record<string, string[]> = {}; // persisted per-state county selection
+  selectedStates: string[] = []; 
+  activeState: string | null = null; 
+  stateModeMap: Record<string, boolean> = {}; 
+  countiesByState: Record<string, string[]> = {}; 
+  selectedCounties: Record<string, string[]> = {}; 
 
-  // remembers the toggle's last position (Full State / With Counties) set
-  // by the user — a brand-new state inherits this instead of always
-  // defaulting to "With Counties"; it only changes when the user flips it
+
   private lastToggleMode = false;
 
-  // ---------- county grid search ----------
   countySearchText = '';
 
   get filteredCounties(): string[] {
@@ -83,12 +75,9 @@ export class CountiesComponent implements OnInit {
     return all.filter((c) => c.toLowerCase().includes(q));
   }
 
-  // ---------- paste / auto-select panel ----------
   pasteText = '';
   detectStatesEnabled = true;
   detectCountiesEnabled = true;
-
-  // ---------- summary sidebar collapse state ----------
   private collapsedSummaryStates = new Set<string>();
 
   ngOnInit(): void {
@@ -130,10 +119,6 @@ export class CountiesComponent implements OnInit {
     }
   }
 
-  // =====================================================
-  // MODE SWITCHES
-  // =====================================================
-
   setGrantMode(mode: GrantMode) {
     this.grantMode = mode;
     this.cd.detectChanges();
@@ -157,11 +142,6 @@ export class CountiesComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  // =====================================================
-  // VALIDATION HELPERS — a state only "counts" as selected
-  // once the user has marked counties on it or set it Full State
-  // =====================================================
-
   private hasValidSelection(stateName: string): boolean {
     return (
       this.stateModeMap[stateName] === true || (this.selectedCounties[stateName]?.length ?? 0) > 0
@@ -174,25 +154,18 @@ export class CountiesComponent implements OnInit {
     delete this.stateModeMap[stateName];
   }
 
-  // called whenever we're about to move away from the currently active
-  // state — if the user never marked counties/Full State on it, it gets
-  // auto-dropped from the selection
   private validateAndDropIfEmpty(stateName: string | null) {
     if (!stateName) return;
     if (this.hasValidSelection(stateName)) return;
     this.discardState(stateName);
   }
 
-  // =====================================================
-  // "SELECT STATE TO VIEW" — drives both Single and Multiple modes
-  // =====================================================
 
   onStateViewChange() {
     const stateName = this.viewingStateName;
     if (!stateName) return;
-    if (this.activeState === stateName) return; // already viewing it
+    if (this.activeState === stateName) return; 
 
-    // moving away from a state in Multiple mode — validate it first
     if (this.selectionType === 'multiple' && this.activeState) {
       this.validateAndDropIfEmpty(this.activeState);
     }
@@ -212,7 +185,6 @@ export class CountiesComponent implements OnInit {
     this.countySearchText = '';
 
     if (!this.stateModeMap.hasOwnProperty(stateName)) {
-      // carry the toggle's current position forward instead of resetting it
       this.stateModeMap[stateName] = this.lastToggleMode;
     }
     if (!this.selectedCounties[stateName]) {
@@ -235,9 +207,6 @@ export class CountiesComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  // =====================================================
-  // COUNTIES LOADING
-  // =====================================================
 
   loadCountiesForState(stateName: string, callback?: () => void): void {
     if (this.countiesByState[stateName]) {
@@ -259,13 +228,6 @@ export class CountiesComponent implements OnInit {
     });
   }
 
-  // =====================================================
-  // COUNTY / FULL-STATE TOGGLES
-  // =====================================================
-
-  // fired by the "With Counties / Full State" buttons — a direct, explicit
-  // user action, so it updates the current state's mode AND becomes the
-  // new carry-forward default for the next state selected
   toggleFullState(stateName: string, isFull: boolean) {
     this.stateModeMap[stateName] = isFull;
     this.lastToggleMode = isFull;
@@ -296,7 +258,7 @@ export class CountiesComponent implements OnInit {
   toggleSelectAllCounties(stateName: string, checked: boolean) {
     if (checked) {
       this.selectedCounties[stateName] = [...(this.countiesByState[stateName] || [])];
-      this.stateModeMap[stateName] = true; // "select all" == Full State
+      this.stateModeMap[stateName] = true;
       this.lastToggleMode = true;
     } else {
       this.selectedCounties[stateName] = [];
@@ -312,9 +274,6 @@ export class CountiesComponent implements OnInit {
     return all.length > 0 && all.length === selected.length;
   }
 
-  // =====================================================
-  // PASTE / AUTO-SELECT PANEL
-  // =====================================================
 
   autoSelectFromText(): void {
     const text = this.pasteText.trim();
@@ -367,10 +326,6 @@ export class CountiesComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  // =====================================================
-  // SUMMARY SIDEBAR
-  // =====================================================
-
   get fullStates(): string[] {
     return this.selectedStates.filter((s) => this.stateModeMap[s] === true);
   }
@@ -404,17 +359,10 @@ export class CountiesComponent implements OnInit {
     return this.collapsedSummaryStates.has(stateName);
   }
 
-  // =====================================================
-  // CLEAR ALL
-  // =====================================================
-
   clearAllSelections() {
     this.resetSelections();
   }
 
-  // =====================================================
-  // LOAD EXISTING DATA (edit mode)
-  // =====================================================
 
   private loadSavedGrantData(): void {
     if (this.stCtType === '[ALL STATES]-[ALL COUNTIES]') {
@@ -478,18 +426,12 @@ export class CountiesComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  // =====================================================
-  // SAVE
-  // =====================================================
-
   saveStatesAndCounties(): void {
     if (!this.grantId) {
       this.showError('Grant ID missing hai — save nahi ho sakta');
       return;
     }
 
-    // validate the currently open state too, so an empty trailing
-    // selection doesn't sneak into the payload
     if (this.selectionType === 'multiple') {
       this.validateAndDropIfEmpty(this.activeState);
     }
@@ -615,10 +557,6 @@ export class CountiesComponent implements OnInit {
       this.cd.detectChanges();
     }, 3000);
   }
-
-  // =====================================================
-  // WIZARD NAV
-  // =====================================================
 
   goToFocusGroup() {
     this.tabChange.emit(4);

@@ -178,7 +178,6 @@ export class CalenderOpportunity {
     return Math.ceil(this.totalCount / this.pageSize);
   }
 
-  // visible page k liye hai ye
   get visiblePages(): number[] {
     const pages: number[] = [];
 
@@ -220,7 +219,6 @@ export class CalenderOpportunity {
       day: date.day,
     };
 
-    // agar toDate pehle se chhoti hai → reset
     if (this.toDate && this.toDate.before(date)) {
       this.toDate = null;
     }
@@ -330,8 +328,6 @@ export class CalenderOpportunity {
   }
 
   onSelectionChange(selected: any[]) {
-    // component apne aap item.selected true/false set karta hai,
-    // yaha bas kuch extra chahiye ho to karo — warna ye method khali bhi chalega
   }
 
   onPageSizeChangeHandler(size: number) {

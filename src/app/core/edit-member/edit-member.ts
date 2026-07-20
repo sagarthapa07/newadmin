@@ -2,16 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Api } from '../Services/api';
-import { AlertMessage } from '../../shared/component/alert-message/alert-message';
-import { DatePipe } from '@angular/common';
-import { pipe } from 'rxjs';
 import { Header } from '../../shared/component/header/header';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-edit-member',
   standalone: true,
-  imports: [ReactiveFormsModule, AlertMessage, DatePipe, Header, RouterLink],
+  imports: [ReactiveFormsModule, Header],
   templateUrl: './edit-member.html',
   styleUrls: ['./edit-member.scss'],
 })

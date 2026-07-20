@@ -1,40 +1,20 @@
 <app-header></app-header>
-<app-alert-message
-  *ngIf="successMessage"
-  [type]="'success'"
-  [message]="successMessage"
-  (close)="successMessage = ''"
->
-</app-alert-message>
+@if (successMessage) {
+  <app-alert-message [type]="'success'" [message]="successMessage" (close)="successMessage = ''">
+  </app-alert-message>
+}
 
-<app-alert-message
-  *ngIf="errorMessage"
-  [type]="'error'"
-  [message]="errorMessage"
-  (close)="errorMessage = ''"
->
-</app-alert-message>
+@if (errorMessage) {
+  <app-alert-message [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
+  </app-alert-message>
+}
+
 <Section class="header-section">
   <section class="page-wrapper">
     <div class="card-box">
       <div class="page-header">
         <h4>Edit Email Template</h4>
       </div>
-      <app-alert-message
-        *ngIf="successMessage"
-        [type]="'success'"
-        [message]="successMessage"
-        (close)="successMessage = ''"
-      >
-      </app-alert-message>
-
-      <app-alert-message
-        *ngIf="errorMessage"
-        [type]="'error'"
-        [message]="errorMessage"
-        (close)="errorMessage = ''"
-      >
-      </app-alert-message>
 
       <form [formGroup]="templateForm">
         <div class="row">

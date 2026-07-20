@@ -1,19 +1,15 @@
 <app-header></app-header>
-<app-alert-message
-  *ngIf="successMessage"
-  [type]="'success'"
-  [message]="successMessage"
-  (close)="successMessage = ''"
->
-</app-alert-message>
 
-<app-alert-message
-  *ngIf="errorMessage"
-  [type]="'error'"
-  [message]="errorMessage"
-  (close)="errorMessage = ''"
->
-</app-alert-message>
+@if (successMessage) {
+  <app-alert-message [type]="'success'" [message]="successMessage" (close)="successMessage = ''">
+  </app-alert-message>
+}
+
+@if (errorMessage) {
+  <app-alert-message [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
+  </app-alert-message>
+}
+
 <section class="page-wrapper header-section">
   <div class="card-box">
     <div class="page-header">
@@ -22,7 +18,7 @@
 
     <form [formGroup]="planForm">
       <div class="plan-grid">
-        <!-- LEFT COLUMN : Plan Detail -->
+        <!-- LEFT COLUMN -->
         <div class="form-column">
           <h5 class="section-title">Plan Detail</h5>
 
@@ -34,7 +30,9 @@
               formControlName="planName"
               placeholder="Plan Name"
             />
-            <div class="error" *ngIf="isFieldInvalid('planName')">Please enter plan name.</div>
+            @if (isFieldInvalid('planName')) {
+              <div class="error">Please enter plan name.</div>
+            }
           </div>
 
           <div class="field-block">
@@ -45,25 +43,35 @@
               formControlName="planCode"
               placeholder="Plan Code"
             />
-            <div class="error" *ngIf="isFieldInvalid('planCode')">Please enter plan code.</div>
+            @if (isFieldInvalid('planCode')) {
+              <div class="error">Please enter plan code.</div>
+            }
           </div>
 
           <div class="field-block">
             <label>Plan Type</label>
             <select class="form-control" formControlName="planType">
               <option value="" disabled selected>Select...</option>
-              <option *ngFor="let type of planTypeOptions" [value]="type">{{ type }}</option>
+              @for (type of planTypeOptions; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
             </select>
-            <div class="error" *ngIf="isFieldInvalid('planType')">Please select a plan type.</div>
+            @if (isFieldInvalid('planType')) {
+              <div class="error">Please select a plan type.</div>
+            }
           </div>
 
           <div class="field-block">
             <label>Plan Expiry</label>
             <select class="form-control" formControlName="planExpiry">
               <option value="" disabled selected>Select...</option>
-              <option *ngFor="let exp of planExpiryOptions" [value]="exp">{{ exp }}</option>
+              @for (exp of planExpiryOptions; track exp) {
+                <option [value]="exp">{{ exp }}</option>
+              }
             </select>
-            <div class="error" *ngIf="isFieldInvalid('planExpiry')">Please select plan expiry.</div>
+            @if (isFieldInvalid('planExpiry')) {
+              <div class="error">Please select plan expiry.</div>
+            }
           </div>
 
           <div class="field-block">
@@ -72,21 +80,24 @@
               <input type="date" class="form-control" formControlName="validFrom" />
               <input type="date" class="form-control" formControlName="validTo" />
             </div>
-            <div
-              class="error"
-              *ngIf="planForm.errors?.['dateRangeInvalid'] && planForm.get('validTo')?.touched"
-            >
-              Valid To date must be after Valid From date.
-            </div>
+
+            @if (planForm.errors?.['dateRangeInvalid'] && planForm.get('validTo')?.touched) {
+              <div class="error">Valid To date must be after Valid From date.</div>
+            }
           </div>
 
           <div class="field-block">
             <label>Status</label>
             <select class="form-control" formControlName="status">
               <option value="" disabled selected>Select...</option>
-              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+
+              @for (s of statusOptions; track s) {
+                <option [value]="s">{{ s }}</option>
+              }
             </select>
-            <div class="error" *ngIf="isFieldInvalid('status')">Please select status.</div>
+            @if (isFieldInvalid('status')) {
+              <div class="error">Please select status.</div>
+            }
           </div>
 
           <div class="field-block">
@@ -100,7 +111,7 @@
           </div>
         </div>
 
-        <!-- RIGHT COLUMN : Pricing & Settings -->
+        <!-- RIGHT COLUMN -->
         <div class="form-column">
           <h5 class="section-title">Pricing &amp; Settings</h5>
 
@@ -113,16 +124,22 @@
                 formControlName="duration"
                 placeholder="Duration"
               />
-              <div class="error" *ngIf="isFieldInvalid('duration')">Enter valid duration.</div>
+              @if (isFieldInvalid('duration')) {
+                <div class="error">Enter valid duration.</div>
+              }
             </div>
 
             <div class="field-block">
               <label>Duration Unit</label>
               <select class="form-control" formControlName="durationUnit">
                 <option value="" disabled selected>Select...</option>
-                <option *ngFor="let unit of durationUnitOptions" [value]="unit">{{ unit }}</option>
+                @for (unit of durationUnitOptions; track unit) {
+                  <option [value]="unit">{{ unit }}</option>
+                }
               </select>
-              <div class="error" *ngIf="isFieldInvalid('durationUnit')">Select duration unit.</div>
+              @if (isFieldInvalid('durationUnit')) {
+                <div class="error">Select duration unit.</div>
+              }
             </div>
           </div>
 
@@ -135,16 +152,22 @@
                 formControlName="planAmount"
                 placeholder="Plan Amount"
               />
-              <div class="error" *ngIf="isFieldInvalid('planAmount')">Enter valid amount.</div>
+              @if (isFieldInvalid('planAmount')) {
+                <div class="error">Enter valid amount.</div>
+              }
             </div>
 
             <div class="field-block">
               <label>Currency</label>
               <select class="form-control" formControlName="planCurrency">
                 <option value="" disabled selected>Select...</option>
-                <option *ngFor="let c of currencyOptions" [value]="c">{{ c }}</option>
+                @for (c of currencyOptions; track c) {
+                  <option [value]="c">{{ c }}</option>
+                }
               </select>
-              <div class="error" *ngIf="isFieldInvalid('planCurrency')">Select currency.</div>
+              @if (isFieldInvalid('planCurrency')) {
+                <div class="error">Select currency.</div>
+              }
             </div>
           </div>
 
@@ -166,66 +189,71 @@
               <label for="autoRenewalPlan" class="checkbox-label">Auto Renewal Plan</label>
             </div>
 
-            <div class="field-block" *ngIf="planForm.get('use14DaysTrial')?.value">
-              <label>Trial Plan Days</label>
-              <select class="form-control" formControlName="trialPlanDays">
-                <option value="" disabled selected>Select Trial Plan Days</option>
-                <option *ngFor="let d of trialPlanDaysOptions" [value]="d">{{ d }}</option>
-              </select>
-              <div class="error" *ngIf="isFieldInvalid('trialPlanDays')">
-                Please select trial plan days.
+            @if (planForm.get('use14DaysTrial')?.value) {
+              <div class="field-block">
+                <label>Trial Plan Days</label>
+                <select class="form-control" formControlName="trialPlanDays">
+                  <option value="" disabled selected>Select Trial Plan Days</option>
+                  @for (d of trialPlanDaysOptions; track d) {
+                    <option [value]="d">{{ d }}</option>
+                  }
+                </select>
+
+                @if (isFieldInvalid('trialPlanDays')) {
+                  <div class="error">Please select trial plan days.</div>
+                }
               </div>
-            </div>
+            }
           </div>
 
-          <!-- Payment Methods : ab API driven -->
+          <!-- Payment Methods -->
           <div class="field-block">
             <label>Payment Methods</label>
+
             <div class="multiselect-wrapper">
               <div
                 class="multiselect-control"
                 [class.has-chips]="selectedPaymentMethods.length"
                 (click)="togglePaymentDropdown()"
               >
-                <!-- Jab kuch select nahi hai -->
-                <span *ngIf="!selectedPaymentMethods.length">
-                  {{ loadingPaymentMethods ? 'Loading...' : 'Select payment methods...' }}
-                </span>
+                @if (!selectedPaymentMethods.length) {
+                  <span>
+                    {{ loadingPaymentMethods ? 'Loading...' : 'Select payment methods...' }}
+                  </span>
+                }
 
-                <!-- Chips -->
-                <span
-                  class="chip"
-                  *ngFor="let method of selectedPaymentMethods"
-                  (click)="$event.stopPropagation()"
-                >
-                  {{ method.label }}
-                  <i class="chip-remove" (click)="removePaymentMethod(method.id, $event)">×</i>
-                </span>
+                @for (method of selectedPaymentMethods; track method.id) {
+                  <span class="chip" (click)="$event.stopPropagation()">
+                    {{ method.label }}
+                    <i class="chip-remove" (click)="removePaymentMethod(method.id, $event)"> × </i>
+                  </span>
+                }
 
                 <i class="bi bi-chevron-down dropdown-icon"></i>
               </div>
 
-              <div class="multiselect-options" *ngIf="showPaymentDropdown">
-                <div *ngIf="loadingPaymentMethods" class="multiselect-option">
-                  Loading payment methods...
-                </div>
+              @if (showPaymentDropdown) {
+                <div class="multiselect-options">
+                  @if (loadingPaymentMethods) {
+                    <div class="multiselect-option">Loading payment methods...</div>
+                  }
 
-                <div
-                  *ngIf="!loadingPaymentMethods && !paymentMethodOptions.length"
-                  class="multiselect-option"
-                >
-                  No payment methods found
-                </div>
+                  @if (!loadingPaymentMethods && !paymentMethodOptions.length) {
+                    <div class="multiselect-option">No payment methods found</div>
+                  }
 
-                <div
-                  class="multiselect-option"
-                  *ngFor="let method of paymentMethodOptions"
-                  (click)="togglePaymentMethod(method.id)"
-                >
-                  <input type="checkbox" [checked]="isPaymentMethodSelected(method.id)" readonly />
-                  <span>{{ method.label }}</span>
+                  @for (method of paymentMethodOptions; track method.id) {
+                    <div class="multiselect-option" (click)="togglePaymentMethod(method.id)">
+                      <input
+                        type="checkbox"
+                        [checked]="isPaymentMethodSelected(method.id)"
+                        readonly
+                      />
+                      <span>{{ method.label }}</span>
+                    </div>
+                  }
                 </div>
-              </div>
+              }
             </div>
           </div>
         </div>
@@ -233,6 +261,7 @@
 
       <div class="buttons d-flex justify-content-end">
         <button type="button" class="button btn-cancel" (click)="onCancel()">Back</button>
+
         <button type="button" class="button" [disabled]="isSaving" (click)="onSave()">
           {{ isSaving ? 'Saving...' : 'Save' }}
         </button>

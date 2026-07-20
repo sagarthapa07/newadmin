@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Header } from '../../shared/component/header/header';
 import { Api } from '../Services/api';
 import { Footer } from '../../shared/component/footer/footer';
-
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -57,32 +56,6 @@ export class InvoiceDetails implements OnInit {
   }
 
 
-  get subtotal(): number {
-    return Number(this.invoice?.planAmount) || 0;
-  }
-
-  get discount(): number {
-    return Number(this.invoice?.discount) || 0;
-  }
-
-  get taxPercent(): number {
-    return Number(this.invoice?.taxPercent) || 0;
-  }
-
-  get tax(): number {
-    if (this.invoice?.tax != null) return Number(this.invoice.tax) || 0;
-    return (this.subtotal * this.taxPercent) / 100;
-  }
-
-  get total(): number {
-    return this.subtotal - this.discount + this.tax;
-  }
-
-  get amountDue(): number {
-    return this.invoice?.amountDue != null ? Number(this.invoice.amountDue) || 0 : this.total;
-  }
-
-
   goBack(): void {
     this.location.back();
   }
@@ -127,7 +100,7 @@ export class InvoiceDetails implements OnInit {
         `Here are your invoice details:\n\n` +
         `Invoice #: ${this.invoice?.invoiceNumber || ''}\n` +
         `Invoice Date: ${this.invoice?.invoiceDate || ''}\n` +
-        `Amount Due: ${this.amountDue.toFixed(2)} USD\n\n` +
+        `Amount: ${Number(this.invoice?.planAmount || 0).toFixed(2)} USD\n\n` +
         `Thank you for your business.\n\nFUNDSFORNGOS, LLC`,
     );
 

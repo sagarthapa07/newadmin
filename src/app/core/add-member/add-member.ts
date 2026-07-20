@@ -9,7 +9,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 
 @Component({
   selector: 'app-add-member',
-  imports: [CommonModule, Header, ReactiveFormsModule, AlertMessage],   // NgSelectModule hataya
+  imports: [CommonModule, Header, ReactiveFormsModule, AlertMessage],
   templateUrl: './add-member.html',
   styleUrl: './add-member.scss',
 })
@@ -104,7 +104,7 @@ export class AddMember {
       userMail: this.getUserMail(),
     };
 
-    // ⚠️ Api service mein addUpdateMember (ya jo bhi naam ho) method call karna padega yahan
+    // Api service mein addUpdateMember (ya jo bhi naam ho) method call karna padega yahan
     this.api.addUpdateMember(payload).subscribe({
       next: (res: any) => {
         this.isSaving = false;

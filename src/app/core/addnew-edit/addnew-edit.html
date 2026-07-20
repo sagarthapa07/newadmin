@@ -1,33 +1,48 @@
 <app-header></app-header>
 
 <section class="header-section">
+
+  @if (errorMessage) {
+    <app-alert-message
+      [type]="'error'"
+      [message]="errorMessage"
+      (close)="errorMessage = ''">
+    </app-alert-message>
+  }
+
   <div class="row">
     <div class="col-lg-6">
       <h4>Calendar and Premium Newsletter (Add/Editor</h4>
     </div>
 
     <div class="col-lg-6 d-flex justify-content-end header-btn">
-      <button
-        class="btn"
-        *ngFor="let item of menuItems"
-        [class.active]="activeItem === item.id"
-        (click)="setActive(item.id)"
-      >
-        {{ item.label }}
-      </button>
+
+      @for (item of menuItems; track item.id) {
+        <button
+          class="btn"
+          [class.active]="activeItem === item.id"
+          [class.locked]="isTabLocked(item.id)"
+          [attr.title]="isTabLocked(item.id) ? 'Save this opportunity first' : null"
+          (click)="setActive(item.id)">
+          {{ item.label }}
+        </button>
+      }
+
     </div>
   </div>
 
-  <div *ngIf="isLoading" class="component-loader">
-    <span class="loader-dot"></span>
-    Loading data...
-  </div>
-  <div>
+  @if (isLoading) {
+    <div class="component-loader">
+      <span class="loader-dot"></span>
+      Loading data...
+    </div>
+  }
+
+  @if (activeItem === 1) {
     <app-calendar-details
-      *ngIf="activeItem === 1"
       [data]="grantData"
-      (tabChange)="setActive($event)"
-    >
+      (tabChange)="setActive($event)">
     </app-calendar-details>
-  </div>
+  }
+
 </section>

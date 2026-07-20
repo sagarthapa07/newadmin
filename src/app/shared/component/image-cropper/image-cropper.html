@@ -9,7 +9,6 @@
   (drop)="onDrop($event)"
 >
   <label class="upload-btn">
-
     <input type="file" accept="image/*" (change)="fileChange($event)" hidden />
     <svg
       class="upload-icon"
@@ -33,30 +32,12 @@
   <span class="file-name" *ngIf="fileName">{{ fileName }}</span>
 </div>
 
-<!--
-  Modal — always in the DOM (no *ngIf/@if), visibility toggled purely via
-  the "show" class, and relocated to document.body once (see ngAfterViewInit
-  in the TS). Class names are prefixed with "cropper-" specifically to avoid
-  colliding with Bootstrap's global .modal/.modal-header/.modal-footer rules
-  (Bootstrap's .modal sets position:fixed;top:0;left:0 — reusing that bare
-  class name was what pinned this box to the top-left corner).
--->
-<div
-  class="cropper-overlay"
-  [class.show]="showEditor"
-  #modalOverlay
-  (click)="overlayClick($event)"
->
+<div class="cropper-overlay" [class.show]="showEditor" #modalOverlay (click)="overlayClick($event)">
   <div class="cropper-modal">
     <div class="cropper-modal-header">Photo Editor</div>
 
     <!-- Canvas -->
-    <div
-      class="canvas-wrap"
-      #canvasWrap
-      (wheel)="onWheel($event)"
-      (mousedown)="onCanvasMD($event)"
-    >
+    <div class="canvas-wrap" #canvasWrap (wheel)="onWheel($event)" (mousedown)="onCanvasMD($event)">
       <!-- Image -->
       <div class="img-layer" #imgLayer [style.transform]="imgLayerStyle()">
         <img #editorImg [src]="imageSrc" draggable="false" [style.transform]="imgStyle()" />

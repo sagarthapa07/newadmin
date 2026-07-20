@@ -6,7 +6,6 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-// vertical divider between the two columns
 .letter-col {
   border-left: 1px solid var(--border-color);
 }
@@ -80,7 +79,7 @@
 
 .detail-col:last-child {
   border-radius: 0 12px 12px 0;
-  border-left: none; // avoid double border with .letter-col rule above
+  border-left: none;
 }
 
 .field-icon {
@@ -160,7 +159,6 @@ textarea.form-control {
   margin-top: 3px;
 }
 
-// decorative caret shown on select-style / dropdown-style fields
 .field-wrapper.has-chevron .form-control {
   padding-right: 36px;
 }
@@ -242,11 +240,6 @@ textarea.form-control {
   color: var(--text-color-dark);
 }
 
-// ===== IMAGE UPLOAD =====
-// kept inside the same .form-row grid as every other field, so it starts
-// at the exact same left column — the dropzone itself is bounded-width
-// (not stretched full-row) to match the reference, with the thumbnail
-// sitting right beside it on the same line
 .image-upload-wrapper {
   display: flex;
   align-items: center;
@@ -395,8 +388,6 @@ textarea.form-control {
   flex-wrap: wrap;
 }
 
-// danger/outline variant for Clear All, built the same way as the
-// global .button-primary / .button-secondary pair
 .button-danger {
   background-color: var(--white);
   color: var(--danger-color);

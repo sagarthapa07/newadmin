@@ -8,6 +8,7 @@ import { filter } from 'rxjs';
 import { Auth } from '../../../core/Services/auth';
 import { Api } from '../../../core/Services/api';
 import { Breadcrumb, BreadcrumbService } from '../../../core/Services/breadcrumb';
+import { Theme } from '../../../core/Services/theme';
 
 @Component({
   selector: 'app-header',
@@ -21,18 +22,13 @@ export class Header implements OnInit {
   isSidebarClosed = true;
   isSidebarHovered = false;
   breadcrumbs: Breadcrumb[] = [];
-
   activeCollapse: string | null = null;
   activeSubCollapse: string | null = null;
-
-  // ---- top bar state ----
   searchText = '';
-  notifications: string[] = []; // TODO: wire this up to your real notifications API/service
+  notifications: string[] = [];
   showNotifications = false;
   showProfileMenu = false;
   isDarkMode = false;
-
-  // ---- profile (name/role) ----
   userName = 'User';
   userRole = '';
 
@@ -42,9 +38,13 @@ export class Header implements OnInit {
     private auth: Auth,
     private api: Api,
     private breadcrumbService: BreadcrumbService,
+    private theme: Theme,
   ) {}
 
   ngOnInit() {
+    this.theme.initTheme();
+    this.isDarkMode = this.theme.isDark();
+
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.breadcrumbs = this.buildBreadcrumb(this.route.root);
     });
@@ -54,15 +54,8 @@ export class Header implements OnInit {
     });
 
     this.loadUserProfile();
-
-    this.isDarkMode = localStorage.getItem('theme') === 'dark';
-    this.applyDarkMode();
   }
 
-  // =========================================================================
-  // SIDEBAR (hover-to-peek + click-to-pin, both drive the same "expanded" state
-  // so the top bar / breadcrumb shifts in sync with the sidebar width)
-  // =========================================================================
   toggleSidebar() {
     this.isSidebarClosed = !this.isSidebarClosed;
     if (this.isSidebarClosed) {
@@ -113,9 +106,6 @@ export class Header implements OnInit {
     this.activeSubCollapse = null;
   }
 
-  // =========================================================================
-  // BREADCRUMB (unchanged logic)
-  // =========================================================================
   buildBreadcrumb(route: ActivatedRoute, url: string = '', breadcrumbs: any[] = []): any[] {
     const children: ActivatedRoute[] = route.children;
     if (children.length === 0) {
@@ -135,9 +125,6 @@ export class Header implements OnInit {
     return breadcrumbs;
   }
 
-  // =========================================================================
-  // TOP BAR: search / notifications / dark mode / profile dropdown
-  // =========================================================================
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
@@ -150,7 +137,6 @@ export class Header implements OnInit {
   }
 
   onSearch() {
-    // TODO: hook this up to a real global-search endpoint once one exists.
     console.log('Search:', this.searchText);
   }
 
@@ -165,19 +151,10 @@ export class Header implements OnInit {
   }
 
   toggleDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
-    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
-    this.applyDarkMode();
+    this.theme.toggleTheme();
+    this.isDarkMode = this.theme.isDark();
   }
 
-  private applyDarkMode() {
-    document.body.classList.toggle('dark-theme', this.isDarkMode);
-  }
-
-  // =========================================================================
-  // PROFILE — name/role primarily from the auth cookie; falls back to an
-  // API call only if the cookie payload doesn't have them.
-  // =========================================================================
   private loadUserProfile(): void {
     const cookieUser = this.auth.getUser();
     if (!cookieUser) return;
@@ -185,10 +162,6 @@ export class Header implements OnInit {
     this.userName = cookieUser.userName || cookieUser.name || cookieUser.emailId || 'User';
     this.userRole = cookieUser.userRole || cookieUser.role || '';
 
-    // Auth.setSession() abhi cookie me sirf jo bhi "user" object login response se
-    // aata hai wahi save karta hai. Agar us object me userName/userRole already
-    // hai to upar ki 2 lines se hi kaam ban jayega. Agar nahi hai, yahan se
-    // fallback API try karo — apna asli endpoint/field names yahan daal dena:
     if (!this.userRole && cookieUser.userIndex) {
       this.api.getUserRecords({ userIndex: cookieUser.userIndex }).subscribe({
         next: (res: any) => {

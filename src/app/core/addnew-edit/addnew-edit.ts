@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Header } from '../../shared/component/header/header';
 import { CalendarDetails } from '../calendar-details/calendar-details';
+import { AlertMessage } from '../../shared/component/alert-message/alert-message';
 import { Api } from '../Services/api';
 import { GrantDetail } from '../../datatype';
 import { Input } from '@angular/core';
@@ -16,6 +17,7 @@ import { ChangeDetectorRef } from '@angular/core';
     FormsModule,
     Header,
     CalendarDetails,
+    AlertMessage,
   ],
   templateUrl: './addnew-edit.html',
   styleUrl: './addnew-edit.scss',
@@ -23,6 +25,7 @@ import { ChangeDetectorRef } from '@angular/core';
 export class AddnewEdit {
   opportunityForm: FormGroup;
   isLoading = false;
+  errorMessage = '';
 
   menuItems = [
     { id: 1, label: 'Calender Details' },
@@ -128,7 +131,17 @@ export class AddnewEdit {
     if (clean.includes('not mentioned')) return 'Grant Duration Not Mentioned';
     return '';
   }
+
+  isTabLocked(id: number): boolean {
+    return id !== 1 && !this.grantData?.id;
+  }
+
   setActive(id: number) {
+    if (this.isTabLocked(id)) {
+      this.errorMessage = 'Please save this Opportunity first before proceeding to other tabs.';
+      setTimeout(() => (this.errorMessage = ''), 4000);
+      return;
+    }
     this.activeItem = id;
   }
 

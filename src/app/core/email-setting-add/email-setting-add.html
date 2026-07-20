@@ -1,24 +1,21 @@
 <app-header></app-header>
-<app-alert-message
-  *ngIf="successMessage"
-  [type]="'success'"
-  [message]="successMessage"
-  (close)="successMessage = ''"
->
-</app-alert-message>
 
-<app-alert-message
-  *ngIf="errorMessage"
-  [type]="'error'"
-  [message]="errorMessage"
-  (close)="errorMessage = ''"
->
-</app-alert-message>
+@if (successMessage) {
+  <app-alert-message [type]="'success'" [message]="successMessage" (close)="successMessage = ''">
+  </app-alert-message>
+}
+
+@if (errorMessage) {
+  <app-alert-message [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
+  </app-alert-message>
+}
+
 <section class="page-wrapper header-section">
   <div class="card-box">
     <div class="page-header">
       <h4>Add Email Setting</h4>
     </div>
+
     <form [formGroup]="settingForm">
       <div class="row">
         <div class="col-md-6">
@@ -29,7 +26,10 @@
             formControlName="senderName"
             placeholder="Sender Name"
           />
-          <div class="error" *ngIf="isFieldInvalid('senderName')">Please enter sender name.</div>
+
+          @if (isFieldInvalid('senderName')) {
+            <div class="error">Please enter sender name.</div>
+          }
         </div>
 
         <div class="col-md-6">
@@ -40,9 +40,10 @@
             formControlName="senderEmail"
             placeholder="Sender Email"
           />
-          <div class="error" *ngIf="isFieldInvalid('senderEmail')">
-            Please enter a valid sender email.
-          </div>
+
+          @if (isFieldInvalid('senderEmail')) {
+            <div class="error">Please enter a valid sender email.</div>
+          }
         </div>
       </div>
 
@@ -55,9 +56,10 @@
             formControlName="senderPassword"
             placeholder="Sender Password"
           />
-          <div class="error" *ngIf="isFieldInvalid('senderPassword')">
-            Please enter sender password.
-          </div>
+
+          @if (isFieldInvalid('senderPassword')) {
+            <div class="error">Please enter sender password.</div>
+          }
         </div>
 
         <div class="col-md-6">
@@ -68,7 +70,10 @@
             formControlName="mailServer"
             placeholder="Mail Server"
           />
-          <div class="error" *ngIf="isFieldInvalid('mailServer')">Please enter mail server.</div>
+
+          @if (isFieldInvalid('mailServer')) {
+            <div class="error">Please enter mail server.</div>
+          }
         </div>
       </div>
 
@@ -81,7 +86,10 @@
             formControlName="smtpport"
             placeholder="SMTP Port"
           />
-          <div class="error" *ngIf="isFieldInvalid('smtpport')">Please enter SMTP port.</div>
+
+          @if (isFieldInvalid('smtpport')) {
+            <div class="error">Please enter SMTP port.</div>
+          }
         </div>
 
         <div class="col-md-6">
@@ -95,6 +103,7 @@
 
       <div class="buttons d-flex justify-content-end">
         <button type="button" class="button btn-cancel" (click)="onCancel()">Cancel</button>
+
         <button type="button" class="button" [disabled]="isSaving" (click)="onSave()">
           {{ isSaving ? 'Saving...' : 'Save' }}
         </button>

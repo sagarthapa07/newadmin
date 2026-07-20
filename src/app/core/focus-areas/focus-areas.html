@@ -1,23 +1,17 @@
 <section class="focus-area-wrapper">
-  <app-alert-message
-    *ngIf="toastMessage"
-    [type]="'success'"
-    [message]="toastMessage"
-    (close)="toastMessage = ''"
-  >
-  </app-alert-message>
+  @if (toastMessage) {
+    <app-alert-message [type]="'success'" [message]="toastMessage" (close)="toastMessage = ''">
+    </app-alert-message>
+  }
 
-  <app-alert-message
-    *ngIf="errorMessage"
-    [type]="'error'"
-    [message]="errorMessage"
-    (close)="errorMessage = ''"
-  >
-  </app-alert-message>
+  @if (errorMessage) {
+    <app-alert-message [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
+    </app-alert-message>
+  }
 
   <!-- HEADER -->
   <div class="focus-header d-flex justify-content-between align-items-start flex-wrap gap-2">
-    <div class="">
+    <div>
       <h5 class="mb-1"><i class="bi bi-bullseye me-2"></i>Select Focus Areas</h5>
       <p class="sub-text mb-0">Choose the focus areas that best match this opportunity.</p>
     </div>
@@ -28,103 +22,114 @@
   </div>
 
   <!-- PASTE MODAL -->
-  <div class="paste-overlay" *ngIf="showPasteModal">
-    <div class="paste-modal" (click)="$event.stopPropagation()">
-      <h3>Paste Article / Content</h3>
+  @if (showPasteModal) {
+    <div class="paste-overlay">
+      <div class="paste-modal" (click)="$event.stopPropagation()">
+        <h3>Paste Article / Content</h3>
 
-      <textarea
-        [(ngModel)]="pasteText"
-        placeholder="Paste your article or long text here..."
-      ></textarea>
+        <textarea
+          [(ngModel)]="pasteText"
+          placeholder="Paste your article or long text here..."
+        ></textarea>
 
-      <div class="paste-actions">
-        <button class="button button-secondary" (click)="closePasteModal()">Cancel</button>
-        <button
-          class="button button-primary"
-          [disabled]="pasteLoading"
-          (click)="generateFromText()"
-        >
-          {{ pasteLoading ? 'Loading...' : 'Generate' }}
-        </button>
-      </div>
-    </div>
-  </div>
+        <div class="paste-actions">
+          <button class="button button-secondary" (click)="closePasteModal()">Cancel</button>
 
-  <!-- MAIN BODY -->
-  <div class="row focus-body gx-4 mt-4">
-    <!-- LEFT: ISSUE GRID -->
-    <div class="col-lg-9">
-      <div class="issue-grid" #issueContainer>
-        <div
-          class="issue-box"
-          *ngFor="let issue of issues"
-          [class.selected]="hasAnySelected(issue)"
-          (click)="onClickIssue(issue); $event.stopPropagation()"
-        >
-          <span class="issue-dot" [class.active]="hasAnySelected(issue)"></span>
-          <span class="issue-text">{{ issue.name }}</span>
-
-          <!-- SUB ISSUE POPOVER -->
-          <div
-            class="subissue-popover"
-            *ngIf="activeIssue?.id === issue.id"
-            (click)="$event.stopPropagation()"
-            (mousedown)="$event.stopPropagation()"
+          <button
+            class="button button-primary"
+            [disabled]="pasteLoading"
+            (click)="generateFromText()"
           >
-            <!-- HEADER -->
-            <div class="popup-header">
-              {{ issue.name }}
-            </div>
-
-            <!-- BODY -->
-            <div class="popup-body">
-              <div class="sub-title">Sub Issues</div>
-
-              <div class="subissue-grid">
-                <label class="sub-checkbox" *ngFor="let sub of issue.subIssues || []">
-                  <input
-                    type="checkbox"
-                    [checked]="isSubSelected(issue, sub)"
-                    (change)="toggleSub(issue, sub)"
-                  />
-                  <div *ngIf="!issue.subIssues?.length">Loading sub issues...</div>
-                  <span>{{ sub.name }}</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- SELECT ALL -->
-            <div class="popup-select-all">
-              <label class="sub-checkbox">
-                <input
-                  type="checkbox"
-                  [checked]="isAllSelected(issue)"
-                  (change)="toggleSelectAll(issue)"
-                />
-                <span>Select All</span>
-              </label>
-            </div>
-
-            <!-- FOOTER -->
-            <div class="popup-footer">
-              <button class="button button-secondary" (click)="clearIssue(issue.id)">
-                ✕ Remove
-              </button>
-              <button class="button button-primary" (click)="saveSelectedIssues()">Done</button>
-            </div>
-          </div>
+            {{ pasteLoading ? 'Loading...' : 'Generate' }}
+          </button>
         </div>
       </div>
     </div>
+  }
 
-    <!-- RIGHT: SELECTION SUMMARY -->
+  <!-- MAIN BODY -->
+  <div class="row focus-body gx-4 mt-4">
+    <!-- LEFT -->
+    <div class="col-lg-9">
+      <div class="issue-grid" #issueContainer>
+        @for (issue of issues; track issue.id) {
+          <div
+            class="issue-box"
+            [class.selected]="hasAnySelected(issue)"
+            (click)="onClickIssue(issue); $event.stopPropagation()"
+          >
+            <span class="issue-dot" [class.active]="hasAnySelected(issue)"></span>
+
+            <span class="issue-text">{{ issue.name }}</span>
+
+            @if (activeIssue?.id === issue.id) {
+              <div
+                class="subissue-popover"
+                (click)="$event.stopPropagation()"
+                (mousedown)="$event.stopPropagation()"
+              >
+                <div class="popup-header">
+                  {{ issue.name }}
+                </div>
+
+                <div class="popup-body">
+                  <div class="sub-title">Sub Issues</div>
+
+                  <div class="subissue-grid">
+                    @for (sub of issue.subIssues || []; track sub.id) {
+                      <label class="sub-checkbox">
+                        <input
+                          type="checkbox"
+                          [checked]="isSubSelected(issue, sub)"
+                          (change)="toggleSub(issue, sub)"
+                        />
+
+                        @if (!issue.subIssues?.length) {
+                          <div>Loading sub issues...</div>
+                        }
+
+                        <span>{{ sub.name }}</span>
+                      </label>
+                    }
+                  </div>
+                </div>
+
+                <div class="popup-select-all">
+                  <label class="sub-checkbox">
+                    <input
+                      type="checkbox"
+                      [checked]="isAllSelected(issue)"
+                      (change)="toggleSelectAll(issue)"
+                    />
+                    <span>Select All</span>
+                  </label>
+                </div>
+
+                <div class="popup-footer">
+                  <button class="button button-secondary" (click)="clearIssue(issue.id)">
+                    ✕ Remove
+                  </button>
+
+                  <button class="button button-primary" (click)="saveSelectedIssues()">Done</button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- RIGHT -->
     <div class="col-lg-3">
       <div class="summary-panel">
         <div class="summary-header d-flex justify-content-between align-items-center">
           <div class="summary-title">
             Selection Summary
-            <span class="count-badge">{{ filteredSelectedEntries.length }}</span>
+            <span class="count-badge">
+              {{ filteredSelectedEntries.length }}
+            </span>
           </div>
+
           <span class="clear-all-link" (click)="clearAll()">
             <i class="bi bi-trash"></i> Clear All
           </span>
@@ -133,43 +138,56 @@
         <div class="summary-subtitle">Selected Focus Areas</div>
 
         <div class="summary-list">
-          <div *ngFor="let entry of filteredSelectedEntries" class="summary-issue">
-            <div class="summary-issue-header d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center gap-2">
-                <span class="issue-icon"><i class="bi bi-bookmark-star-fill"></i></span>
-                <strong>{{ getIssueName(entry[0]) }}</strong>
+          @for (entry of filteredSelectedEntries; track entry[0]) {
+            <div class="summary-issue">
+              <div class="summary-issue-header d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="issue-icon">
+                    <i class="bi bi-bookmark-star-fill"></i>
+                  </span>
+
+                  <strong>{{ getIssueName(entry[0]) }}</strong>
+                </div>
+
+                <span
+                  class="remove-issue"
+                  (click)="removeWholeIssue(entry[0])"
+                  title="Remove entire issue"
+                >
+                  Remove
+                </span>
               </div>
-              <span
-                class="remove-issue"
-                (click)="removeWholeIssue(entry[0])"
-                title="Remove entire issue"
-              >
-                Remove
-              </span>
-            </div>
 
-            <div class="chip-list">
-              <span class="chip" *ngFor="let subId of entry[1]">
-                {{ getSubIssueName(entry[0], subId) }}
-                <span class="remove" (click)="clearSingleSub(entry[0], subId)">×</span>
-              </span>
-            </div>
-          </div>
+              <div class="chip-list">
+                @for (subId of entry[1]; track subId) {
+                  <span class="chip">
+                    {{ getSubIssueName(entry[0], subId) }}
 
-          <div class="empty-summary" *ngIf="filteredSelectedEntries.length === 0">
-            No focus areas selected yet.
-          </div>
+                    <span class="remove" (click)="clearSingleSub(entry[0], subId)"> × </span>
+                  </span>
+                }
+              </div>
+            </div>
+          }
+
+          @if (filteredSelectedEntries.length === 0) {
+            <div class="empty-summary">No focus areas selected yet.</div>
+          }
         </div>
 
         <div class="tip-box">
           <i class="bi bi-lightbulb-fill"></i>
-          <span><strong>Tip:</strong> Click on any focus area to add or remove sub-areas.</span>
+
+          <span>
+            <strong>Tip:</strong>
+            Click on any focus area to add or remove sub-areas.
+          </span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- BOTTOM ACTION BAR -->
+  <!-- FOOTER -->
   <div class="section-footer mb-5">
     <button type="button" class="btn btn-clear" (click)="clearAll()">
       <i class="bi bi-trash3"></i> Clear All

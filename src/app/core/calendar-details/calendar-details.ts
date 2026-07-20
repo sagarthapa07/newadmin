@@ -374,8 +374,6 @@ export class CalendarDetails {
     this.showImageModal = false;
   }
 
-  // ✅ FIX: galat '/preview/:id' route ki jagah ab actual routes.ts wala
-  // 'calendar-opportunity/edit/preview/:id' path use ho raha hai
   goToPreview(): void {
     if (this.opportunityForm.invalid || this.isEditorEmpty()) {
       this.opportunityForm.markAllAsTouched();

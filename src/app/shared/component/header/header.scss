@@ -8,9 +8,6 @@ body {
   display: flex;
 }
 
-// ---------------------------------------------------------------------
-// LOGO SWAP (small icon <-> full wordmark) on sidebar expand
-// ---------------------------------------------------------------------
 .logo {
   position: absolute;
   transition: opacity 0.3s ease;
@@ -38,13 +35,6 @@ body {
   opacity: 1;
 }
 
-// ---------------------------------------------------------------------
-// SIDEBAR
-// Two states only: .close (70px, icons only) and expanded (250px) —
-// expanded is driven by [class.close]="!isSidebarExpanded()" in the
-// template, so hover-peek and click-to-pin both land on the same state
-// that the top bar syncs against (no separate hover-only width anymore).
-// ---------------------------------------------------------------------
 .sidebar {
   position: fixed;
   top: 0;
@@ -244,9 +234,6 @@ body {
   color: var(--primary-color);
 }
 
-// ---------------------------------------------------------------------
-// MAIN AREA — shifts right in sync with the sidebar's expanded state
-// ---------------------------------------------------------------------
 .main-area {
   flex: 1;
   margin-left: 70px;
@@ -258,9 +245,6 @@ body {
   margin-left: 250px;
 }
 
-// ---------------------------------------------------------------------
-// TOP BAR
-// ---------------------------------------------------------------------
 .topbar {
   height: 64px;
   display: flex;
@@ -302,7 +286,6 @@ body {
   background: var(--btn-bg-color);
 }
 
-// ---- breadcrumb ----
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -341,7 +324,6 @@ body {
   color: var(--placeholder-color);
 }
 
-// ---- right side ----
 .topbar-right {
   display: flex;
   align-items: center;
@@ -417,7 +399,6 @@ body {
   border: 2px solid var(--white);
 }
 
-// ---- dropdown panels (notifications / profile) ----
 .notif-wrapper,
 .profile-wrapper {
   position: relative;
@@ -481,7 +462,6 @@ body {
   color: var(--danger-color);
 }
 
-// ---- profile button ----
 .profile-btn {
   display: flex;
   align-items: center;
@@ -532,9 +512,6 @@ body {
   color: var(--placeholder-color);
 }
 
-// ---------------------------------------------------------------------
-// RESPONSIVE
-// ---------------------------------------------------------------------
 @media (max-width: 992px) {
   .search-box {
     width: 180px;

@@ -78,6 +78,72 @@
   --tran-05: all 0.5s ease;
 }
 
+.topbar {
+  background: var(--white);
+}
+body.dark-theme {
+  /* Main Colors */
+  --white: #17191d;
+  --body-color: #0f1115;
+  --sidebar-color: #161a20;
+  --card-bg-color: #1b1f27;
+
+  /* Text */
+  --text-color: #f5f7fa;
+  --text-color-dark: #ffffff;
+  --text-color-light: #a5adba;
+  --placeholder-color: #8b949e;
+
+  /* Primary */
+  --primary-color: #a893fc;
+  --primary-color-dark: #ccc2f8;
+  --primary-color-light: rgba(124, 92, 255, 0.18);
+
+  /* Borders */
+  --border-color: #2b313d;
+  --btn-border-color: #323845;
+
+  /* Backgrounds */
+  --btn-bg-color: #232834;
+  --box-bg-color: #20252f;
+  --header2-bkg-color: #1b2028;
+  --nav-color: #7c5cff;
+
+  /* Others */
+  --hover-color: #2b313d;
+  --danger-color: #ff6b6b;
+  --toggle-color: #7c5cff;
+  --shadow-color: rgba(0, 0, 0, 0.45);
+}
+
+body.dark-theme .ngb-dp {
+  background: #17191d;
+
+  border: 1px solid #2b313d;
+}
+
+body.dark-theme .ngb-dp-header {
+  background: #1f232b;
+}
+
+body.dark-theme .ngb-dp-day {
+  color: white;
+}
+
+body.dark-theme .btn-light {
+  background: transparent;
+
+  color: white;
+}
+
+body.dark-theme .btn-light:hover {
+  background: #2c3240;
+}
+
+body.dark-theme .ngb-dp-weekday {
+  color: #8b949e;
+}
+
 .header-section {
   margin: 15px 0px 0 98px;
 }

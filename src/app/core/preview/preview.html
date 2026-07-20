@@ -1,12 +1,17 @@
 <app-header></app-header>
 
-<div class="state-wrapper" *ngIf="loading">
-  <p>Loading opportunity...</p>
-</div>
+@if (loading) {
+  <div class="state-wrapper">
+    <p>Loading opportunity...</p>
+  </div>
+}
 
-<div class="state-wrapper" *ngIf="!loading && errorMsg">
-  <p>{{ errorMsg }}</p>
-</div>
+@if (!loading && errorMsg) {
+  <div class="state-wrapper">
+    <p>{{ errorMsg }}</p>
+  </div>
+}
+
 <header class="grant-header">
   <div class="grant-topbar">
     <div class="grant-container grant-topbar-inner">
@@ -47,150 +52,179 @@
   <div class="grant-breadcrumb">
     <div class="grant-container">
       <span>Home</span>
-
       <span>/</span>
-
       <span>Funding Grants</span>
-
       <span>/</span>
-
-      <span class="active"> {{ data.title }} </span>
+      <span class="active">{{ data.title }}</span>
     </div>
   </div>
 </header>
-<div class="preview-wrapper" *ngIf="!loading && !errorMsg && data">
-  <!-- LEFT -->
-  <div class="left">
-    <div class="top-card">
-      <div class="top-inner">
-        <img
-          [src]="data.imageUrl || data.logoUrl || 'assets/images/no-image.png'"
-          [alt]="data.title"
-          class="logo"
-        />
 
-        <div class="top-content">
-          <div class="title-row">
-            <h2>{{ data.title }}</h2>
-            <button class="fav-btn" (click)="toggleFavorite()" type="button">
-              <i class="bi" [ngClass]="isFavorite ? 'bi-heart-fill' : 'bi-heart'"></i>
-            </button>
-          </div>
+@if (!loading && !errorMsg && data) {
+  <div class="preview-wrapper">
+    <!-- LEFT -->
+    <div class="left">
+      <div class="top-card">
+        <div class="top-inner">
+          <img
+            [src]="data.imageUrl || data.logoUrl || 'assets/images/no-image.png'"
+            [alt]="data.title"
+            class="logo"
+          />
 
-          <div class="meta">
-            <p class="meta-label">Important Dates:</p>
+          <div class="top-content">
+            <div class="title-row">
+              <h2>{{ data.title }}</h2>
 
-            <p class="meta-row no-border">
-              <b>Post Date:</b>
-              <span>{{
-                data.postDate ? (data.postDate | date: 'MMMM d, y') : 'Not Available'
-              }}</span>
-            </p>
-            <p class="meta-row">
-              <b>Deadline Date:</b>
-              <span>{{
-                data.deadLineDate ? (data.deadLineDate | date: 'MMMM d, y') : 'Not Available'
-              }}</span>
-            </p>
-            <p class="meta-row">
-              <b>Donor Name:</b> <span>{{ data.donorName || 'Not Available' }}</span>
-            </p>
-            <p class="meta-row">
-              <b>Grant Size:</b> <span>{{ data.grantSize || 'Not Available' }}</span>
-            </p>
-            <p class="meta-row">
-              <b>Grant Duration:</b>
-              <span>{{ data.grantDuration || 'Grant Duration Not Mentioned' }}</span>
-            </p>
-            <p class="meta-row">
-              <b>Category:</b> <span>{{ data.category || 'N/A' }}</span>
-            </p>
-            <p class="meta-row url-row">
-              <b>Reference URL:</b>
-              <a
-                *ngIf="data.referenceUrl; else noUrl"
-                [href]="data.referenceUrl"
-                target="_blank"
-                rel="noopener"
-              >
-                {{ data.referenceUrl }}
-              </a>
-              <ng-template #noUrl><span>Opportunity is not available.</span></ng-template>
-
-              <button class="btn-copy" (click)="copyUrl()" *ngIf="data.referenceUrl" type="button">
-                {{ urlCopied ? 'Copied!' : 'Copy Url' }}
+              <button class="fav-btn" (click)="toggleFavorite()" type="button">
+                <i class="bi" [ngClass]="isFavorite ? 'bi-heart-fill' : 'bi-heart'"> </i>
               </button>
-            </p>
+            </div>
+
+            <div class="meta">
+              <p class="meta-label">Important Dates:</p>
+
+              <p class="meta-row no-border">
+                <b>Post Date:</b>
+                <span>
+                  {{ data.postDate ? (data.postDate | date: 'MMMM d, y') : 'Not Available' }}
+                </span>
+              </p>
+
+              <p class="meta-row">
+                <b>Deadline Date:</b>
+                <span>
+                  {{
+                    data.deadLineDate ? (data.deadLineDate | date: 'MMMM d, y') : 'Not Available'
+                  }}
+                </span>
+              </p>
+
+              <p class="meta-row">
+                <b>Donor Name:</b>
+                <span>{{ data.donorName || 'Not Available' }}</span>
+              </p>
+
+              <p class="meta-row">
+                <b>Grant Size:</b>
+                <span>{{ data.grantSize || 'Not Available' }}</span>
+              </p>
+
+              <p class="meta-row">
+                <b>Grant Duration:</b>
+                <span>{{ data.grantDuration || 'Grant Duration Not Mentioned' }}</span>
+              </p>
+
+              <p class="meta-row">
+                <b>Category:</b>
+                <span>{{ data.category || 'N/A' }}</span>
+              </p>
+
+              <p class="meta-row url-row">
+                <b>Reference URL:</b>
+
+                @if (data.referenceUrl) {
+                  <a [href]="data.referenceUrl" target="_blank" rel="noopener">
+                    {{ data.referenceUrl }}
+                  </a>
+                } @else {
+                  <span>Opportunity is not available.</span>
+                }
+
+                @if (data.referenceUrl) {
+                  <button class="btn-copy" (click)="copyUrl()" type="button">
+                    {{ urlCopied ? 'Copied!' : 'Copy Url' }}
+                  </button>
+                }
+              </p>
+            </div>
           </div>
         </div>
       </div>
+
+      <div class="content-card">
+        @if (data.shortDescription) {
+          <div class="intro">
+            <p>{{ data.shortDescription }}</p>
+          </div>
+        }
+
+        <div class="rich-text" [innerHTML]="description"></div>
+
+        @if (data.fundingInformation) {
+          <h5>Funding Information</h5>
+          <p>{{ data.fundingInformation }}</p>
+        }
+
+        @if (data.eligibilityCriteria?.length) {
+          <h5>Eligibility Criteria</h5>
+          <ul>
+            @for (item of data.eligibilityCriteria; track item) {
+              <li>{{ item }}</li>
+            }
+          </ul>
+        }
+
+        @if (data.ineligibility?.length) {
+          <h5>Ineligibility</h5>
+          <ul>
+            @for (item of data.ineligibility; track item) {
+              <li>{{ item }}</li>
+            }
+          </ul>
+        }
+      </div>
     </div>
 
-    <div class="content-card">
-      <div class="intro" *ngIf="data.shortDescription">
-        <p>{{ data.shortDescription }}</p>
-      </div>
+    <!-- RIGHT -->
+    <div class="right">
+      @if (focusAreas.length) {
+        <div class="side-box">
+          <h4>Focus Area(s) of Interest</h4>
 
-      <div class="rich-text" [innerHTML]="description"></div>
+          <div class="chip-box">
+            @for (area of focusAreas; track area) {
+              <span class="chip">{{ area }}</span>
+            }
+          </div>
+        </div>
+      }
 
-      <ng-container *ngIf="data.fundingInformation">
-        <h5>Funding Information</h5>
-        <p>{{ data.fundingInformation }}</p>
-      </ng-container>
+      @if (counties.length) {
+        <div class="side-box">
+          <h4>Focus County(ies)</h4>
 
-      <ng-container *ngIf="data.eligibilityCriteria?.length">
-        <h5>Eligibility Criteria</h5>
-        <ul>
-          <li *ngFor="let item of data.eligibilityCriteria">{{ item }}</li>
-        </ul>
-      </ng-container>
+          <div class="chip-box scroll">
+            @for (county of visibleCounties; track county) {
+              <span class="chip">{{ county }}</span>
+            }
+          </div>
 
-      <ng-container *ngIf="data.ineligibility?.length">
-        <h5>Ineligibility</h5>
-        <ul>
-          <li *ngFor="let item of data.ineligibility">{{ item }}</li>
-        </ul>
-      </ng-container>
+          @if (counties.length > visibleLimit) {
+            <button class="view-all-btn" (click)="toggleCounties()" type="button">
+              {{ showAllCounties ? 'View less' : 'View all (' + counties.length + ')' }}
+            </button>
+          }
+        </div>
+      }
+
+      @if (states.length) {
+        <div class="side-box">
+          <h4>Focus State(s)</h4>
+
+          <div class="chip-box">
+            @for (state of visibleStates; track state) {
+              <span class="chip">{{ state }}</span>
+            }
+          </div>
+
+          @if (states.length > visibleLimit) {
+            <button class="view-all-btn" (click)="toggleStates()" type="button">
+              {{ showAllStates ? 'View less' : 'View all (' + states.length + ')' }}
+            </button>
+          }
+        </div>
+      }
     </div>
   </div>
-
-  <!-- RIGHT -->
-  <div class="right">
-    <div class="side-box" *ngIf="focusAreas.length">
-      <h4>Focus Area(s) of Interest</h4>
-      <div class="chip-box">
-        <span class="chip" *ngFor="let area of focusAreas">{{ area }}</span>
-      </div>
-    </div>
-
-    <div class="side-box" *ngIf="counties.length">
-      <h4>Focus County(ies)</h4>
-      <div class="chip-box scroll">
-        <span class="chip" *ngFor="let county of visibleCounties">{{ county }}</span>
-      </div>
-      <button
-        class="view-all-btn"
-        *ngIf="counties.length > visibleLimit"
-        (click)="toggleCounties()"
-        type="button"
-      >
-        {{ showAllCounties ? 'View less' : 'View all (' + counties.length + ')' }}
-      </button>
-    </div>
-
-    <div class="side-box" *ngIf="states.length">
-      <h4>Focus State(s)</h4>
-      <div class="chip-box">
-        <span class="chip" *ngFor="let state of visibleStates">{{ state }}</span>
-      </div>
-      <button
-        class="view-all-btn"
-        *ngIf="states.length > visibleLimit"
-        (click)="toggleStates()"
-        type="button"
-      >
-        {{ showAllStates ? 'View less' : 'View all (' + states.length + ')' }}
-      </button>
-    </div>
-  </div>
-</div>
+}

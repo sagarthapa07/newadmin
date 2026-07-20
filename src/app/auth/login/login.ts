@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
 import { Auth } from '../../core/Services/auth';
 import { Common } from '../../core/Services/common';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
@@ -36,7 +35,6 @@ export class Login implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // pre-fill the username if it was remembered from a previous login
     const rememberedUser = localStorage.getItem(REMEMBERED_USER_KEY);
     if (rememberedUser) {
       this.loginForm.patchValue({ name: rememberedUser, rememberMe: true });
@@ -108,16 +106,11 @@ export class Login implements OnInit {
     this.auth.login(payload).subscribe({
       next: (res) => {
         console.log(res);
-
         this.loading = false;
-
         if (res.successCode === 1) {
           console.log('Login Success');
-
           this.auth.setSession(res.result);
-
           console.log('Session Created');
-
           this.router.navigate(['/']).then((res) => {
             console.log('Navigate Result:', res);
           });
@@ -125,10 +118,8 @@ export class Login implements OnInit {
           this.errorMessage = res.message;
         }
       },
-
       error: () => {
         this.loading = false;
-
         this.errorMessage = 'Server Error';
       },
     });

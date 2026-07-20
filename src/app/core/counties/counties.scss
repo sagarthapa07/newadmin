@@ -25,10 +25,6 @@
   color: var(--placeholder-color);
 }
 
-// ===== GRID LAYOUT =====
-// toggle row now lives inside coverage-main, so its width naturally
-// matches the left column instead of stretching full-page-wide, and
-// the sidebar's "Total Selected" heading starts at the same top edge
 .coverage-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -41,7 +37,7 @@
   }
 }
 
-// ===== TOP TOGGLE (All States / Selected States) =====
+
 .toggle-card-row {
   display: flex;
   gap: 16px;
@@ -73,7 +69,6 @@
   }
 }
 
-// ===== RADIO DOT — shared by top toggle + selection-mode tiles =====
 .radio-dot {
   width: 18px;
   height: 18px;
@@ -129,7 +124,6 @@
   }
 }
 
-// ===== SELECTION MODE TILES =====
 .option-tile {
   display: flex;
   align-items: flex-start;
@@ -169,7 +163,6 @@
   }
 }
 
-// ===== AUTO SELECT PANEL =====
 .hint-text {
   color: var(--text-color-light);;
   font-size: var(--fs-13);
@@ -220,7 +213,6 @@
   font-size: var(--fs-14) !important;
 }
 
-// ===== STATE VIEW + COVERAGE TYPE =====
 .view-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -288,7 +280,6 @@
   }
 }
 
-// ===== COUNTIES GRID =====
 .county-panel-header {
   display: flex;
   align-items: center;
@@ -351,7 +342,6 @@
   }
 }
 
-// ===== SIDEBAR =====
 .coverage-sidebar {
   h6 {
     font-weight: var(--fw-700);
@@ -562,9 +552,6 @@
   }
 }
 
-/* ==========================================================================
-   COMMON SECTION FOOTER
-   ========================================================================== */
 
 .section-footer {
   display: flex;

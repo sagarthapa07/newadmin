@@ -16,9 +16,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Issue, SubIssue } from '../edit/issues.data';
 import { Common } from '../Services/common';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Output, EventEmitter } from '@angular/core';
-
 
 @Component({
   selector: 'app-focus-area',
@@ -37,7 +35,7 @@ export class FocusAreaComponent implements OnInit, OnChanges {
   selectedMap = new Map<number, number[]>();
   showPasteModal = false;
   pasteText = '';
-  pasteLoading = false; // true while sub-issues load on modal open (fallback only, usually already cached)
+  pasteLoading = false;
   selectedNames = new Map<number, { id: number; name: string }[]>();
   toastMessage = '';
   errorMessage = '';
@@ -95,9 +93,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
             subIssues: [],
             loaded: false,
           }));
-
-          // Prefetch all sub-issues in parallel right away so clicking
-          // an issue later opens the popover instantly (no per-click API wait).
           this.preloadAllSubIssues();
         }
       },
@@ -179,9 +174,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
 
   onClickIssue(issue: Issue) {
     this.activeIssue = issue;
-
-    // Fallback: if preload hasn't finished yet (e.g. slow network),
-    // load this specific issue's sub-issues on demand.
     if (!issue.loaded) {
       this.loadSubIssues(issue);
     }
@@ -367,8 +359,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
     this.tabChange.emit(4);
   }
 
-  // ===== PASTE MODAL LOGIC =====
-
   async openPasteModal() {
     this.pasteText = '';
     this.showPasteModal = true;
@@ -383,9 +373,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
   }
 
   private async loadAllSubIssuesForPaste(): Promise<void> {
-    // Most issues are already preloaded by preloadAllSubIssues() on init,
-    // so this only fetches whatever is still missing — and does it in
-    // parallel instead of one-by-one, so it's fast even as a fallback.
     const pending = this.issues.filter((issue) => !issue.subIssues || issue.subIssues.length === 0);
 
     if (!pending.length) return;
@@ -436,12 +423,10 @@ export class FocusAreaComponent implements OnInit, OnChanges {
       if (matchedSubIds.length > 0) {
         const existing = this.selectedMap.get(issue.id) || [];
 
-        // Merge: purane + naye, duplicates hataa ke
         const merged = Array.from(new Set([...existing, ...matchedSubIds]));
 
         this.selectedMap.set(issue.id, merged);
 
-        // changedMap me bhi add karo taaki Save pe ye bhi API ko jaaye
         const changed = this.changedMap.get(issue.id) || [];
         const newlyAdded = matchedSubIds.filter((id) => !changed.includes(id));
         if (newlyAdded.length > 0) {
@@ -452,8 +437,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
 
     this.showPasteModal = false;
   }
-
-  // ===== END PASTE MODAL LOGIC =====
 
   getIssueName(issueId: number): string {
     return this.issues.find((issue: Issue) => issue.id === issueId)?.name || '';

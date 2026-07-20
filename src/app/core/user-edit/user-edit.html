@@ -1,58 +1,81 @@
 <app-header></app-header>
-<app-alert-message
-  *ngIf="successMessage"
-  [type]="'success'"
-  [message]="successMessage"
-  (close)="successMessage = ''"
->
-</app-alert-message>
 
-<app-alert-message
-  *ngIf="errorMessage"
-  [type]="'error'"
-  [message]="errorMessage"
-  (close)="errorMessage = ''"
->
-</app-alert-message>
+@if (successMessage) {
+  <app-alert-message
+    [type]="'success'"
+    [message]="successMessage"
+    (close)="successMessage = ''"
+  >
+  </app-alert-message>
+}
+
+@if (errorMessage) {
+  <app-alert-message
+    [type]="'error'"
+    [message]="errorMessage"
+    (close)="errorMessage = ''"
+  >
+  </app-alert-message>
+}
+
 <section class="page-wrapper header-section">
   <div class="card-box">
     <div class="page-header">
       <h4>Edit User Detials</h4>
     </div>
+
     <form [formGroup]="userForm">
       <div class="row">
         <div class="col-md-6">
           <label>Username</label>
+
           <input
             type="text"
             class="form-control"
             formControlName="userName"
             placeholder="Username"
           />
-          <div class="error" *ngIf="isFieldInvalid('userName')">Please enter username.</div>
+
+          @if (isFieldInvalid('userName')) {
+            <div class="error">Please enter username.</div>
+          }
         </div>
 
         <div class="col-md-6">
           <label>Full Name</label>
+
           <input
             type="text"
             class="form-control"
             formControlName="fullName"
             placeholder="Full Name"
           />
-          <div class="error" *ngIf="isFieldInvalid('fullName')">Please enter full name.</div>
+
+          @if (isFieldInvalid('fullName')) {
+            <div class="error">Please enter full name.</div>
+          }
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6">
           <label>Email</label>
-          <input type="text" class="form-control" formControlName="emailId" placeholder="Email" />
-          <div class="error" *ngIf="isFieldInvalid('emailId')">Please enter a valid email.</div>
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="emailId"
+            placeholder="Email"
+          />
+
+          @if (isFieldInvalid('emailId')) {
+            <div class="error">Please enter a valid email.</div>
+          }
         </div>
 
         <div class="col-md-6">
           <label>User Type</label>
+
           <select class="form-control" formControlName="userType">
             <option value="Manager">Manager</option>
             <option value="Data Operator">Data Operator</option>
@@ -66,6 +89,7 @@
       <div class="row">
         <div class="col-md-6">
           <label>Password</label>
+
           <input
             type="password"
             class="form-control"
@@ -76,26 +100,26 @@
 
         <div class="col-md-6">
           <label>Confirm Password</label>
+
           <input
             type="password"
             class="form-control"
             formControlName="confirmPassword"
             placeholder="Confirm Password"
           />
-          <div
-            class="error"
-            *ngIf="
-              userForm.errors?.['passwordMismatch'] && userForm.get('confirmPassword')?.touched
-            "
-          >
-            Passwords do not match.
-          </div>
+
+          @if (userForm.errors?.['passwordMismatch'] && userForm.get('confirmPassword')?.touched) {
+            <div class="error">
+              Passwords do not match.
+            </div>
+          }
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6">
           <label>Status</label>
+
           <select class="form-control" formControlName="userStatus">
             <option value="ACTIVE">Active</option>
             <option value="INACTIVE">Inactive</option>
@@ -105,13 +129,19 @@
 
         <div class="col-md-6">
           <label>Date of Creation</label>
-          <input type="date" class="form-control" formControlName="creationdate" />
+
+          <input
+            type="date"
+            class="form-control"
+            formControlName="creationdate"
+          />
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-12">
           <label>Remark</label>
+
           <textarea
             rows="3"
             class="form-control"
@@ -122,8 +152,21 @@
       </div>
 
       <div class="buttons d-flex justify-content-end">
-        <button type="button" class="button btn-cancel" (click)="onCancel()">Cancel</button>
-        <button type="button" class="button" (click)="onSave()">Update</button>
+        <button
+          type="button"
+          class="button btn-cancel"
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="button"
+          (click)="onSave()"
+        >
+          Update
+        </button>
       </div>
     </form>
   </div>

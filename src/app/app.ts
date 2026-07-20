@@ -3,13 +3,14 @@ import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {ViewEncapsulation} from'@angular/core';
+import { Footer } from "./shared/component/footer/footer";
 
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CKEditorModule, FormsModule, RouterOutlet],
+  imports: [CKEditorModule, FormsModule, RouterOutlet, Footer],
   templateUrl: './app.html',
   encapsulation: ViewEncapsulation.None,
   styleUrl:'./app.scss'

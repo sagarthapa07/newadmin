@@ -1,58 +1,68 @@
 <app-header></app-header>
-<app-alert-message
-  *ngIf="successMessage"
-  [type]="'success'"
-  [message]="successMessage"
-  (close)="successMessage = ''"
->
-</app-alert-message>
 
-<app-alert-message
-  *ngIf="errorMessage"
-  [type]="'error'"
-  [message]="errorMessage"
-  (close)="errorMessage = ''"
->
-</app-alert-message>
+@if (successMessage) {
+  <app-alert-message [type]="'success'" [message]="successMessage" (close)="successMessage = ''">
+  </app-alert-message>
+}
+
+@if (errorMessage) {
+  <app-alert-message [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
+  </app-alert-message>
+}
+
 <section class="page-wrapper header-section">
   <div class="card-box">
     <div class="page-header">
       <h4>Add User</h4>
     </div>
+
     <form [formGroup]="userForm">
       <div class="row">
         <div class="col-md-6">
           <label>Username</label>
+
           <input
             type="text"
             class="form-control"
             formControlName="userName"
             placeholder="Username"
           />
-          <div class="error" *ngIf="isFieldInvalid('userName')">Please enter username.</div>
+
+          @if (isFieldInvalid('userName')) {
+            <div class="error">Please enter username.</div>
+          }
         </div>
 
         <div class="col-md-6">
           <label>Full Name</label>
+
           <input
             type="text"
             class="form-control"
             formControlName="fullName"
             placeholder="Full Name"
           />
-          <div class="error" *ngIf="isFieldInvalid('fullName')">Please enter full name.</div>
+
+          @if (isFieldInvalid('fullName')) {
+            <div class="error">Please enter full name.</div>
+          }
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6">
           <label>Email</label>
+
           <input type="text" class="form-control" formControlName="emailId" placeholder="Email" />
-          <div class="error" *ngIf="isFieldInvalid('emailId')">Please enter a valid email.</div>
+
+          @if (isFieldInvalid('emailId')) {
+            <div class="error">Please enter a valid email.</div>
+          }
         </div>
 
         <div class="col-md-6">
           <label>User Type</label>
+
           <select class="form-control" formControlName="userType">
             <option value="" disabled selected>Select...</option>
             <option value="Manager">Manager</option>
@@ -61,47 +71,53 @@
             <option value="super-admin">Super Admin</option>
             <option value="Support">Support</option>
           </select>
-          <div class="error" *ngIf="isFieldInvalid('userType')">Please select a user type.</div>
+
+          @if (isFieldInvalid('userType')) {
+            <div class="error">Please select a user type.</div>
+          }
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6">
           <label>Password</label>
+
           <input
             type="password"
             class="form-control"
             formControlName="password"
             placeholder="Password"
           />
-          <div class="error" *ngIf="isFieldInvalid('password')">Please enter a password.</div>
+
+          @if (isFieldInvalid('password')) {
+            <div class="error">Please enter a password.</div>
+          }
         </div>
 
         <div class="col-md-6">
           <label>Confirm Password</label>
+
           <input
             type="password"
             class="form-control"
             formControlName="confirmPassword"
             placeholder="Confirm Password"
           />
-          <div class="error" *ngIf="isFieldInvalid('confirmPassword')">
-            Please confirm your password.
-          </div>
-          <div
-            class="error"
-            *ngIf="
-              userForm.errors?.['passwordMismatch'] && userForm.get('confirmPassword')?.touched
-            "
-          >
-            Passwords do not match.
-          </div>
+
+          @if (isFieldInvalid('confirmPassword')) {
+            <div class="error">Please confirm your password.</div>
+          }
+
+          @if (userForm.errors?.['passwordMismatch'] && userForm.get('confirmPassword')?.touched) {
+            <div class="error">Passwords do not match.</div>
+          }
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6">
           <label>Status</label>
+
           <select class="form-control" formControlName="userStatus">
             <option value="ACTIVE">Active</option>
             <option value="INACTIVE">Inactive</option>
@@ -111,6 +127,7 @@
 
         <div class="col-md-6">
           <label>Date of Creation</label>
+
           <input type="date" class="form-control" formControlName="creationdate" />
         </div>
       </div>
@@ -118,6 +135,7 @@
       <div class="row">
         <div class="col-md-12">
           <label>Remark</label>
+
           <textarea
             rows="3"
             class="form-control"
@@ -129,6 +147,7 @@
 
       <div class="buttons d-flex justify-content-end">
         <button type="button" class="button btn-cancel" (click)="onCancel()">Cancel</button>
+
         <button type="button" class="button" [disabled]="isSaving" (click)="onSave()">
           {{ isSaving ? 'Saving...' : 'Save' }}
         </button>

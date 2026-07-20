@@ -67,7 +67,6 @@ export class BusinessPlanEdit implements OnInit {
   }
 
   ngOnInit(): void {
-    // Route se planIndex nikaalo
     const idParam = this.route.snapshot.paramMap.get('id');
     this.planIndex = idParam ? +idParam : 0;
 
@@ -75,8 +74,6 @@ export class BusinessPlanEdit implements OnInit {
       this.errorMessage = 'Invalid plan ID';
       return;
     }
-
-    // Pehle payment methods load karo, fir plan data (dropdown ke labels chahiye hote hain)
     this.loadPaymentMethods(() => this.loadPlanDetails());
 
     this.planForm.get('use14DaysTrial')?.valueChanges.subscribe((checked: boolean) => {
@@ -91,7 +88,6 @@ export class BusinessPlanEdit implements OnInit {
     });
   }
 
-  // ---------- Payment methods master list load karo ----------
   loadPaymentMethods(callback?: () => void): void {
     this.loadingPaymentMethods = true;
 
@@ -113,7 +109,6 @@ export class BusinessPlanEdit implements OnInit {
     });
   }
 
-  // ---------- Plan detail fetch aur form patch karo ----------
   loadPlanDetails(): void {
     this.isLoading = true;
 
@@ -128,8 +123,6 @@ export class BusinessPlanEdit implements OnInit {
 
         const plan = res.result.plan;
         const selectedPaymentMethods: number[] = res.result.planPaymentMethods || [];
-
-        // trialDays (number) ko dropdown ki string value mein convert karo, jaise 3 -> "3 Days"
         const trialDaysLabel = plan.trialDays
           ? this.trialPlanDaysOptions.find((opt) => opt.startsWith(String(plan.trialDays))) || ''
           : '';
@@ -257,7 +250,7 @@ export class BusinessPlanEdit implements OnInit {
 
     const payload = {
       plan: {
-        planIndex: this.planIndex, // Edit mode mein actual ID
+        planIndex: this.planIndex,
         planName: form.planName,
         planCode: form.planCode,
         planAmount: form.planAmount,

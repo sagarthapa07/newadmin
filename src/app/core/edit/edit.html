@@ -5,69 +5,82 @@
     <h4 class="page-title">Calendar and Premium Newsletter (Add/Edit)</h4>
 
     <div class="nav-btn">
-      <button
-        class="btn"
-        *ngFor="let item of menuItems"
-        [class.active]="activeItem === item.id"
-        (click)="setActive(item.id)"
-      >
-        {{ item.label }}
-      </button>
+      @for (item of menuItems; track item.id) {
+        <button
+          class="btn"
+          [class.active]="activeItem === item.id"
+          (click)="setActive(item.id)"
+        >
+          {{ item.label }}
+        </button>
+      }
     </div>
   </div>
 
-  <div *ngIf="isLoading" class="component-loader">
-    <span class="loader-dot"></span>
-    Loading data...
-  </div>
+  @if (isLoading) {
+    <div class="component-loader">
+      <span class="loader-dot"></span>
+      Loading data...
+    </div>
+  }
+
   <div>
-    <app-calendar-details
-      *ngIf="activeItem === 1 && grantData"
-      [data]="grantData"
-      (tabChange)="setActive($event)"
-    >
-    </app-calendar-details>
 
-    <app-geo-location
-      *ngIf="grantData"
-      [hidden]="activeItem !== 2"
-      [grantId]="grantData.id"
-      (tabChange)="setActive($event)"
-    >
-    </app-geo-location>
+    @if (activeItem === 1 && grantData) {
+      <app-calendar-details
+        [data]="grantData"
+        (tabChange)="setActive($event)"
+      >
+      </app-calendar-details>
+    }
 
-    <app-focus-area
-      *ngIf="grantData"
-      [hidden]="activeItem !== 3"
-      [grantId]="grantData.id"
-      (tabChange)="setActive($event)"
-    ></app-focus-area>
+    @if (grantData) {
+      <app-geo-location
+        [hidden]="activeItem !== 2"
+        [grantId]="grantData.id"
+        (tabChange)="setActive($event)"
+      >
+      </app-geo-location>
+    }
 
-    <app-focus-groups
-      *ngIf="grantData"
-      [hidden]="activeItem !== 4"
-      [grantId]="grantData.id"
-      (tabChange)="setActive($event)"
-    >
-    </app-focus-groups>
+    @if (grantData) {
+      <app-focus-area
+        [hidden]="activeItem !== 3"
+        [grantId]="grantData.id"
+        (tabChange)="setActive($event)"
+      >
+      </app-focus-area>
+    }
 
-    <app-counties
-      *ngIf="grantData"
-      [hidden]="activeItem !== 5"
-      [grantId]="grantData.id"
-      [stCtType]="grantData.stCtType"
-      [stateString]="grantData.stateString"
-      [countyString]="grantData.countyString"
-      (tabChange)="setActive($event)"
-    >
-    </app-counties>
+    @if (grantData) {
+      <app-focus-groups
+        [hidden]="activeItem !== 4"
+        [grantId]="grantData.id"
+        (tabChange)="setActive($event)"
+      >
+      </app-focus-groups>
+    }
 
-    <app-seo-social
-      *ngIf="grantData"
-      [hidden]="activeItem !== 6"
-      [grantId]="grantData.id"
-      (tabChange)="setActive($event)"
-    >
-    </app-seo-social>
+    @if (grantData) {
+      <app-counties
+        [hidden]="activeItem !== 5"
+        [grantId]="grantData.id"
+        [stCtType]="grantData.stCtType"
+        [stateString]="grantData.stateString"
+        [countyString]="grantData.countyString"
+        (tabChange)="setActive($event)"
+      >
+      </app-counties>
+    }
+
+    @if (grantData) {
+      <app-seo-social
+        [hidden]="activeItem !== 6"
+        [grantId]="grantData.id"
+        (tabChange)="setActive($event)"
+      >
+      </app-seo-social>
+    }
+
   </div>
 </section>
