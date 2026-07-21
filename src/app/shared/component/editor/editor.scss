@@ -3,19 +3,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 @media print {
-	body {
-		margin: 0 !important;
-	}
+  body {
+    margin: 0 !important;
+  }
 }
 
 :root {
-	--ck-content-font-family: 'Lato';
+  --ck-content-font-family: 'Lato';
 }
 
 .main-container {
-	font-family: var(--ck-content-font-family);
-	width: 100%;
-	height: 100%;
+  background: var(--body-color);
+  font-family: var(--ck-content-font-family);
+  width: 100%;
+  height: 100%;
 }
 
 /* =========================
@@ -23,62 +24,64 @@
 ========================= */
 
 .editor-container {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .editor-container_classic-editor .editor-container__editor {
-	width: 100%;
-	max-width: 100%;
-	min-width: 100%;
-	border-radius: 6px;
-	overflow: hidden;
-	background: #fff;
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--body-color);
 }
 
 /* Toolbar stable */
 .ck.ck-toolbar {
-	border: 0 !important;
-	border-bottom: 1px solid #ddd !important;
-	flex-wrap: wrap;
+  background: var(--body-color);
+  border: 0 !important;
+  border-bottom: 1px solid var(--white) !important;
+  flex-wrap: wrap;
 }
 
 /* Main editor box */
 .ck-editor__editable {
-	min-height: 630px;
-	max-height: 630px;
-	height: 630px;
-	overflow-y: auto;
-	padding: 10px 15px ;
-	font-family: 'Lato';
-	font-size: 14	px;
-	line-height: 1.7;
+  color: var(--text-color);
+  min-height: 630px;
+  max-height: 630px;
+  height: 630px;
+  overflow-y: auto;
+  padding: 10px 15px;
+  font-family: 'Lato';
+  font-size: 14 px;
+  line-height: 1.7;
 }
 
 /* Full editor width */
 .ck.ck-editor {
-	width: 100%;
-	display: block;
+  width: 100%;
+  display: block;
 }
 
 /* Prevent overlap */
 .ck.ck-editor__main {
-	width: 100%;
-	overflow: hidden;
+  width: 100%;
+  overflow: hidden;
 }
 
 /* Fix textarea/content jump */
 .ck-content {
-	min-height: 100%;
-	word-break: break-word;
-	overflow-wrap: break-word;
-	box-sizing: border-box;
+  min-height: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
 }
 
 /* Sidebar fix */
 .editor-container__sidebar_ckeditor-ai:has(.ck-tabs.ck-hidden) {
-	max-width: 0;
-	min-width: 0;
+  max-width: 0;
+  min-width: 0;
 }
 
 /* =========================
@@ -86,92 +89,92 @@
 ========================= */
 
 .ck-content h3.category {
-	font-family: 'Oswald';
-	font-size: 20px;
-	font-weight: bold;
-	color: #555;
-	letter-spacing: 10px;
-	margin: 0;
-	padding: 0;
+  font-family: 'Oswald';
+  font-size: 20px;
+  font-weight: bold;
+  color: #555;
+  letter-spacing: 10px;
+  margin: 0;
+  padding: 0;
 }
 
 .ck-content h2.document-title {
-	font-family: 'Oswald';
-	font-size: 50px;
-	font-weight: bold;
-	margin: 0;
-	padding: 0;
-	border: 0;
+  font-family: 'Oswald';
+  font-size: 50px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .ck-content h3.document-subtitle {
-	font-family: 'Oswald';
-	font-size: 20px;
-	color: #555;
-	margin: 0 0 1em;
-	font-weight: bold;
-	padding: 0;
+  font-family: 'Oswald';
+  font-size: 20px;
+  color: #555;
+  margin: 0 0 1em;
+  font-weight: bold;
+  padding: 0;
 }
 
 .ck-content p.info-box {
-	--background-size: 30px;
-	--background-color: #e91e63;
+  --background-size: 30px;
+  --background-color: #e91e63;
 
-	padding: 1.2em 2em;
-	border: 1px solid var(--background-color);
+  padding: 1.2em 2em;
+  border: 1px solid var(--background-color);
 
-	background:
-		linear-gradient(
-			135deg,
-			var(--background-color) 0%,
-			var(--background-color) var(--background-size),
-			transparent var(--background-size)
-		),
-		linear-gradient(
-			135deg,
-			transparent calc(100% - var(--background-size)),
-			var(--background-color) calc(100% - var(--background-size)),
-			var(--background-color)
-		);
+  background:
+    linear-gradient(
+      135deg,
+      var(--background-color) 0%,
+      var(--background-color) var(--background-size),
+      transparent var(--background-size)
+    ),
+    linear-gradient(
+      135deg,
+      transparent calc(100% - var(--background-size)),
+      var(--background-color) calc(100% - var(--background-size)),
+      var(--background-color)
+    );
 
-	border-radius: 10px;
-	margin: 1.5em 2em;
-	box-shadow: 5px 5px 0 #ffe6ef;
+  border-radius: 10px;
+  margin: 1.5em 2em;
+  box-shadow: 5px 5px 0 var(--white);
 }
 
 .ck-content span.marker {
-	background: yellow;
+  background: yellow;
 }
 
 .ck-content span.spoiler {
-	background: #000;
-	color: #000;
+  background: #000;
+  color: #000;
 }
 
 .ck-content span.spoiler:hover {
-	background: #000;
-	color: #fff;
+  background: #000;
+  color: #fff;
 }
 
 .ck-content .button {
-	display: inline-block;
-	margin: 0 auto;
+  display: inline-block;
+  margin: 0 auto;
 }
 
 .ck-content .button--green {
-	background-color: #406b1e;
+  background-color: #406b1e;
 }
 
 .ck-content .button--black {
-	background-color: #141517;
+  background-color: #141517;
 }
 .ck-editor__editable_inline {
-    direction: ltr !important;
-    text-align: left !important;
-    unicode-bidi: plaintext;
-    caret-color: black;
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: plaintext;
+  caret-color: black;
 }
 .ck-content {
-    direction: ltr !important;
-    text-align: left !important;
+  direction: ltr !important;
+  text-align: left !important;
 }

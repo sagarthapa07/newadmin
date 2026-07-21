@@ -145,7 +145,8 @@ body.dark-theme .ngb-dp-weekday {
 }
 
 .header-section {
-  margin: 15px 0px 0 98px;
+  background: var(--body-color);
+  padding: 15px 0px 0 98px;
 }
 
 .heading {
@@ -153,7 +154,6 @@ body.dark-theme .ngb-dp-weekday {
   font-weight: var(--fw-700);
 }
 
-/* Base Button */
 .button {
   display: inline-flex;
   align-items: center;
@@ -185,7 +185,6 @@ body.dark-theme .ngb-dp-weekday {
   align-items: center;
 }
 
-/* Primary Button */
 .button-primary {
   background-color: var(--primary-color);
   color: var(--white);
@@ -197,7 +196,6 @@ body.dark-theme .ngb-dp-weekday {
   border-color: var(--primary-color-dark);
 }
 
-/* White / Outline Button */
 .button-secondary {
   background-color: var(--white);
   color: var(--primary-color);
@@ -210,7 +208,7 @@ body.dark-theme .ngb-dp-weekday {
   border-color: var(----primary-color-dark);
 }
 
-/* Importing Bootstrap SCSS file. */
+
 @import 'bootstrap/scss/bootstrap';
 .ngx-pe-img {
   display: block !important;
@@ -221,5 +219,5 @@ body.dark-theme .ngb-dp-weekday {
   max-width: 100%;
 }
 
-/* Importing Bootstrap SCSS file. */
+
 @import 'bootstrap/scss/bootstrap';

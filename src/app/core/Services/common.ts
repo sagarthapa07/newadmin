@@ -67,7 +67,6 @@ export class Common {
       });
       return encrypted.toString();
 
-      //  return  encrypted.toString().replace(/=/g, "|").replace(/\//g, "!").replace(/\+/g, "-")
     } catch (e) {
       console.error(e);
       return null;
@@ -91,7 +90,6 @@ export class Common {
       return null;
     }
   }
-
   decryptData(encryptedText: string) {
     encryptedText = encryptedText.replace(/\|/g, '=').replace(/!/g, '/').replace(/\-/g, '+');
     try {
@@ -110,7 +108,7 @@ export class Common {
     }
   }
 
-  getCurrentDate() {
+  getCurrentDate() {  
     return moment.tz('America/New_York').format('YYYY');
   }
 
