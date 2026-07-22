@@ -6,7 +6,9 @@
     margin: 0 !important;
   }
 }
-
+body{
+  background: var(--body-color);
+}
 :root {
   --ck-content-font-family: 'Lato';
 }
