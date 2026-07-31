@@ -12,24 +12,56 @@
 
 <section class="page-wrapper header-section">
   <div class="card-box">
-    <div class="page-header">
-      <h4>Add Plan</h4>
+
+    <!-- Card Header -->
+    <div class="card-header">
+      <div class="header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <line x1="10" y1="9" x2="8" y2="9"></line>
+        </svg>
+      </div>
+      <div class="header-text">
+        <h4>Add Plan</h4>
+        <p>Create a new business plan and configure its settings.</p>
+      </div>
     </div>
 
     <form [formGroup]="planForm">
       <div class="plan-grid">
+
         <!-- LEFT COLUMN -->
         <div class="form-column">
-          <h5 class="section-title">Plan Detail</h5>
+          <h5 class="section-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <span>Plan Detail</span>
+          </h5>
 
           <div class="field-block">
             <label>Plan Name</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="planName"
-              placeholder="Plan Name"
-            />
+            <div class="input-group" [class.has-error]="isFieldInvalid('planName')">
+              <span class="input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="planName"
+                placeholder="Enter plan name"
+              />
+            </div>
             @if (isFieldInvalid('planName')) {
               <div class="error">Please enter plan name.</div>
             }
@@ -37,12 +69,15 @@
 
           <div class="field-block">
             <label>Plan Code</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="planCode"
-              placeholder="Plan Code"
-            />
+            <div class="input-group" [class.has-error]="isFieldInvalid('planCode')">
+              <span class="input-icon">#</span>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="planCode"
+                placeholder="Enter plan code"
+              />
+            </div>
             @if (isFieldInvalid('planCode')) {
               <div class="error">Please enter plan code.</div>
             }
@@ -50,12 +85,21 @@
 
           <div class="field-block">
             <label>Plan Type</label>
-            <select class="form-control" formControlName="planType">
-              <option value="" disabled selected>Select...</option>
-              @for (type of planTypeOptions; track type) {
-                <option [value]="type">{{ type }}</option>
-              }
-            </select>
+            <div class="input-group select-group" [class.has-error]="isFieldInvalid('planType')">
+              <span class="input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path>
+                  <circle cx="7.5" cy="7.5" r="1.5"></circle>
+                </svg>
+              </span>
+              <select class="form-control" formControlName="planType">
+                <option value="" disabled selected>Select plan type</option>
+                @for (type of planTypeOptions; track type) {
+                  <option [value]="type">{{ type }}</option>
+                }
+              </select>
+            </div>
             @if (isFieldInvalid('planType')) {
               <div class="error">Please select a plan type.</div>
             }
@@ -63,12 +107,23 @@
 
           <div class="field-block">
             <label>Plan Expiry</label>
-            <select class="form-control" formControlName="planExpiry">
-              <option value="" disabled selected>Select...</option>
-              @for (exp of planExpiryOptions; track exp) {
-                <option [value]="exp">{{ exp }}</option>
-              }
-            </select>
+            <div class="input-group select-group" [class.has-error]="isFieldInvalid('planExpiry')">
+              <span class="input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </span>
+              <select class="form-control" formControlName="planExpiry">
+                <option value="" disabled selected>Select plan expiry</option>
+                @for (exp of planExpiryOptions; track exp) {
+                  <option [value]="exp">{{ exp }}</option>
+                }
+              </select>
+            </div>
             @if (isFieldInvalid('planExpiry')) {
               <div class="error">Please select plan expiry.</div>
             }
@@ -77,8 +132,31 @@
           <div class="field-block">
             <label>Validity</label>
             <div class="date-range-row">
-              <input type="date" class="form-control" formControlName="validFrom" />
-              <input type="date" class="form-control" formControlName="validTo" />
+              <div class="input-group">
+                <span class="input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </span>
+                <input type="date" class="form-control" formControlName="validFrom" placeholder="Start Date" />
+              </div>
+
+              <div class="input-group">
+                <span class="input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </span>
+                <input type="date" class="form-control" formControlName="validTo" placeholder="End Date" />
+              </div>
             </div>
 
             @if (planForm.errors?.['dateRangeInvalid'] && planForm.get('validTo')?.touched) {
@@ -88,13 +166,21 @@
 
           <div class="field-block">
             <label>Status</label>
-            <select class="form-control" formControlName="status">
-              <option value="" disabled selected>Select...</option>
-
-              @for (s of statusOptions; track s) {
-                <option [value]="s">{{ s }}</option>
-              }
-            </select>
+            <div class="input-group select-group" [class.has-error]="isFieldInvalid('status')">
+              <span class="input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  <path d="m9 12 2 2 4-4"></path>
+                </svg>
+              </span>
+              <select class="form-control" formControlName="status">
+                <option value="" disabled selected>Select status</option>
+                @for (s of statusOptions; track s) {
+                  <option [value]="s">{{ s }}</option>
+                }
+              </select>
+            </div>
             @if (isFieldInvalid('status')) {
               <div class="error">Please select status.</div>
             }
@@ -102,28 +188,59 @@
 
           <div class="field-block">
             <label>Remark</label>
-            <textarea
-              rows="3"
-              class="form-control"
-              formControlName="planRemark"
-              placeholder="Remark"
-            ></textarea>
+            <div class="input-group textarea-group">
+              <span class="input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                </svg>
+              </span>
+              <textarea
+                rows="3"
+                class="form-control"
+                formControlName="planRemark"
+                placeholder="Enter remark (optional)"
+              ></textarea>
+            </div>
           </div>
         </div>
 
         <!-- RIGHT COLUMN -->
         <div class="form-column">
-          <h5 class="section-title">Pricing &amp; Settings</h5>
+          <h5 class="section-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="21" x2="4" y2="14"></line>
+              <line x1="4" y1="10" x2="4" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12" y2="3"></line>
+              <line x1="20" y1="21" x2="20" y2="16"></line>
+              <line x1="20" y1="12" x2="20" y2="3"></line>
+              <line x1="1" y1="14" x2="7" y2="14"></line>
+              <line x1="9" y1="8" x2="15" y2="8"></line>
+              <line x1="17" y1="16" x2="23" y2="16"></line>
+            </svg>
+            <span>Pricing &amp; Settings</span>
+          </h5>
 
           <div class="row-pair">
             <div class="field-block">
               <label>Duration</label>
-              <input
-                type="number"
-                class="form-control"
-                formControlName="duration"
-                placeholder="Duration"
-              />
+              <div class="input-group" [class.has-error]="isFieldInvalid('duration')">
+                <span class="input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </span>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="duration"
+                  placeholder="Enter duration"
+                />
+              </div>
               @if (isFieldInvalid('duration')) {
                 <div class="error">Enter valid duration.</div>
               }
@@ -131,12 +248,23 @@
 
             <div class="field-block">
               <label>Duration Unit</label>
-              <select class="form-control" formControlName="durationUnit">
-                <option value="" disabled selected>Select...</option>
-                @for (unit of durationUnitOptions; track unit) {
-                  <option [value]="unit">{{ unit }}</option>
-                }
-              </select>
+              <div class="input-group select-group" [class.has-error]="isFieldInvalid('durationUnit')">
+                <span class="input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </span>
+                <select class="form-control" formControlName="durationUnit">
+                  <option value="" disabled selected>Select unit</option>
+                  @for (unit of durationUnitOptions; track unit) {
+                    <option [value]="unit">{{ unit }}</option>
+                  }
+                </select>
+              </div>
               @if (isFieldInvalid('durationUnit')) {
                 <div class="error">Select duration unit.</div>
               }
@@ -146,12 +274,22 @@
           <div class="row-pair">
             <div class="field-block">
               <label>Plan Amount</label>
-              <input
-                type="number"
-                class="form-control"
-                formControlName="planAmount"
-                placeholder="Plan Amount"
-              />
+              <div class="input-group" [class.has-error]="isFieldInvalid('planAmount')">
+                <span class="input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </span>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="planAmount"
+                  placeholder="Enter plan amount"
+                />
+              </div>
               @if (isFieldInvalid('planAmount')) {
                 <div class="error">Enter valid amount.</div>
               }
@@ -159,12 +297,15 @@
 
             <div class="field-block">
               <label>Currency</label>
-              <select class="form-control" formControlName="planCurrency">
-                <option value="" disabled selected>Select...</option>
-                @for (c of currencyOptions; track c) {
-                  <option [value]="c">{{ c }}</option>
-                }
-              </select>
+              <div class="input-group select-group" [class.has-error]="isFieldInvalid('planCurrency')">
+                <span class="input-icon">$</span>
+                <select class="form-control" formControlName="planCurrency">
+                  <option value="" disabled selected>Select currency</option>
+                  @for (c of currencyOptions; track c) {
+                    <option [value]="c">{{ c }}</option>
+                  }
+                </select>
+              </div>
               @if (isFieldInvalid('planCurrency')) {
                 <div class="error">Select currency.</div>
               }
@@ -190,14 +331,25 @@
             </div>
 
             @if (planForm.get('use14DaysTrial')?.value) {
-              <div class="field-block">
+              <div class="field-block trial-days-block">
                 <label>Trial Plan Days</label>
-                <select class="form-control" formControlName="trialPlanDays">
-                  <option value="" disabled selected>Select Trial Plan Days</option>
-                  @for (d of trialPlanDaysOptions; track d) {
-                    <option [value]="d">{{ d }}</option>
-                  }
-                </select>
+                <div class="input-group select-group" [class.has-error]="isFieldInvalid('trialPlanDays')">
+                  <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </span>
+                  <select class="form-control" formControlName="trialPlanDays">
+                    <option value="" disabled selected>Select Trial Plan Days</option>
+                    @for (d of trialPlanDaysOptions; track d) {
+                      <option [value]="d">{{ d }}</option>
+                    }
+                  </select>
+                </div>
 
                 @if (isFieldInvalid('trialPlanDays')) {
                   <div class="error">Please select trial plan days.</div>
@@ -216,20 +368,33 @@
                 [class.has-chips]="selectedPaymentMethods.length"
                 (click)="togglePaymentDropdown()"
               >
-                @if (!selectedPaymentMethods.length) {
-                  <span>
-                    {{ loadingPaymentMethods ? 'Loading...' : 'Select payment methods...' }}
-                  </span>
-                }
+                <span class="input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                  </svg>
+                </span>
 
-                @for (method of selectedPaymentMethods; track method.id) {
-                  <span class="chip" (click)="$event.stopPropagation()">
-                    {{ method.label }}
-                    <i class="chip-remove" (click)="removePaymentMethod(method.id, $event)"> × </i>
-                  </span>
-                }
+                <div class="multiselect-content">
+                  @if (!selectedPaymentMethods.length) {
+                    <span class="placeholder">
+                      {{ loadingPaymentMethods ? 'Loading...' : 'Select payment methods...' }}
+                    </span>
+                  }
 
-                <i class="bi bi-chevron-down dropdown-icon"></i>
+                  @for (method of selectedPaymentMethods; track method.id) {
+                    <span class="chip" (click)="$event.stopPropagation()">
+                      {{ method.label }}
+                      <i class="chip-remove" (click)="removePaymentMethod(method.id, $event)"> × </i>
+                    </span>
+                  }
+                </div>
+
+                <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
               </div>
 
               @if (showPaymentDropdown) {
@@ -262,8 +427,16 @@
       <div class="buttons d-flex justify-content-end">
         <button type="button" class="button btn-cancel" (click)="onCancel()">Back</button>
 
-        <button type="button" class="button" [disabled]="isSaving" (click)="onSave()">
-          {{ isSaving ? 'Saving...' : 'Save' }}
+        <button type="button" class="button btn-save" [disabled]="isSaving" (click)="onSave()">
+          @if (!isSaving) {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+          }
+          <span>{{ isSaving ? 'Saving...' : 'Save Plan' }}</span>
         </button>
       </div>
     </form>

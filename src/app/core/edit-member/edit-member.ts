@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Api } from '../Services/api';
@@ -7,7 +8,7 @@ import { Header } from '../../shared/component/header/header';
 @Component({
   selector: 'app-edit-member',
   standalone: true,
-  imports: [ReactiveFormsModule, Header],
+  imports: [CommonModule, ReactiveFormsModule, Header],
   templateUrl: './edit-member.html',
   styleUrls: ['./edit-member.scss'],
 })
@@ -17,6 +18,7 @@ export class EditMemberComponent implements OnInit {
   plans: any[] = [];
   memberId!: number;
   invoices: any[] = [];
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -50,6 +52,10 @@ export class EditMemberComponent implements OnInit {
     this.loadMember();
     this.loadInvoices();
     this.loadPlans();
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
   loadPlans() {

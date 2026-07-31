@@ -1,110 +1,179 @@
 <app-header></app-header>
 
-<!-- <section class="member-container"> -->
-<section class="header-section">
-  <div class="member-card">
-    <h3 class="page-title">Members Edits</h3>
+<section class="edit-member-page header-section">
+  <!-- Page Intro -->
+  <div class="page-intro">
+    <div class="intro-left">
+      <div class="intro-icon">
+        <i class="bi bi-person-vcard"></i>
+      </div>
+      <div>
+        <h2 class="intro-title">Edit Member</h2>
+        <p class="intro-subtitle">Update the member's information and account details.</p>
+      </div>
+    </div>
 
-    <form [formGroup]="memberForm">
-      <div class="member-grid">
-        <!-- LEFT -->
+    <div class="member-id-badge">
+      <i class="bi bi-info-circle"></i>
+      <div class="member-id-text">
+        <span class="label">Member ID</span>
+        <span class="value">#MEM-{{ memberId }}</span>
+      </div>
+    </div>
+  </div>
 
-        <div class="left-panel">
-          <h5>Personal details</h5>
+  <form [formGroup]="memberForm">
+    <div class="member-grid">
+      <!-- LEFT: Personal Details -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-icon"><i class="bi bi-person"></i></div>
+          <h5>Personal Details</h5>
+        </div>
 
-          <div class="form-row">
-            <label>Member's name:</label>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-person"></i></span> Member's Name
+          </div>
+          <div class="double-input">
+            <div class="input-group-block">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="firstName"
+                placeholder="First Name"
+              />
 
-            <div class="double-input">
-              <input type="text" class="form-control" formControlName="firstName" />
-
-              <input type="text" class="form-control" formControlName="lastName" />
             </div>
-          </div>
+            <div class="input-group-block">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="lastName"
+                placeholder="Last Name"
+              />
 
-          <div class="form-row">
-            <label>Location:</label>
-
-            <div class="double-input">
-              <select class="form-control state-dropdown">
-                <option>Select</option>
-                <option value="United States" selected>United State</option>
-              </select>
-              <select class="form-control state-dropdown" formControlName="state">
-                <option value="">Select</option>
-
-                @for (item of states; track item.stateID) {
-                  <option [value]="item.stateName">
-                    {{ item.stateName }}
-                  </option>
-                }
-              </select>
             </div>
-          </div>
-
-          <div class="form-row">
-            <label></label>
-
-            <div class="double-input">
-              <input type="text" class="form-control" formControlName="zipCode" />
-
-              <input type="text" class="form-control" formControlName="city" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <label>Address</label>
-
-            <input type="text" class="form-control" formControlName="billingAddress" />
-          </div>
-
-          <div class="form-row">
-            <label>Remark</label>
-
-            <input type="text" class="form-control" formControlName="remarks" />
           </div>
         </div>
 
-        <!-- RIGHT -->
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-geo-alt"></i></span> Location
+          </div>
+          <div class="double-input">
+            <div class="select-wrapper">
+              <select class="form-control state-dropdown" formControlName="country">
+                <option value="">Select</option>
+                <option value="United States">United State</option>
+              </select>
+              <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="select-wrapper">
+              <select class="form-control state-dropdown" formControlName="state">
+                <option value="">Select</option>
+                @for (item of states; track item.stateID) {
+                  <option [value]="item.stateName">{{ item.stateName }}</option>
+                }
+              </select>
+              <i class="bi bi-chevron-down"></i>
+            </div>
+          </div>
+        </div>
 
-        <div class="right-panel">
-          <h5>Personal details</h5>
+        <div class="field-row">
+          <div class="double-input">
+            <div class="input-group-icon">
+              <i class="bi bi-mailbox"></i>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="zipCode"
+                placeholder="Zip Code"
+              />
+            </div>
+            <div class="input-group-icon">
+              <i class="bi bi-building"></i>
+              <input type="text" class="form-control" formControlName="city" placeholder="City" />
+            </div>
+          </div>
+        </div>
 
-          <div class="form-row">
-            <label>Current Plan:</label>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-house"></i></span> Address
+          </div>
+          <input type="text" class="form-control" formControlName="billingAddress" />
+        </div>
 
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-chat-left-text"></i></span> Remark
+          </div>
+          <input type="text" class="form-control" formControlName="remarks" />
+        </div>
+      </div>
+
+      <!-- RIGHT: Account Details -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-icon"><i class="bi bi-shield-check"></i></div>
+          <h5>Account Details</h5>
+        </div>
+
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-calendar2-check"></i></span> Current Plan
+          </div>
+          <div class="select-wrapper full">
             <select class="form-control state-dropdown" formControlName="plan">
               <option value="">Select</option>
-
               @for (item of plans; track item.index) {
-                <option [value]="item.name">
-                  {{ item.name }}
-                </option>
+                <option [value]="item.name">{{ item.name }}</option>
               }
             </select>
+            <i class="bi bi-chevron-down"></i>
           </div>
+        </div>
 
-          <div class="form-row">
-            <label>Email:</label>
-
-            <input type="text" class="form-control" formControlName="email" />
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-envelope"></i></span> Email
           </div>
+          <input type="text" class="form-control" formControlName="email" />
+        </div>
 
-          <div class="form-row">
-            <label>Password:</label>
-
-            <input type="text" class="form-control" formControlName="password" />
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-lock"></i></span> Password
           </div>
+          <div class="password-field">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control"
+              formControlName="password"
 
-          <div class="form-row">
-            <label>Phone:</label>
-
-            <input type="text" class="form-control" formControlName="contactNo" />
+            />
+            <i
+              class="bi"
+              [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"
+              (click)="togglePassword()"
+            ></i>
           </div>
+        </div>
 
-          <div class="form-row">
-            <label>Status:</label>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-telephone"></i></span> Phone
+          </div>
+          <input type="text" class="form-control" formControlName="contactNo" />
+        </div>
 
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-toggle2-on"></i></span> Status
+          </div>
+          <div class="select-wrapper full">
             <select class="form-control state-dropdown" formControlName="memberStatus">
               <option value="">Select</option>
               <option value="NEW">New</option>
@@ -112,91 +181,118 @@
               <option value="EXPIRED">Expired</option>
               <option value="BLOCKED">Blocked</option>
             </select>
-          </div>
-
-          <div class="form-row">
-            <label>Registration Date:</label>
-
-            <input type="date" class="form-control" formControlName="registrationDate" />
-          </div>
-
-          <div class="form-row">
-            <label>Activation Date:</label>
-
-            <input type="date" class="form-control" formControlName="activationDate" />
+            <i class="bi bi-chevron-down"></i>
           </div>
         </div>
-      </div>
 
-      <div class="btn-section">
-        <button type="button" class="btn btn-cancel" (click)="gotoCancel()">Cancel</button>
-        <button type="button" class="button" (click)="onSave()">Save</button>
-      </div>
-    </form>
-  </div>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-calendar-event"></i></span> Registration Date
+          </div>
+          <input type="date" class="form-control" formControlName="registrationDate" />
+        </div>
 
-  <div class="invoice-card">
-    <div class="invoice-header">
-      <h3>Invoices</h3>
-
-      <div class="btn-invoice">
-        <button class="btn btn-mailchimp">Subscribe MailChimp</button>
-
-        <button class="btn btn-invoice" (click)="openInvoice(0)">Add New Invoice</button>
+        <div class="field-row">
+          <div class="field-label">
+            <span class="row-icon"><i class="bi bi-calendar-check"></i></span> Activation Date
+          </div>
+          <input type="date" class="form-control" formControlName="activationDate" />
+        </div>
       </div>
     </div>
 
-    <table class="invoice-table">
-      <thead>
-        <tr>
-          <th>#Invoice</th>
-          <th>Invoice Date</th>
-          <th>Full Name</th>
-          <th>Email Address</th>
-          <th>Plan Amount</th>
-          <th>Net Amount</th>
-          <th>Payment Mode</th>
-        </tr>
-      </thead>
+    <div class="btn-section">
+      <button type="button" class="button button-secondary" (click)="gotoCancel()">Cancel</button>
+      <button type="button" class="button button-primary " (click)="onSave()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        Save Changes
+      </button>
+    </div>
+  </form>
 
-      <tbody>
-        @if (invoices.length) {
-          @for (item of invoices; track item.invoiceIndex) {
+  <!-- Invoices -->
+  <div class="invoice-card">
+    <div class="invoice-header">
+      <div class="invoice-title">
+        <i class="bi bi-file-earmark-text"></i>
+        <h3>Invoices</h3>
+      </div>
+
+      <div class="btn-invoice-group">
+        <button class="btn btn-mailchimp"><i class="bi bi-send"></i> Subscribe MailChimp</button>
+        <button class="button button-primary" (click)="openInvoice(0)">
+          <i class="bi bi-plus-circle"></i> Add New Invoice
+        </button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="invoice-table">
+        <thead>
+          <tr>
+            <th>#Invoice</th>
+            <th>Invoice Date</th>
+            <th>Full Name</th>
+            <th>Email Address</th>
+            <th>Plan Amount</th>
+            <th>Net Amount</th>
+            <th>Payment Mode</th>
+            <th class="text-end">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @if (invoices.length) {
+            @for (item of invoices; track item.invoiceIndex) {
+              <tr>
+                <td>
+                  <a href="javascript:void(0)" (click)="openInvoice(item.invoiceIndex)">
+                    {{ item.invoiceNumber }}
+                  </a>
+                </td>
+                <td>{{ item.invoiceDate }}</td>
+                <td>{{ item.firstName }} {{ item.lastName }}</td>
+                <td>{{ item.payerEmail }}</td>
+                <td>{{ item.planAmount }} {{ item.currency }}</td>
+                <td>{{ item.netInvoiceAmount }} {{ item.currency }}</td>
+                <td>{{ item.paymentMode }}</td>
+                <td class="text-end">
+                  <div class="dropdown">
+                    <button class="btn-action-toggle" data-bs-toggle="dropdown" (click)="openInvoice(item.invoiceIndex)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <a class="dropdown-item" (click)="openInvoice(item.invoiceIndex)">
+                          View / Edit
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            }
+          } @else {
             <tr>
-              <td>
-                <a href="javascript:void(0)" (click)="openInvoice(item.invoiceIndex)">
-                  {{ item.invoiceNumber }}
-                </a>
-              </td>
-
-              <td>{{ item.invoiceDate }}</td>
-
-              <td>
-                {{ item.firstName }}
-                {{ item.lastName }}
-              </td>
-
-              <td>{{ item.payerEmail }}</td>
-
-              <td>
-                {{ item.planAmount }}
-                {{ item.currency }}
-              </td>
-
-              <td>
-                {{ item.netInvoiceAmount }}
-                {{ item.currency }}
-              </td>
-
-              <td>{{ item.paymentMode }}</td>
+              <td colspan="8" class="no-data">No Invoice Found</td>
             </tr>
           }
-        } @else {
-          <tr>
-            <td colspan="7" class="no-data">No Invoice Found</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>

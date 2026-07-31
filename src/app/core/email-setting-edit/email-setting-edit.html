@@ -12,21 +12,52 @@
 
 <section class="page-wrapper header-section">
   <div class="card-box">
-    <div class="page-header">
-      <h4>Edit Email Setting</h4>
+
+    <!-- Card Header -->
+    <div class="card-header">
+      <div class="header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+        </svg>
+      </div>
+      <div class="header-text">
+        <h4>Email Configuration</h4>
+        <p>Configure SMTP details for sending emails.</p>
+      </div>
     </div>
 
     <form [formGroup]="settingForm">
+
+      <!-- Email Details Section -->
+      <div class="section-heading">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+        </svg>
+        <span>Email Details</span>
+      </div>
+
       <div class="row">
         <div class="col-md-6">
           <label>Sender Name</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="senderName"
-            placeholder="Sender Name"
-          />
-
+          <div class="input-group" [class.has-error]="isFieldInvalid('senderName')">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="senderName"
+              placeholder="Enter sender name"
+            />
+          </div>
           @if (isFieldInvalid('senderName')) {
             <div class="error">Please enter sender name.</div>
           }
@@ -34,13 +65,21 @@
 
         <div class="col-md-6">
           <label>Sender Email</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="senderEmail"
-            placeholder="Sender Email"
-          />
-
+          <div class="input-group" [class.has-error]="isFieldInvalid('senderEmail')">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </svg>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="senderEmail"
+              placeholder="Enter sender email"
+            />
+          </div>
           @if (isFieldInvalid('senderEmail')) {
             <div class="error">Please enter a valid sender email.</div>
           }
@@ -50,43 +89,82 @@
       <div class="row">
         <div class="col-md-6">
           <label>Sender Password</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="senderPassword"
-            placeholder="Sender Password"
-          />
-
+          <div class="input-group" [class.has-error]="isFieldInvalid('senderPassword')">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="senderPassword"
+              placeholder="Enter sender password"
+            />
+          </div>
           @if (isFieldInvalid('senderPassword')) {
             <div class="error">Please enter sender password.</div>
           }
         </div>
 
         <div class="col-md-6">
-          <label>Mail Server</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="mailServer"
-            placeholder="Mail Server"
-          />
-
+          <label>Mail Server (SMTP)</label>
+          <div class="input-group" [class.has-error]="isFieldInvalid('mailServer')">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="mailServer"
+              placeholder="Enter mail server (e.g. smtp.gmail.com)"
+            />
+          </div>
           @if (isFieldInvalid('mailServer')) {
             <div class="error">Please enter mail server.</div>
           }
         </div>
       </div>
 
+      <!-- SMTP Details Section -->
+      <div class="section-heading">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="8" rx="2"></rect>
+          <rect x="2" y="13" width="20" height="8" rx="2"></rect>
+          <line x1="6" y1="7" x2="6.01" y2="7"></line>
+          <line x1="6" y1="17" x2="6.01" y2="17"></line>
+        </svg>
+        <span>SMTP Details</span>
+      </div>
+
       <div class="row">
         <div class="col-md-6">
           <label>SMTP Port</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="smtpport"
-            placeholder="SMTP Port"
-          />
-
+          <div class="input-group" [class.has-error]="isFieldInvalid('smtpport')">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="2" width="6" height="6" rx="1"></rect>
+                <rect x="2" y="16" width="6" height="6" rx="1"></rect>
+                <rect x="16" y="16" width="6" height="6" rx="1"></rect>
+                <path d="M12 8v4M12 12H5v4M12 12h7v4"></path>
+              </svg>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="smtpport"
+              placeholder="Enter SMTP port (e.g. 587)"
+            />
+          </div>
           @if (isFieldInvalid('smtpport')) {
             <div class="error">Please enter SMTP port.</div>
           }
@@ -94,17 +172,33 @@
 
         <div class="col-md-6">
           <label>Enable SSL</label>
-          <select class="form-control" formControlName="enableSsl">
-            <option value="True">Yes</option>
-            <option value="False">No</option>
-          </select>
+          <div class="input-group select-group">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </span>
+            <select class="form-control" formControlName="enableSsl">
+              <option value="True">Enabled</option>
+              <option value="False">Disabled</option>
+            </select>
+          </div>
         </div>
       </div>
 
       <div class="buttons d-flex justify-content-end">
         <button type="button" class="button btn-cancel" (click)="onCancel()">Cancel</button>
 
-        <button type="button" class="button" (click)="onSave()">Update</button>
+        <button type="button" class="button btn-save" (click)="onSave()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          <span>Save Settings</span>
+        </button>
       </div>
     </form>
   </div>

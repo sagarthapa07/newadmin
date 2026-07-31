@@ -18,6 +18,7 @@ export class AddMember {
   successMessage = '';
   errorMessage = '';
   isSaving = false;
+  showPassword = false;
 
   states: any[] = [];
   plans: any[] = [];
@@ -87,6 +88,9 @@ export class AddMember {
 
   onCancel() {
     this.router.navigate(['/premium-members/memberModule']);
+  }
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
   onSave() {

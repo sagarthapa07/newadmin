@@ -256,7 +256,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
       return { userIndex: 0, emailId: '' };
     }
   }
-
   saveSelectedIssues(): void {
     if (!this.grantId) {
       this.errorMessage = 'Grant ID missing hai — save nahi ho sakta';
@@ -268,15 +267,17 @@ export class FocusAreaComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (this.changedMap.size === 0) {
-      this.showSuccessMessage('No changes detected');
+    if (this.selectedMap.size === 0) {
+      this.showSuccessMessage('No focus areas selected');
       return;
     }
 
     const grantId = this.grantId;
 
+    // selectedMap mein already selected + newly toggled dono merged hote hain
+    // (toggleSub() isi map ko update karta hai), isliye rows yahin se banao
     const rows: SaveFocusAreaRow[] = [];
-    this.changedMap.forEach((subIds, issueId) => {
+    this.selectedMap.forEach((subIds, issueId) => {
       subIds.forEach((subId) => {
         rows.push({
           grantIndex: grantId,
@@ -297,6 +298,8 @@ export class FocusAreaComponent implements OnInit, OnChanges {
       userMail: userInfo.emailId,
       clientIP: this.clientIP,
     };
+
+    console.log('SAVE FOCUS AREAS PAYLOAD', payload);
 
     this.api.saveFocusAreas(payload).subscribe({
       next: () => {
