@@ -130,7 +130,7 @@
             <label>Amount After Discount:</label>
 
             <div class="field-group single">
-              <input formControlName="afterDiscountAmount" />
+              <input formControlName="afterDiscountAmount" readonly />
             </div>
           </div>
 
@@ -192,7 +192,7 @@
             <label>Net Taxable Amount:</label>
 
             <div class="field-group single">
-              <input type="number" formControlName="netTaxableAmount" />
+              <input type="number" formControlName="netTaxableAmount" readonly />
             </div>
           </div>
 
@@ -216,7 +216,7 @@
           <div class="form-row">
             <label>Net Invoice Amount:</label>
             <div class="field-group single">
-              <input type="text" formControlName="netInvoiceAmount" />
+              <input type="text" formControlName="netInvoiceAmount" readonly />
             </div>
           </div>
 
@@ -261,7 +261,7 @@
           <div class="form-row">
             <label>Transaction Amount:</label>
             <div class="field-group single">
-              <input type="text" formControlName="transactionAmount" />
+              <input type="text" formControlName="transactionAmount" readonly />
             </div>
           </div>
 
@@ -320,8 +320,6 @@
       </form>
     </div>
 
-    <!-- RIGHT -->
-
     <div class="member-sidebar">
       <div class="sidebar-header">
         <div class="sidebar-title-group">
@@ -337,7 +335,6 @@
 
       <form [formGroup]="memberForm">
         <form [formGroup]="memberForm">
-          <!-- Member Name -->
           <div class="form-row">
             <label>Member's name:</label>
 
@@ -347,7 +344,6 @@
             </div>
           </div>
 
-          <!-- Location -->
           <div class="form-row">
             <label>Location:</label>
 
@@ -369,19 +365,16 @@
             </div>
           </div>
 
-          <!-- Address -->
           <div class="form-row">
             <label>Address</label>
             <textarea formControlName="billingAddress" rows="1"></textarea>
           </div>
 
-          <!-- Remark -->
           <div class="form-row">
             <label>Remark</label>
             <textarea formControlName="remarks" rows="1"></textarea>
           </div>
 
-          <!-- Plan -->
           <div class="form-row">
             <label>Current Plan</label>
             <select formControlName="plan">
@@ -393,37 +386,31 @@
             </select>
           </div>
 
-          <!-- Email -->
           <div class="form-row">
             <label>Email</label>
             <input type="text" formControlName="email" />
           </div>
 
-          <!-- Password -->
           <div class="form-row">
             <label>Password</label>
             <input type="text" formControlName="password" />
           </div>
 
-          <!-- Phone -->
           <div class="form-row">
             <label>Phone</label>
             <input type="text" formControlName="contactNo" />
           </div>
 
-          <!-- Status -->
           <div class="form-row">
             <label>Status</label>
             <input type="text" formControlName="memberStatus" />
           </div>
 
-          <!-- Registration Date -->
           <div class="form-row">
             <label>Registration Date</label>
             <input type="date" formControlName="registrationDate" />
           </div>
 
-          <!-- Activation Date -->
           <div class="form-row">
             <label>Activation Date</label>
             <input type="date" formControlName="activationDate" />

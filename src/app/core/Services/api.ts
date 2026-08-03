@@ -159,7 +159,7 @@ export class Api {
 
   saveFocusAreas(payload: SaveFocusAreasPayload) {
     return this.http.post<ApiSuccessResponse>(
-      `${environment.baseUrl}/USGrantFocusAreas/InsertUSGrantFocusAreas`,
+      `${environment.baseUrl}/USGrantFocusAreas/InsertUSGrantFocusAreasV2`,
       payload,
     );
   }

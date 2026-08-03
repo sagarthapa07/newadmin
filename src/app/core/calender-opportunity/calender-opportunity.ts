@@ -302,8 +302,10 @@ export class CalenderOpportunity {
     this.route.navigate(['/calendar-opportunity/edit', id]);
   }
 
+  
   exportSelectedGrants() {
     const selected = this.grants.filter((x) => x.selected);
+
     if (selected.length === 0) {
       alert('Please select at least one grant.');
       return;
@@ -313,13 +315,25 @@ export class CalenderOpportunity {
 
     this.api.exportUSGrants(ids).subscribe({
       next: (res: any) => {
-        const excelData = res.collections.map((item: any) => ({
-          'Grant ID': item.id,
+        console.log('Export API response:', res);
+
+        const csvData = res.collections.map((item: any) => ({
+          id: item.id,
           Title: item.title,
           Categories: item.categories,
+          Tags: item.tags,
+          States: item.states,
+          Counties: item.counties,
+          Donors: item.donors,
+          Cities: item.cities,
+          Townships: item.townships,
+          'Insular Areas': item.insularAreas,
+          Deadlines: item.deadlines,
+          Beneficiaries: item.beneficiaries,
           Content: item.content,
         }));
-        this.exportService.exportToExcel(excelData, 'Grant_Export', 'Grants');
+
+        this.exportService.exportToCsv(csvData, 'Grant_Export');
       },
       error: (err) => {
         console.error(err);
@@ -328,6 +342,11 @@ export class CalenderOpportunity {
   }
 
   onSelectionChange(selected: any[]) {
+    const selectedIndexes = new Set(selected.map((s) => s.grantIndex));
+    this.grants.forEach((item) => {
+      item.selected = selectedIndexes.has(item.grantIndex);
+    });
+    this.selectAll = this.grants.length > 0 && this.grants.every((item) => item.selected);
   }
 
   onPageSizeChangeHandler(size: number) {
@@ -354,7 +373,6 @@ export class CalenderOpportunity {
 
     navigator.clipboard.writeText(fullUrl).then(
       () => {
-        console.log('Copy url ho gya hai', fullUrl);
         this.alertType = 'success';
         this.alertMessage = 'URL copied to clipboard!';
       },
@@ -372,8 +390,6 @@ export class CalenderOpportunity {
       this.alertMessage = 'URL not found for this grant.';
       return;
     }
-
-    console.log('Open ho gya hai', fullUrl);
     window.open(fullUrl, '_blank');
   }
 

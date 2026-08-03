@@ -1,13 +1,37 @@
 .page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
   margin-bottom: 20px;
-  padding: 10px 0px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--btn-border-color);
 
-  h4 {
-    font-size: var(--fs-20);
-    font-weight: var(--fw-600);
-    color: var(--text-color);
-    margin-bottom: 4px;
+  .header-icon-badge {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--primary-color-light);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .header-text {
+    h4 {
+      font-size: var(--fs-20);
+      font-weight: var(--fw-600);
+      color: var(--text-color);
+      margin: 0 0 4px;
+    }
+
+    .header-subtitle {
+      font-size: var(--fs-13);
+      color: var(--text-color-light);
+      margin: 0;
+    }
   }
 
   .breadcrumb {
@@ -63,8 +87,37 @@
   margin-bottom: 6px;
 }
 
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &.align-top {
+    align-items: flex-start;
+  }
+}
+
+.field-icon-box {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: var(--primary-color-light);
+  color: var(--svgIcon-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+
+  &.field-icon-text {
+    font-size: 13px;
+    font-weight: var(--fw-600);
+  }
+}
+
 .form-control {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   border: 1px solid #d0d5dd;
   border-radius: 6px;
   padding: 9px 12px;
@@ -92,6 +145,7 @@ textarea.form-control {
   color: #f04438;
   font-size: 12px;
   margin-top: 4px;
+  margin-left: 48px;
 }
 
 .buttons {
@@ -116,6 +170,27 @@ textarea.form-control {
   background: #f8f9fa;
 }
 
+.btn-save {
+  background: var(--primary-color);
+  color: var(--white);
+  border: 1px solid var(--primary-color);
+  padding: 9px 22px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--tran-02);
+
+  &:hover:not(:disabled) {
+    background: var(--primary-color-dark);
+    border-color: var(--primary-color-dark);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
 @media (max-width: 768px) {
   .row {
     flex-direction: column;
@@ -123,6 +198,10 @@ textarea.form-control {
 
   .col-md-6 {
     min-width: 100%;
+  }
+
+  .error {
+    margin-left: 0;
   }
 }
 

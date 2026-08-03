@@ -9,6 +9,7 @@ import { Api } from '../Services/api';
 import { GrantDetail } from '../../datatype';
 import { Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { Common } from '../Services/common';
 
 @Component({
   selector: 'app-addnew-edit',
@@ -46,6 +47,7 @@ export class AddnewEdit {
     private route: ActivatedRoute,
     private api: Api,
     private cd: ChangeDetectorRef,
+    private common: Common,
   ) {
     this.opportunityForm = this.fb.group({
       title: [''],

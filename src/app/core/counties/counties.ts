@@ -56,12 +56,11 @@ export class CountiesComponent implements OnInit {
 
   viewingStateName: string | null = null;
 
-  selectedStates: string[] = []; 
-  activeState: string | null = null; 
-  stateModeMap: Record<string, boolean> = {}; 
-  countiesByState: Record<string, string[]> = {}; 
-  selectedCounties: Record<string, string[]> = {}; 
-
+  selectedStates: string[] = [];
+  activeState: string | null = null;
+  stateModeMap: Record<string, boolean> = {};
+  countiesByState: Record<string, string[]> = {};
+  selectedCounties: Record<string, string[]> = {};
 
   private lastToggleMode = false;
 
@@ -124,6 +123,7 @@ export class CountiesComponent implements OnInit {
     this.cd.detectChanges();
   }
 
+  // This is the ONLY place selectionType should ever change — user's explicit click.
   setSelectionType(type: SelectionType) {
     if (this.selectionType === type) return;
     this.selectionType = type;
@@ -160,11 +160,10 @@ export class CountiesComponent implements OnInit {
     this.discardState(stateName);
   }
 
-
   onStateViewChange() {
     const stateName = this.viewingStateName;
     if (!stateName) return;
-    if (this.activeState === stateName) return; 
+    if (this.activeState === stateName) return;
 
     if (this.selectionType === 'multiple' && this.activeState) {
       this.validateAndDropIfEmpty(this.activeState);
@@ -206,7 +205,6 @@ export class CountiesComponent implements OnInit {
     }
     this.cd.detectChanges();
   }
-
 
   loadCountiesForState(stateName: string, callback?: () => void): void {
     if (this.countiesByState[stateName]) {
@@ -274,7 +272,20 @@ export class CountiesComponent implements OnInit {
     return all.length > 0 && all.length === selected.length;
   }
 
-
+  /**
+   * FIX (both bugs):
+   * 1. selectionType is NEVER auto-changed here anymore — only setSelectionType()
+   *    (user's explicit click) is allowed to change it. Previously this method did
+   *    `this.selectionType = detectedStates.length > 1 ? 'multiple' : 'single'`
+   *    which silently flipped "Multiple" back to "Single" whenever a paste only
+   *    matched one state.
+   * 2. In 'multiple' mode, states/counties are always ADDED to existing selections
+   *    (this.selectedStates.push, Set-merge for counties) — never reset/overwritten.
+   *    The old `this.selectedStates = []` reset (which fired whenever the type got
+   *    forced to 'single') is gone, so a fresh paste no longer wipes prior picks.
+   *    'single' mode still intentionally replaces the one active state, matching
+   *    the existing single-mode behavior elsewhere (onStateViewChange).
+   */
   autoSelectFromText(): void {
     const text = this.pasteText.trim();
     if (!text || !this.detectStatesEnabled) {
@@ -290,22 +301,7 @@ export class CountiesComponent implements OnInit {
       return;
     }
 
-    this.selectionType = detectedStates.length > 1 ? 'multiple' : 'single';
-    if (this.selectionType === 'single') {
-      this.selectedStates = [];
-    }
-
-    detectedStates.forEach((state) => {
-      if (!this.selectedStates.includes(state)) {
-        this.selectedStates.push(state);
-      }
-      if (!this.stateModeMap.hasOwnProperty(state)) {
-        this.stateModeMap[state] = this.lastToggleMode;
-      }
-      if (!this.selectedCounties[state]) {
-        this.selectedCounties[state] = [];
-      }
-
+    const applyCountyMatch = (state: string) => {
       this.loadCountiesForState(state, () => {
         if (this.detectCountiesEnabled) {
           const counties = this.countiesByState[state] || [];
@@ -317,10 +313,39 @@ export class CountiesComponent implements OnInit {
         }
         this.cd.detectChanges();
       });
-    });
+    };
 
-    const lastState = detectedStates[detectedStates.length - 1];
-    this.activateState(lastState);
+    if (this.selectionType === 'single') {
+      // Single mode still only ever holds one active state — but we don't touch
+      // this.selectionType itself here, only the user's toggle click does that.
+      const state = detectedStates[0];
+      this.selectedStates = [state];
+      if (!this.stateModeMap.hasOwnProperty(state)) {
+        this.stateModeMap[state] = this.lastToggleMode;
+      }
+      if (!this.selectedCounties[state]) {
+        this.selectedCounties[state] = [];
+      }
+      applyCountyMatch(state);
+      this.activateState(state);
+    } else {
+      // Multiple mode: append new states/counties on top of whatever is already selected.
+      detectedStates.forEach((state) => {
+        if (!this.selectedStates.includes(state)) {
+          this.selectedStates.push(state);
+        }
+        if (!this.stateModeMap.hasOwnProperty(state)) {
+          this.stateModeMap[state] = this.lastToggleMode;
+        }
+        if (!this.selectedCounties[state]) {
+          this.selectedCounties[state] = [];
+        }
+        applyCountyMatch(state);
+      });
+
+      const lastState = detectedStates[detectedStates.length - 1];
+      this.activateState(lastState);
+    }
 
     this.pasteText = '';
     this.cd.detectChanges();
@@ -362,7 +387,6 @@ export class CountiesComponent implements OnInit {
   clearAllSelections() {
     this.resetSelections();
   }
-
 
   private loadSavedGrantData(): void {
     if (this.stCtType === '[ALL STATES]-[ALL COUNTIES]') {

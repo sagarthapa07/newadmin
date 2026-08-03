@@ -23,6 +23,7 @@ export class EmailTemplates {
   successMessage = '';
   errorMessage = '';
   emailSettingsList: any[] = [];
+  isSaving = false;
 
   constructor(
     private fb: FormBuilder,
@@ -138,6 +139,8 @@ export class EmailTemplates {
       return;
     }
 
+    this.isSaving = true;
+
     const form = this.templateForm.value;
     const userMail = this.getUserMail();
     const userId = this.getUserId();
@@ -151,7 +154,6 @@ export class EmailTemplates {
       },
     });
   }
-
   private saveTemplate(form: any, userId: number, userMail: string, clientIP: string) {
     const payload: any = {
       userIndex: userId,
@@ -184,5 +186,4 @@ export class EmailTemplates {
       },
     });
   }
-  
 }

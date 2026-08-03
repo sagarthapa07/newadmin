@@ -46,9 +46,6 @@ export class UserAdd {
     );
   }
 
-  // NOTE: Add screen mein koi existing id load nahi karni — form hamesha khali start hoga.
-  // Isliye yahan ngOnInit mein UserEdit jaisa loadUser() call nahi hai.
-
   passwordMatchValidator(group: FormGroup) {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
@@ -112,7 +109,7 @@ export class UserAdd {
     const payload: any = {
       email: '',
       id: null,
-      userIndex: 0, // 0 / null => backend ko pata chalega ki naya user create karna hai
+      userIndex: 0,
       userName: form.userName,
       fullName: form.fullName,
       emailId: form.emailId,
@@ -136,9 +133,6 @@ export class UserAdd {
         if (res.successCode === 1) {
           this.successMessage = 'User created successfully';
 
-          // NOTE: Apne actual API response ke shape ke hisaab se yahan newUserIndex nikalna hoga.
-          // Neeche common possibilities cover ki hain — jo bhi tumhara backend return karta hai
-          // usko match kar lo (res.result ek number ho sakta hai, ya object jisme userIndex ho).
           const newUserIndex =
             typeof res.result === 'number'
               ? res.result

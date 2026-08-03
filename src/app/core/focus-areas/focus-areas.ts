@@ -274,8 +274,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
 
     const grantId = this.grantId;
 
-    // selectedMap mein already selected + newly toggled dono merged hote hain
-    // (toggleSub() isi map ko update karta hai), isliye rows yahin se banao
     const rows: SaveFocusAreaRow[] = [];
     this.selectedMap.forEach((subIds, issueId) => {
       subIds.forEach((subId) => {

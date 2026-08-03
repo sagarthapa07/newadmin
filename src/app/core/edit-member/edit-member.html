@@ -43,7 +43,6 @@
                 formControlName="firstName"
                 placeholder="First Name"
               />
-
             </div>
             <div class="input-group-block">
               <input
@@ -52,7 +51,6 @@
                 formControlName="lastName"
                 placeholder="Last Name"
               />
-
             </div>
           </div>
         </div>
@@ -152,7 +150,6 @@
               [type]="showPassword ? 'text' : 'password'"
               class="form-control"
               formControlName="password"
-
             />
             <i
               class="bi"
@@ -203,23 +200,14 @@
 
     <div class="btn-section">
       <button type="button" class="button button-secondary" (click)="gotoCancel()">Cancel</button>
-      <button type="button" class="button button-primary " (click)="onSave()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-          <polyline points="17 21 17 13 7 13 7 21"></polyline>
-          <polyline points="7 3 7 8 15 8"></polyline>
-        </svg>
-        Save Changes
+      <button type="button" class="button button-primary" (click)="onSave()" [disabled]="isSaving">
+        @if (isSaving) {
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Saving...
+        } @else {
+          <i class="bi bi-floppy"></i>
+          Save Changes
+        }
       </button>
     </div>
   </form>
@@ -272,7 +260,11 @@
                 <td>{{ item.paymentMode }}</td>
                 <td class="text-end">
                   <div class="dropdown">
-                    <button class="btn-action-toggle" data-bs-toggle="dropdown" (click)="openInvoice(item.invoiceIndex)">
+                    <button
+                      class="btn-action-toggle"
+                      data-bs-toggle="dropdown"
+                      (click)="openInvoice(item.invoiceIndex)"
+                    >
                       <i class="bi bi-pencil-square"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Api } from '../Services/api';
+import { Common } from '../Services/common';
 import { Header } from '../../shared/component/header/header';
 
 @Component({
@@ -19,12 +20,14 @@ export class EditMemberComponent implements OnInit {
   memberId!: number;
   invoices: any[] = [];
   showPassword = false;
+  isSaving = false;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private api: Api,
     private router: Router,
+    private common: Common,
   ) {}
 
   ngOnInit(): void {
@@ -120,7 +123,12 @@ export class EditMemberComponent implements OnInit {
   }
 
   onSave() {
+    if (this.isSaving) {
+      return;
+    }
+    this.isSaving = true;
     const f = this.memberForm.value;
+    const encryptedPassword = f.password ? this.common.encryptData(f.password) : f.password;
 
     const payload = {
       userIndex: 5,
@@ -139,7 +147,7 @@ export class EditMemberComponent implements OnInit {
       plan: f.plan,
       planId: this.getPlanId(f.plan),
       email: f.email,
-      password: f.password,
+      password: encryptedPassword,
       contactNo: f.contactNo,
       memberStatus: f.memberStatus,
       registrationDate: f.registrationDate ? new Date(f.registrationDate).toISOString() : null,
@@ -151,17 +159,23 @@ export class EditMemberComponent implements OnInit {
     this.api.addUpdateMember(payload).subscribe({
       next: (res: any) => {
         console.log('Saved Successfully', res);
+        this.stopLoadingAfterDelay();
       },
 
       error: (err) => {
         console.log(err);
+        this.stopLoadingAfterDelay();
       },
     });
   }
 
+  private stopLoadingAfterDelay() {
+    setTimeout(() => {
+      this.isSaving = false;
+    }, 3000); 
+  }
   getPlanId(planName: string): number {
     const plan = this.plans.find((x: any) => x.name === planName);
-
     return plan ? plan.index : 0;
   }
   gotoCancel() {
