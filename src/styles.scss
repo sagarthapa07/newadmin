@@ -1,3 +1,5 @@
+@use 'bootstrap/scss/bootstrap';
+
 html,
 body {
   height: 100%;
@@ -228,8 +230,6 @@ body.dark-theme .ngb-dp-weekday {
   border-color: var(----primary-color-dark);
 }
 
-
-@import 'bootstrap/scss/bootstrap';
 .ngx-pe-img {
   display: block !important;
 }
@@ -238,6 +238,3 @@ body.dark-theme .ngb-dp-weekday {
   display: block !important;
   max-width: 100%;
 }
-
-
-@import 'bootstrap/scss/bootstrap';

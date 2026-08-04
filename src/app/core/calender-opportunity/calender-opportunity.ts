@@ -302,7 +302,6 @@ export class CalenderOpportunity {
     this.route.navigate(['/calendar-opportunity/edit', id]);
   }
 
-  
   exportSelectedGrants() {
     const selected = this.grants.filter((x) => x.selected);
 

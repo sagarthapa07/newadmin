@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Header } from '../../shared/component/header/header';
 import { Api } from '../Services/api';
 import { DropdownItem } from '../../datatype';
@@ -21,7 +21,6 @@ import {
     NgbDatepickerModule,
     CommonModule,
     Header,
-    RouterLink,
     NgMultiSelectDropDownModule,
     TableColumnComponent,
   ],

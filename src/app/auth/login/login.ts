@@ -62,9 +62,9 @@ export class Login implements OnInit {
       userName: name,
       userPassword: this.common.encryptData(password!),
     };
-debugger
     this.auth.login(payload).subscribe({
       next: (res) => {
+        debugger
         this.loading = false;
 
         if (res.successCode === 1) {

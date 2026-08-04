@@ -16,6 +16,7 @@ export class Common {
       expires: expireTime,
       path: '/',
       sameSite: 'Lax',
+      domain: environment.domain || undefined,
     });
 
     return true;
@@ -25,7 +26,7 @@ export class Common {
     return this.Cookie.get(key);
   }
 
-  public deleteCookie(key: string) {
+  public deleteCookie(key: string) {    
     document.cookie = encodeURIComponent(key) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/';
   }
 
@@ -66,7 +67,6 @@ export class Common {
         padding: CryptoJS.pad.Pkcs7,
       });
       return encrypted.toString();
-
     } catch (e) {
       console.error(e);
       return null;
@@ -108,7 +108,7 @@ export class Common {
     }
   }
 
-  getCurrentDate() {  
+  getCurrentDate() {
     return moment.tz('America/New_York').format('YYYY');
   }
 

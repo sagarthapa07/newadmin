@@ -21,6 +21,18 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "core-js",
+              "raf",
+              "rgbcolor",
+              "html2canvas",
+              "crypto-js",
+              "moment",
+              "moment-timezone",
+              "file-saver",
+              "fuzzysort",
+              "extend"
+            ],
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -33,21 +45,20 @@
               "node_modules/ngx-photo-editor/photo-editor.css"
             ],
             "scripts": [],
-
-            "polyfills": ["zone.js"]
+            "polyfills": ["@angular/localize/init", "zone.js"]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "5mb",
+                  "maximumError": "6mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "240kB",
+                  "maximumError": "250kB"
                 }
               ],
               "outputHashing": "all"

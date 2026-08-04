@@ -3,14 +3,13 @@ import { CommonModule, DatePipe, Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Header } from '../../shared/component/header/header';
 import { Api } from '../Services/api';
-import { Footer } from '../../shared/component/footer/footer';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-invoice-details',
   standalone: true,
-  imports: [CommonModule, DatePipe, Header, Footer],
+  imports: [CommonModule, DatePipe, Header],
   templateUrl: './invoice-details.html',
   styleUrl: './invoice-details.scss',
 })
