@@ -11,22 +11,71 @@ import 'moment-timezone';
 export class Common {
   constructor(@Inject(CookieService) private Cookie: CookieService) {}
 
-  public setCookie(key: string, value: string, expireTime: any) {
+  // public setCookie(key: string, value: string, expireTime: any): boolean {
+  //   this.Cookie.set(key, value, {
+  //     expires: expireTime,
+  //     path: '/',
+  //     sameSite: 'Lax',
+  //     domain: environment.domain,
+  //   });
+
+  //   return true;
+  // }
+
+  // public getCookie(key: string) {
+  //   return this.Cookie.get(key);
+  // }
+
+  public setCookie(key: string, value: string, expireTime: any): boolean {
+    console.log('============== setCookie ==============');
+
+    console.log('Key :', key);
+
+    console.log('Value :', value);
+
+    console.log('Expire :', expireTime);
+
+    console.log('Environment Domain :', environment.domain);
+
+    console.log('Current Host :', window.location.hostname);
+
+    console.log('Current Origin :', window.location.origin);
+
     this.Cookie.set(key, value, {
       expires: expireTime,
+
       path: '/',
+
       sameSite: 'Lax',
-      domain: environment.domain || undefined,
+
+      domain: environment.domain,
+
+      // CHANGE :
+      // Secure add kiya hai.
+      // HTTPS domain pe cookie secure honi chahiye.
+      secure: window.location.protocol === 'https:',
     });
+
+    console.log('Cookie After Save :', this.Cookie.get(key));
+
+    console.log('All Cookies :', document.cookie);
 
     return true;
   }
 
   public getCookie(key: string) {
-    return this.Cookie.get(key);
+    const cookie = this.Cookie.get(key);
+
+    console.log('Reading Cookie');
+
+    console.log('Key :', key);
+
+    console.log('Value :', cookie);
+
+    return cookie;
   }
 
-  public deleteCookie(key: string) {    
+  public deleteCookie(key: string) {
     document.cookie = encodeURIComponent(key) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/';
   }
 
@@ -57,6 +106,8 @@ export class Common {
   }
 
   encryptData(data: string) {
+    console.log('Cookie Key :', environment.cookieKey);
+    console.log('Data Before Encrypt :', data);
     try {
       const key = CryptoJS.enc.Utf8.parse(environment.cookieKey);
       const iv = CryptoJS.enc.Utf8.parse('');

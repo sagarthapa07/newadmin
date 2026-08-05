@@ -51,77 +51,42 @@ export class Login implements OnInit {
 
   onSubmit() {
     if (this.loginForm.invalid) return;
-
     this.loading = true;
-
     this.successMessage = '';
     this.errorMessage = '';
-
     const { name, password, rememberMe } = this.loginForm.value;
     const payload = {
       userName: name,
       userPassword: this.common.encryptData(password!),
     };
+
     this.auth.login(payload).subscribe({
       next: (res) => {
-        debugger
+        console.log('================ LOGIN RESPONSE ================');
+        console.log(res);
         this.loading = false;
-
         if (res.successCode === 1) {
-          this.auth.setSession(res.result);
+          console.log('API Login Success');
+          const sessionCreated = this.auth.setSession(res.result);
+          console.log('Session Created :', sessionCreated);
+          console.log('User :', res.result);
 
           if (rememberMe) {
             localStorage.setItem(REMEMBERED_USER_KEY, name || '');
           } else {
             localStorage.removeItem(REMEMBERED_USER_KEY);
           }
-
           this.router.navigate(['/']);
         } else {
           this.errorMessage = res.message;
         }
       },
 
-      error: () => {
+      error: (err) => {
+        console.log('C. API error:', err);
         this.loading = false;
         this.errorMessage = 'Server Error';
       },
     });
   }
-
-
-  //  onSubmit() {
-  //   if (this.loginForm.invalid) return;
-
-  //   this.loading = true;
-
-  //   this.successMessage = '';
-  //   this.errorMessage = '';
-
-  //   const payload = {
-  //     userName: this.loginForm.value.name,
-  //     userPassword: 'Ps/YXj//LALs1VU3swk8ZA==',
-  //   };
-
-  //   this.auth.login(payload).subscribe({
-  //     next: (res) => {
-  //       console.log(res);
-  //       this.loading = false;
-  //       if (res.successCode === 1) {
-  //         console.log('Login Success');
-  //         this.auth.setSession(res.result);
-  //         console.log('Session Created');
-  //         this.router.navigate(['/']).then((res) => {
-  //           console.log('Navigate Result:', res);
-  //         });
-  //       } else {
-  //         this.errorMessage = res.message;
-  //       }
-  //     },
-  //     error: () => {
-  //       this.loading = false;
-  //       this.errorMessage = 'Server Error';
-  //     },
-  //   });
-  // }
 }
