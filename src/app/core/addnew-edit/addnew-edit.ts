@@ -148,7 +148,7 @@ export class AddnewEdit {
   }
 
   onSave() {
-    console.log(this.opportunityForm.value);
+    // console.log(this.opportunityForm.value);
   }
 
   gotoPreview() {

@@ -78,8 +78,6 @@
         if (id && id !== 'null' && id !== 'undefined' && +id > 0) {
           this.getGrantDetails(+id);
         } else {
-          console.log('NEW GRANT MODE');
-
           this.grantData = null;
         }
       }
@@ -93,7 +91,7 @@
             this.cd.detectChanges();
           },
           error: (err) => {
-            console.log('❌ API ERROR:', err);
+            console.log('API ERROR:', err);
             this.isLoading = false;
           },
         });
@@ -148,7 +146,6 @@
       }
 
       onSave() {
-        console.log(this.opportunityForm.value);
       }
 
       gotoPreview() {

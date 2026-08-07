@@ -20,7 +20,6 @@ export class FileUpload {
         fileContent: img.base64.split(',')[1],
       })),
     };
-    console.log(payload);
     return this.http.put(this.uploadUrl, payload);
   }
 }

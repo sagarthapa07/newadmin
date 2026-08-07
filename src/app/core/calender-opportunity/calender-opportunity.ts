@@ -314,8 +314,6 @@ export class CalenderOpportunity {
 
     this.api.exportUSGrants(ids).subscribe({
       next: (res: any) => {
-        console.log('Export API response:', res);
-
         const csvData = res.collections.map((item: any) => ({
           id: item.id,
           Title: item.title,

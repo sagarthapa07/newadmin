@@ -179,7 +179,7 @@ export class ImageCropper implements AfterViewInit, OnDestroy {
     this.doZoom(e.deltaY < 0 ? 0.1 : -0.1);
   }
 
-  // ── Mouse Events ──────────────────────────────────────────────
+
   onCanvasMD(e: MouseEvent) {
     this.panning = true;
     this.startMX = e.clientX;
@@ -252,7 +252,6 @@ export class ImageCropper implements AfterViewInit, OnDestroy {
     this.resizeHandle = null;
   }
 
-  // ── CSS Transforms ────────────────────────────────────────────
   imgLayerStyle() {
     return `translate(calc(-50% + ${this.tx}px), calc(-50% + ${this.ty}px)) scale(${this.scale})`;
   }
@@ -260,7 +259,6 @@ export class ImageCropper implements AfterViewInit, OnDestroy {
     return `rotate(${this.rotation}deg) scaleX(${this.flipH}) scaleY(${this.flipV})`;
   }
 
-  // ── Close ─────────────────────────────────────────────────────
   closeEditor() {
     this.showEditor = false;
     this.doReset();
@@ -269,14 +267,11 @@ export class ImageCropper implements AfterViewInit, OnDestroy {
     if ((e.target as HTMLElement).classList.contains('modal-overlay')) this.closeEditor();
   }
 
-  // ── Apply → Canvas crop → File → ImgResizeService ─────────────
   async applyEdit() {
     const img = this.editorImg.nativeElement;
     const wrap = this.canvasWrap.nativeElement;
     const wr = wrap.getBoundingClientRect();
     const ir = img.getBoundingClientRect();
-
-    // ── Step 1: Canvas pe crop karo ───────────────────────────
     const scaleX = img.naturalWidth / ir.width;
     const scaleY = img.naturalHeight / ir.height;
 
@@ -296,10 +291,9 @@ export class ImageCropper implements AfterViewInit, OnDestroy {
     ctx.scale(this.flipH, this.flipV);
     ctx.drawImage(img, srcX, srcY, srcW, srcH, -300, -300, 600, 600);
 
-    // ── Step 2: Canvas → preview show karo ───────────────────
+
     this.outputSrc = canvas.toDataURL('image/png');
 
-    // ── Step 3: Canvas → File (Blob) banao ───────────────────
     const croppedFile = await new Promise<File>((resolve) => {
       canvas.toBlob(
         (blob) => {
@@ -311,23 +305,20 @@ export class ImageCropper implements AfterViewInit, OnDestroy {
       );
     });
 
-    // ── Step 4: ImgResizeService call karo ───────────────────
+
     try {
       this.isLoading = true;
       this.resizeImages = await this.imgResizeService.imgResize(
         croppedFile,
-        this.dirPath, // e.g. 'img.Grants'
-        this.recType, // e.g. 'CU' ya 'TC' ya default
+        this.dirPath,
+        this.recType, 
       );
 
-      console.log('✅ Resize complete:', this.resizeImages);
-
-      // ── Step 5: Parent ko emit karo ──────────────────────
       this.onCropped.emit(this.resizeImages);
 
       this.showEditor = false;
     } catch (err) {
-      console.error('❌ Resize failed:', err);
+      console.error(' Resize failed:', err);
     } finally {
       this.isLoading = false;
     }

@@ -112,8 +112,6 @@ export class EditMemberComponent implements OnInit {
   loadInvoices() {
     this.api.getMemberInvoices(this.memberId).subscribe({
       next: (res: any) => {
-        console.log('Invoices Response', res);
-
         this.invoices = res.invoice || res.result || [];
       },
       error: (err) => {
@@ -154,11 +152,8 @@ export class EditMemberComponent implements OnInit {
       activationDate: f.activationDate ? new Date(f.activationDate).toISOString() : null,
     };
 
-    console.log(payload);
-
     this.api.addUpdateMember(payload).subscribe({
       next: (res: any) => {
-        console.log('Saved Successfully', res);
         this.stopLoadingAfterDelay();
       },
 

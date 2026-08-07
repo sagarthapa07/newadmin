@@ -124,7 +124,6 @@ export class MemberSearch {
 
     this.api.membersAdvanceSearch(payload).subscribe({
       next: (res: any) => {
-        console.log(res.result);
         this.members = res.result || [];
         this.totalCount = res.totalCount || res.recCount || this.members.length;
         this.isLoading = false;

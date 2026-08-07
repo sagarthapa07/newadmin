@@ -297,8 +297,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
       clientIP: this.clientIP,
     };
 
-    console.log('SAVE FOCUS AREAS PAYLOAD', payload);
-
     this.api.saveFocusAreas(payload).subscribe({
       next: () => {
         this.activeIssue = null;
@@ -306,7 +304,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
         this.showSuccessMessage('Focus Areas Saved Successfully');
       },
       error: (err) => {
-        console.log('SAVE ERROR', err);
         this.errorMessage = 'Save Failed';
         this.cd.detectChanges();
         setTimeout(() => {

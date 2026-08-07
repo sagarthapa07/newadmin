@@ -275,8 +275,6 @@ export class BusinessPlanEdit implements OnInit {
       clientIP: clientIP,
     };
 
-    console.log('Payload sent to API (Edit Plan):', payload);
-
     this.api.addUpdatePlanRecord(payload).subscribe({
       next: (res: any) => {
         this.isSaving = false;

@@ -150,7 +150,6 @@ export class EmailTemp {
     }
   }
   goToAdd() {
-    console.log('yhaaa hun mai ');
     this.router.navigate(['masters/email-templates-add']);
   }
 

@@ -245,18 +245,15 @@ export class GeoLocationComponent implements OnInit {
 
     this.geoDropdowns[this.geoModalType].data.push(newItem);
     this.geoDropdowns[this.geoModalType].selected.push(newItem);
-    console.log(`New ${this.geoModalType} added:`, newItem);
     this.closeGeoModal();
   }
   saveGeo(type: GeoKey) {
     const selectedItems = this.geoDropdowns[type].selected;
     if (!selectedItems || selectedItems.length === 0) {
-      console.log(`${this.geoDropdowns[type].label} : No selection`);
       return;
     }
     // sirf names nikaal rahe hain
     const names = selectedItems.map((item: DropdownItem) => item.item_text);
-    console.log(`${this.geoDropdowns[type].label} : ${names.join(', ')}`);
   }
   removeGeoItem(type: GeoKey, item: DropdownItem) {
     this.geoDropdowns[type].selected = this.geoDropdowns[type].selected.filter(
@@ -387,12 +384,8 @@ export class GeoLocationComponent implements OnInit {
   }
 
   saveAll(): void {
-    console.log('CURRENT GRANT ID', this.grantId);
-    console.log('SELECTED STATES', this.geoDropdowns.states.selected);
-    console.log('SELECTED CITIES', this.geoDropdowns.cities.selected);
     if (!this.grantId) {
       console.log('NO GRANT ID FOUND');
-
       return;
     }
 
@@ -438,10 +431,6 @@ export class GeoLocationComponent implements OnInit {
       userIndex: 5,
     };
 
-    console.log('Cities Payload:', citiesPayload);
-    console.log('Insular Payload:', insularPayload);
-    console.log('Township Payload:', townshipPayload);
-    console.log('States Payload:', statesPayload);
 
     forkJoin({
       cities: this.api.insertGrantCities(citiesPayload),

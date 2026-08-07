@@ -21,7 +21,6 @@ export class Login implements OnInit {
   errorMessage = '';
   showPassword = false;
   currentYear = new Date().getFullYear();
-
   loginForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -62,15 +61,8 @@ export class Login implements OnInit {
 
     this.auth.login(payload).subscribe({
       next: (res) => {
-        console.log('================ LOGIN RESPONSE ================');
-        console.log(res);
         this.loading = false;
         if (res.successCode === 1) {
-          console.log('API Login Success');
-          const sessionCreated = this.auth.setSession(res.result);
-          console.log('Session Created :', sessionCreated);
-          console.log('User :', res.result);
-
           if (rememberMe) {
             localStorage.setItem(REMEMBERED_USER_KEY, name || '');
           } else {
@@ -81,9 +73,7 @@ export class Login implements OnInit {
           this.errorMessage = res.message;
         }
       },
-
       error: (err) => {
-        console.log('C. API error:', err);
         this.loading = false;
         this.errorMessage = 'Server Error';
       },

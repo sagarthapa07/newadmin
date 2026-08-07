@@ -101,7 +101,6 @@ export class UserEdit {
         const list = res.result || [];
         const found = list.find((x: any) => x.userIndex === id);
         if (found) {
-          console.log('Found user object:', found);
           this.originalUserData = found;
           this.fillForm(found);
         } else {

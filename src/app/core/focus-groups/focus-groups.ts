@@ -476,12 +476,10 @@
       const selected: DropdownItem[] = this.focusGroupKeyDropdowns.entities.selected;
 
       if (!selected || selected.length === 0) {
-        console.log('No selection');
         return;
       }
       if (type === 'beneficiaries') {
         this.savedBeneficiaries = selected.map((item: DropdownItem) => item.item_text);
-        console.log('Selected Beneficiaries:', this.savedBeneficiaries);
       }
 
       if (type === 'entities') {
@@ -489,8 +487,7 @@
         if (!this.savedEntities.includes(entityName)) {
           this.savedEntities.push(entityName);
         }
-        console.log('Selected Entity:', entityName);
-        console.log('Selected Sub Entities:', this.selectedSubEntities[entityName] || []);
+
       }
     }
 
@@ -514,12 +511,9 @@
       // FIRST API
       this.api.insertSubEntities(subEntityPayload).subscribe({
         next: (subRes) => {
-          console.log('SUB ENTITY SAVED', subRes);
-
           // SECOND API
           this.api.insertBeneficiaries(beneficiariesPayload).subscribe({
             next: (beneficiaryRes) => {
-              console.log('BENEFICIARY SAVED', beneficiaryRes);
               // SUCCESS MESSAGE
               this.successMessage = 'Your Entities and Beneficiaries have been saved successfully.';
               // update original state
@@ -534,7 +528,6 @@
             },
 
             error: (err) => {
-              console.log('BENEFICIARY ERROR', err);
               this.errorMessage = err?.error?.message || 'Beneficiary save failed';
               this.cd.detectChanges();
               setTimeout(() => {
@@ -545,8 +538,6 @@
         },
 
         error: (err) => {
-          console.log('SUB ENTITY ERROR', err);
-
           this.errorMessage = err?.error?.message || 'Sub Entity save failed';
 
           setTimeout(() => {
@@ -628,7 +619,6 @@
         grantIndex: String(this.grantId ?? ''),
         grantSubEntities: rows,
       };
-      console.log('📤 FINAL Payload:', payload);
       this.api.insertSubEntities(payload).subscribe({
         next: (res) => console.log(' SubEntities Saved', res),
         error: (err) => console.log(' Error', err),
@@ -646,9 +636,8 @@
         grantIndex: String(this.grantId),
         grantBeneficiaries: rows,
       };
-      console.log('FINAL Beneficiaries Payload:', payload);
       this.api.insertBeneficiaries(payload).subscribe({
-        next: (res) => console.log('✅ Saved', res),
+        next: (res) => console.log('Saved', res),
       });
     }
 

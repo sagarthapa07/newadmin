@@ -99,12 +99,8 @@ export class SeoSocialComponent implements OnInit, OnChanges {
       instagramHandler: form['I-Handler'],
     };
 
-    console.log('PAYLOAD', payload);
-
     this.api.updateSeoSocial(this.grantId, payload).subscribe({
       next: (res) => {
-        console.log('UPDATE SUCCESS', res);
-
         this.toastType = 'success';
         this.toastMessage = 'SEO/Social Media updated successfully';
 
@@ -114,8 +110,6 @@ export class SeoSocialComponent implements OnInit, OnChanges {
       },
 
       error: (err) => {
-        console.log('UPDATE ERROR', err);
-
         this.toastType = 'error';
         this.toastMessage = 'Failed to update SEO/Social Media';
 

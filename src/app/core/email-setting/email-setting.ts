@@ -52,8 +52,6 @@ export class EmailSetting {
 
   ngOnInit() {
     const user = this.auth.getUser();
-    console.log('Full user object from cookie:', user);
-
     const data = localStorage.getItem('emailSettingsSearchHistory');
     this.searchHistory = data ? JSON.parse(data) : [];
 
@@ -92,7 +90,6 @@ export class EmailSetting {
         };
         this.api.getAllEmailSettings(payload).subscribe({
           next: (res: any) => {
-            console.log('API response:', res);
             this.emailSettings = res.settings || [];
             this.totalCount = res.recCount || 0;
             this.isLoading = false;
