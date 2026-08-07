@@ -13,21 +13,20 @@
   font-size: var(--fs-h4);
   color: var(--text-color);
   margin: 0;
-  white-space: nowrap; // "Calendar (Add/Edit)" ek line me rahega jab tak jagah ho
+  white-space: nowrap; 
 }
 
-/* ===== NAV TABS ===== */
+
 .nav-btn {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap; // 🔥 scroll ki jagah ab WRAP karega — koi button hide nahi hoga
+  flex-wrap: wrap; 
   justify-content: flex-end;
 }
 
 .nav-btn .btn {
   background: var(--white);
   font-weight: var(--fw-500);
-  border: 1px solid var(--btn-border-color);
   color: var(--text-color);
   height: 37px;
   padding: 0 14px;
