@@ -9,7 +9,7 @@
   color: var(--text-color);
 }
 
-/* ===== HEADER ROW ===== */
+
 .header-row {
   display: flex;
   align-items: center;
@@ -58,7 +58,6 @@
   cursor: pointer;
 }
 
-/* ===== DATE RANGE ===== */
 .date-range-wrapper {
   position: relative;
 }
@@ -255,11 +254,11 @@
 
 .action-icons .btn .table-icon-cell {
   font-size: 13px;
-  color: inherit; // button ke text color se match karega
+  color: inherit;
   cursor: pointer;
 }
 
-/* ===== RESPONSIVE ===== */
+
 @media (max-width: 992px) {
   .header-row {
     flex-direction: column;

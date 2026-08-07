@@ -1,18 +1,8 @@
-// ==========================================================================
-// Focus Groups — uses global :root tokens from styles.scss only.
-// No hardcoded hex values (except the SVG-safe transparent utility below).
-// ==========================================================================
-
 
 .fg-card {
-  background: var(--white);
   border-radius: 10px;
   overflow: hidden;
 }
-
-// ---------------------------------------------------------------------
-// HEADER
-// ---------------------------------------------------------------------
 .focus-header {
   padding-bottom: 20px;
   border-bottom: 1px solid var(--border-color);
@@ -35,9 +25,6 @@
   color: var(--placeholder-color);
 }
 
-// ---------------------------------------------------------------------
-// BODY / PANELS
-// ---------------------------------------------------------------------
 .fg-body {
   padding: 24px 0px;
 }
@@ -88,9 +75,6 @@
   font-style: italic;
 }
 
-// ---------------------------------------------------------------------
-// SUB ENTITY CHECKBOX GRID
-// ---------------------------------------------------------------------
 .fg-sub-block {
   margin-top: 20px;
   padding-top: 18px;
@@ -130,18 +114,12 @@
   }
 }
 
-// ---------------------------------------------------------------------
-// ENTITIES NAME / SUB ENTITIES NAME
-// ---------------------------------------------------------------------
 .fg-names {
   margin-top: 22px;
   padding-top: 18px;
   border-top: 1px solid var(--border-color);
 }
 
-// ---------------------------------------------------------------------
-// CHIPS
-// ---------------------------------------------------------------------
 .chip-wrap {
   display: flex;
   flex-wrap: wrap;
@@ -177,9 +155,6 @@
   line-height: 1;
 }
 
-// ---------------------------------------------------------------------
-// FOOTER
-// ---------------------------------------------------------------------
 .fg-footer {
   display: flex;
   align-items: center;
@@ -257,17 +232,11 @@
   border-color: var(--primary-color-dark);
 }
 
-// ---------------------------------------------------------------------
-// MULTISELECT DROPDOWN — THEME OVERRIDES
-// ng-multiselect-dropdown ships its own hardcoded blue; we re-point it
-// to the app's primary color via ::ng-deep so it matches the rest of the UI.
-// ---------------------------------------------------------------------
 :host ::ng-deep .multiselect-item-checkbox,
 :host ::ng-deep .selected-item {
   max-width: none !important;
 }
 
-// Selected chips inside the dropdown input (e.g. "Businesses x")
 :host ::ng-deep .dropdown-btn .selected-item {
   background: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
@@ -278,7 +247,6 @@
   border-color: var(--primary-color-dark) !important;
 }
 
-// Search box inside the open panel
 :host ::ng-deep .dropdown-list .filter-textbox input {
   border-color: var(--border-color) !important;
 }
@@ -289,7 +257,6 @@
   box-shadow: 0 0 0 2px rgba(0, 149, 192, 0.15) !important;
 }
 
-// Checkbox squares (unchecked + checked states)
 :host ::ng-deep .multiselect-item-checkbox input[type='checkbox'] + div:before {
   border-color: var(--placeholder-color) !important;
 }
@@ -299,21 +266,16 @@
   border-color: var(--primary-color) !important;
 }
 
-// Row hover / highlighted state inside the dropdown list
 :host ::ng-deep .dropdown-list li:hover,
 :host ::ng-deep .dropdown-list .item2 .highlight-item {
   background: var(--header2-bkg-color) !important;
   color: var(--text-color-dark) !important;
 }
 
-// "Select All" row accent
 :host ::ng-deep .multiselect-item-checkbox input[type='checkbox']:checked + div {
   color: var(--text-color-dark) !important;
 }
 
-// ---------------------------------------------------------------------
-// RESPONSIVE
-// ---------------------------------------------------------------------
 @media (max-width: 992px) {
   .sub-grid {
     grid-template-columns: repeat(2, 1fr);

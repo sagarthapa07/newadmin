@@ -184,6 +184,9 @@
                 {{ item }}
               </li>
             </ul>
+            @if (isFieldInvalid('grantType')) {
+              <div class="error">Please select grant type.</div>
+            }
           </div>
         </div>
 
@@ -207,6 +210,10 @@
                 {{ item }}
               </li>
             </ul>
+
+            @if (isFieldInvalid('grantDuration')) {
+              <div class="error">Please select grant duration.</div>
+            }
           </div>
         </div>
 
@@ -227,8 +234,33 @@
                 {{ item }}
               </li>
             </ul>
+            @if (isFieldInvalid('grantSize')) {
+              <div class="error">Please select grant size.</div>
+            }
           </div>
         </div>
+
+        <!-- <div class="form-row">
+          <label><i class="bi bi-image field-icon"></i> Image</label>
+          <div class="field-wrapper">
+            <div class="image-upload-wrapper">
+              <app-image-cropper
+                [imageSrc]="previewUrl"
+                [dirPath]="'img.USGrants'"
+                [recType]="'CU'"
+                (onCropped)="onImageCropped($event)"
+              ></app-image-cropper>
+
+              <img
+                *ngIf="previewUrl"
+                [src]="previewUrl"
+                class="preview-image"
+                (click)="openImageModal()"
+                title="Click to view"
+              />
+            </div>
+          </div>
+        </div> -->
 
         <div class="form-row">
           <label><i class="bi bi-image field-icon"></i> Image</label>
@@ -249,9 +281,11 @@
                 title="Click to view"
               />
             </div>
+            @if (isImageInvalid()) {
+              <div class="error">Please upload an image.</div>
+            }
           </div>
         </div>
-
         <div class="form-row">
           <label><i class="bi bi-shield-check field-icon"></i> Status</label>
           <div class="field-wrapper has-chevron">
@@ -279,7 +313,7 @@
         <hr />
         <app-editor formControlName="letterText"></app-editor>
 
-        @if (isEditorEmpty()) {
+        @if (isEditorEmpty() && opportunityForm.get('letterText')?.touched) {
           <div class="error">Please enter letter text.</div>
         }
       </div>

@@ -31,7 +31,7 @@ export class Preview implements OnInit {
 
   isFavorite = false;
   urlCopied = false;
-
+  showAllFocusAreas = false;
   constructor(
     private route: ActivatedRoute,
     private api: Api,
@@ -161,5 +161,12 @@ export class Preview implements OnInit {
 
   toggleFavorite(): void {
     this.isFavorite = !this.isFavorite;
+  }
+
+  get visibleFocusAreas(): string[] {
+    return this.showAllFocusAreas ? this.focusAreas : this.focusAreas.slice(0, this.visibleLimit);
+  }
+  toggleFocusAreas(): void {
+    this.showAllFocusAreas = !this.showAllFocusAreas;
   }
 }

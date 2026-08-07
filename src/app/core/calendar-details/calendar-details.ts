@@ -54,6 +54,7 @@ export class CalendarDetails {
   selectedGrantDuration = '';
   showGrantSizeDropdown = false;
   selectedGrantSize = '';
+  formSubmitted = false;
 
   grantTypeList = [
     'Awards and Prizes',
@@ -311,6 +312,10 @@ export class CalendarDetails {
   goToCalenderArea() {
     this.tabChange.emit(1);
   }
+
+  isImageInvalid(): boolean {
+    return this.formSubmitted && !this.previewUrl;
+  }
   onSearchDonor(event: any) {
     const value = event.target.value;
     if (!value) {
@@ -344,11 +349,11 @@ export class CalendarDetails {
   }
 
   onSave(): void {
-    if (this.opportunityForm.invalid || this.isEditorEmpty()) {
+    this.formSubmitted = true;
+    if (this.opportunityForm.invalid || this.isEditorEmpty() || this.isImageInvalid()) {
       this.opportunityForm.markAllAsTouched();
       return;
     }
-
     this.persistGrant((grantId: number) => {
       this.successMessage = 'Grant saved successfully';
     });
@@ -375,12 +380,12 @@ export class CalendarDetails {
   }
 
   goToPreview(): void {
-    if (this.opportunityForm.invalid || this.isEditorEmpty()) {
+    this.formSubmitted = true;
+    if (this.opportunityForm.invalid || this.isEditorEmpty() || this.isImageInvalid()) {
       this.opportunityForm.markAllAsTouched();
       this.errorMessage = 'Please fill all required fields before preview.';
       return;
     }
-
     this.persistGrant((grantId: number) => {
       this.router.navigate(['/calendar-opportunity/edit/preview', grantId]);
     });

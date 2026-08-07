@@ -182,11 +182,12 @@
         <div class="side-box">
           <h4>Focus Area(s) of Interest</h4>
 
-          <div class="chip-box">
-            @for (area of focusAreas; track area) {
+          <div class="chip-box scroll">
+            @for (area of visibleFocusAreas; track area) {
               <span class="chip">{{ area }}</span>
             }
           </div>
+
         </div>
       }
 
@@ -199,12 +200,6 @@
               <span class="chip">{{ county }}</span>
             }
           </div>
-
-          @if (counties.length > visibleLimit) {
-            <button class="view-all-btn" (click)="toggleCounties()" type="button">
-              {{ showAllCounties ? 'View less' : 'View all (' + counties.length + ')' }}
-            </button>
-          }
         </div>
       }
 
