@@ -13,6 +13,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): boolean {
     const login = this.auth.isLoggedIn();
+
     if (login) {
       return true;
     }

@@ -21,6 +21,7 @@ export class Login implements OnInit {
   errorMessage = '';
   showPassword = false;
   currentYear = new Date().getFullYear();
+
   loginForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -63,6 +64,7 @@ export class Login implements OnInit {
       next: (res) => {
         this.loading = false;
         if (res.successCode === 1) {
+          const sessionCreated = this.auth.setSession(res.result);
           if (rememberMe) {
             localStorage.setItem(REMEMBERED_USER_KEY, name || '');
           } else {
@@ -73,6 +75,7 @@ export class Login implements OnInit {
           this.errorMessage = res.message;
         }
       },
+
       error: (err) => {
         this.loading = false;
         this.errorMessage = 'Server Error';

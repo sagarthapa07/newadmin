@@ -30,6 +30,7 @@ export class Common {
   public setCookie(key: string, value: string, expireTime: any): boolean {
     const isLocalhost = window.location.hostname === 'localhost';
     const cookieDomain = isLocalhost ? undefined : environment.domain;
+
     this.Cookie.set(key, value, {
       expires: expireTime,
       path: '/',
@@ -46,7 +47,10 @@ export class Common {
   }
 
   public deleteCookie(key: string) {
-    document.cookie = encodeURIComponent(key) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/';
+    const isLocalhost = window.location.hostname === 'localhost';
+    const cookieDomain = isLocalhost ? undefined : environment.domain;
+    const isSecure = window.location.protocol === 'https:';
+    this.Cookie.delete(key, '/', cookieDomain, isSecure);
   }
 
   public deleteAllCookie() {
@@ -76,6 +80,7 @@ export class Common {
   }
 
   encryptData(data: string) {
+    console.log('Data Before Encrypt :', data);
     try {
       const key = CryptoJS.enc.Utf8.parse(environment.cookieKey);
       const iv = CryptoJS.enc.Utf8.parse('');

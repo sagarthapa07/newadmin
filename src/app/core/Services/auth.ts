@@ -53,7 +53,9 @@ export class Auth {
     const expire = new Date();
     expire.setDate(expire.getDate() + 1);
     const encryptedUser = this.common.encryptData(JSON.stringify(user));
+
     if (!encryptedUser) {
+      console.log('Encryption Failed');
       return false;
     }
     this.common.setCookie('_US_ADMIN_AUTH_', encryptedUser, expire);
