@@ -32,7 +32,6 @@
   color: var(--placeholder-color);
 }
 
-
 // ---------------------------------------------------------------------
 // GRID
 // ---------------------------------------------------------------------
@@ -592,7 +591,7 @@
 
 .btn-clear {
   background: var(--white);
-  color: var(--danger-color);
+  color: var(--text-color);
   border-color: var(--btn-border-color);
 }
 
@@ -600,10 +599,9 @@
   background: var(--body-color);
   border-color: var(--danger-color);
 }
-
 .btn-back {
   background: var(--white);
-  color: var(--text-color-light);
+  color: var(--text-color);
   border-color: var(--btn-border-color);
 }
 
@@ -613,7 +611,7 @@
 
 .btn-save {
   background: var(--white);
-  color: var(--nav-color);
+  color: var(--text-color);
   border-color: var(--nav-color);
 }
 
@@ -623,7 +621,7 @@
 
 .btn-next {
   background: var(--nav-color);
-  color: var(--white);
+  color: var(--text-color);
   border-color: var(--nav-color);
 }
 
@@ -635,6 +633,109 @@
 // ---------------------------------------------------------------------
 // RESPONSIVE
 // ---------------------------------------------------------------------
+
+@media (max-width: 1440px) {
+  .geo-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .geo-card {
+    padding: 12px;
+  }
+
+  .geo-card-name {
+    font-size: 13px;
+  }
+
+  .geo-item {
+    font-size: 12px;
+  }
+
+  .geo-search input {
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .geo-select-all {
+    font-size: 12px;
+  }
+
+  .geo-summary {
+    padding: 12px;
+  }
+
+  .geo-summary-card {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .geo-summary-card-title strong {
+    font-size: 12px;
+  }
+
+  .geo-summary-icon {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    font-size: 11px;
+  }
+
+  .chip {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .geo-footer .btn {
+    min-width: 76px;
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+
+  .geo-footer .btn i {
+    font-size: 12px;
+  }
+
+  .focus-header .button {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .geo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .geo-card {
+    padding: 10px;
+  }
+
+  .geo-card-name {
+    font-size: 12px;
+  }
+
+  .geo-item {
+    font-size: 11px;
+  }
+
+  .geo-summary-card {
+    padding: 8px;
+  }
+
+  .geo-summary-card-title strong {
+    font-size: 11px;
+  }
+
+  .geo-footer .btn {
+    min-width: 68px;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+}
+
+
+
 @media (max-width: 1200px) {
   .geo-grid {
     grid-template-columns: repeat(2, 1fr);

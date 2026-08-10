@@ -109,12 +109,10 @@
           <div class="field-wrapper">
             <textarea
               rows="3"
-              maxlength="500"
               class="form-control"
               formControlName="shortInfo"
               placeholder="Enter short information about this opportunity..."
             ></textarea>
-            <div class="char-counter">{{ shortInfoLength }}/500</div>
             @if (isFieldInvalid('shortInfo')) {
               <div class="error">Please Enter a ShortInfo.</div>
             }

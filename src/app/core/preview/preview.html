@@ -11,215 +11,215 @@
     <p>{{ errorMsg }}</p>
   </div>
 }
-
-<header class="grant-header">
-  <div class="grant-topbar">
-    <div class="grant-container grant-topbar-inner">
-      <div class="grant-user-menu">
-        <a href="#">Vinay KD <i class="bi bi-caret-down-fill"></i></a>
-        <a href="#">Support</a>
-        <a href="#">Sign out</a>
+<section class="header-section">
+  <header class="grant-header">
+    <div class="grant-topbar">
+      <div class="grant-container grant-topbar-inner">
+        <div class="grant-user-menu">
+          <a href="#">Vinay KD <i class="bi bi-caret-down-fill"></i></a>
+          <a href="#">Support</a>
+          <a href="#">Sign out</a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="grant-navbar">
-    <div class="grant-container grant-navbar-inner">
-      <div class="grant-logo">
-        <img src="../../../assets/logo (3).png" />
+    <div class="grant-navbar">
+      <div class="grant-container grant-navbar-inner">
+        <div class="grant-logo">
+          <img src="../../../assets/logo (3).png" />
+        </div>
+
+        <nav class="grant-menu">
+          <a>Dashboard</a>
+
+          <a>
+            Grants
+            <i class="bi bi-caret-down-fill"></i>
+          </a>
+
+          <a>Advanced Search</a>
+
+          <a>Set Your Grant Alerts</a>
+
+          <a>
+            States / Counties
+            <i class="bi bi-caret-down-fill"></i>
+          </a>
+        </nav>
       </div>
-
-      <nav class="grant-menu">
-        <a>Dashboard</a>
-
-        <a>
-          Grants
-          <i class="bi bi-caret-down-fill"></i>
-        </a>
-
-        <a>Advanced Search</a>
-
-        <a>Set Your Grant Alerts</a>
-
-        <a>
-          States / Counties
-          <i class="bi bi-caret-down-fill"></i>
-        </a>
-      </nav>
     </div>
-  </div>
 
-  <div class="grant-breadcrumb">
-    <div class="grant-container">
-      <span>Home</span>
-      <span>/</span>
-      <span>Funding Grants</span>
-      <span>/</span>
-      <span class="active">{{ data.title }}</span>
+    <div class="grant-breadcrumb">
+      <div class="grant-container">
+        <span>Home</span>
+        <span>/</span>
+        <span>Funding Grants</span>
+        <span>/</span>
+        <span class="active">{{ data.title }}</span>
+      </div>
     </div>
-  </div>
-</header>
+  </header>
 
-@if (!loading && !errorMsg && data) {
-  <div class="preview-wrapper">
-    <!-- LEFT -->
-    <div class="left">
-      <div class="top-card">
-        <div class="top-inner">
-          <img
-            [src]="data.imageUrl || data.logoUrl || 'assets/images/no-image.png'"
-            [alt]="data.title"
-            class="logo"
-          />
+  @if (!loading && !errorMsg && data) {
+    <div class="preview-wrapper">
+      <!-- LEFT -->
+      <div class="left">
+        <div class="top-card">
+          <div class="top-inner">
+            <img
+              [src]="data.imageUrl || data.logoUrl || 'assets/images/no-image.png'"
+              [alt]="data.title"
+              class="logo"
+            />
 
-          <div class="top-content">
-            <div class="title-row">
-              <h2>{{ data.title }}</h2>
+            <div class="top-content">
+              <div class="title-row">
+                <h2>{{ data.title }}</h2>
 
-              <button class="fav-btn" (click)="toggleFavorite()" type="button">
-                <i class="bi" [ngClass]="isFavorite ? 'bi-heart-fill' : 'bi-heart'"> </i>
-              </button>
+                <button class="fav-btn" (click)="toggleFavorite()" type="button">
+                  <i class="bi" [ngClass]="isFavorite ? 'bi-heart-fill' : 'bi-heart'"> </i>
+                </button>
+              </div>
+
+              <div class="meta">
+                <p class="meta-label">Important Dates:</p>
+
+                <p class="meta-row no-border">
+                  <b>Post Date:</b>
+                  <span>
+                    {{ data.postDate ? (data.postDate | date: 'MMMM d, y') : 'Not Available' }}
+                  </span>
+                </p>
+
+                <p class="meta-row">
+                  <b>Deadline Date:</b>
+                  <span>
+                    {{
+                      data.deadLineDate ? (data.deadLineDate | date: 'MMMM d, y') : 'Not Available'
+                    }}
+                  </span>
+                </p>
+
+                <p class="meta-row">
+                  <b>Donor Name:</b>
+                  <span>{{ data.donorName || 'Not Available' }}</span>
+                </p>
+
+                <p class="meta-row">
+                  <b>Grant Size:</b>
+                  <span>{{ data.grantSize || 'Not Available' }}</span>
+                </p>
+
+                <p class="meta-row">
+                  <b>Grant Duration:</b>
+                  <span>{{ data.grantDuration || 'Grant Duration Not Mentioned' }}</span>
+                </p>
+
+                <p class="meta-row">
+                  <b>Category:</b>
+                  <span>{{ data.category || 'N/A' }}</span>
+                </p>
+
+                <p class="meta-row url-row">
+                  <b>Reference URL:</b>
+
+                  @if (data.referenceUrl) {
+                    <a [href]="data.referenceUrl" target="_blank" rel="noopener">
+                      {{ data.referenceUrl }}
+                    </a>
+                  } @else {
+                    <span>Opportunity is not available.</span>
+                  }
+
+                  @if (data.referenceUrl) {
+                    <button class="btn-copy" (click)="copyUrl()" type="button">
+                      {{ urlCopied ? 'Copied!' : 'Copy Url' }}
+                    </button>
+                  }
+                </p>
+              </div>
             </div>
+          </div>
+        </div>
 
-            <div class="meta">
-              <p class="meta-label">Important Dates:</p>
-
-              <p class="meta-row no-border">
-                <b>Post Date:</b>
-                <span>
-                  {{ data.postDate ? (data.postDate | date: 'MMMM d, y') : 'Not Available' }}
-                </span>
-              </p>
-
-              <p class="meta-row">
-                <b>Deadline Date:</b>
-                <span>
-                  {{
-                    data.deadLineDate ? (data.deadLineDate | date: 'MMMM d, y') : 'Not Available'
-                  }}
-                </span>
-              </p>
-
-              <p class="meta-row">
-                <b>Donor Name:</b>
-                <span>{{ data.donorName || 'Not Available' }}</span>
-              </p>
-
-              <p class="meta-row">
-                <b>Grant Size:</b>
-                <span>{{ data.grantSize || 'Not Available' }}</span>
-              </p>
-
-              <p class="meta-row">
-                <b>Grant Duration:</b>
-                <span>{{ data.grantDuration || 'Grant Duration Not Mentioned' }}</span>
-              </p>
-
-              <p class="meta-row">
-                <b>Category:</b>
-                <span>{{ data.category || 'N/A' }}</span>
-              </p>
-
-              <p class="meta-row url-row">
-                <b>Reference URL:</b>
-
-                @if (data.referenceUrl) {
-                  <a [href]="data.referenceUrl" target="_blank" rel="noopener">
-                    {{ data.referenceUrl }}
-                  </a>
-                } @else {
-                  <span>Opportunity is not available.</span>
-                }
-
-                @if (data.referenceUrl) {
-                  <button class="btn-copy" (click)="copyUrl()" type="button">
-                    {{ urlCopied ? 'Copied!' : 'Copy Url' }}
-                  </button>
-                }
-              </p>
+        <div class="content-card">
+          @if (data.shortDescription) {
+            <div class="intro">
+              <p>{{ data.shortDescription }}</p>
             </div>
-          </div>
-        </div>
-      </div>
+          }
 
-      <div class="content-card">
-        @if (data.shortDescription) {
-          <div class="intro">
-            <p>{{ data.shortDescription }}</p>
-          </div>
-        }
+          <div class="rich-text" [innerHTML]="description"></div>
 
-        <div class="rich-text" [innerHTML]="description"></div>
+          @if (data.fundingInformation) {
+            <h5>Funding Information</h5>
+            <p>{{ data.fundingInformation }}</p>
+          }
 
-        @if (data.fundingInformation) {
-          <h5>Funding Information</h5>
-          <p>{{ data.fundingInformation }}</p>
-        }
+          @if (data.eligibilityCriteria?.length) {
+            <h5>Eligibility Criteria</h5>
+            <ul>
+              @for (item of data.eligibilityCriteria; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+          }
 
-        @if (data.eligibilityCriteria?.length) {
-          <h5>Eligibility Criteria</h5>
-          <ul>
-            @for (item of data.eligibilityCriteria; track item) {
-              <li>{{ item }}</li>
-            }
-          </ul>
-        }
-
-        @if (data.ineligibility?.length) {
-          <h5>Ineligibility</h5>
-          <ul>
-            @for (item of data.ineligibility; track item) {
-              <li>{{ item }}</li>
-            }
-          </ul>
-        }
-      </div>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="right">
-      @if (focusAreas.length) {
-        <div class="side-box">
-          <h4>Focus Area(s) of Interest</h4>
-
-          <div class="chip-box scroll">
-            @for (area of visibleFocusAreas; track area) {
-              <span class="chip">{{ area }}</span>
-            }
-          </div>
-
-        </div>
-      }
-
-      @if (counties.length) {
-        <div class="side-box">
-          <h4>Focus County(ies)</h4>
-
-          <div class="chip-box scroll">
-            @for (county of visibleCounties; track county) {
-              <span class="chip">{{ county }}</span>
-            }
-          </div>
-        </div>
-      }
-
-      @if (states.length) {
-        <div class="side-box">
-          <h4>Focus State(s)</h4>
-
-          <div class="chip-box">
-            @for (state of visibleStates; track state) {
-              <span class="chip">{{ state }}</span>
-            }
-          </div>
-
-          @if (states.length > visibleLimit) {
-            <button class="view-all-btn" (click)="toggleStates()" type="button">
-              {{ showAllStates ? 'View less' : 'View all (' + states.length + ')' }}
-            </button>
+          @if (data.ineligibility?.length) {
+            <h5>Ineligibility</h5>
+            <ul>
+              @for (item of data.ineligibility; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
           }
         </div>
-      }
+      </div>
+
+      <!-- RIGHT -->
+      <div class="right">
+        @if (focusAreas.length) {
+          <div class="side-box">
+            <h4>Focus Area(s) of Interest</h4>
+
+            <div class="chip-box scroll">
+              @for (area of visibleFocusAreas; track area) {
+                <span class="chip">{{ area }}</span>
+              }
+            </div>
+          </div>
+        }
+
+        @if (counties.length) {
+          <div class="side-box">
+            <h4>Focus County(ies)</h4>
+
+            <div class="chip-box scroll">
+              @for (county of visibleCounties; track county) {
+                <span class="chip">{{ county }}</span>
+              }
+            </div>
+          </div>
+        }
+
+        @if (states.length) {
+          <div class="side-box">
+            <h4>Focus State(s)</h4>
+
+            <div class="chip-box">
+              @for (state of visibleStates; track state) {
+                <span class="chip">{{ state }}</span>
+              }
+            </div>
+
+            @if (states.length > visibleLimit) {
+              <button class="view-all-btn" (click)="toggleStates()" type="button">
+                {{ showAllStates ? 'View less' : 'View all (' + states.length + ')' }}
+              </button>
+            }
+          </div>
+        }
+      </div>
     </div>
-  </div>
-}
+  }
+</section>

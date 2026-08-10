@@ -37,7 +37,6 @@
   }
 }
 
-
 .toggle-card-row {
   display: flex;
   gap: 16px;
@@ -50,7 +49,7 @@
   align-items: center;
   gap: 10px;
   padding: 14px 18px;
-  border: 2px solid var(--border-color);;
+  border: 2px solid var(--border-color);
   border-radius: 10px;
   background: var(--white);
   font-weight: var(--fw-600);
@@ -64,7 +63,7 @@
 
   &.active {
     border-color: var(--primary-color);
-    background: var(--primary-color-light);;
+    background: var(--primary-color-light);
     color: var(--primary-color-dark);
   }
 }
@@ -109,7 +108,7 @@
 }
 
 .panel-card {
-  border: 1px solid var(--border-color);;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 18px 20px;
   background: var(--white);
@@ -130,7 +129,7 @@
   gap: 10px;
   width: 100%;
   padding: 12px 14px;
-  border: 2px solid var(--border-color);;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   background: var(--white);
   cursor: pointer;
@@ -144,7 +143,7 @@
 
   &.active {
     border-color: var(--primary-color);
-    background: var(--primary-color-light);;
+    background: var(--primary-color-light);
   }
 
   .option-text {
@@ -157,14 +156,14 @@
     }
 
     small {
-      color: var(--text-color-light);;
+      color: var(--text-color-light);
       font-size: var(--fs-13);
     }
   }
 }
 
 .hint-text {
-  color: var(--text-color-light);;
+  color: var(--text-color-light);
   font-size: var(--fs-13);
   margin-bottom: 10px;
 }
@@ -172,7 +171,7 @@
 .paste-textarea {
   width: 100%;
   min-height: 90px;
-  border: 1px solid var(--border-color);;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: var(--fs-14);
@@ -236,7 +235,7 @@
 }
 
 .native-select {
-  border: 1px solid var(--border-color);;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 8px 12px;
   font-size: var(--fs-15);
@@ -251,8 +250,7 @@
 
 .coverage-type-toggle {
   display: flex;
-  border: 1px solid var(--border-color);;
-  border-radius: 8px;
+  border: 1px solid var(--border-color);
   overflow: hidden;
 }
 
@@ -264,8 +262,8 @@
   font-size: var(--fs-14);
   font-weight: var(--fw-600);
   cursor: pointer;
-  color: var(--text-color-light);;
-  border-right: 1px solid var(--border-color);;
+  color: var(--text-color-light);
+  border-right: 1px solid var(--border-color);
   transition: var(--tran-02);
 
   &:last-child {
@@ -273,7 +271,7 @@
   }
 
   &.active {
-    background: var(--primary-color-light);;
+    background: var(--primary-color-light);
     color: var(--primary-color-dark);
     font-weight: var(--fw-700);
     box-shadow: inset 0 0 0 2px var(--primary-color);
@@ -297,11 +295,11 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid var(--border-color);;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 6px 10px;
   font-size: var(--fs-13);
-  color: var(--text-color-light);;
+  color: var(--text-color-light);
 
   input {
     border: none;
@@ -317,7 +315,7 @@
   gap: 8px 16px;
   max-height: 320px;
   overflow-y: auto;
-  border: 1px solid var(--border-color);;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 12px 16px;
 }
@@ -358,7 +356,7 @@
 }
 
 .stat-card {
-  border: 1px solid var(--border-color);;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 12px;
   background: var(--white);
@@ -386,16 +384,16 @@
 
   &.badge-green {
     background: var(--primary-color-light);
-    color: var(--primary-color);;
+    color: var(--primary-color);
   }
 
   &.badge-accent {
     background: var(--nav-color);
-    color: var(--nav-color);;
+    color: var(--nav-color);
   }
 
   &.badge-primary {
-    background: var(--primary-color-light);;
+    background: var(--primary-color-light);
     color: var(--primary-color);
   }
 }
@@ -407,12 +405,12 @@
 
 .stat-label {
   font-size: var(--fs-11);
-  color: var(--text-color-light);;
+  color: var(--text-color-light);
   line-height: 1.2;
 }
 
 .summary-card {
-  border: 1px solid var(--border-color);;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 16px 18px;
   background: var(--card-bg-color);
@@ -432,7 +430,7 @@
 .clear-all-link {
   border: none;
   background: none;
-  color: var(--danger-color);;
+  color: var(--danger-color);
   font-size: var(--fs-13);
   font-weight: var(--fw-600);
   cursor: pointer;
@@ -445,14 +443,14 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--primary-color);;
+  color: var(--primary-color);
   font-size: var(--fs-13);
   font-weight: var(--fw-700);
   margin: 14px 0 8px;
 }
 
 .summary-state-block {
-  border-bottom: 1px solid var(--border-color);;
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 8px;
   margin-bottom: 8px;
 
@@ -469,7 +467,7 @@
   font-size: var(--fs-15);
 
   .state-icon {
-    color: var(--primary-color);;
+    color: var(--primary-color);
   }
 
   strong {
@@ -480,7 +478,7 @@
 .remove-state-link {
   border: none;
   background: none;
-  color: var(--danger-color);;
+  color: var(--danger-color);
   font-size: var(--fs-13);
   font-weight: var(--fw-600);
   display: inline-flex;
@@ -502,7 +500,7 @@
   padding: 3px 0;
 
   .bi-check-circle-fill {
-    color: var(--primary-color);;
+    color: var(--primary-color);
   }
 
   span {
@@ -510,7 +508,7 @@
   }
 
   .remove-county {
-    color: var(--danger-color);;
+    color: var(--danger-color);
     cursor: pointer;
     opacity: 0.6;
 
@@ -528,7 +526,7 @@
   padding: 6px 0;
 
   .state-icon {
-    color: var(--nav-color);;
+    color: var(--nav-color);
   }
 
   strong {
@@ -536,13 +534,13 @@
   }
 
   .all-included-text {
-    color: var(--nav-color);;
+    color: var(--nav-color);
     font-size: var(--fs-13);
     font-weight: var(--fw-600);
   }
 
   .remove-county {
-    color: var(--danger-color);;
+    color: var(--danger-color);
     cursor: pointer;
     opacity: 0.6;
 
@@ -551,7 +549,6 @@
     }
   }
 }
-
 
 .section-footer {
   display: flex;
@@ -586,7 +583,7 @@
   transition: var(--tran-02);
 
   i {
-    font-size: 14px;
+    font-size: var(--fs-14);
   }
 }
 
@@ -630,6 +627,159 @@
 .btn-next:hover {
   background: var(--primary-color-dark);
   border-color: var(--primary-color-dark);
+}
+
+@media (max-width: 1440px) {
+  .coverage-grid {
+    gap: 14px;
+    padding: 20px 0;
+  }
+
+  .toggle-card-row {
+    gap: 10px;
+  }
+
+  .toggle-card {
+    padding: 10px 14px;
+    font-size: var(--fs-14);
+    gap: 8px;
+  }
+
+  .radio-dot {
+    width: 15px;
+    height: 15px;
+  }
+
+  .panel-row {
+    gap: 12px;
+  }
+
+  .panel-card {
+    padding: 14px 16px;
+    border-radius: 10px;
+
+    h6 {
+      font-size: var(--fs-14);
+      margin-bottom: 8px;
+    }
+  }
+
+  .option-tile {
+    padding: 10px 12px;
+    margin-bottom: 8px;
+
+    .option-text strong {
+      font-size: var(--fs-14);
+    }
+  }
+
+  .paste-textarea {
+    min-height: 70px;
+    padding: 8px 10px;
+    font-size: var(--fs-13);
+  }
+
+  .auto-select-actions {
+    gap: 10px;
+  }
+
+  .auto-select-btn {
+    padding: 5px 12px !important;
+    font-size: var(--fs-13) !important;
+  }
+
+  .view-row {
+    gap: 12px;
+  }
+
+  .native-select {
+    padding: 6px 10px;
+    font-size: var(--fs-14);
+  }
+
+  .coverage-type-btn {
+    padding: 6px 10px;
+    font-size: var(--fs-13);
+  }
+
+  .county-search input {
+    width: 120px;
+  }
+  .county-item {
+    font-size: 12px;
+  }
+  .county-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    max-height: 260px;
+    gap: 2px 8px;
+    padding: 10px 10px;
+  }
+
+  .stat-row {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .stat-card {
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .stat-icon-badge {
+    width: 24px;
+    height: 24px;
+
+    i {
+      font-size: var(--fs-13);
+    }
+  }
+
+  .stat-num {
+    font-size: var(--fs-16);
+  }
+
+  .stat-label {
+    font-size: var(--fs-10);
+  }
+
+  .summary-card {
+    padding: 12px 14px;
+  }
+
+  .summary-subtitle {
+    font-size: var(--fs-13);
+    margin: 10px 0 6px;
+  }
+
+  .summary-state-row {
+    font-size: var(--fs-14);
+  }
+
+  .summary-county-row,
+  .summary-full-row {
+    font-size: var(--fs-13);
+  }
+
+  .section-footer {
+    padding: 14px 0px;
+    margin-top: 18px;
+    gap: 10px;
+  }
+
+  .section-footer-right {
+    gap: 8px;
+  }
+
+  .section-footer .btn {
+    min-width: 70px;
+    padding: 7px 14px;
+    font-size: var(--fs-13);
+    gap: 6px;
+
+    i {
+      font-size: var(--fs-11);
+    }
+  }
 }
 
 @media (max-width: 768px) {

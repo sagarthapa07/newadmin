@@ -123,7 +123,6 @@ export class CountiesComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  // This is the ONLY place selectionType should ever change — user's explicit click.
   setSelectionType(type: SelectionType) {
     if (this.selectionType === type) return;
     this.selectionType = type;
@@ -272,24 +271,15 @@ export class CountiesComponent implements OnInit {
     return all.length > 0 && all.length === selected.length;
   }
 
-  /**
-   * FIX (both bugs):
-   * 1. selectionType is NEVER auto-changed here anymore — only setSelectionType()
-   *    (user's explicit click) is allowed to change it. Previously this method did
-   *    `this.selectionType = detectedStates.length > 1 ? 'multiple' : 'single'`
-   *    which silently flipped "Multiple" back to "Single" whenever a paste only
-   *    matched one state.
-   * 2. In 'multiple' mode, states/counties are always ADDED to existing selections
-   *    (this.selectedStates.push, Set-merge for counties) — never reset/overwritten.
-   *    The old `this.selectedStates = []` reset (which fired whenever the type got
-   *    forced to 'single') is gone, so a fresh paste no longer wipes prior picks.
-   *    'single' mode still intentionally replaces the one active state, matching
-   *    the existing single-mode behavior elsewhere (onStateViewChange).
-   */
   autoSelectFromText(): void {
     const text = this.pasteText.trim();
-    if (!text || !this.detectStatesEnabled) {
+    if (!text) {
       this.pasteText = '';
+      return;
+    }
+
+    if (!this.detectStatesEnabled && !this.detectCountiesEnabled) {
+      this.showError('Detect States ya Detect Counties me se kam se kam ek select karo');
       return;
     }
 
@@ -301,7 +291,21 @@ export class CountiesComponent implements OnInit {
       return;
     }
 
-    const applyCountyMatch = (state: string) => {
+    const useFullState = this.detectStatesEnabled && !this.detectCountiesEnabled;
+
+    const setupState = (state: string) => {
+      if (useFullState) {
+        this.stateModeMap[state] = true;
+        this.selectedCounties[state] = [];
+        this.cd.detectChanges();
+        return;
+      }
+
+      this.stateModeMap[state] = false;
+      if (!this.selectedCounties[state]) {
+        this.selectedCounties[state] = [];
+      }
+
       this.loadCountiesForState(state, () => {
         if (this.detectCountiesEnabled) {
           const counties = this.countiesByState[state] || [];
@@ -316,37 +320,23 @@ export class CountiesComponent implements OnInit {
     };
 
     if (this.selectionType === 'single') {
-      // Single mode still only ever holds one active state — but we don't touch
-      // this.selectionType itself here, only the user's toggle click does that.
       const state = detectedStates[0];
       this.selectedStates = [state];
-      if (!this.stateModeMap.hasOwnProperty(state)) {
-        this.stateModeMap[state] = this.lastToggleMode;
-      }
-      if (!this.selectedCounties[state]) {
-        this.selectedCounties[state] = [];
-      }
-      applyCountyMatch(state);
+      setupState(state);
       this.activateState(state);
     } else {
-      // Multiple mode: append new states/counties on top of whatever is already selected.
       detectedStates.forEach((state) => {
         if (!this.selectedStates.includes(state)) {
           this.selectedStates.push(state);
         }
-        if (!this.stateModeMap.hasOwnProperty(state)) {
-          this.stateModeMap[state] = this.lastToggleMode;
-        }
-        if (!this.selectedCounties[state]) {
-          this.selectedCounties[state] = [];
-        }
-        applyCountyMatch(state);
+        setupState(state);
       });
 
       const lastState = detectedStates[detectedStates.length - 1];
       this.activateState(lastState);
     }
 
+    this.lastToggleMode = useFullState;
     this.pasteText = '';
     this.cd.detectChanges();
   }

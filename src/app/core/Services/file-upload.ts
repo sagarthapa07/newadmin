@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class FileUpload {
   private uploadUrl =
-    'https://sne1bukm2g.execute-api.us-east-1.amazonaws.com/US-RestAPI-Local-UploadFile';
+    'https://cw8n8zcyn1.execute-api.us-east-1.amazonaws.com/US-RestAPI-Live-UploadFile';
 
   constructor(private http: HttpClient) {}
 

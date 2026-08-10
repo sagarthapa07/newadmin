@@ -1,6 +1,4 @@
-/*  Table  */
-
-/* Wrapper */
+  
 .table-wrapper {
   margin-right: 10px;
   background: #fff;
@@ -9,13 +7,13 @@
   overflow: hidden;
 }
 
-/* No horizontal scroll — table always fits its container */
+
 .table-responsive {
   width: 100%;
   overflow-x: hidden;
 }
 
-/* Table */
+
 .custom-table {
   width: 100%;
   table-layout: auto;
@@ -37,8 +35,6 @@
   vertical-align: middle;
 }
 
-/* Any action buttons (Edit / Copy / Delete etc.) placed inside a cell
-   should wrap to the next line instead of stretching the column */
 .table-actions,
 .custom-table td > div {
   display: flex;
@@ -56,14 +52,13 @@
   color: #344054;
 }
 
-/* Opportunity text */
+
 .id-text {
   color: #0d6efd;
   font-weight: 500;
   cursor: pointer;
 }
 
-/* Status badge */
 .table-status {
   padding: 4px 10px;
   font-size: 12px;
@@ -86,7 +81,6 @@
   color: #f04438;
 }
 
-/* Icons */
 .table-icon-cell {
   text-align: center;
   font-size: 18px;
@@ -103,20 +97,19 @@
   height: 20px;
 }
 
-/* Footer Section */
 
 .footer-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 16px;
+  padding: 12px 10px;
   border-top: 1px solid #e5e7eb;
   background: #fff;
   flex-wrap: wrap;
   gap: 12px;
 }
 
-/* LEFT */
+
 .footer-left {
   display: flex;
   align-items: center;
@@ -134,7 +127,7 @@
   cursor: pointer;
 }
 
-/* RIGHT */
+
 .footer-right {
   display: flex;
   align-items: center;
@@ -142,7 +135,6 @@
   flex-wrap: wrap;
 }
 
-/* Pagination buttons */
 .page-btn {
   min-width: 30px;
   height: 30px;
@@ -207,16 +199,72 @@
   color: #777;
 }
 
-/* ============================================= */
-/* Mobile Responsive — Card layout (NO horizontal scroll) */
-/* ============================================= */
+@media (max-width: 1440px) {
+  .table-wrapper {
+    margin-right: 8px;
+    border-radius: 8px;
+  }
+
+  .custom-table {
+    font-size: 13px;
+  }
+
+  .custom-table th,
+  .custom-table td {
+    padding: 9px 10px;
+  }
+
+  .table-status {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  .table-icon-cell {
+    font-size: 15px;
+  }
+
+  .custom-checkbox input {
+    width: 16px;
+    height: 16px;
+  }
+
+  .footer-section {
+    padding: 10px 8px;
+    gap: 8px;
+  }
+
+  .footer-left {
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .page-select {
+    padding: 3px 6px;
+    font-size: 13px;
+  }
+
+  .footer-right {
+    gap: 4px;
+  }
+
+  .page-btn {
+    min-width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+
+  .no-data {
+    padding: 20px;
+    font-size: 14px;
+  }
+}
+
 @media (max-width: 768px) {
   .table-wrapper {
     margin-left: 0;
     margin-right: 0;
   }
 
-  /* stop the left-right slider completely */
   .table-responsive {
     overflow-x: visible;
   }
@@ -226,7 +274,6 @@
     width: 100%;
   }
 
-  /* hide header row visually, keep it for accessibility */
   .custom-table thead {
     position: absolute;
     width: 1px;
@@ -266,7 +313,7 @@
     border-bottom: none;
   }
 
-  /* label pulled from data-label, shown on the left */
+
   .custom-table td[data-label]::before {
     content: attr(data-label);
     font-weight: 600;
@@ -275,7 +322,7 @@
     margin-right: auto;
   }
 
-  /* skeleton / no-data rows shouldn't get the label treatment */
+
   .custom-table td[colspan] {
     display: block;
     text-align: center;

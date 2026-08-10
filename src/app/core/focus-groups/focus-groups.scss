@@ -1,4 +1,3 @@
-
 .fg-card {
   border-radius: 10px;
   overflow: hidden;
@@ -321,4 +320,45 @@
   .fg-names > .col-md-9 {
     padding: 0;
   }
+}
+@media (max-width: 1440px) {
+  .fg-footer .btn {
+    min-width: 76px;
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+
+  .fg-footer .btn i {
+    font-size: 12px;
+  }
+
+  .fg-panel-label {
+    font-size: 13px;
+  }
+
+  .fg-subheading h6,
+  .fg-names h6 {
+    font-size: 12px;
+  }
+
+  .fg-sub-block-title {
+    font-size: 13px;
+  }
+
+  .sub-checkbox {
+    font-size: 12px;
+  }
+
+  .chip {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .fg-body {
+    padding: 18px 0px;
+  }
+  :host ::ng-deep .dropdown-btn .selected-item {
+    font-size: 10px !important;
+    padding: 1px 5px !important;
+  } 
 }

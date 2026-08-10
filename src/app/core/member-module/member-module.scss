@@ -12,15 +12,16 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .header-left {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex: 1 1 auto;
+  min-width: 0;
 }
 
 .header-right {
@@ -29,6 +30,7 @@
   align-items: center;
   gap: 10px;
   margin-right: 10px;
+  flex: 0 0 auto;
 }
 
 .search-box {
@@ -37,7 +39,8 @@
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 6px 10px;
-  flex: 0 0 220px;
+  flex: 1 1 160px;
+  min-width: 100px;
   height: 37px;
   background: var(--white);
   color: var(--text-color);
@@ -412,13 +415,126 @@
 
 /* ============ RESPONSIVE ============ */
 
+@media (max-width: 1440px) {
+  .header-row {
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .header-left {
+    gap: 6px;
+    flex-wrap: nowrap;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .header-right {
+    gap: 6px;
+    margin-right: 0;
+    flex-wrap: nowrap;
+    flex: 0 0 auto;
+  }
+
+  /* Input boxes / selects — shrink to fit instead of wrapping to a new row */
+  .search-box {
+    flex: 1 1 110px;
+    min-width: 80px;
+    height: 34px;
+    padding: 5px 6px;
+  }
+
+  .multiselect-wrapper {
+    flex: 1 1 110px;
+    min-width: 80px;
+    height: 34px;
+  }
+
+  ::ng-deep .multiselect-wrapper .dropdown-btn {
+    padding: 5px 6px !important;
+    height: 34px !important;
+    font-size: var(--fs-13) !important;
+  }
+
+  /* Buttons — stay on one line, never wrap or shrink below content */
+  .header-left .button,
+  .header-right .button {
+    padding: 6px 10px;
+    font-size: var(--fs-13);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .header-left .button i,
+  .header-right .button i {
+    font-size: var(--fs-14);
+  }
+
+  /* Table */
+  .table-wrapper {
+    margin-right: 8px;
+  }
+
+  .custom-table {
+    font-size: var(--fs-13);
+  }
+
+  .custom-table th,
+  .custom-table td {
+    padding: 10px 12px;
+  }
+
+  .icon-cell {
+    font-size: var(--fs-15);
+  }
+
+  .custom-checkbox input {
+    width: 16px;
+    height: 16px;
+  }
+
+  .table-status,
+  .member-type-badge {
+    min-width: 76px;
+    padding: 4px 8px;
+    font-size: var(--fs-11);
+  }
+
+  /* Footer / Pagination */
+  .footer-section {
+    padding: 10px 12px;
+  }
+
+  .footer-left {
+    font-size: var(--fs-13);
+    gap: 6px;
+  }
+
+  .page-select {
+    padding: 3px 6px;
+    font-size: var(--fs-13);
+  }
+
+  .page-btn {
+    min-width: 26px;
+    height: 26px;
+    font-size: var(--fs-13);
+  }
+
+  .no-data {
+    padding: 20px;
+    font-size: var(--fs-14);
+  }
+}
+
 @media (max-width: 992px) {
   .header-row {
     gap: 12px;
+    flex-wrap: wrap;
   }
 
   .header-left {
     flex: 1 1 100%;
+    flex-wrap: wrap;
   }
 
   .header-right {
@@ -505,7 +621,8 @@
 }
 
 .multiselect-wrapper {
-  flex: 0 0 220px;
+  flex: 1 1 160px;
+  min-width: 100px;
   height: 37px;
   position: relative;
 }

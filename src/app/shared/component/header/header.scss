@@ -5,29 +5,52 @@ body {
 }
 
 .app-shell {
-  --sidebar-width: clamp(200px, 18vw, 275px);
-  --sidebar-width-closed: clamp(60px, 5vw, 75px);
+  --sidebar-width: 275px;
+  --sidebar-width-closed: 75px;
 
   display: flex;
 }
 
+/* ===== LOGO ===== */
+.image-text {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 46px;
+  position: relative;
+  width: 100%;
+}
+
+.sidebar.close .image-text {
+  justify-content: center;
+}
+
 .logo {
   position: absolute;
-  transition: opacity 0.3s ease;
+  top: 50%;
+  transition: opacity 0.25s ease;
 }
 
 .small-logo {
   opacity: 1;
-  width: clamp(30px, 2.6vw, 40px);
-  height: clamp(30px, 2.6vw, 40px);
-  margin-left: 15px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-left: 5px;
   // filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(90deg) brightness(70%) contrast(90%);
 }
 
 .big-logo {
-  height: clamp(30px, 2.6vw, 40px);
+  left: 0;
+  transform: translateY(-50%);
+  height: 40px;
+  width: auto;
+  max-width: calc(var(--sidebar-width) - 24px);
+  object-fit: contain;
   opacity: 0;
-  margin-right: 30px;
+  margin-left: 10px;
 }
 
 .sidebar:not(.close) .small-logo {
@@ -46,9 +69,9 @@ body {
   width: var(--sidebar-width);
   display: flex;
   flex-direction: column;
-  padding: 10px clamp(8px, 0.8vw, 14px);
+  padding: 10px 12px;
   background: var(--sidebar-color);
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, transform 0.3s ease;
   white-space: nowrap;
   overflow: hidden;
   z-index: 100;
@@ -58,6 +81,17 @@ body {
 .sidebar.close {
   width: var(--sidebar-width-closed);
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* collapsed sidebar — force icon-only, never let text/chevron/submenu peek out */
+.sidebar.close .text,
+.sidebar.close .chevron,
+.sidebar.close .submenu-wrapper {
+  display: none !important;
+}
+
+.sidebar.close li a {
+  justify-content: center;
 }
 
 .sidebar .menu {
@@ -81,25 +115,17 @@ body {
 }
 
 .sidebar .text {
-  font-size: clamp(13px, 1vw, 16px);
+  font-size: 16px;
   font-weight: 500;
   color: var(--text-color);
   transition: opacity 0.2s ease;
 }
 
 .sidebar .image {
-  min-width: clamp(48px, 4vw, 60px);
+  min-width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.image-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: clamp(38px, 3.2vw, 46px);
-  position: relative;
 }
 
 .sidebar header {
@@ -113,7 +139,7 @@ body {
 }
 
 .sidebar li {
-  height: clamp(40px, 3.4vw, 50px);
+  height: 50px;
   margin-top: 8px;
   list-style: none;
 }
@@ -130,14 +156,16 @@ body {
 .sidebar li a .chevron {
   margin-right: 10px;
   min-width: auto;
+  flex-shrink: 0;
 }
 
 .sidebar li .icons {
-  min-width: clamp(48px, 4vw, 60px);
-  font-size: clamp(17px, 1.5vw, 22px);
+  min-width: 60px;
+  font-size: 22px;
   display: flex;
   justify-content: center;
   color: var(--text-color);
+  flex-shrink: 0;
 }
 
 .sidebar li.nav-link > a:hover {
@@ -183,7 +211,7 @@ body {
 .submenu a {
   display: block;
   padding: 10px 0;
-  font-size: clamp(12px, 0.9vw, 14px);
+  font-size: 14px;
   color: #6c757d;
   text-decoration: none;
   cursor: pointer;
@@ -196,8 +224,9 @@ body {
 .submenu-parent {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 10px 0;
-  font-size: clamp(12px, 0.9vw, 14px);
+  font-size: 14px;
   color: #6c757d;
   cursor: pointer;
   text-decoration: none;
@@ -206,6 +235,19 @@ body {
 .submenu-parent .chevron {
   font-size: 12px;
   margin-right: 15px;
+  flex-shrink: 0;
+}
+
+/* remove default browser focus box on sidebar links, use a subtle custom indicator instead */
+.sidebar li a:focus,
+.sidebar li a:focus-visible,
+.submenu-parent:focus,
+.submenu-parent:focus-visible,
+.sub-submenu a:focus,
+.sub-submenu a:focus-visible {
+  outline: none;
+  box-shadow: inset 2px 0 0 var(--primary-color);
+  border-radius: 4px;
 }
 
 .sub-submenu {
@@ -228,7 +270,7 @@ body {
 .sub-submenu a {
   display: block;
   padding: 8px 0;
-  font-size: clamp(11px, 0.85vw, 13px);
+  font-size: 13px;
   color: #8a8a8a;
   text-decoration: none;
   cursor: pointer;
@@ -251,14 +293,14 @@ body {
 
 /* ===== TOPBAR ===== */
 .topbar {
-  --topbar-icon: clamp(30px, 2.2vw, 38px);
+  --topbar-icon: 38px;
 
-  height: clamp(48px, 4vw, 64px);
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: clamp(8px, 1vw, 16px);
-  padding: 0 clamp(10px, 1.2vw, 20px);
+  gap: 16px;
+  padding: 0 20px;
   background: var(--white);
   border-bottom: 1px solid var(--border-color);
   position: sticky;
@@ -270,7 +312,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 1vw, 14px);
+  gap: 14px;
   min-width: 0;
 }
 
@@ -285,7 +327,7 @@ body {
   background: transparent;
   border-radius: 6px;
   color: var(--text-color-dark);
-  font-size: clamp(15px, 1.3vw, 20px);
+  font-size: 20px;
   cursor: pointer;
   box-sizing: border-box;
   transition: background 0.2s ease;
@@ -299,10 +341,11 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: clamp(11px, 0.8vw, var(--fs-14));
+  font-size: 14px;
   overflow-x: auto;
   white-space: nowrap;
   margin-top: 15px;
+  min-width: 0;
 }
 
 .breadcrumb .crumb {
@@ -311,6 +354,7 @@ body {
   gap: 4px;
   color: var(--placeholder-color);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .breadcrumb .crumb-home {
@@ -331,12 +375,14 @@ body {
 .breadcrumb .separator {
   font-size: 11px;
   color: var(--placeholder-color);
+  flex-shrink: 0;
 }
 
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: clamp(6px, 0.9vw, 14px);
+  gap: 14px;
+  flex-shrink: 0;
 }
 
 .search-box {
@@ -344,8 +390,8 @@ body {
   align-items: center;
   gap: 8px;
   height: var(--topbar-icon);
-  width: clamp(140px, 14vw, 260px);
-  padding: 0 clamp(8px, 0.9vw, 14px);
+  width: 260px;
+  padding: 0 14px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background: var(--body-color);
@@ -354,7 +400,7 @@ body {
 
 .search-box i {
   color: var(--placeholder-color);
-  font-size: clamp(11px, 0.85vw, 14px);
+  font-size: 14px;
 }
 
 .search-box input {
@@ -364,7 +410,8 @@ body {
   outline: none;
   background: transparent;
   color: var(--text-color);
-  font-size: clamp(12px, 0.8vw, var(--fs-14));
+  font-size: 14px;
+  min-width: 0;
 }
 
 .search-box input::placeholder {
@@ -383,7 +430,7 @@ body {
   background: var(--body-color);
   border-radius: 50%;
   color: var(--text-color-dark);
-  font-size: clamp(12px, 0.95vw, 16px);
+  font-size: 16px;
   cursor: pointer;
   box-sizing: border-box;
   transition: background 0.2s ease;
@@ -414,6 +461,7 @@ body {
 .notif-wrapper,
 .profile-wrapper {
   position: relative;
+  flex-shrink: 0;
 }
 
 .dropdown-panel {
@@ -492,8 +540,8 @@ body {
 }
 
 .avatar {
-  width: clamp(28px, 2vw, 36px);
-  height: clamp(28px, 2vw, 36px);
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
@@ -501,7 +549,7 @@ body {
   justify-content: center;
   background: var(--box-bg-color);
   color: var(--placeholder-color);
-  font-size: clamp(22px, 1.6vw, 30px);
+  font-size: 30px;
   flex-shrink: 0;
 }
 
@@ -510,48 +558,325 @@ body {
   flex-direction: column;
   align-items: flex-start;
   line-height: 1.2;
+  min-width: 0;
 }
 
 .profile-text strong {
-  font-size: clamp(12px, 0.8vw, var(--fs-14));
+  font-size: 14px;
   color: var(--text-color-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
 }
 
 .profile-text small {
-  font-size: clamp(10px, 0.7vw, var(--fs-12));
+  font-size: 12px;
   color: var(--placeholder-color);
 }
 
 .profile-caret {
   font-size: 12px;
   color: var(--placeholder-color);
+  flex-shrink: 0;
 }
 
-/* ===== RESPONSIVE ===== */
+/* =========================================================
+   RESPONSIVE — fixed values per breakpoint (no clamp)
+   ========================================================= */
+
+/* ----- 1440px and below ----- */
 @media (max-width: 1440px) {
   .app-shell {
-    --sidebar-width: clamp(190px, 16vw, 250px);
+    --sidebar-width: 250px;
+    --sidebar-width-closed: 70px;
   }
-}
 
-@media (max-width: 1200px) {
-  .app-shell {
-    --sidebar-width: clamp(180px, 15vw, 220px);
-    --sidebar-width-closed: clamp(55px, 4.5vw, 68px);
+  .small-logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .big-logo {
+    height: 38px;
+  }
+
+  .image-text {
+    height: 44px;
+  }
+
+  .sidebar .text {
+    font-size: 15px;
+  }
+
+  .sidebar .image {
+    min-width: 56px;
+  }
+
+  .sidebar li {
+    height: 47px;
+  }
+
+  .sidebar li .icons {
+    min-width: 56px;
+    font-size: 20px;
+  }
+
+  .submenu a,
+  .submenu-parent {
+    font-size: 13px;
+  }
+
+  .sub-submenu a {
+    font-size: 12px;
+  }
+
+  .topbar {
+    --topbar-icon: 35px;
+    height: 58px;
+    padding: 0 17px;
+    gap: 14px;
+  }
+
+  .topbar-left {
+    gap: 12px;
+  }
+
+  .hamburger-btn {
+    font-size: 18px;
+  }
+
+  .breadcrumb {
+    font-size: 13px;
+  }
+
+  .topbar-right {
+    gap: 12px;
   }
 
   .search-box {
-    width: clamp(130px, 12vw, 180px);
+    width: 220px;
+    padding: 0 12px;
+  }
+
+  .search-box i {
+    font-size: 13px;
+  }
+
+  .search-box input {
+    font-size: 13px;
+  }
+
+  .icon-btn {
+    font-size: 15px;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 28px;
+  }
+
+  .profile-text strong {
+    font-size: 13px;
+  }
+
+  .profile-text small {
+    font-size: 11px;
   }
 }
 
+/* ----- 1200px and below ----- */
+@media (max-width: 1200px) {
+  .app-shell {
+    --sidebar-width: 225px;
+    --sidebar-width-closed: 66px;
+  }
+
+  .small-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .big-logo {
+    height: 36px;
+  }
+
+  .image-text {
+    height: 40px;
+  }
+
+  .sidebar .text {
+    font-size: 14px;
+  }
+
+  .sidebar .image {
+    min-width: 52px;
+  }
+
+  .sidebar li {
+    height: 44px;
+  }
+
+  .sidebar li .icons {
+    min-width: 52px;
+    font-size: 18px;
+  }
+
+  .submenu a,
+  .submenu-parent {
+    font-size: 13px;
+  }
+
+  .sub-submenu a {
+    font-size: 12px;
+  }
+
+  .topbar {
+    --topbar-icon: 32px;
+    height: 52px;
+    padding: 0 14px;
+    gap: 12px;
+  }
+
+  .topbar-left {
+    gap: 10px;
+  }
+
+  .hamburger-btn {
+    font-size: 16px;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+  }
+
+  .topbar-right {
+    gap: 10px;
+  }
+
+  .search-box {
+    width: 180px;
+    padding: 0 10px;
+  }
+
+  .search-box i {
+    font-size: 12px;
+  }
+
+  .search-box input {
+    font-size: 12px;
+  }
+
+  .icon-btn {
+    font-size: 13px;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 25px;
+  }
+
+  .profile-text strong {
+    font-size: 12px;
+  }
+
+  .profile-text small {
+    font-size: 10px;
+  }
+}
+
+/* ----- 992px and below ----- */
 @media (max-width: 992px) {
   .app-shell {
+    --sidebar-width: 210px;
     --sidebar-width-closed: 60px;
+  }
+
+  .small-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .big-logo {
+    height: 34px;
+  }
+
+  .image-text {
+    height: 38px;
+  }
+
+  .sidebar .text {
+    font-size: 13px;
+  }
+
+  .sidebar .image {
+    min-width: 48px;
+  }
+
+  .sidebar li {
+    height: 40px;
+  }
+
+  .sidebar li .icons {
+    min-width: 48px;
+    font-size: 17px;
+  }
+
+  .submenu a,
+  .submenu-parent {
+    font-size: 12px;
+  }
+
+  .sub-submenu a {
+    font-size: 11px;
+  }
+
+  .topbar {
+    --topbar-icon: 30px;
+    height: 48px;
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .topbar-left {
+    gap: 8px;
+  }
+
+  .hamburger-btn {
+    font-size: 15px;
+  }
+
+  .breadcrumb {
+    font-size: 11px;
+  }
+
+  .topbar-right {
+    gap: 6px;
   }
 
   .search-box {
     width: 160px;
+    padding: 0 8px;
+  }
+
+  .search-box i {
+    font-size: 11px;
+  }
+
+  .search-box input {
+    font-size: 12px;
+  }
+
+  .icon-btn {
+    font-size: 12px;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 22px;
   }
 
   .profile-text {
@@ -559,33 +884,258 @@ body {
   }
 }
 
+/* ----- 768px and below — sidebar becomes an overlay drawer ----- */
 @media (max-width: 768px) {
+  .app-shell {
+    --sidebar-width: 230px;
+    --sidebar-width-closed: 56px;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+
+  .sidebar:not(.close) {
+    transform: translateX(0);
+    width: var(--sidebar-width);
+    box-shadow: 6px 0 24px rgba(0, 0, 0, 0.25);
+  }
+
+  .sidebar.close {
+    transform: translateX(-100%);
+    width: var(--sidebar-width);
+  }
+
+  /* main content no longer shifts — sidebar floats on top */
+  .main-area,
+  .main-area.main-area-expanded {
+    margin-left: 0;
+  }
+
+  .small-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .big-logo {
+    height: 34px;
+  }
+
+  .image-text {
+    height: 38px;
+  }
+
+  .sidebar .text {
+    font-size: 14px;
+  }
+
+  .sidebar li {
+    height: 42px;
+  }
+
+  .sidebar li .icons {
+    min-width: 46px;
+    font-size: 17px;
+  }
+
+  .submenu a,
+  .submenu-parent {
+    font-size: 13px;
+  }
+
+  .sub-submenu a {
+    font-size: 12px;
+  }
+
   .topbar {
+    --topbar-icon: 32px;
+    height: 48px;
     padding: 0 12px;
     gap: 10px;
   }
 
-  .search-box {
-    display: none;
+  .hamburger-btn {
+    font-size: 15px;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+    margin-top: 0;
   }
 
   .breadcrumb .crumb-home span {
     display: none;
-  }
-}
-
-@media (max-width: 576px) {
-  .app-shell {
-    --sidebar-width: 220px;
-    --sidebar-width-closed: 52px;
   }
 
   .topbar-right {
     gap: 8px;
   }
 
+  .search-box {
+    display: none;
+  }
+
+  .icon-btn {
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 22px;
+  }
+}
+
+/* ----- 576px and below ----- */
+@media (max-width: 576px) {
+  .app-shell {
+    --sidebar-width: 220px;
+    --sidebar-width-closed: 52px;
+  }
+
+  .small-logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .big-logo {
+    height: 32px;
+  }
+
+  .image-text {
+    height: 36px;
+  }
+
+  .sidebar .text {
+    font-size: 13px;
+  }
+
+  .sidebar .image {
+    min-width: 44px;
+  }
+
+  .sidebar li {
+    height: 40px;
+  }
+
+  .sidebar li .icons {
+    min-width: 42px;
+    font-size: 16px;
+  }
+
+  .submenu a,
+  .submenu-parent {
+    font-size: 12px;
+  }
+
+  .sub-submenu a {
+    font-size: 11px;
+  }
+
+  .topbar {
+    --topbar-icon: 30px;
+    height: 46px;
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .hamburger-btn {
+    font-size: 14px;
+  }
+
+  .breadcrumb {
+    font-size: 11px;
+  }
+
+  .topbar-right {
+    gap: 8px;
+  }
+
+  .icon-btn {
+    font-size: 13px;
+  }
+
+  .avatar {
+    width: 26px;
+    height: 26px;
+    font-size: 20px;
+  }
+
   .dropdown-panel {
     right: -12px;
     min-width: 220px;
+    max-width: calc(100vw - 24px);
+  }
+}
+
+/* ----- 480px and below ----- */
+@media (max-width: 480px) {
+  .app-shell {
+    --sidebar-width: 200px;
+    --sidebar-width-closed: 48px;
+  }
+
+  .small-logo {
+    width: 26px;
+    height: 26px;
+  }
+
+  .big-logo {
+    height: 30px;
+  }
+
+  .image-text {
+    height: 34px;
+  }
+
+  .sidebar .text {
+    font-size: 13px;
+  }
+
+  .sidebar .image {
+    min-width: 40px;
+  }
+
+  .sidebar li {
+    height: 38px;
+  }
+
+  .sidebar li .icons {
+    min-width: 40px;
+    font-size: 15px;
+  }
+
+  .submenu a,
+  .submenu-parent {
+    font-size: 11px;
+  }
+
+  .sub-submenu a {
+    font-size: 10px;
+  }
+
+  .topbar {
+    --topbar-icon: 28px;
+    height: 44px;
+    padding: 0 8px;
+    gap: 6px;
+  }
+
+  .hamburger-btn,
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .topbar-right {
+    gap: 6px;
+  }
+
+  .avatar {
+    width: 26px;
+    height: 26px;
+    font-size: 20px;
   }
 }
