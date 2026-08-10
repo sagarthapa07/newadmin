@@ -54,7 +54,7 @@
 .issue-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px 30px;
+  gap: 10px 10px;
 }
 
 .issue-box {
@@ -68,6 +68,7 @@
   border-radius: 6px;
   border: 1px solid transparent;
   transition: var(--tran-02);
+  min-width: 0; /* zaroori hai taaki child me ellipsis kaam kare */
 }
 
 .issue-box:hover {
@@ -95,6 +96,12 @@
   font-size: var(--fs-14);
   color: var(--text-color);
   transition: var(--tran-02);
+  /* SINGLE LINE FIX */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
 }
 
 .issue-box:hover .issue-text,
@@ -161,6 +168,7 @@
   cursor: pointer;
   font-size: var(--fs-14);
   transition: var(--tran-02);
+  min-width: 0; /* zaroori hai taaki child me ellipsis kaam kare */
 }
 
 .sub-checkbox:hover {
@@ -169,11 +177,18 @@
 
 .sub-checkbox input {
   accent-color: var(--primary-color);
+  flex-shrink: 0;
 }
 
 .sub-checkbox span {
   font-size: var(--fs-14);
   color: var(--text-color);
+  /* SINGLE LINE FIX */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
 }
 
 .popup-select-all {
@@ -394,65 +409,8 @@
   gap: 10px;
 }
 
-/* RESPONSIVE */
-@media (max-width: 992px) {
-  .issue-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .subissue-popover {
-    width: 360px;
-  }
-
-  .summary-panel {
-    margin-top: 20px;
-    position: static;
-  }
-}
-
-@media (max-width: 576px) {
-  .issue-grid {
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  .subissue-popover {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 92vw;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-
-  .popup-footer {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .section-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding-top: 20px;
-    margin-top: 24px;
-    border-top: 1px solid var(--border-color);
-  }
-
-  .section-footer-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-}
-
-
-
 /* ==========================================================================
-   SECTION FOOTER
+   SECTION FOOTER (buttons)
    ========================================================================== */
 
 .section-footer {
@@ -532,6 +490,121 @@
   background: var(--primary-color-dark);
   border-color: var(--primary-color-dark);
 }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+/* Chote desktop / laptop screens (13-14 inch, ~1366px aur usse chota) */
+/* NOTE: grid columns 4 hi rahenge desktop par hamesha - sirf box/text/button size chota hoga */
+@media (min-width: 993px) and (max-width: 1366px) {
+
+  .issue-grid {
+    gap: 8px;
+  }
+
+  .issue-box {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+
+  .issue-text {
+    font-size: 13px;
+  }
+
+  .subissue-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  .subissue-popover {
+    width: 380px;
+  }
+
+  /* Buttons chote (height/width dono) */
+  .section-footer .btn {
+    padding: 6px 14px;
+    min-width: 70px;
+    font-size: 13px;
+  }
+
+  .section-footer .btn i {
+    font-size: 12px;
+  }
+
+  /* Auto Selection button */
+  .focus-header .button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+/* Yahan se neeche tablet/mobile shuru hota hai - isliye grid 2 columns hota hai */
+@media (max-width: 992px) {
+  .issue-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .subissue-popover {
+    width: 360px;
+  }
+
+  .summary-panel {
+    margin-top: 20px;
+    position: static;
+  }
+
+  /* Buttons aur chote is range me */
+  .section-footer .btn {
+    padding: 5px 12px;
+    min-width: 60px;
+    font-size: 12px;
+  }
+
+  .focus-header .button {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .issue-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .subissue-popover {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92vw;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .popup-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .section-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 20px;
+    margin-top: 24px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .section-footer-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 768px) {
 
   .section-footer {
