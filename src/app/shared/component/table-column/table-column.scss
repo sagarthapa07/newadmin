@@ -9,16 +9,16 @@
   overflow: hidden;
 }
 
-/* Responsive scroll */
+/* No horizontal scroll — table always fits its container */
 .table-responsive {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 /* Table */
 .custom-table {
   width: 100%;
-  min-width: 900px;
+  table-layout: auto;
   border-collapse: collapse;
   font-size: 14px;
 }
@@ -29,10 +29,22 @@
 
 .custom-table th,
 .custom-table td {
-  padding: 14px 20px;
+  padding: 12px 14px;
   border-bottom: 1px solid #e5e7eb;
   text-align: left;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  vertical-align: middle;
+}
+
+/* Any action buttons (Edit / Copy / Delete etc.) placed inside a cell
+   should wrap to the next line instead of stretching the column */
+.table-actions,
+.custom-table td > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
 }
 
 .custom-table th {
@@ -91,23 +103,6 @@
   height: 20px;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .table-wrapper {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .custom-table {
-    font-size: 13px;
-  }
-
-  .custom-table th,
-  .custom-table td {
-    padding: 10px;
-  }
-}
-
 /* Footer Section */
 
 .footer-section {
@@ -144,6 +139,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 /* Pagination buttons */
@@ -174,17 +170,6 @@
 .page-btn.disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-@media (max-width: 768px) {
-  .table-footer {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .footer-right {
-    align-self: flex-end;
-  }
 }
 
 .skeleton-row {
@@ -220,4 +205,97 @@
   font-size: 16px;
   font-weight: 500;
   color: #777;
+}
+
+/* ============================================= */
+/* Mobile Responsive — Card layout (NO horizontal scroll) */
+/* ============================================= */
+@media (max-width: 768px) {
+  .table-wrapper {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* stop the left-right slider completely */
+  .table-responsive {
+    overflow-x: visible;
+  }
+
+  .custom-table {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* hide header row visually, keep it for accessibility */
+  .custom-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .custom-table,
+  .custom-table tbody,
+  .custom-table tr,
+  .custom-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .custom-table tr {
+    margin-bottom: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+
+  .custom-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 4px;
+    border-bottom: 1px solid #f2f4f7;
+    white-space: normal;
+    text-align: right;
+  }
+
+  .custom-table td:last-child {
+    border-bottom: none;
+  }
+
+  /* label pulled from data-label, shown on the left */
+  .custom-table td[data-label]::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #475467;
+    text-align: left;
+    margin-right: auto;
+  }
+
+  /* skeleton / no-data rows shouldn't get the label treatment */
+  .custom-table td[colspan] {
+    display: block;
+    text-align: center;
+  }
+
+  .custom-table td[colspan]::before {
+    content: none;
+  }
+
+  .custom-table th,
+  .custom-table td {
+    font-size: 13px;
+  }
+
+  .footer-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-right {
+    align-self: flex-start;
+  }
 }

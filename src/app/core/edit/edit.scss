@@ -4,36 +4,42 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: clamp(8px, 1vw, 12px);
   margin-bottom: 15px;
 }
 
 .page-title {
   font-weight: var(--fw-700);
-  font-size: var(--fs-h4);
+  font-size: clamp(16px, 1.4vw, var(--fs-h4));
   color: var(--text-color);
   margin: 0;
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
-
+/* ===== NAV / TAB BUTTONS ===== */
 .nav-btn {
+  --nav-btn-height: clamp(30px, 2.4vw, 37px);
+
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap; 
+  gap: clamp(6px, 0.6vw, 8px);
+  flex-wrap: wrap;
   justify-content: flex-end;
 }
 
 .nav-btn .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--white);
   font-weight: var(--fw-500);
   color: var(--text-color);
-  height: 37px;
-  padding: 0 14px;
+  height: var(--nav-btn-height);
+  padding: 0 clamp(8px, 0.9vw, 14px);
   border-radius: 5px;
-  font-size: var(--fs-14);
+  font-size: clamp(11px, 0.8vw, 14px);
   white-space: nowrap;
   cursor: pointer;
+  box-sizing: border-box;
   transition: all 0.2s ease;
 }
 
@@ -57,22 +63,26 @@
   color: var(--text-color);
 }
 
+/* ===== FORM ===== */
 .form-group {
+  --field-height: clamp(32px, 2.4vw, 35px);
+
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: clamp(10px, 1vw, 15px);
   margin-bottom: 12px;
   flex-wrap: wrap;
 }
 
 .form-group label {
-  width: 180px;
+  width: clamp(130px, 12vw, 180px);
   font-weight: 500;
+  font-size: clamp(12px, 0.85vw, 14px);
   color: var(--text-color);
 }
 
 .date-input {
-  width: 350px;
+  width: clamp(220px, 24vw, 350px);
   margin-left: -33px;
 }
 
@@ -81,11 +91,13 @@
 }
 
 .form-group input {
-  height: 35px;
+  height: var(--field-height);
+  font-size: clamp(12px, 0.85vw, 14px);
 }
 
 .form-group select {
-  height: 35px;
+  height: var(--field-height);
+  font-size: clamp(12px, 0.85vw, 14px);
 }
 
 textarea {
@@ -126,6 +138,7 @@ select.form-control {
   height: 20px;
 }
 
+/* ===== BOTTOM ACTION BUTTONS ===== */
 .buttons {
   display: flex;
   justify-content: space-between;
@@ -135,14 +148,16 @@ select.form-control {
 }
 
 .buttons .btn {
-  min-width: 90px;
-  padding: 10px 22px;
-  font-size: 14px;
+  min-width: clamp(76px, 7vw, 90px);
+  height: clamp(34px, 2.6vw, 42px);
+  padding: 0 clamp(14px, 1.6vw, 22px);
+  font-size: clamp(12px, 0.85vw, 14px);
   font-weight: 600;
   color: var(--white);
   border: none;
   border-radius: 2px;
   cursor: pointer;
+  box-sizing: border-box;
   transition: background-color 0.2s ease-in-out;
 }
 
@@ -192,6 +207,26 @@ select.form-control {
 
 /* ===== RESPONSIVE ===== */
 
+/* Chote desktop/laptop screens pe header thoda tight ho jaaye */
+@media (max-width: 1440px) {
+  .page-header {
+    gap: 10px;
+  }
+}
+
+/* 1100px se page-header stack hona shuru — title upar, tabs neeche full width */
+@media (max-width: 1100px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
 /* Row/column stack thoda pehle se shuru karo taaki buttons ko jagah mile */
 @media (max-width: 992px) {
   .header-section .row {
@@ -211,66 +246,9 @@ select.form-control {
   }
 }
 
-/* 900px ke aas paas — buttons chhote hone lagte hain, wrap nahi */
-@media (max-width: 900px) {
-  .nav-btn .btn {
-    height: 34px;
-    padding: 0 10px;
-    font-size: var(--fs-13);
-  }
-}
-
 @media (max-width: 768px) {
-  .nav-btn .btn {
-    height: 32px;
-    padding: 0 8px;
-    font-size: var(--fs-11);
-  }
-}
-
-@media (max-width: 576px) {
-  .form-group {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .form-group label {
-    width: 100%;
-  }
-
-  .nav-btn .btn {
-    height: 30px;
-    padding: 0 6px;
-    font-size: var(--fs-10);
-  }
-
-  .buttons {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .buttons .btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 1100px) {
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav-btn {
-    width: 100%;
-    justify-content: flex-start; 
-  }
-}
-
-@media (max-width: 900px) {
-  .nav-btn .btn {
-    height: 34px;
-    padding: 0 10px;
-    font-size: var(--fs-13);
+  .page-title {
+    white-space: normal;
   }
 }
 
@@ -280,9 +258,26 @@ select.form-control {
     white-space: normal;
   }
 
-  .nav-btn .btn {
-    height: 32px;
-    padding: 0 8px;
-    font-size: var(--fs-12);
+  .form-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-group label {
+    width: 100%;
+  }
+
+  .date-input {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buttons .btn {
+    width: 100%;
   }
 }
