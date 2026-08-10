@@ -13,13 +13,7 @@ import { Common } from '../Services/common';
 
 @Component({
   selector: 'app-addnew-edit',
-  imports: [
-    CommonModule,
-    FormsModule,
-    Header,
-    CalendarDetails,
-    AlertMessage,
-  ],
+  imports: [CommonModule, FormsModule, Header, CalendarDetails, AlertMessage],
   templateUrl: './addnew-edit.html',
   styleUrl: './addnew-edit.scss',
 })
@@ -68,11 +62,19 @@ export class AddnewEdit {
   }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.getGrantDetails(+id);
-    }
+    // snapshot ki jagah subscribe — kyunki save ke baad hum isi component pe
+    // navigate karte hain (sirf :id param badalta hai), aur us case me
+    // Angular ngOnInit dobara nahi chalata. subscribe naya id aate hi
+    // getGrantDetails() khud call kar dega.
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.grantId = +id;
+        this.getGrantDetails(+id);
+      }
+    });
   }
+
   getGrantDetails(id: number) {
     this.isLoading = true;
     this.api.getGrantById(id).subscribe({
@@ -88,9 +90,11 @@ export class AddnewEdit {
       },
     });
   }
+
   formatDate(date: string): string {
     return date ? date.split('T')[0] : '';
   }
+
   mapGrantData(res: any) {
     const data = res.usGrantDataWithURL.grantData;
     const url = res.usGrantDataWithURL.urlData;
@@ -148,7 +152,56 @@ export class AddnewEdit {
   }
 
   onSave() {
-    // console.log(this.opportunityForm.value);
+    if (this.isLoading) {
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const payload = this.opportunityForm.value;
+
+    if (this.grantId) {
+      // EDIT MODE — grant already exists, update it
+      this.api.updateGrant(this.grantId, payload).subscribe({
+        next: (res) => {
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.log('UPDATE ERROR:', err);
+          this.isLoading = false;
+          this.errorMessage = 'Failed to update. Please try again.';
+          setTimeout(() => (this.errorMessage = ''), 4000);
+        },
+      });
+      return;
+    }
+
+    this.api.insertGrant(payload).subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        const newGrantId = res?.result?.grantIndex;
+
+        if (res?.successCode === 1 && newGrantId) {
+          this.router
+            .navigate(['/calendar-opportunity/edit', newGrantId])
+            .then((success) =>
+              console.log('[onSave][insert] router.navigate resolved, success =', success),
+            )
+            .catch((err) => console.log('[onSave][insert] router.navigate FAILED:', err));
+        } else {
+          console.log('[onSave][insert] condition failed — NOT navigating. Full res:', res);
+          this.errorMessage = 'Saved, but could not redirect — grant ID missing in response.';
+          setTimeout(() => (this.errorMessage = ''), 4000);
+        }
+      },
+      error: (err) => {
+        console.log('[onSave][insert] ERROR response:', err);
+        this.isLoading = false;
+        this.errorMessage = 'Failed to save. Please try again.';
+        setTimeout(() => (this.errorMessage = ''), 4000);
+      },
+    });
   }
 
   gotoPreview() {
