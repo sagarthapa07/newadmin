@@ -238,28 +238,6 @@
           </div>
         </div>
 
-        <!-- <div class="form-row">
-          <label><i class="bi bi-image field-icon"></i> Image</label>
-          <div class="field-wrapper">
-            <div class="image-upload-wrapper">
-              <app-image-cropper
-                [imageSrc]="previewUrl"
-                [dirPath]="'img.USGrants'"
-                [recType]="'CU'"
-                (onCropped)="onImageCropped($event)"
-              ></app-image-cropper>
-
-              <img
-                *ngIf="previewUrl"
-                [src]="previewUrl"
-                class="preview-image"
-                (click)="openImageModal()"
-                title="Click to view"
-              />
-            </div>
-          </div>
-        </div> -->
-
         <div class="form-row">
           <label><i class="bi bi-image field-icon"></i> Image</label>
           <div class="field-wrapper">
@@ -326,9 +304,19 @@
         <button type="button" class="button button-secondary" (click)="goBack()">
           <i class="bi bi-chevron-double-left"></i> Back
         </button>
-        <button type="button" class="button button-secondary" (click)="onSave()">
-          <i class="bi bi-bookmark-check"></i> Save
+        <button
+          type="button"
+          class="button button-secondary btn-save"
+          [disabled]="isSaving"
+          (click)="onSave()"
+        >
+          @if (isSaving) {
+            <span class="loader-dot"></span> Saving...
+          } @else {
+            <i class="bi bi-bookmark-check"></i> Save
+          }
         </button>
+        
         <button type="button" class="button button-primary" (click)="goToGeoLocation()">
           Next <i class="bi bi-chevron-double-right"></i>
         </button>

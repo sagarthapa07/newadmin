@@ -18,11 +18,13 @@ import { Output, EventEmitter } from '@angular/core';
 import { AlertMessage } from '../../shared/component/alert-message/alert-message';
 import { ImageCropper } from '../../shared/component/image-cropper/image-cropper';
 import { FileUpload } from '../Services/file-upload';
+import { LoaderService } from '../Services/loader-service';
+import { Loader } from '../../shared/component/loader/loader';
 
 @Component({
   standalone: true,
   selector: 'app-calendar-details',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, Editor, AlertMessage, ImageCropper],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, Editor, AlertMessage, ImageCropper,Loader],
   templateUrl: './calendar-details.html',
   styleUrls: ['./calendar-details.scss'],
 })
@@ -132,6 +134,7 @@ export class CalendarDetails {
     private api: Api,
     private fileUploadService: FileUpload,
     private location: Location,
+    private loader: LoaderService,
   ) {
     this.opportunityForm = this.fb.group({
       title: ['', Validators.required],
@@ -357,6 +360,7 @@ export class CalendarDetails {
       return;
     }
     this.isSaving = true;
+    this.loader.show();
     this.persistGrant((grantId: number) => {
       this.successMessage = 'Grant saved successfully';
     });
@@ -439,6 +443,7 @@ export class CalendarDetails {
         this.api.updateGrant(this.data.id, payload).subscribe({
           next: (res: any) => {
             this.isSaving = false;
+            this.loader.hide();
             if (res.successCode === 1) {
               onSuccess(this.data!.id!);
             } else {
@@ -447,6 +452,7 @@ export class CalendarDetails {
           },
           error: (err) => {
             this.isSaving = false;
+            this.loader.hide();
             console.error(err);
             this.errorMessage = 'Grant update failed';
           },
@@ -455,21 +461,11 @@ export class CalendarDetails {
         this.api.insertGrant(payload).subscribe({
           next: (res: any) => {
             this.isSaving = false;
+            this.loader.hide();
             const grantId = res?.result?.grantIndex;
             if (grantId) {
               this.data = { ...(this.data || {}), id: grantId } as any;
 
-              // 👇 YAHI FIX HAI:
-              // Pehle `location.replaceState()` sirf browser URL bar ka
-              // text badal raha tha — Angular Router ko pata hi nahi
-              // chalta tha ki navigation hua hai, isliye asli "Edit" route
-              // ka wrapper component (jo poora grantData fetch karke
-              // saare tabs ko data deta hai) kabhi mount hi nahi hota tha.
-              // Breadcrumb "Add New" hi dikhta reh jaata tha.
-              //
-              // Ab asli `router.navigate()` call karte hain — isse
-              // Angular real navigation karega aur "Edit" wrapper
-              // component properly load hoga.
               onSuccess(grantId);
               this.router.navigate(['/calendar-opportunity/edit', grantId]);
             } else {
@@ -478,6 +474,7 @@ export class CalendarDetails {
           },
           error: (err) => {
             this.isSaving = false;
+             this.loader.hide();
             console.log(err);
             this.errorMessage = 'Insert failed';
           },
@@ -494,11 +491,13 @@ export class CalendarDetails {
             saveGrant(uploadedImagePath);
           } else {
             this.isSaving = false;
+            this.loader.hide();
             this.errorMessage = 'Image upload failed';
           }
         },
         error: (err) => {
           this.isSaving = false;
+          this.loader.hide();
           console.log('UPLOAD ERROR', err);
           this.errorMessage = 'Image upload failed';
         },

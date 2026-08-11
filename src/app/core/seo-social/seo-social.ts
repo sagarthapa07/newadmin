@@ -20,6 +20,7 @@ export class SeoSocialComponent implements OnInit, OnChanges {
   opportunityForm: FormGroup;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
+  isSaving = false;
 
   constructor(
     private fb: FormBuilder,
@@ -74,8 +75,20 @@ export class SeoSocialComponent implements OnInit, OnChanges {
       },
     });
   }
+  goToPreview(): void {
+    if (!this.grantId) {
+      this.toastType = 'error';
+      this.toastMessage = 'Grant ID missing — preview nahi ho sakta';
+      setTimeout(() => {
+        this.toastMessage = '';
+      }, 3000);
+      return;
+    }
+    this.router.navigate(['/calendar-opportunity/edit/preview', this.grantId]);
+  }
 
   onSave() {
+    if (this.isSaving) return;
     const form = this.opportunityForm.value;
 
     const payload = {
@@ -98,9 +111,10 @@ export class SeoSocialComponent implements OnInit, OnChanges {
       googlePlusHandler: form['G-Handler'],
       instagramHandler: form['I-Handler'],
     };
-
+    this.isSaving = true;
     this.api.updateSeoSocial(this.grantId, payload).subscribe({
       next: (res) => {
+        this.isSaving = false;
         this.toastType = 'success';
         this.toastMessage = 'SEO/Social Media updated successfully';
 
@@ -110,6 +124,7 @@ export class SeoSocialComponent implements OnInit, OnChanges {
       },
 
       error: (err) => {
+        this.isSaving = false;
         this.toastType = 'error';
         this.toastMessage = 'Failed to update SEO/Social Media';
 

@@ -297,20 +297,29 @@
 
   <!-- FOOTER BUTTONS -->
   <div class="section-footer">
-    <button type="button" class="btn btn-clear" (click)="clearAllSelections()">
+    <button type="button" class="button button-danger" (click)="clearAllSelections()">
       <i class="bi bi-trash3"></i> Clear All
     </button>
 
     <div class="section-footer-right">
-      <button type="button" class="btn btn-back" (click)="goToFocusGroup()">
+      <button type="button" class="button button-secondary" (click)="goToFocusGroup()">
         <i class="bi bi-skip-backward"></i> Back
       </button>
 
-      <button type="button" class="btn btn-save" (click)="saveStatesAndCounties()">
-        <i class="bi bi-bookmark-check"></i> Save
+      <button
+        type="button"
+        class="button button-secondary btn-save"
+        [disabled]="isSaving"
+        (click)="saveStatesAndCounties()"
+      >
+        @if (isSaving) {
+          <span class="loader-dot"></span> Saving...
+        } @else {
+          <i class="bi bi-bookmark-check"></i> Save
+        }
       </button>
 
-      <button type="button" class="btn btn-next" (click)="goToSeo()">
+      <button type="button" class="button button-primary" (click)="goToSeo()">
         Next <i class="bi bi-skip-forward"></i>
       </button>
     </div>

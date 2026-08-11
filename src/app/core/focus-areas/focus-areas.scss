@@ -430,75 +430,47 @@
   flex-wrap: wrap;
 }
 
-.section-footer .btn {
+.section-footer .button {
+  height: clamp(34px, 2.6vw, 42px);
+  padding: 0 clamp(12px, 1.4vw, 20px);
+  font-size: clamp(12px, 0.85vw, 14px);
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-width: 90px;
-  padding: 9px 20px;
-  font-size: var(--fs-14);
-  font-weight: var(--fw-600);
-  border-radius: 6px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: var(--tran-02);
+  gap: 6px;
 
   i {
     font-size: 14px;
   }
 }
 
-.btn-clear {
-  background: var(--white);
-  color: var(--danger-color);
-  border-color: var(--btn-border-color);
-}
-
-.btn-clear:hover {
-  background: var(--body-color);
-  border-color: var(--danger-color);
-}
-
-.btn-back {
-  background: var(--white);
-  color: var(--text-color-light);
-  border-color: var(--btn-border-color);
-}
-
-.btn-back:hover {
-  background: var(--btn-bg-color);
-}
-
 .btn-save {
-  background: var(--white);
-  color: var(--nav-color);
-  border-color: var(--nav-color);
+  min-width: 90px;
+  justify-content: center;
 }
 
-.btn-save:hover {
-  background: var(--header2-bkg-color);
+.loader-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: blink 1s infinite;
 }
 
-.btn-next {
-  background: var(--nav-color);
-  color: var(--white);
-  border-color: var(--nav-color);
+@keyframes blink {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
 }
 
-.btn-next:hover {
-  background: var(--primary-color-dark);
-  border-color: var(--primary-color-dark);
-}
-
-/* ==========================================================================
-   RESPONSIVE
-   ========================================================================== */
-
-/* Chote desktop / laptop screens (13-14 inch, ~1366px aur usse chota) */
-/* NOTE: grid columns 4 hi rahenge desktop par hamesha - sirf box/text/button size chota hoga */
 @media (min-width: 993px) and (max-width: 1366px) {
-
   .issue-grid {
     gap: 8px;
   }
@@ -520,21 +492,19 @@
     width: 380px;
   }
 
-  /* Buttons chote (height/width dono) */
-  .section-footer .btn {
+  .focus-header .button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .section-footer .button {
     padding: 6px 14px;
     min-width: 70px;
     font-size: 13px;
   }
 
-  .section-footer .btn i {
+  .section-footer .button i {
     font-size: 12px;
-  }
-
-  /* Auto Selection button */
-  .focus-header .button {
-    padding: 6px 12px;
-    font-size: 13px;
   }
 }
 
@@ -553,15 +523,13 @@
     position: static;
   }
 
-  /* Buttons aur chote is range me */
-  .section-footer .btn {
-    padding: 5px 12px;
-    min-width: 60px;
-    font-size: 12px;
-  }
-
   .focus-header .button {
     padding: 5px 10px;
+    font-size: 12px;
+  }
+  .section-footer .button {
+    padding: 5px 12px;
+    min-width: 60px;
     font-size: 12px;
   }
 }
@@ -606,7 +574,6 @@
 }
 
 @media (max-width: 768px) {
-
   .section-footer {
     padding: 16px 18px;
     flex-direction: column;
@@ -617,10 +584,9 @@
     justify-content: space-between;
   }
 
-  .section-footer .btn {
+  .section-footer .button {
     flex: 1;
     justify-content: center;
     min-width: 0;
   }
-
 }

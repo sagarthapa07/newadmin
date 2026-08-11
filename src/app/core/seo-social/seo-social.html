@@ -161,19 +161,28 @@
 
       <!-- FOOTER -->
       <div class="ss-footer">
-        <button type="button" class="btn btn-clear" (click)="clearAll()">
+        <button type="button" class="button button-danger" (click)="clearAll()">
           <i class="bi bi-trash3"></i> Clear All
         </button>
 
         <div class="ss-footer-right">
-          <button type="button" class="btn btn-back" (click)="goToCounties()">
+          <button type="button" class="button button-secondary" (click)="goToCounties()">
             <i class="bi bi-skip-backward"></i> Back
           </button>
-          <button type="button" class="btn btn-save" (click)="onSave()">
-            <i class="bi bi-bookmark-check"></i> Save
+          <button
+            type="button"
+            class="button button-secondary btn-save"
+            [disabled]="isSaving"
+            (click)="onSave()"
+          >
+            @if (isSaving) {
+              <span class="loader-dot"></span> Saving...
+            } @else {
+              <i class="bi bi-bookmark-check"></i> Save
+            }
           </button>
-          <button type="button" class="btn btn-next" (click)="goToCalenderArea()">
-            Next <i class="bi bi-skip-forward"></i>
+          <button type="button" class="button button-primary" (click)="goToPreview()">
+            <i class="bi bi-eye"></i> Preview
           </button>
         </div>
       </div>

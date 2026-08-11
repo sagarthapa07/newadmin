@@ -33,6 +33,7 @@ export class GeoLocationComponent implements OnInit {
   pasteText = '';
   successMessage = '';
   errorMessage = '';
+  isSaving = false;
 
   constructor(
     private router: Router,
@@ -229,7 +230,6 @@ export class GeoLocationComponent implements OnInit {
 
     const trimmedName = this.newGeoName.trim();
 
-    // Duplicate Check (case-insensitive)
     const exists = this.geoDropdowns[this.geoModalType].data.some(
       (item: DropdownItem) => item.item_text.toLowerCase() === trimmedName.toLowerCase(),
     );
@@ -252,7 +252,6 @@ export class GeoLocationComponent implements OnInit {
     if (!selectedItems || selectedItems.length === 0) {
       return;
     }
-    // sirf names nikaal rahe hain
     const names = selectedItems.map((item: DropdownItem) => item.item_text);
   }
   removeGeoItem(type: GeoKey, item: DropdownItem) {
@@ -261,9 +260,6 @@ export class GeoLocationComponent implements OnInit {
     );
   }
 
-  // ---------------------------------------------------------------------
-  // SEARCH + SELECT ALL (per card)
-  // ---------------------------------------------------------------------
   filteredItems(key: GeoKey): DropdownItem[] {
     const term = (this.searchText[key] || '').toLowerCase().trim();
     const data = this.geoDropdowns[key].data || [];
@@ -307,9 +303,6 @@ export class GeoLocationComponent implements OnInit {
     }
   }
 
-  // ---------------------------------------------------------------------
-  // SELECTED SUMMARY PANEL
-  // ---------------------------------------------------------------------
   totalSelectedCount(): number {
     return (Object.keys(this.geoDropdowns) as GeoKey[]).reduce(
       (sum, key) => sum + this.geoDropdowns[key].selected.length,
@@ -345,11 +338,6 @@ export class GeoLocationComponent implements OnInit {
     this.showPasteModal = false;
   }
 
-  // ---------------------------------------------------------------------
-  // AUTO SELECTION FROM PASTED TEXT
-  // Scans the pasted text and auto-checks any township / insular area /
-  // city / state whose name appears in it (case-insensitive match).
-  // ---------------------------------------------------------------------
   generateFromText() {
     if (!this.pasteText.trim()) {
       return;
@@ -390,6 +378,7 @@ export class GeoLocationComponent implements OnInit {
     }
 
     const grantId = this.grantId;
+    this.isSaving = true;
 
     // Cities
     const citiesPayload: SaveCitiesPayload = {
@@ -431,7 +420,6 @@ export class GeoLocationComponent implements OnInit {
       userIndex: 5,
     };
 
-
     forkJoin({
       cities: this.api.insertGrantCities(citiesPayload),
       insular: this.api.insertGrantInsular(insularPayload),
@@ -439,6 +427,7 @@ export class GeoLocationComponent implements OnInit {
       states: this.api.insertGrantStates(statesPayload),
     }).subscribe({
       next: (response) => {
+        this.isSaving = false;
         this.successMessage = 'Geo Location data saved successfully';
         this.cd.detectChanges();
         setTimeout(() => {
@@ -448,6 +437,7 @@ export class GeoLocationComponent implements OnInit {
       },
 
       error: (error) => {
+        this.isSaving = false;
         console.error('Save Error:', error);
         this.errorMessage = error?.error?.message || 'Failed to save Geo Location data';
         this.cd.detectChanges();

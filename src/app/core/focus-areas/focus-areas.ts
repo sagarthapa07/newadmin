@@ -40,6 +40,7 @@ export class FocusAreaComponent implements OnInit, OnChanges {
   toastMessage = '';
   errorMessage = '';
   clientIP: string = '';
+  isSaving = false;
 
   constructor(
     private router: Router,
@@ -257,6 +258,7 @@ export class FocusAreaComponent implements OnInit, OnChanges {
     }
   }
   saveSelectedIssues(): void {
+    if (this.isSaving) return;
     if (!this.grantId) {
       this.errorMessage = 'Grant ID missing hai — save nahi ho sakta';
       this.cd.detectChanges();
@@ -296,14 +298,16 @@ export class FocusAreaComponent implements OnInit, OnChanges {
       userMail: userInfo.emailId,
       clientIP: this.clientIP,
     };
-
+    this.isSaving = true;
     this.api.saveFocusAreas(payload).subscribe({
       next: () => {
+        this.isSaving = false;
         this.activeIssue = null;
         this.changedMap.clear();
         this.showSuccessMessage('Focus Areas Saved Successfully');
       },
       error: (err) => {
+        this.isSaving = false;
         this.errorMessage = 'Save Failed';
         this.cd.detectChanges();
         setTimeout(() => {

@@ -39,7 +39,7 @@ export class CountiesComponent implements OnInit {
     private common: Common,
     private http: HttpClient,
   ) {}
-
+  isSaving = false;
   grantMode: GrantMode = 'selected';
   selectionType: SelectionType = 'single';
 
@@ -441,6 +441,7 @@ export class CountiesComponent implements OnInit {
   }
 
   saveStatesAndCounties(): void {
+    if (this.isSaving) return;
     if (!this.grantId) {
       this.showError('Grant ID missing hai — save nahi ho sakta');
       return;
@@ -533,24 +534,38 @@ export class CountiesComponent implements OnInit {
       userEmail: userInfo.emailId,
       clientIP: this.clientIP,
     };
-
+    this.isSaving = true;
     this.api.updateGrantTags(this.grantId, tagsPayload).subscribe({
       next: () => {
         this.api.insertGrantStatesJSON(statesPayload).subscribe({
           next: () => {
             if (!usGrantCounties.length) {
+              this.isSaving = false;
               this.showSuccess();
               return;
             }
             this.api.insertGrantCounties(countiesPayload).subscribe({
-              next: () => this.showSuccess(),
-              error: () => this.showError('Counties save failed'),
+              next: () => {
+                this.isSaving = false;
+                this.showSuccess();
+              },
+
+              error: () => {
+                this.isSaving = false;
+                this.showError('Counties save failed');
+              },
             });
           },
-          error: () => this.showError('States save failed'),
+          error: () => {
+            this.isSaving = false;
+            this.showError('States save failed');
+          },
         });
       },
-      error: () => this.showError('Tags save failed'),
+      error: () => {
+        this.isSaving = false;
+        this.showError('Tags save failed');
+      },
     });
   }
 

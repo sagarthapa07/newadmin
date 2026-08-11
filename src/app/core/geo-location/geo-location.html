@@ -1,18 +1,11 @@
 <section class="geo-page">
-
   @if (successMessage) {
-    <app-alert-message
-      [type]="'success'"
-      [message]="successMessage"
-      (close)="successMessage = ''">
+    <app-alert-message [type]="'success'" [message]="successMessage" (close)="successMessage = ''">
     </app-alert-message>
   }
 
   @if (errorMessage) {
-    <app-alert-message
-      [type]="'error'"
-      [message]="errorMessage"
-      (close)="errorMessage = ''">
+    <app-alert-message [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
     </app-alert-message>
   }
 
@@ -20,9 +13,7 @@
   <div class="focus-header d-flex justify-content-between align-items-start flex-wrap gap-2">
     <div>
       <h5 class="mb-1"><i class="bi bi-geo-alt-fill me-2"></i>Geo Location</h5>
-      <p class="sub-text mb-0">
-        Choose the geographies that are relevant for this opportunity.
-      </p>
+      <p class="sub-text mb-0">Choose the geographies that are relevant for this opportunity.</p>
     </div>
 
     <button class="button button-secondary" (click)="openPasteModal()">
@@ -32,10 +23,8 @@
 
   <!-- MAIN GRID -->
   <div class="geo-grid">
-
     @for (key of geoKeys; track key) {
       <div class="geo-card">
-
         <!-- CARD HEAD -->
         <div class="geo-card-head">
           <span class="geo-card-icon">
@@ -45,8 +34,9 @@
                 'bi-house': key === 'township',
                 'bi-tree': key === 'insular',
                 'bi-building': key === 'cities',
-                'bi-bank': key === 'states'
-              }">
+                'bi-bank': key === 'states',
+              }"
+            >
             </i>
           </span>
 
@@ -56,17 +46,13 @@
             </span>
 
             @if (geoDropdowns[key].selected.length) {
-              <span class="geo-card-badge">
-                {{ geoDropdowns[key].selected.length }} Selected
-              </span>
+              <span class="geo-card-badge"> {{ geoDropdowns[key].selected.length }} Selected </span>
             }
           </div>
         </div>
 
         @if (shouldShowAdd(key)) {
-          <span
-            class="geo-add-new"
-            (click)="openGeoModal(key)">
+          <span class="geo-add-new" (click)="openGeoModal(key)">
             Add New <i class="bi bi-plus-circle"></i>
           </span>
         }
@@ -79,7 +65,8 @@
             type="text"
             [placeholder]="'Search ' + geoDropdowns[key].label.toLowerCase() + '...'"
             [(ngModel)]="searchText[key]"
-            [ngModelOptions]="{ standalone: true }" />
+            [ngModelOptions]="{ standalone: true }"
+          />
         </div>
 
         <!-- SELECT ALL -->
@@ -88,43 +75,36 @@
             <input
               type="checkbox"
               [checked]="isAllFilteredSelected(key)"
-              (change)="toggleSelectAll(key, $event.target.checked)" />
+              (change)="toggleSelectAll(key, $event.target.checked)"
+            />
             <span>Select All ({{ filteredItems(key).length }})</span>
           </label>
         }
 
         <!-- LIST -->
         <div class="geo-list">
-
           @for (item of filteredItems(key); track item.item_id ?? item.item_text) {
             <label class="geo-item">
-
               <input
                 type="checkbox"
                 [checked]="isItemSelected(key, item)"
-                (change)="toggleGeoItem(key, item, $event.target.checked)" />
+                (change)="toggleGeoItem(key, item, $event.target.checked)"
+              />
 
               <span>{{ item.item_text }}</span>
-
             </label>
           }
 
           @if (!filteredItems(key).length) {
-            <div class="geo-empty">
-              No matches found
-            </div>
+            <div class="geo-empty">No matches found</div>
           }
-
         </div>
-
       </div>
     }
-
   </div>
 
   <!-- SELECTED SUMMARY -->
   <div class="geo-summary">
-
     <div class="geo-summary-head">
       <div class="geo-summary-title">
         Selection Summary
@@ -138,20 +118,13 @@
       </span>
     </div>
 
-    <div class="geo-summary-subtitle">
-      Selected Locations
-    </div>
+    <div class="geo-summary-subtitle">Selected Locations</div>
 
     <div class="geo-summary-list">
-
       @for (key of geoKeys; track key) {
-
         @if (geoDropdowns[key].selected.length) {
-
           <div class="geo-summary-card">
-
             <div class="geo-summary-card-head">
-
               <div class="geo-summary-card-title">
                 <span class="geo-summary-icon">
                   <i
@@ -160,8 +133,9 @@
                       'bi-house': key === 'township',
                       'bi-tree': key === 'insular',
                       'bi-building': key === 'cities',
-                      'bi-bank': key === 'states'
-                    }">
+                      'bi-bank': key === 'states',
+                    }"
+                  >
                   </i>
                 </span>
 
@@ -172,40 +146,28 @@
               </div>
 
               <div class="geo-summary-card-actions">
-                <span
-                  class="geo-remove-category"
-                  (click)="clearGeoCategory(key)">
-                  Remove
-                </span>
+                <span class="geo-remove-category" (click)="clearGeoCategory(key)"> Remove </span>
 
                 <i
                   class="bi geo-collapse-icon"
                   [ngClass]="summaryCollapsed[key] ? 'bi-chevron-down' : 'bi-chevron-up'"
-                  (click)="toggleSummaryCollapse(key)">
+                  (click)="toggleSummaryCollapse(key)"
+                >
                 </i>
               </div>
-
             </div>
 
             @if (!summaryCollapsed[key]) {
-
               <div class="geo-summary-chips">
-
                 @for (item of visibleSummaryChips(key); track item.item_id ?? item.item_text) {
                   <span class="chip">
                     {{ item.item_text }}
-                    <span
-                      class="remove"
-                      (click)="removeGeoItem(key, item)">
-                      ×
-                    </span>
+                    <span class="remove" (click)="removeGeoItem(key, item)"> × </span>
                   </span>
                 }
 
                 @if (geoDropdowns[key].selected.length > summaryPreviewCount) {
-                  <span
-                    class="chip chip-more"
-                    (click)="toggleSummaryShowAll(key)">
+                  <span class="chip chip-more" (click)="toggleSummaryShowAll(key)">
                     {{
                       summaryShowAll[key]
                         ? 'Show less'
@@ -213,23 +175,15 @@
                     }}
                   </span>
                 }
-
               </div>
-
             }
-
           </div>
-
         }
-
       }
 
       @if (!totalSelectedCount()) {
-        <div class="geo-empty geo-empty-center">
-          No locations selected yet.
-        </div>
+        <div class="geo-empty geo-empty-center">No locations selected yet.</div>
       }
-
     </div>
 
     <div class="geo-tip-box">
@@ -239,69 +193,43 @@
         Use the checkboxes on the left to add or remove locations.
       </span>
     </div>
-
   </div>
 
   <!-- AUTO SELECTION -->
   @if (showPasteModal) {
     <div class="paste-overlay" (click)="closePasteModal()">
-
-      <div
-        class="paste-modal"
-        (click)="$event.stopPropagation()">
-
+      <div class="paste-modal" (click)="$event.stopPropagation()">
         <h3>Paste Article / Content</h3>
 
         <p class="geo-modal-help">
-          We'll scan the text and auto-select any matching townships,
-          insular areas, cities or states.
+          We'll scan the text and auto-select any matching townships, insular areas, cities or
+          states.
         </p>
 
         <textarea
           [(ngModel)]="pasteText"
           [ngModelOptions]="{ standalone: true }"
-          placeholder="Paste your article or long text here...">
+          placeholder="Paste your article or long text here..."
+        >
         </textarea>
 
         <div class="paste-actions">
-          <button
-            class="btn-remove"
-            (click)="closePasteModal()">
-            Cancel
-          </button>
+          <button class="btn-remove" (click)="closePasteModal()">Cancel</button>
 
-          <button
-            class="btn-done"
-            (click)="generateFromText()">
-            Generate
-          </button>
+          <button class="btn-done" (click)="generateFromText()">Generate</button>
         </div>
-
       </div>
-
     </div>
   }
 
   <!-- ADD NEW GEO -->
   @if (showGeoModal) {
-    <div
-      class="custom-overlay"
-      (click)="closeGeoModal()">
-
-      <div
-        class="custom-modal"
-        (click)="$event.stopPropagation()">
-
+    <div class="custom-overlay" (click)="closeGeoModal()">
+      <div class="custom-modal" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h5>
-            Add {{ geoModalType === 'cities' ? 'City' : 'Township' }}
-          </h5>
+          <h5>Add {{ geoModalType === 'cities' ? 'City' : 'Township' }}</h5>
 
-          <span
-            class="close-btn"
-            (click)="closeGeoModal()">
-            ✕
-          </span>
+          <span class="close-btn" (click)="closeGeoModal()"> ✕ </span>
         </div>
 
         <div class="modal-body">
@@ -310,63 +238,46 @@
             class="form-control"
             [placeholder]="geoModalType === 'cities' ? 'City' : 'Township'"
             [(ngModel)]="newGeoName"
-            [ngModelOptions]="{ standalone: true }" />
+            [ngModelOptions]="{ standalone: true }"
+          />
         </div>
 
         <div class="modal-footer gap-2">
-          <button
-            class="btn btn-back"
-            (click)="closeGeoModal()">
-            Close
-          </button>
+          <button class="btn btn-back" (click)="closeGeoModal()">Close</button>
 
-          <button
-            class="btn btn-save"
-            (click)="saveGeoItem()">
-            Save
-          </button>
+          <button class="btn btn-save" (click)="saveGeoItem()">Save</button>
         </div>
-
       </div>
-
     </div>
   }
 
   <!-- FOOTER -->
   <div class="geo-footer">
-
-    <button
-      type="button"
-      class="btn btn-clear"
-      (click)="clearAll()">
+    <button type="button" class="button button-danger" (click)="clearAll()">
       <i class="bi bi-trash3"></i> Clear All
     </button>
 
     <div class="geo-footer-right">
-
-      <button
-        type="button"
-        class="btn btn-back"
-        (click)="goToCalenderArea()">
+      <button type="button" class="button button-secondary" (click)="goToCalenderArea()">
         <i class="bi bi-skip-backward"></i> Back
       </button>
 
       <button
         type="button"
-        class="btn btn-save"
-        (click)="saveAll()">
-        <i class="bi bi-bookmark-check"></i> Save
+        class="button button-secondary btn-save"
+        [disabled]="isSaving"
+        (click)="saveAll()"
+      >
+        @if (isSaving) {
+          <span class="loader-dot"></span> Saving...
+        } @else {
+          <i class="bi bi-bookmark-check"></i> Save
+        }
       </button>
 
-      <button
-        type="button"
-        class="btn btn-next"
-        (click)="goToFocusAreas()">
+      <button type="button" class="button button-primary" (click)="goToFocusAreas()">
         Next <i class="bi bi-skip-forward"></i>
       </button>
-
     </div>
-
   </div>
-
 </section>

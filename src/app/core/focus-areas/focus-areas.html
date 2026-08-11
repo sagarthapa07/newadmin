@@ -1,12 +1,12 @@
 <section class="focus-area-wrapper">
   @if (toastMessage) {
-  <app-alert-message [type]="'success'" [message]="toastMessage" (close)="toastMessage = ''">
-  </app-alert-message>
+    <app-alert-message [type]="'success'" [message]="toastMessage" (close)="toastMessage = ''">
+    </app-alert-message>
   }
 
   @if (errorMessage) {
-  <app-alert-message [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
-  </app-alert-message>
+    <app-alert-message [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
+    </app-alert-message>
   }
 
   <!-- HEADER -->
@@ -23,21 +23,28 @@
 
   <!-- PASTE MODAL -->
   @if (showPasteModal) {
-  <div class="paste-overlay">
-    <div class="paste-modal" (click)="$event.stopPropagation()">
-      <h3>Paste Article / Content</h3>
+    <div class="paste-overlay">
+      <div class="paste-modal" (click)="$event.stopPropagation()">
+        <h3>Paste Article / Content</h3>
 
-      <textarea [(ngModel)]="pasteText" placeholder="Paste your article or long text here..."></textarea>
+        <textarea
+          [(ngModel)]="pasteText"
+          placeholder="Paste your article or long text here..."
+        ></textarea>
 
-      <div class="paste-actions">
-        <button class="button button-secondary" (click)="closePasteModal()">Cancel</button>
+        <div class="paste-actions">
+          <button class="button button-secondary" (click)="closePasteModal()">Cancel</button>
 
-        <button class="button button-primary" [disabled]="pasteLoading" (click)="generateFromText()">
-          {{ pasteLoading ? 'Loading...' : 'Generate' }}
-        </button>
+          <button
+            class="button button-primary"
+            [disabled]="pasteLoading"
+            (click)="generateFromText()"
+          >
+            {{ pasteLoading ? 'Loading...' : 'Generate' }}
+          </button>
+        </div>
       </div>
     </div>
-  </div>
   }
 
   <!-- MAIN BODY -->
@@ -46,53 +53,68 @@
     <div class="col-lg-9">
       <div class="issue-grid" #issueContainer>
         @for (issue of issues; track issue.id) {
-        <div class="issue-box" [class.selected]="hasAnySelected(issue)"
-          (click)="onClickIssue(issue); $event.stopPropagation()">
-          <span class="issue-dot" [class.active]="hasAnySelected(issue)"></span>
+          <div
+            class="issue-box"
+            [class.selected]="hasAnySelected(issue)"
+            (click)="onClickIssue(issue); $event.stopPropagation()"
+          >
+            <span class="issue-dot" [class.active]="hasAnySelected(issue)"></span>
 
-          <span class="issue-text" [title]="issue.name">{{ issue.name }}</span>
+            <span class="issue-text" [title]="issue.name">{{ issue.name }}</span>
 
-          @if (activeIssue?.id === issue.id) {
-          <div class="subissue-popover" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()">
-            <div class="popup-header">
-              {{ issue.name }}
-            </div>
+            @if (activeIssue?.id === issue.id) {
+              <div
+                class="subissue-popover"
+                (click)="$event.stopPropagation()"
+                (mousedown)="$event.stopPropagation()"
+              >
+                <div class="popup-header">
+                  {{ issue.name }}
+                </div>
 
-            <div class="popup-body">
-              <div class="sub-title">Sub Issues</div>
+                <div class="popup-body">
+                  <div class="sub-title">Sub Issues</div>
 
-              <div class="subissue-grid">
-                @for (sub of issue.subIssues || []; track sub.id) {
-                <label class="sub-checkbox" [title]="sub.name">
-                  <input type="checkbox" [checked]="isSubSelected(issue, sub)" (change)="toggleSub(issue, sub)" />
+                  <div class="subissue-grid">
+                    @for (sub of issue.subIssues || []; track sub.id) {
+                      <label class="sub-checkbox" [title]="sub.name">
+                        <input
+                          type="checkbox"
+                          [checked]="isSubSelected(issue, sub)"
+                          (change)="toggleSub(issue, sub)"
+                        />
 
-                  @if (!issue.subIssues.length) {
-                  <div>Loading sub issues...</div>
-                  }
+                        @if (!issue.subIssues.length) {
+                          <div>Loading sub issues...</div>
+                        }
 
-                  <span>{{ sub.name }}</span>
-                </label>
-                }
+                        <span>{{ sub.name }}</span>
+                      </label>
+                    }
+                  </div>
+                </div>
+
+                <div class="popup-select-all">
+                  <label class="sub-checkbox">
+                    <input
+                      type="checkbox"
+                      [checked]="isAllSelected(issue)"
+                      (change)="toggleSelectAll(issue)"
+                    />
+                    <span>Select All</span>
+                  </label>
+                </div>
+
+                <div class="popup-footer">
+                  <button class="button button-secondary" (click)="clearIssue(issue.id)">
+                    ✕ Remove
+                  </button>
+
+                  <button class="button button-primary" (click)="saveSelectedIssues()">Done</button>
+                </div>
               </div>
-            </div>
-
-            <div class="popup-select-all">
-              <label class="sub-checkbox">
-                <input type="checkbox" [checked]="isAllSelected(issue)" (change)="toggleSelectAll(issue)" />
-                <span>Select All</span>
-              </label>
-            </div>
-
-            <div class="popup-footer">
-              <button class="button button-secondary" (click)="clearIssue(issue.id)">
-                ✕ Remove
-              </button>
-
-              <button class="button button-primary" (click)="saveSelectedIssues()">Done</button>
-            </div>
+            }
           </div>
-          }
-        </div>
         }
       </div>
     </div>
@@ -117,35 +139,39 @@
 
         <div class="summary-list">
           @for (entry of filteredSelectedEntries; track entry[0]) {
-          <div class="summary-issue">
-            <div class="summary-issue-header d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center gap-2">
-                <span class="issue-icon">
-                  <i class="bi bi-bookmark-star-fill"></i>
-                </span>
+            <div class="summary-issue">
+              <div class="summary-issue-header d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="issue-icon">
+                    <i class="bi bi-bookmark-star-fill"></i>
+                  </span>
 
-                <strong>{{ getIssueName(entry[0]) }}</strong>
+                  <strong>{{ getIssueName(entry[0]) }}</strong>
+                </div>
+
+                <span
+                  class="remove-issue"
+                  (click)="removeWholeIssue(entry[0])"
+                  title="Remove entire issue"
+                >
+                  Remove
+                </span>
               </div>
 
-              <span class="remove-issue" (click)="removeWholeIssue(entry[0])" title="Remove entire issue">
-                Remove
-              </span>
-            </div>
+              <div class="chip-list">
+                @for (subId of entry[1]; track subId) {
+                  <span class="chip">
+                    {{ getSubIssueName(entry[0], subId) }}
 
-            <div class="chip-list">
-              @for (subId of entry[1]; track subId) {
-              <span class="chip">
-                {{ getSubIssueName(entry[0], subId) }}
-
-                <span class="remove" (click)="clearSingleSub(entry[0], subId)"> × </span>
-              </span>
-              }
+                    <span class="remove" (click)="clearSingleSub(entry[0], subId)"> × </span>
+                  </span>
+                }
+              </div>
             </div>
-          </div>
           }
 
           @if (filteredSelectedEntries.length === 0) {
-          <div class="empty-summary">No focus areas selected yet.</div>
+            <div class="empty-summary">No focus areas selected yet.</div>
           }
         </div>
 
@@ -163,20 +189,29 @@
 
   <!-- FOOTER -->
   <div class="section-footer mb-5">
-    <button type="button" class="btn btn-clear" (click)="clearAll()">
+    <button type="button" class="button button-danger" (click)="clearAll()">
       <i class="bi bi-trash3"></i> Clear All
     </button>
 
     <div class="section-footer-right">
-      <button type="button" class="btn btn-back" (click)="goToGeoLocation()">
+      <button type="button" class="button button-secondary" (click)="goToGeoLocation()">
         <i class="bi bi-skip-backward"></i> Back
       </button>
 
-      <button type="submit" class="btn btn-save" (click)="saveSelectedIssues()">
-        <i class="bi bi-bookmark-check"></i> Save
+      <button
+        type="submit"
+        class="button button-secondary btn-save"
+        [disabled]="isSaving"
+        (click)="saveSelectedIssues()"
+      >
+        @if (isSaving) {
+          <span class="loader-dot"></span> Saving...
+        } @else {
+          <i class="bi bi-bookmark-check"></i> Save
+        }
       </button>
 
-      <button type="button" class="btn btn-next" (click)="goToFocusGroup()">
+      <button type="button" class="button button-primary" (click)="goToFocusGroup()">
         Next <i class="bi bi-skip-forward"></i>
       </button>
     </div>

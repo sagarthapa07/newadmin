@@ -1,22 +1,16 @@
 <section class="fg-page">
-
   @if (successMessage) {
-    <app-alert-message
-      [type]="'success'"
-      [message]="successMessage"
-      (close)="successMessage = ''">
+    <app-alert-message [type]="'success'" [message]="successMessage" (close)="successMessage = ''">
     </app-alert-message>
   }
 
   @if (errorMessage) {
-    <app-alert-message
-      [type]="'error'"
-      [message]="errorMessage"
-      (close)="errorMessage = ''">
+    <app-alert-message [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
     </app-alert-message>
   }
 
   <div class="fg-card">
+    <!-- HEADER -->
     <!-- HEADER -->
     <div class="focus-header d-flex justify-content-between align-items-start flex-wrap gap-2">
       <div>
@@ -25,11 +19,45 @@
           Choose the beneficiaries, entities and organizations relevant to this opportunity.
         </p>
       </div>
+
+      <button class="button button-secondary" (click)="openPasteModal()">
+        <i class="bi bi-magic"></i> Auto Selection
+      </button>
     </div>
+
+    <!-- PASTE MODAL -->
+    @if (showPasteModal) {
+      <div class="paste-overlay">
+        <div class="paste-modal" (click)="$event.stopPropagation()">
+          <h3>Paste Article / Content</h3>
+
+          <p class="paste-help">
+            We'll scan the text and auto-select any matching beneficiaries and entities.
+          </p>
+
+          <textarea
+            [(ngModel)]="pasteText"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Paste your article or long text here..."
+          ></textarea>
+
+          <div class="paste-actions">
+            <button class="button button-secondary" (click)="closePasteModal()">Cancel</button>
+
+            <button
+              class="button button-primary"
+              [disabled]="pasteLoading"
+              (click)="generateFromText()"
+            >
+              {{ pasteLoading ? 'Loading...' : 'Generate' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
 
     <div class="fg-body">
       <div class="row g-4">
-
         <!-- LEFT SIDE -->
         <div class="col-lg-4 col-12">
           <div class="fg-panel">
@@ -48,7 +76,8 @@
               (onSelectAll)="onBeneficiaryChange()"
               (onDeSelectAll)="onBeneficiaryChange()"
               [ngModelOptions]="{ standalone: true }"
-              name="beneficiaries">
+              name="beneficiaries"
+            >
             </ng-multiselect-dropdown>
 
             <div class="fg-subheading">
@@ -59,7 +88,6 @@
             </div>
 
             <div class="chip-wrap">
-
               @for (b of savedBeneficiaries; track b) {
                 <span class="chip">
                   {{ b }}
@@ -70,7 +98,6 @@
               @if (!savedBeneficiaries.length) {
                 <span class="fg-empty">No beneficiaries selected</span>
               }
-
             </div>
           </div>
         </div>
@@ -78,7 +105,6 @@
         <!-- RIGHT SIDE -->
         <div class="col-lg-8 col-12">
           <div class="fg-panel">
-
             <label class="fg-panel-label">
               <i class="bi bi-building"></i>
               {{ focusGroupKeyDropdowns.entities.label }}
@@ -91,46 +117,46 @@
               (onSelect)="onEntityChange()"
               (onDeSelect)="onEntityDeSelect($event)"
               [ngModelOptions]="{ standalone: true }"
-              name="entities">
+              name="entities"
+            >
             </ng-multiselect-dropdown>
 
             @if (activeEntityForSubGrid) {
               <div class="fg-sub-block">
-
                 <h6 class="fg-sub-block-title">
                   {{ activeEntityForSubGrid }}
                 </h6>
 
                 <div class="sub-grid">
-
                   @for (sub of subEntitiesList; track sub.subEntName) {
                     <label class="sub-checkbox">
-
                       <input
                         type="checkbox"
-                        [checked]="selectedSubEntities[activeEntityForSubGrid]?.includes(sub.subEntName)"
-                        (change)="toggleSubEntity(activeEntityForSubGrid, sub.subEntName, $event.target.checked)"
+                        [checked]="
+                          selectedSubEntities[activeEntityForSubGrid]?.includes(sub.subEntName)
+                        "
+                        (change)="
+                          toggleSubEntity(
+                            activeEntityForSubGrid,
+                            sub.subEntName,
+                            $event.target.checked
+                          )
+                        "
                       />
 
                       <span>{{ sub.subEntName }}</span>
-
                     </label>
                   }
-
                 </div>
-
               </div>
             }
 
             <!-- Entities -->
             <div class="fg-names row g-0">
-
               <div class="col-md-3 col-12">
                 <h6>
                   Entities Name
-                  <span class="fg-count">
-                    ({{ objectKeys(selectedSubEntities).length }})
-                  </span>
+                  <span class="fg-count"> ({{ objectKeys(selectedSubEntities).length }}) </span>
                 </h6>
               </div>
 
@@ -139,90 +165,62 @@
               </div>
 
               @if (objectKeys(selectedSubEntities).length) {
-
                 @for (entity of objectKeys(selectedSubEntities); track entity) {
-
                   <div class="col-md-3 col-12 mt-3">
                     <span class="chip entity-chip">
                       {{ entity }}
-                      <span class="remove" (click)="removeEntity(entity)">
-                        ×
-                      </span>
+                      <span class="remove" (click)="removeEntity(entity)"> × </span>
                     </span>
                   </div>
 
                   <div class="col-md-9 col-12 mt-3">
-
                     @for (sub of selectedSubEntities[entity]; track sub) {
                       <span class="chip">
                         {{ sub }}
-                        <span
-                          class="remove"
-                          (click)="removeSubEntity(entity, sub)">
-                          ×
-                        </span>
+                        <span class="remove" (click)="removeSubEntity(entity, sub)"> × </span>
                       </span>
                     }
-
                   </div>
-
                 }
-
               } @else {
-
                 <div class="col-12 mt-3">
-                  <span class="fg-empty">
-                    No entities selected yet
-                  </span>
+                  <span class="fg-empty"> No entities selected yet </span>
                 </div>
-
               }
-
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
 
     <!-- FOOTER -->
     <div class="fg-footer">
-
-      <button
-        type="button"
-        class="btn btn-clear"
-        (click)="clearFocusGroup()">
+      <button type="button" class="button button-danger" (click)="clearFocusGroup()">
         <i class="bi bi-trash3"></i> Clear All
       </button>
 
       <div class="fg-footer-right">
-
-        <button
-          type="button"
-          class="btn btn-back"
-          (click)="goToFocusGroup()">
+        <button type="button" class="button button-secondary" (click)="goToFocusGroup()">
           <i class="bi bi-skip-backward"></i> Back
         </button>
 
         <button
           type="submit"
-          class="btn btn-save"
-          (click)="saveAllFocusGroup()">
-          <i class="bi bi-bookmark-check"></i> Save
+          class="button button-secondary btn-save"
+          [disabled]="isSaving"
+          (click)="saveAllFocusGroup()"
+        >
+          @if (isSaving) {
+            <span class="loader-dot"></span> Saving...
+          } @else {
+            <i class="bi bi-bookmark-check"></i> Save
+          }
         </button>
 
-        <button
-          type="button"
-          class="btn btn-next"
-          (click)="goToCounties()">
+        <button type="button" class="button button-primary" (click)="goToCounties()">
           Next <i class="bi bi-skip-forward"></i>
         </button>
-
       </div>
-
     </div>
-
   </div>
-
 </section>

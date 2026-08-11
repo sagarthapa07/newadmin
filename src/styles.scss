@@ -183,7 +183,6 @@ body.dark-theme .ngb-dp-weekday {
   align-items: center;
   justify-content: center;
   gap: 8px;
-
   border-radius: 8px;
   padding: 8px 20px;
   cursor: pointer;
@@ -231,6 +230,17 @@ body.dark-theme .ngb-dp-weekday {
   color: var(--primary-color-dark);
   border-color: var(----primary-color-dark);
 }
+.button-danger{
+  background: var(--white);
+  color: var(--danger-color);
+  border-color: 1px soild var(--btn-border-color);
+}
+
+.button-danger:hover{
+  background: var(--body-color);
+  border-color: var(--danger-color);
+}
+
 
 .ngx-pe-img {
   display: block !important;
