@@ -44,6 +44,7 @@ export class CalendarDetails {
   previewUrl: string = '';
   successMessage = '';
   errorMessage = '';
+  isSaving = false;
   fullImageUrl: string = '';
   selectedImage: any;
   resizeImages: any[] = [];
@@ -349,11 +350,13 @@ export class CalendarDetails {
   }
 
   onSave(): void {
+    if (this.isSaving) return;
     this.formSubmitted = true;
     if (this.opportunityForm.invalid || this.isEditorEmpty() || this.isImageInvalid()) {
       this.opportunityForm.markAllAsTouched();
       return;
     }
+    this.isSaving = true;
     this.persistGrant((grantId: number) => {
       this.successMessage = 'Grant saved successfully';
     });
@@ -435,6 +438,7 @@ export class CalendarDetails {
       if (this.data?.id) {
         this.api.updateGrant(this.data.id, payload).subscribe({
           next: (res: any) => {
+            this.isSaving = false;
             if (res.successCode === 1) {
               onSuccess(this.data!.id!);
             } else {
@@ -442,6 +446,7 @@ export class CalendarDetails {
             }
           },
           error: (err) => {
+            this.isSaving = false;
             console.error(err);
             this.errorMessage = 'Grant update failed';
           },
@@ -449,16 +454,30 @@ export class CalendarDetails {
       } else {
         this.api.insertGrant(payload).subscribe({
           next: (res: any) => {
+            this.isSaving = false;
             const grantId = res?.result?.grantIndex;
             if (grantId) {
               this.data = { ...(this.data || {}), id: grantId } as any;
-              this.location.replaceState(`/calendar-opportunity/edit/${grantId}`);
+
+              // 👇 YAHI FIX HAI:
+              // Pehle `location.replaceState()` sirf browser URL bar ka
+              // text badal raha tha — Angular Router ko pata hi nahi
+              // chalta tha ki navigation hua hai, isliye asli "Edit" route
+              // ka wrapper component (jo poora grantData fetch karke
+              // saare tabs ko data deta hai) kabhi mount hi nahi hota tha.
+              // Breadcrumb "Add New" hi dikhta reh jaata tha.
+              //
+              // Ab asli `router.navigate()` call karte hain — isse
+              // Angular real navigation karega aur "Edit" wrapper
+              // component properly load hoga.
               onSuccess(grantId);
+              this.router.navigate(['/calendar-opportunity/edit', grantId]);
             } else {
               this.errorMessage = 'Grant ID not found';
             }
           },
           error: (err) => {
+            this.isSaving = false;
             console.log(err);
             this.errorMessage = 'Insert failed';
           },
@@ -474,10 +493,12 @@ export class CalendarDetails {
             const uploadedImagePath = fullPath.split('/')[0] + '|' + fullPath.split('/').pop();
             saveGrant(uploadedImagePath);
           } else {
+            this.isSaving = false;
             this.errorMessage = 'Image upload failed';
           }
         },
         error: (err) => {
+          this.isSaving = false;
           console.log('UPLOAD ERROR', err);
           this.errorMessage = 'Image upload failed';
         },

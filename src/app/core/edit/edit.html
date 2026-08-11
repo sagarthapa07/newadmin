@@ -6,80 +6,66 @@
 
     <div class="nav-btn">
       @for (item of menuItems; track item.id) {
-        <button
-          class="btn"
-          [class.active]="activeItem === item.id"
-          (click)="setActive(item.id)"
-        >
-          {{ item.label }}
-        </button>
+      <button class="btn" [class.active]="activeItem === item.id" (click)="setActive(item.id)">
+        {{ item.label }}
+      </button>
       }
     </div>
   </div>
 
   @if (isLoading) {
-    <div class="component-loader">
-      <span class="loader-dot"></span>
-      Loading data...
-    </div>
+  <div class="component-loader">
+    <span class="loader-dot"></span>
+    Loading data...
+  </div>
   }
 
   <div>
 
-    @if (activeItem === 1 && grantData) {
-      <app-calendar-details
-        [data]="grantData"
-        (tabChange)="setActive($event)"
-      >
-      </app-calendar-details>
+    <!--
+      👇 YAHI FIX HAI.
+      Pehle: @if (activeItem === 1 && grantData) — jab tu tab switch karta
+      tha, ye condition false ho jaati thi aur Angular is poore component
+      ko DESTROY kar deta tha. Wapas aane pe ek naya (fresh) instance banta
+      tha jisko parent ka purana `grantData` milta tha — isliye saved aur
+      unsaved dono tarah ke changes gayab dikhte the.
+
+      Ab: baaki 5 tabs (Geo Location, Focus Areas, etc.) ki tarah [hidden]
+      use kiya hai. [hidden] sirf CSS se display:none karta hai — component
+      kabhi destroy nahi hota, uska form/state hamesha zinda rehta hai.
+      Bahar wala @if (grantData) sirf ek baar (jab data load ho) true hota
+      hai aur phir hamesha true hi rehta hai, toh wo dobara destroy nahi
+      karega.
+    -->
+    @if (grantData) {
+    <app-calendar-details [hidden]="activeItem !== 1" [data]="grantData" (tabChange)="setActive($event)">
+    </app-calendar-details>
     }
 
     @if (grantData) {
-      <app-geo-location
-        [hidden]="activeItem !== 2"
-        [grantId]="grantData.id"
-        (tabChange)="setActive($event)"
-      >
-      </app-geo-location>
+    <app-geo-location [hidden]="activeItem !== 2" [grantId]="grantData.id" (tabChange)="setActive($event)">
+    </app-geo-location>
     }
 
     @if (grantData) {
-      <app-focus-area
-        [hidden]="activeItem !== 3"
-        [grantId]="grantData.id"
-        (tabChange)="setActive($event)"
-      >
-      </app-focus-area>
+    <app-focus-area [hidden]="activeItem !== 3" [grantId]="grantData.id" (tabChange)="setActive($event)">
+    </app-focus-area>
     }
 
     @if (grantData) {
-      <app-focus-groups
-        [hidden]="activeItem !== 4"
-        [grantId]="grantData.id"
-        (tabChange)="setActive($event)"
-      >
-      </app-focus-groups>
+    <app-focus-groups [hidden]="activeItem !== 4" [grantId]="grantData.id" (tabChange)="setActive($event)">
+    </app-focus-groups>
     }
 
     @if (grantData) {
-      <app-counties
-        [hidden]="activeItem !== 5"
-        [grantId]="grantData.id"
-        [stCtType]="grantData.stCtType"
-        [stateString]="grantData.stateString"
-        [countyString]="grantData.countyString"
-        (tabChange)="setActive($event)"
-      >
-      </app-counties>
+    <app-counties [hidden]="activeItem !== 5" [grantId]="grantData.id" [stCtType]="grantData.stCtType"
+      [stateString]="grantData.stateString" [countyString]="grantData.countyString" (tabChange)="setActive($event)">
+    </app-counties>
     }
 
     @if (grantData) {
-      <app-seo-social
-        [hidden]="activeItem !== 6"
-        [grantId]="grantData.id"
-        (tabChange)="setActive($event)"
-      >
-      </app-seo-social>
+    <app-seo-social [hidden]="activeItem !== 6" [grantId]="grantData.id" (tabChange)="setActive($event)">
+    </app-seo-social>
     }
 
   </div>
