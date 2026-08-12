@@ -224,7 +224,7 @@
         </div>
 
         <div class="notif-wrapper">
-          <button class="icon-btn" (click)="toggleNotifications()" aria-label="Notifications">
+          <button class="icon-btn" disabled (click)="toggleNotifications()" aria-label="Notifications">
             <i class="bi bi-bell"></i>
 
             @if (notifications.length) {
@@ -251,7 +251,7 @@
           }
         </div>
 
-        <button class="icon-btn" (click)="toggleDarkMode()" aria-label="Toggle dark mode">
+        <button class="icon-btn" disabled (click)="toggleDarkMode()" aria-label="Toggle dark mode">
           <i class="bi" [ngClass]="isDarkMode ? 'bi-sun' : 'bi-moon-stars'"></i>
         </button>
 

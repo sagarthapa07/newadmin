@@ -31,7 +31,6 @@
                   formControlName="linkUrl"
                   placeholder="Enter friendly URL"
                 />
-                <p class="ss-help">This will be used to create a SEO friendly URL.</p>
               </div>
             </div>
 
@@ -45,7 +44,6 @@
                   formControlName="M-title"
                   placeholder="Enter meta title"
                 />
-                <p class="ss-help">Recommended: 50–60 characters</p>
               </div>
             </div>
 
@@ -59,7 +57,6 @@
                   formControlName="M-author"
                   placeholder="Enter meta author"
                 />
-                <p class="ss-help">Author name for this content</p>
               </div>
             </div>
 
@@ -73,7 +70,6 @@
                   formControlName="M-keywords"
                   placeholder="Enter meta keywords"
                 />
-                <p class="ss-help">Separate keywords with commas</p>
               </div>
             </div>
 
@@ -86,12 +82,7 @@
                   class="form-control"
                   formControlName="shortInfo"
                   placeholder="Enter meta description"
-                  maxlength="160"
                 ></textarea>
-                <div class="ss-help ss-help-row">
-                  <span>Recommended: 120–160 characters</span>
-                  <span>{{ opportunityForm.get('shortInfo')?.value?.length || 0 }}/160</span>
-                </div>
               </div>
             </div>
           </div>
@@ -110,7 +101,6 @@
                   formControlName="F-Handler"
                   placeholder="https://facebook.com/yourpage"
                 />
-                <p class="ss-help">Enter your Facebook page URL</p>
               </div>
             </div>
 
@@ -124,7 +114,6 @@
                   formControlName="T-Handler"
                   placeholder="https://twitter.com/yourprofile"
                 />
-                <p class="ss-help">Enter your Twitter profile URL</p>
               </div>
             </div>
 
@@ -138,7 +127,6 @@
                   formControlName="G-Handler"
                   placeholder="https://plus.google.com/yourprofile"
                 />
-                <p class="ss-help">Enter your Google Plus profile URL</p>
               </div>
             </div>
 
@@ -152,7 +140,6 @@
                   formControlName="I-Handler"
                   placeholder="https://instagram.com/yourprofile"
                 />
-                <p class="ss-help">Enter your Instagram profile URL</p>
               </div>
             </div>
           </div>

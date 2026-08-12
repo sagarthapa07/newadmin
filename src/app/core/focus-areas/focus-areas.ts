@@ -402,11 +402,32 @@ export class FocusAreaComponent implements OnInit, OnChanges {
     this.showPasteModal = false;
   }
 
-  private isTextMatching(text: string, subName: string): boolean {
+  // ---- Sirf poore-poore (whole) sub-issue name ki saari occurrences dhoondta hai text mein,
+  // start/end character position ke saath — taaki baad mein "overlap" check kar sakein.
+  private findMatchRanges(text: string, subName: string): { start: number; end: number }[] {
     const normalized = subName.trim().toLowerCase();
+    if (!normalized) return [];
+
     const escaped = normalized.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`\\b${escaped}\\b`, 'i');
-    return regex.test(text);
+    const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
+
+    const ranges: { start: number; end: number }[] = [];
+    let match: RegExpExecArray | null;
+
+    while ((match = regex.exec(text)) !== null) {
+      ranges.push({ start: match.index, end: match.index + match[0].length });
+      // zero-length match se infinite loop bachne ke liye
+      if (match[0].length === 0) {
+        regex.lastIndex++;
+      }
+    }
+
+    return ranges;
+  }
+
+  // ---- Check karta hai ki do character-ranges overlap kar rahe hain ya nahi
+  private rangesOverlap(a: { start: number; end: number }, b: { start: number; end: number }): boolean {
+    return a.start < b.end && b.start < a.end;
   }
 
   generateFromText(): void {
@@ -417,25 +438,56 @@ export class FocusAreaComponent implements OnInit, OnChanges {
 
     const text: string = this.pasteText.toLowerCase();
 
+    // Saare issues ke saare sub-issues ek hi flat list mein le aao,
+    // kyunki overlap alag-alag issues ke sub-issues ke beech bhi ho sakta hai
+    // (e.g. issue A mein "Marketing" aur issue B mein "Digital Marketing")
+    const allSubs: { issue: Issue; sub: SubIssue }[] = [];
     for (const issue of this.issues) {
-      const matchedSubIds: number[] = (issue.subIssues || [])
-        .filter((sub: SubIssue) => this.isTextMatching(text, sub.name))
-        .map((sub: SubIssue) => sub.id);
-
-      if (matchedSubIds.length > 0) {
-        const existing = this.selectedMap.get(issue.id) || [];
-
-        const merged = Array.from(new Set([...existing, ...matchedSubIds]));
-
-        this.selectedMap.set(issue.id, merged);
-
-        const changed = this.changedMap.get(issue.id) || [];
-        const newlyAdded = matchedSubIds.filter((id) => !changed.includes(id));
-        if (newlyAdded.length > 0) {
-          this.changedMap.set(issue.id, [...changed, ...newlyAdded]);
-        }
+      for (const sub of issue.subIssues || []) {
+        allSubs.push({ issue, sub });
       }
     }
+
+    // Zyada words wala (jyada specific/lamba) naam pehle match karo —
+    // taaki "Digital Marketing" jaisa poora phrase pehle claim ho jaaye,
+    // aur uske andar wala chhota word jaise "Marketing" dobara/adhura match na ho.
+    allSubs.sort((a, b) => {
+      const wordsA = a.sub.name.trim().split(/\s+/).length;
+      const wordsB = b.sub.name.trim().split(/\s+/).length;
+      if (wordsB !== wordsA) return wordsB - wordsA;
+      return b.sub.name.length - a.sub.name.length;
+    });
+
+    const claimedRanges: { start: number; end: number }[] = [];
+    const matchedByIssue = new Map<number, number[]>();
+
+    for (const { issue, sub } of allSubs) {
+      const occurrences = this.findMatchRanges(text, sub.name);
+
+      // Sirf wahi occurrence lo jo abhi tak kisi lambe/pehle-match-hue phrase se overlap nahi karti
+      const freeOccurrence = occurrences.find(
+        (occ) => !claimedRanges.some((claimed) => this.rangesOverlap(occ, claimed)),
+      );
+
+      if (freeOccurrence) {
+        claimedRanges.push(freeOccurrence);
+        const existing = matchedByIssue.get(issue.id) || [];
+        existing.push(sub.id);
+        matchedByIssue.set(issue.id, existing);
+      }
+    }
+
+    matchedByIssue.forEach((matchedSubIds, issueId) => {
+      const existing = this.selectedMap.get(issueId) || [];
+      const merged = Array.from(new Set([...existing, ...matchedSubIds]));
+      this.selectedMap.set(issueId, merged);
+
+      const changed = this.changedMap.get(issueId) || [];
+      const newlyAdded = matchedSubIds.filter((id) => !changed.includes(id));
+      if (newlyAdded.length > 0) {
+        this.changedMap.set(issueId, [...changed, ...newlyAdded]);
+      }
+    });
 
     this.showPasteModal = false;
   }

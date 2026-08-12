@@ -359,15 +359,36 @@ export class CalendarDetails {
   isImageInvalid(): boolean {
     return this.formSubmitted && !this.previewUrl;
   }
+
+  // Central place to pull a readable message out of any HttpErrorResponse
+  // shape our APIs throw, so every catch block below can show the *real*
+  // backend/network reason in the alert instead of a generic string.
+  private getErrorMessage(err: any, fallback: string): string {
+    return (
+      err?.error?.message ||
+      err?.error?.error ||
+      (typeof err?.error === 'string' ? err.error : '') ||
+      err?.message ||
+      fallback
+    );
+  }
+
   onSearchDonor(event: any) {
     const value = event.target.value;
     if (!value) {
       this.showDropdown = false;
       return;
     }
-    this.api.searchDonors('DU', value).subscribe((res) => {
-      this.donorList = res?.donorsList?.slice(0, 10) || [];
-      this.showDropdown = true;
+    this.api.searchDonors('DU', value).subscribe({
+      next: (res: any) => {
+        this.donorList = res?.donorsList?.slice(0, 10) || [];
+        this.showDropdown = true;
+      },
+      error: (err) => {
+        console.error(err);
+        this.showDropdown = false;
+        this.errorMessage = this.getErrorMessage(err, 'Donor search failed');
+      },
     });
   }
   selectDonor(item: any) {
@@ -487,14 +508,14 @@ export class CalendarDetails {
               this.clearLocalDraft();
               onSuccess(this.data!.id!);
             } else {
-              this.errorMessage = 'Grant update failed';
+              this.errorMessage = res?.message || 'Grant update failed';
             }
           },
           error: (err) => {
             this.isSaving = false;
             this.loader.hide();
             console.error(err);
-            this.errorMessage = 'Grant update failed';
+            this.errorMessage = this.getErrorMessage(err, 'Grant update failed');
           },
         });
       } else {
@@ -510,14 +531,14 @@ export class CalendarDetails {
               onSuccess(grantId);
               this.router.navigate(['/calendar/list/edit', grantId]);
             } else {
-              this.errorMessage = 'Grant ID not found';
+              this.errorMessage = res?.message || 'Grant ID not found';
             }
           },
           error: (err) => {
             this.isSaving = false;
             this.loader.hide();
-            console.log(err);
-            this.errorMessage = 'Insert failed';
+            console.error(err);
+            this.errorMessage = this.getErrorMessage(err, 'Insert failed');
           },
         });
       }
@@ -533,14 +554,14 @@ export class CalendarDetails {
           } else {
             this.isSaving = false;
             this.loader.hide();
-            this.errorMessage = 'Image upload failed';
+            this.errorMessage = (res as any)?.message || 'Image upload failed';
           }
         },
         error: (err) => {
           this.isSaving = false;
           this.loader.hide();
-          console.log('UPLOAD ERROR', err);
-          this.errorMessage = 'Image upload failed';
+          console.error('UPLOAD ERROR', err);
+          this.errorMessage = this.getErrorMessage(err, 'Image upload failed');
         },
       });
     } else {

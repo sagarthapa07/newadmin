@@ -9,7 +9,7 @@ export class Export {
 
   exportToCsv(data: any[], filePrefix: string) {
     if (!data || data.length === 0) {
-      alert('No data available');
+      alert('Select ');
       return;
     }
 

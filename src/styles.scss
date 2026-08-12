@@ -47,7 +47,6 @@ app-root {
   --danger-color: #f15c5c;
   --hover-color: #cecece;
 
-  
   /* Font Sizes */
   --header-text: 22px;
   --placeholder-text: 14px;
@@ -169,8 +168,7 @@ body.dark-theme .ngb-dp-weekday {
 
 .header-section {
   background: var(--body-color);
-  padding: 10px 10px 0 90px;
-  
+  padding: 10px 12px 0 90px;
 }
 
 .heading {
@@ -230,17 +228,16 @@ body.dark-theme .ngb-dp-weekday {
   color: var(--primary-color-dark);
   border-color: var(----primary-color-dark);
 }
-.button-danger{
+.button-danger {
   background: var(--white);
   color: var(--danger-color);
   border-color: 1px soild var(--btn-border-color);
 }
 
-.button-danger:hover{
+.button-danger:hover {
   background: var(--body-color);
   border-color: var(--danger-color);
 }
-
 
 .ngx-pe-img {
   display: block !important;
