@@ -299,7 +299,7 @@ export class CalenderOpportunity {
       console.error('ID missing', id);
       return;
     }
-    this.route.navigate(['/calendar-opportunity/edit', id]);
+    this.route.navigate(['/calendar/list/edit', id]);
   }
 
   exportSelectedGrants() {

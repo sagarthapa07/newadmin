@@ -26,6 +26,7 @@ import { Output, EventEmitter } from '@angular/core';
   styleUrl: './focus-areas.scss',
 })
 export class FocusAreaComponent implements OnInit, OnChanges {
+  @Input() draftId: string = '';
   @ViewChild('issueContainer') issueContainer!: ElementRef;
   @Input() grantId?: number;
   @Output() tabChange = new EventEmitter<number>();
@@ -94,7 +95,6 @@ export class FocusAreaComponent implements OnInit, OnChanges {
             subIssues: [],
             loaded: false,
           }));
-          this.preloadAllSubIssues();
         }
       },
     });

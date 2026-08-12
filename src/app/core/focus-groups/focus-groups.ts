@@ -34,6 +34,7 @@ import { AlertMessage } from '../../shared/component/alert-message/alert-message
   styleUrls: ['./focus-groups.scss'],
 })
 export class FocusGroupsComponent implements OnChanges {
+  @Input() draftId: string = '';
   objectKeys = Object.keys;
   @ViewChild('editorOutlineElement')
   private editorOutline!: ElementRef<HTMLDivElement>;
@@ -723,72 +724,44 @@ export class FocusGroupsComponent implements OnChanges {
     });
   }
 
-  private isTextMatching(text: string, name: string): boolean {
-    const normalized = name.trim().toLowerCase();
-    if (!normalized) return false;
+  private isTextMatching(text: string, subName: string): boolean {
+    const normalized = subName.trim().toLowerCase().replace(/\s+/g, ' ');
     const escaped = normalized.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`\\b${escaped}\\b`, 'i');
+    const regex = new RegExp(`(?<![a-z0-9])${escaped}(?![a-z0-9])`, 'i');
     return regex.test(text);
   }
 
   generateFromText(): void {
     if (!this.pasteText.trim()) {
+      alert('Please paste some text');
       return;
     }
 
-    const text = this.pasteText.toLowerCase();
+    const text: string = this.pasteText.toLowerCase().replace(/\s+/g, ' ');
+    const allEntities = this.focusGroupKeyDropdowns.entities.data;
 
-    // ---- Match Beneficiaries (whole word) ----
-    const matchedBeneficiaries = this.focusGroupKeyDropdowns.beneficiaries.data.filter((b) =>
-      this.isTextMatching(text, b.item_text),
-    );
+    for (const entity of allEntities) {
+      const subEntities = this.allSubEntities[entity.item_id] || [];
 
-    if (matchedBeneficiaries.length) {
-      const existingIds = new Set(
-        this.focusGroupKeyDropdowns.beneficiaries.selected.map((x) => x.item_id),
-      );
-      const toAdd = matchedBeneficiaries.filter((b) => !existingIds.has(b.item_id));
-      this.focusGroupKeyDropdowns.beneficiaries.selected = [
-        ...this.focusGroupKeyDropdowns.beneficiaries.selected,
-        ...toAdd,
-      ];
-      this.onBeneficiaryChange();
-    }
+      const matchedSubNames: string[] = subEntities
+        .filter((sub: SubEntity) => this.isTextMatching(text, sub.subEntName))
+        .map((sub: SubEntity) => sub.subEntName);
 
-    // ---- Match Entities (whole word) — ab sub-entities pehle se cached hain ----
-    const matchedEntities = this.focusGroupKeyDropdowns.entities.data.filter((e) =>
-      this.isTextMatching(text, e.item_text),
-    );
+      if (matchedSubNames.length > 0) {
+        const existing = this.selectedSubEntities[entity.item_text] || [];
+        const merged = Array.from(new Set([...existing, ...matchedSubNames]));
+        this.selectedSubEntities[entity.item_text] = merged;
 
-    matchedEntities.forEach((entity) => {
-      const subs: SubEntity[] = this.allSubEntities[entity.item_id] || [];
-
-      const exists = this.focusGroupKeyDropdowns.entities.selected.find(
-        (x) => x.item_text === entity.item_text,
-      );
-      if (!exists) {
-        this.focusGroupKeyDropdowns.entities.selected = [
-          ...this.focusGroupKeyDropdowns.entities.selected,
-          entity,
-        ];
-      }
-
-      if (!this.selectedSubEntities[entity.item_text]) {
-        this.selectedSubEntities[entity.item_text] = [];
-      }
-
-      // Uski saari sub-entities mark karo
-      subs.forEach((s: SubEntity) => {
-        if (!this.selectedSubEntities[entity.item_text].includes(s.subEntName)) {
-          this.selectedSubEntities[entity.item_text].push(s.subEntName);
+        const alreadySelected = this.focusGroupKeyDropdowns.entities.selected.find(
+          (e) => e.item_text === entity.item_text,
+        );
+        if (!alreadySelected) {
+          this.focusGroupKeyDropdowns.entities.selected = [
+            ...this.focusGroupKeyDropdowns.entities.selected,
+            entity,
+          ];
         }
-      });
-    });
-
-    if (matchedEntities.length) {
-      const lastEntity = matchedEntities[matchedEntities.length - 1];
-      this.activeEntityForSubGrid = lastEntity.item_text;
-      this.subEntitiesList = this.allSubEntities[lastEntity.item_id] || [];
+      }
     }
 
     this.showPasteModal = false;

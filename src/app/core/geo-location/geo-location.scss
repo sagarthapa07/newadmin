@@ -1,14 +1,7 @@
-// ==========================================================================
-// Geo Location — uses global :root tokens from styles.scss only.
-// ==========================================================================
-
 .geo-page {
   padding: 0px 0 20px;
 }
 
-// ---------------------------------------------------------------------
-// HEADER
-// ---------------------------------------------------------------------
 .focus-header {
   padding-bottom: 20px;
   border-bottom: 1px solid var(--border-color);
@@ -32,9 +25,6 @@
   color: var(--placeholder-color);
 }
 
-// ---------------------------------------------------------------------
-// GRID
-// ---------------------------------------------------------------------
 .geo-grid {
   margin-top: 20px;
   display: grid;
@@ -43,9 +33,6 @@
   align-items: start;
 }
 
-// ---------------------------------------------------------------------
-// CATEGORY CARD
-// ---------------------------------------------------------------------
 .geo-card {
   background: var(--white);
   border: 1px solid var(--border-color);
@@ -65,25 +52,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
   border-radius: 8px;
   background: var(--header2-bkg-color);
   color: var(--svgIcon-color);
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .geo-card-title {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 .geo-card-name {
   font-size: var(--fs-15);
   font-weight: var(--fw-700);
   color: var(--text-color-dark);
+  white-space: nowrap;
 }
 
 .geo-card-badge {
@@ -97,7 +86,8 @@
 }
 
 .geo-add-new {
-  align-self: flex-end;
+  margin-left: auto;
+  align-self: center;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -105,8 +95,7 @@
   font-size: var(--fs-13);
   font-weight: var(--fw-600);
   cursor: pointer;
-  margin-top: -22px;
-  margin-bottom: 12px;
+  white-space: nowrap;
 }
 
 .geo-add-new:hover {
@@ -211,9 +200,6 @@
   border-radius: 6px;
 }
 
-// ---------------------------------------------------------------------
-// SELECTED SUMMARY PANEL — matches Focus Areas' Selection Summary card
-// ---------------------------------------------------------------------
 .geo-summary {
   background: var(--body-color);
   border: 1px solid var(--border-color);
@@ -377,9 +363,6 @@
   margin-top: 2px;
 }
 
-// ---------------------------------------------------------------------
-// CHIPS (shared: summary panel)
-// ---------------------------------------------------------------------
 .chip {
   display: inline-flex;
   align-items: center;
@@ -405,9 +388,6 @@
   line-height: 1;
 }
 
-// ---------------------------------------------------------------------
-// PASTE MODAL (Auto Selection)
-// ---------------------------------------------------------------------
 .paste-overlay {
   position: fixed;
   inset: 0;
@@ -494,9 +474,6 @@
   background: var(--primary-color-dark);
 }
 
-// ---------------------------------------------------------------------
-// ADD NEW GEO MODAL
-// ---------------------------------------------------------------------
 .custom-overlay {
   position: fixed;
   inset: 0;
@@ -551,9 +528,7 @@
   padding: 15px 20px;
   border-top: 1px solid var(--border-color);
 }
-// ---------------------------------------------------------------------
-// FOOTER
-// ---------------------------------------------------------------------
+
 .geo-footer {
   display: flex;
   align-items: center;
@@ -570,7 +545,6 @@
   flex-wrap: wrap;
 }
 
-// same sizing as calendar-details' ".buttons .button"
 .geo-footer .button {
   height: clamp(34px, 2.6vw, 42px);
   padding: 0 clamp(12px, 1.4vw, 20px);
@@ -606,10 +580,6 @@
     opacity: 0.2;
   }
 }
-
-// ---------------------------------------------------------------------
-// RESPONSIVE
-// ---------------------------------------------------------------------
 
 @media (max-width: 1440px) {
   .geo-grid {

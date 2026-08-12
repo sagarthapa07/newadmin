@@ -27,6 +27,7 @@ type SelectionType = 'single' | 'multiple';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CountiesComponent implements OnInit {
+  @Input() draftId: string = '';
   @Input() grantId?: number;
   @Input() stCtType?: string;
   @Input() stateString?: string;

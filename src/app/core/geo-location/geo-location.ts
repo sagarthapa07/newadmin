@@ -27,6 +27,7 @@ type GeoKey = 'cities' | 'township' | 'insular' | 'states';
   styleUrl: './geo-location.scss',
 })
 export class GeoLocationComponent implements OnInit {
+  @Input() draftId: string = '';
   @Input() grantId?: number;
   @Output() tabChange = new EventEmitter<number>();
   showPasteModal = false;

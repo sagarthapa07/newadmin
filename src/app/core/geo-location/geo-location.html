@@ -49,13 +49,12 @@
               <span class="geo-card-badge"> {{ geoDropdowns[key].selected.length }} Selected </span>
             }
           </div>
+          @if (shouldShowAdd(key)) {
+            <span class="geo-add-new" (click)="openGeoModal(key)">
+              Add New <i class="bi bi-plus-circle"></i>
+            </span>
+          }
         </div>
-
-        @if (shouldShowAdd(key)) {
-          <span class="geo-add-new" (click)="openGeoModal(key)">
-            Add New <i class="bi bi-plus-circle"></i>
-          </span>
-        }
 
         <!-- SEARCH -->
         <div class="geo-search">

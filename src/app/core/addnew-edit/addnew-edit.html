@@ -36,6 +36,7 @@
   @if (activeItem === 1) {
     <app-calendar-details
       [data]="grantData"
+      [draftId]="draftId"
       (tabChange)="setActive($event)">
     </app-calendar-details>
   }

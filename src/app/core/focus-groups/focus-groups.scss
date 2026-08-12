@@ -1,7 +1,8 @@
 .fg-card {
   border-radius: 10px;
-  overflow: hidden;
+  overflow: visible; // hidden ki jagah
 }
+
 .focus-header {
   padding-bottom: 20px;
   border-bottom: 1px solid var(--border-color);
@@ -291,6 +292,15 @@
 }
 
 @media (max-width: 576px) {
+  .focus-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .focus-header .button {
+    width: 100%;
+    justify-content: center;
+  }
   .sub-grid {
     grid-template-columns: repeat(1, 1fr);
   }
@@ -301,6 +311,15 @@
   }
 }
 @media (max-width: 1440px) {
+  .focus-header .button {
+    padding: 7px 14px;
+    font-size: 12px;
+    height: auto;
+  }
+
+  .focus-header .button i {
+    font-size: 12px;
+  }
   .fg-footer .button {
     padding: 7px 14px;
     font-size: 12px;

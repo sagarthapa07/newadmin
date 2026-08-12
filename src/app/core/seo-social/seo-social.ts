@@ -14,6 +14,7 @@ import { Output, EventEmitter } from '@angular/core';
   styleUrl: './seo-social.scss',
 })
 export class SeoSocialComponent implements OnInit, OnChanges {
+  @Input() draftId: string = '';
   @Input() grantId!: number;
   @Output() tabChange = new EventEmitter<number>();
 
@@ -84,7 +85,7 @@ export class SeoSocialComponent implements OnInit, OnChanges {
       }, 3000);
       return;
     }
-    this.router.navigate(['/calendar-opportunity/edit/preview', this.grantId]);
+    this.router.navigate(['/calendar/list/edit/preview', this.grantId]);
   }
 
   onSave() {

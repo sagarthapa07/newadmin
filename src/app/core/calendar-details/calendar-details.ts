@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild, HostListener, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
-
+import { debounceTime } from 'rxjs/operators';
 import {
   FormBuilder,
   FormGroup,
@@ -20,15 +20,25 @@ import { ImageCropper } from '../../shared/component/image-cropper/image-cropper
 import { FileUpload } from '../Services/file-upload';
 import { LoaderService } from '../Services/loader-service';
 import { Loader } from '../../shared/component/loader/loader';
+import { DraftService } from '../Services/grant-draft';
 
 @Component({
   standalone: true,
   selector: 'app-calendar-details',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, Editor, AlertMessage, ImageCropper,Loader],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    Editor,
+    AlertMessage,
+    ImageCropper,
+    Loader,
+  ],
   templateUrl: './calendar-details.html',
   styleUrls: ['./calendar-details.scss'],
 })
 export class CalendarDetails {
+  @Input() draftId: string = '';
   objectKeys = Object.keys;
   @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
   @Input() data: GrantDetail | null = null;
@@ -135,6 +145,7 @@ export class CalendarDetails {
     private fileUploadService: FileUpload,
     private location: Location,
     private loader: LoaderService,
+    private draftService: DraftService,
   ) {
     this.opportunityForm = this.fb.group({
       title: ['', Validators.required],
@@ -221,6 +232,7 @@ export class CalendarDetails {
     if (this.data?.id) {
       this.fillForm(this.data);
     }
+    this.restoreDraft();
     this.opportunityForm.get('title')?.valueChanges.subscribe((value) => {
       if (this.data?.id) return;
       const friendlyUrl = value
@@ -231,6 +243,33 @@ export class CalendarDetails {
         .replace(/-+/g, '-');
       this.opportunityForm.patchValue({ friendlyURLText: friendlyUrl }, { emitEvent: false });
     });
+    this.opportunityForm.valueChanges.pipe(debounceTime(800)).subscribe((value) => {
+      if (!this.draftId) return;
+      this.draftService.saveTabDraft(this.draftId, 'calendarDetails', value, this.data?.id || null);
+    });
+  }
+
+  private restoreDraft() {
+    if (!this.draftId) return;
+    const saved = this.draftService.getTabDraft(this.draftId, 'calendarDetails');
+    if (!saved) return;
+
+    this.opportunityForm.patchValue(saved, { emitEvent: false });
+    this.selectedGrantType = saved.grantType || '';
+    this.selectedGrantDuration = saved.grantDuration || '';
+    this.selectedGrantSize = saved.grantSize || '';
+  }
+
+  // Once the grant is actually persisted to the backend (Save clicked and
+  // API call succeeds), the local pending/unsaved draft copy has served its
+  // purpose and should be cleared out — otherwise it lingers in Pending
+  // Grants as a stale/duplicate entry even though the grant is now saved.
+  private clearLocalDraft() {
+    if (!this.draftId) return;
+    this.draftService.removeDraft(this.draftId);
+    if (this.draftService.getActiveDraftId() === this.draftId) {
+      this.draftService.clearActiveDraftId();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -394,7 +433,7 @@ export class CalendarDetails {
       return;
     }
     this.persistGrant((grantId: number) => {
-      this.router.navigate(['/calendar-opportunity/edit/preview', grantId]);
+      this.router.navigate(['/calendar/list/edit/preview', grantId]);
     });
   }
 
@@ -445,6 +484,7 @@ export class CalendarDetails {
             this.isSaving = false;
             this.loader.hide();
             if (res.successCode === 1) {
+              this.clearLocalDraft();
               onSuccess(this.data!.id!);
             } else {
               this.errorMessage = 'Grant update failed';
@@ -465,16 +505,17 @@ export class CalendarDetails {
             const grantId = res?.result?.grantIndex;
             if (grantId) {
               this.data = { ...(this.data || {}), id: grantId } as any;
+              this.clearLocalDraft();
 
               onSuccess(grantId);
-              this.router.navigate(['/calendar-opportunity/edit', grantId]);
+              this.router.navigate(['/calendar/list/edit', grantId]);
             } else {
               this.errorMessage = 'Grant ID not found';
             }
           },
           error: (err) => {
             this.isSaving = false;
-             this.loader.hide();
+            this.loader.hide();
             console.log(err);
             this.errorMessage = 'Insert failed';
           },

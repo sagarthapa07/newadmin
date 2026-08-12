@@ -27,6 +27,7 @@ import { EmailSettingAdd } from './core/email-setting-add/email-setting-add';
 import { EmailTemplatesAdd } from './core/email-templates-add/email-templates-add';
 import { EmailTemp } from './core/email-temp/email-temp';
 import { EmailTemplates } from './core/email-templates/email-templates';
+import { PandingGrants } from './core/panding-grants/panding-grants';
 
 export const routes: Routes = [
   {
@@ -43,10 +44,10 @@ export const routes: Routes = [
   },
 
   {
-    path: 'calendar-opportunity',
+    path: 'calendar/list',
     component: CalenderOpportunity,
     canActivate: [AuthGuard],
-    data: { breadcrumb: 'calendar-opportunity' },
+    data: { breadcrumb: 'calendar/list' },
   },
 
   {
@@ -62,26 +63,26 @@ export const routes: Routes = [
   },
 
   {
-    path: 'calendar-opportunity/edit/:id',
+    path: 'calendar/list/edit/:id',
     component: Edit,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'edit' },
   },
   {
-    path: 'calendar-opportunity/edit/preview/:id',
+    path: 'calendar/list/edit/preview/:id',
     component: Preview,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'edit' },
   },
 
   {
-    path: 'calendar-opportunity/edit/add-new',
+    path: 'calendar/list/edit/add-new',
     component: Preview,
     canActivate: [AuthGuard],
   },
 
   {
-    path: 'calendar-opportunity/add-new',
+    path: 'calendar/list/add-new',
     component: AddnewEdit,
     canActivate: [AuthGuard],
   },
@@ -195,6 +196,11 @@ export const routes: Routes = [
   {
     path: 'masters/email-templates-add',
     component: EmailTemplatesAdd,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'calendar/panding-grants',
+    component: PandingGrants,
     canActivate: [AuthGuard],
   },
 ];

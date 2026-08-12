@@ -15,29 +15,14 @@
           <div class="search-wrapper">
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Search pending grants"
               [(ngModel)]="searchText"
-              (focus)="showSuggestions = true"
               (keyup.enter)="onSearch()"
               (input)="onInputChange()"
             />
-
-            @if (showSuggestions && searchHistory.length) {
-              <div class="suggestions">
-                @for (item of searchHistory.slice(0, 2); track item) {
-                  <div class="suggestion-item" (click)="selectSuggestion(item)">
-                    {{ item }}
-                  </div>
-                }
-              </div>
-            }
           </div>
         </div>
 
-        <!-- <button class="button button-primary" (click)="onSearch()">
-          <i class="bi bi-funnel mx-1"></i>
-          <span>Filter</span>
-        </button> -->
         <button class="button button-primary" (click)="onSearch()">
           <span>Search</span>
         </button>
@@ -77,14 +62,14 @@
         </div>
 
         <div>
-          <button class="button button-secondary" (click)="exportSelectedGrants()">
+          <button class="button button-secondary" (click)="exportPendingGrants()">
             <i class="bi bi-file-arrow-down"></i>
             <span>Export</span>
           </button>
         </div>
 
         <div>
-          <button class="button button-primary" routerLink="/calendar/list/add-new">
+          <button class="button button-primary" routerLink="/calendar-opportunity/add-new">
             <i class="fa-solid fa-plus"></i>
             Add New
           </button>
@@ -105,31 +90,24 @@
     [totalCount]="totalCount"
     (pageChange)="changePage($event)"
     (pageSizeChange)="onPageSizeChangeHandler($event)"
-    (selectionChange)="onSelectionChange($event)"
   >
     <ng-template #cellTemplate let-item let-col="col">
       @switch (col.key) {
-        @case ('postDate') {
-          {{ item.postDate | date: 'dd MMM yyyy' }}
+        @case ('lastUpdated') {
+          {{ item.lastUpdated | date: 'dd MMM yyyy, hh:mm a' }}
         }
-        @case ('deadLineDate') {
-          {{ item.deadLineDate | date: 'dd MMM yyyy' }}
-        }
-        @case ('status') {
-          <span class="status" [ngClass]="getStatusClass(item.status)">
-            {{ item.status }}
+        @case ('type') {
+          <span class="status" [ngClass]="item.grantId ? 'status-published' : 'status-draft'">
+            {{ item.grantId ? 'Editing existing' : 'New opportunity' }}
           </span>
         }
         @case ('actions') {
           <div class="action-icons">
-            <button class="btn" (click)="goToEdit(item.grantIndex)">
-              Edit <i class="bi bi-pencil-square table-icon-cell"></i>
+            <button class="btn" (click)="resumeDraft(item)">
+              Resume <i class="bi bi-arrow-clockwise table-icon-cell"></i>
             </button>
-            <button class="btn" (click)="copyUrl(item)">
-              Copy <i class="bi bi-copy table-icon-cell"></i>
-            </button>
-            <button class="btn" (click)="openUrl(item)">
-              Open <i class="bi bi-box-arrow-up-right table-icon-cell"></i>
+            <button class="btn" (click)="deleteDraft(item)">
+              Delete <i class="bi bi-trash table-icon-cell"></i>
             </button>
           </div>
         }
