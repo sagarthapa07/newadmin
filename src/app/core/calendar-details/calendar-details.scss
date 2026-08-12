@@ -2,7 +2,7 @@
   background: var(--white);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: clamp(16px, 2vw, 28px) clamp(16px, 2.4vw, 32px);
+  padding: 24px 28px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
 }
@@ -28,27 +28,27 @@
 /* Reduce inner padding of the editable text area (where the actual text sits) */
 ::ng-deep .letter-col .ck.ck-editor__editable_inline,
 ::ng-deep .letter-col .ck.ck-content {
-  padding: clamp(6px, 0.9vw, 12px) clamp(8px, 1.1vw, 16px) !important;
-  font-size: clamp(12px, 0.9vw, var(--fs-15));
+  padding: 8px 12px !important;
+  font-size: var(--fs-15);
   color: var(--text-color);
 }
 
 .card-header-row {
   display: flex;
   align-items: flex-start;
-  gap: clamp(10px, 1vw, 14px);
+  gap: 12px;
   margin-bottom: 8px;
 }
 
 .card-icon-badge {
-  width: clamp(36px, 3vw, 44px);
-  height: clamp(36px, 3vw, 44px);
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: clamp(16px, 1.4vw, 20px);
+  font-size: 18px;
 
   &.badge-blue {
     background: var(--header2-bkg-color);
@@ -63,14 +63,14 @@
 
 .section-title {
   font-weight: var(--fw-700);
-  font-size: clamp(16px, 1.4vw, var(--fs-h4));
+  font-size: var(--fs-h4);
   margin-bottom: 3px;
   color: var(--text-color-dark);
 }
 
 .section-subtitle {
   margin: 0;
-  font-size: clamp(11px, 0.8vw, var(--fs-14));
+  font-size: var(--fs-14);
   color: var(--text-color-light);
 }
 
@@ -91,7 +91,7 @@
 
 .detail-col {
   min-width: 0;
-  padding: clamp(12px, 1.2vw, 15px);
+  padding: 14px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -122,14 +122,14 @@
 .field-icon {
   color: var(--primary-color);
   margin-right: 4px;
-  font-size: clamp(12px, 0.9vw, var(--fs-15));
+  font-size: var(--fs-15);
 }
 
 .form-row {
   display: grid;
-  grid-template-columns: clamp(120px, 12vw, 160px) 1fr;
+  grid-template-columns: 150px 1fr;
   align-items: start;
-  gap: clamp(10px, 1vw, 15px);
+  gap: 14px;
   margin-bottom: 20px;
 }
 
@@ -137,7 +137,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: clamp(12px, 0.9vw, var(--fs-15));
+  font-size: var(--fs-15);
   font-weight: var(--fw-600);
   color: var(--text-color);
   padding-top: 8px;
@@ -150,14 +150,14 @@
 }
 
 .form-control {
-  height: clamp(36px, 3vw, 42px);
+  height: 40px;
   width: 100%;
   box-sizing: border-box;
-  font-size: clamp(12px, 0.9vw, var(--fs-15));
+  font-size: var(--fs-15);
   color: var(--text-color);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 0 clamp(10px, 1vw, 14px);
+  padding: 0 13px;
   transition: var(--tran-02);
   background: var(--body-color);
 }
@@ -171,7 +171,7 @@
 select.form-control {
   width: 100%;
   box-sizing: border-box;
-  font-size: clamp(12px, 0.9vw, var(--fs-15));
+  font-size: var(--fs-15);
   color: var(--text-color);
   appearance: none;
   -webkit-appearance: none;
@@ -180,19 +180,19 @@ select.form-control {
 
 textarea.form-control {
   height: auto;
-  padding: clamp(8px, 1vw, 12px) clamp(10px, 1vw, 14px);
-  font-size: clamp(12px, 0.9vw, var(--fs-15));
+  padding: 11px 13px;
+  font-size: var(--fs-15);
   resize: none;
 }
 
 .form-control::placeholder {
-  font-size: clamp(12px, 0.9vw, var(--fs-15));
+  font-size: var(--fs-15);
   color: var(--placeholder-color);
 }
 
 .char-counter {
   text-align: right;
-  font-size: clamp(10px, 0.75vw, var(--fs-12));
+  font-size: var(--fs-12);
   color: var(--placeholder-color);
   margin-top: 3px;
 }
@@ -207,7 +207,7 @@ textarea.form-control {
   top: 50%;
   transform: translateY(-50%);
   color: var(--placeholder-color);
-  font-size: clamp(11px, 0.8vw, var(--fs-13));
+  font-size: var(--fs-13);
   pointer-events: none;
 }
 
@@ -216,7 +216,7 @@ textarea.form-control {
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  gap: clamp(10px, 1vw, 15px);
+  gap: 14px;
 }
 .deadline-field input[type='date'] {
   flex: 1;
@@ -233,7 +233,7 @@ textarea.form-control {
   white-space: nowrap;
 }
 .ongoing-box .form-check-label {
-  font-size: clamp(11px, 0.8vw, var(--fs-14));
+  font-size: var(--fs-14);
   color: var(--text-color);
 }
 
@@ -270,7 +270,7 @@ textarea.form-control {
 .dropdown-list li {
   padding: 8px 12px;
   cursor: pointer;
-  font-size: clamp(11px, 0.8vw, var(--fs-14));
+  font-size: var(--fs-14);
 }
 
 .dropdown-list li:hover {
@@ -318,8 +318,8 @@ textarea.form-control {
 }
 
 .preview-image {
-  width: clamp(80px, 6vw, 100px);
-  height: clamp(76px, 5.8vw, 96px);
+  width: 92px;
+  height: 88px;
   border-radius: 6px;
   object-fit: cover;
   border: 1px solid var(--border-color);
@@ -427,9 +427,9 @@ textarea.form-control {
 }
 
 .buttons .button {
-  height: clamp(34px, 2.6vw, 42px);
-  padding: 0 clamp(12px, 1.4vw, 20px);
-  font-size: clamp(12px, 0.85vw, 14px);
+  height: 40px;
+  padding: 0 18px;
+  font-size: 13px;
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;

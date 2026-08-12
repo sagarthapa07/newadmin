@@ -1,10 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbCalendar, NgbDate, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
-import { inject } from '@angular/core';
-import { Output, EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-date-picker',
@@ -25,16 +22,15 @@ export class DatePicker {
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
-
       this.toDate = null;
     } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
       this.toDate = date;
     } else {
       this.fromDate = date;
-
       this.toDate = null;
     }
   }
+
   isHovered(date: NgbDate) {
     return (
       this.fromDate &&
@@ -48,6 +44,7 @@ export class DatePicker {
   isInside(date: NgbDate) {
     return this.fromDate && this.toDate && date.after(this.fromDate) && date.before(this.toDate);
   }
+
   isRange(date: NgbDate) {
     return (
       (this.fromDate && date.equals(this.fromDate)) ||
@@ -56,6 +53,7 @@ export class DatePicker {
       this.isHovered(date)
     );
   }
+
   applySelection() {
     if (this.fromDate && !this.toDate) {
       this.toDate = this.fromDate;
@@ -66,6 +64,4 @@ export class DatePicker {
       to: this.toDate,
     });
   }
-
-  
 }

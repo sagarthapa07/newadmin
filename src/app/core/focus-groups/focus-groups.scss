@@ -1,6 +1,6 @@
 .fg-card {
   border-radius: 10px;
-  overflow: visible; // hidden ki jagah
+  overflow: visible;
 }
 
 .focus-header {
@@ -173,9 +173,9 @@
 }
 
 .fg-footer .button {
-  height: clamp(34px, 2.6vw, 42px);
-  padding: 0 clamp(12px, 1.4vw, 20px);
-  font-size: clamp(12px, 0.85vw, 14px);
+  height: 40px;
+  padding: 0 18px;
+  font-size: 13px;
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;

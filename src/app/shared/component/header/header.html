@@ -224,7 +224,12 @@
         </div>
 
         <div class="notif-wrapper">
-          <button class="icon-btn" disabled (click)="toggleNotifications()" aria-label="Notifications">
+          <button
+            class="icon-btn"
+            disabled
+            (click)="toggleNotifications()"
+            aria-label="Notifications"
+          >
             <i class="bi bi-bell"></i>
 
             @if (notifications.length) {

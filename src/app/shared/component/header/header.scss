@@ -11,7 +11,6 @@ body {
   display: flex;
 }
 
-/* ===== LOGO ===== */
 .image-text {
   display: flex;
   align-items: center;
@@ -39,7 +38,6 @@ body {
   height: 40px;
   object-fit: contain;
   margin-left: 5px;
-  // filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(90deg) brightness(70%) contrast(90%);
 }
 
 .big-logo {
@@ -83,7 +81,6 @@ body {
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
 }
 
-/* collapsed sidebar — force icon-only, never let text/chevron/submenu peek out */
 .sidebar.close .text,
 .sidebar.close .chevron,
 .sidebar.close .submenu-wrapper {
@@ -238,7 +235,6 @@ body {
   flex-shrink: 0;
 }
 
-/* remove default browser focus box on sidebar links, use a subtle custom indicator instead */
 .sidebar li a:focus,
 .sidebar li a:focus-visible,
 .submenu-parent:focus,
@@ -291,7 +287,6 @@ body {
   margin-left: var(--sidebar-width);
 }
 
-/* ===== TOPBAR ===== */
 .topbar {
   --topbar-icon: 38px;
 
@@ -581,11 +576,6 @@ body {
   flex-shrink: 0;
 }
 
-/* =========================================================
-   RESPONSIVE — fixed values per breakpoint (no clamp)
-   ========================================================= */
-
-/* ----- 1440px and below ----- */
 @media (max-width: 1440px) {
   .app-shell {
     --sidebar-width: 250px;
@@ -686,7 +676,6 @@ body {
   }
 }
 
-/* ----- 1200px and below ----- */
 @media (max-width: 1200px) {
   .app-shell {
     --sidebar-width: 225px;
@@ -787,7 +776,6 @@ body {
   }
 }
 
-/* ----- 992px and below ----- */
 @media (max-width: 992px) {
   .app-shell {
     --sidebar-width: 210px;
@@ -884,7 +872,6 @@ body {
   }
 }
 
-/* ----- 768px and below — sidebar becomes an overlay drawer ----- */
 @media (max-width: 768px) {
   .app-shell {
     --sidebar-width: 230px;
@@ -907,7 +894,6 @@ body {
     width: var(--sidebar-width);
   }
 
-  /* main content no longer shifts — sidebar floats on top */
   .main-area,
   .main-area.main-area-expanded {
     margin-left: 0;
@@ -987,7 +973,6 @@ body {
   }
 }
 
-/* ----- 576px and below ----- */
 @media (max-width: 576px) {
   .app-shell {
     --sidebar-width: 220px;
@@ -1069,7 +1054,6 @@ body {
   }
 }
 
-/* ----- 480px and below ----- */
 @media (max-width: 480px) {
   .app-shell {
     --sidebar-width: 200px;
