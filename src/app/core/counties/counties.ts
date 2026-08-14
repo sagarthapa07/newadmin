@@ -472,7 +472,7 @@ export class CountiesComponent implements OnInit {
           countryIndex: 230,
           countryName: 'United States',
           countyIndex: this.countyIndexMap[`${county}||${state}`] || 0,
-          countyName: `${county}, ${state}`,
+          countyName: `${county}`,
           stateIndex: this.stateIndexMap[state],
           stateName: state,
         });
