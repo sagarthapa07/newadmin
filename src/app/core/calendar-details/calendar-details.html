@@ -1,149 +1,94 @@
 <Section>
-  <app-alert-message
-    *ngIf="successMessage"
-    [type]="'success'"
-    [message]="successMessage"
-    (close)="successMessage = ''"
-  ></app-alert-message>
+  <app-alert-message *ngIf="successMessage" [type]="'success'" [message]="successMessage"
+    (close)="successMessage = ''"></app-alert-message>
 
-  <app-alert-message
-    *ngIf="errorMessage"
-    [type]="'error'"
-    [message]="errorMessage"
-    (close)="errorMessage = ''"
-  ></app-alert-message>
+  <app-alert-message *ngIf="errorMessage" [type]="'error'" [message]="errorMessage"
+    (close)="errorMessage = ''"></app-alert-message>
 
   <form [formGroup]="opportunityForm">
     <div class="detail-grid">
       <!-- LEFT COLUMN -->
       <div class="detail-col form-card">
         <div class="card-header-row">
-          <span class="card-icon-badge badge-blue"><i class="bi bi-file-earmark-text"></i></span>
-          <div>
-            <h5 class="section-title">Opportunity Details</h5>
-            <p class="section-subtitle">Provide key information about this opportunity</p>
+          <div class="card-header-left">
+            <span class="card-icon-badge badge-blue"><i class="bi bi-file-earmark-text"></i></span>
+            <div>
+              <h5 class="section-title">Opportunity Details</h5>
+              <p class="section-subtitle">Core listing information</p>
+            </div>
           </div>
         </div>
         <hr />
 
-        <div class="form-row">
-          <label><i class="bi bi-tag field-icon"></i> Title</label>
-          <div class="field-wrapper">
-            <input
-              type="text"
-              class="form-control"
-              formControlName="title"
-              placeholder="Enter opportunity title"
-            />
-            @if (isFieldInvalid('title')) {
-              <div class="error">Please Enter a Title.</div>
-            }
-          </div>
+        <div class="field-group">
+          <label>Title <span class="req">*</span></label>
+          <input type="text" class="form-control" formControlName="title" placeholder="Enter opportunity title" />
+          @if (isFieldInvalid('title')) {
+          <div class="error">Please Enter a Title.</div>
+          }
         </div>
 
         @if (!data?.id) {
-          <div class="form-row">
-            <label><i class="bi bi-link-45deg field-icon"></i> Friendly URL</label>
-            <div class="field-wrapper">
-              <input
-                type="text"
-                class="form-control"
-                formControlName="friendlyURLText"
-                placeholder="Friendly URL"
-                readonly
-              />
-              @if (isFieldInvalid('friendlyURLText')) {
-                <div class="error">Please Enter a friendlyURL</div>
-              }
-            </div>
-          </div>
+        <div class="field-group">
+          <label>Friendly URL</label>
+          <input type="text" class="form-control" formControlName="friendlyURLText" placeholder="Friendly URL"
+            readonly />
+          @if (isFieldInvalid('friendlyURLText')) {
+          <div class="error">Please Enter a friendlyURL</div>
+          }
+        </div>
         }
 
-        <div class="form-row">
-          <label><i class="bi bi-link field-icon"></i> Link URL</label>
-          <div class="field-wrapper">
-            <input
-              type="text"
-              class="form-control"
-              formControlName="linkUrl"
-              placeholder="https://example.com/opportunity"
-            />
-            @if (isFieldInvalid('linkUrl')) {
-              <div class="error">Please Enter a linkUrl.</div>
-            }
-          </div>
+        <div class="field-group">
+          <label>Link URL</label>
+          <input type="text" class="form-control" formControlName="linkUrl"
+            placeholder="https://example.com/opportunity" />
+          @if (isFieldInvalid('linkUrl')) {
+          <div class="error">Please Enter a linkUrl.</div>
+          }
         </div>
 
-        <div class="form-row">
-          <label><i class="bi bi-calendar3 field-icon"></i> Post Date</label>
-          <div class="field-wrapper">
+        <div class="field-row-2">
+          <div class="field-group">
+            <label>Post Date <span class="req">*</span></label>
             <input type="date" class="form-control" formControlName="postDate" />
             @if (isFieldInvalid('postDate')) {
-              <div class="error">Please Enter a PostDate.</div>
+            <div class="error">Please Enter a PostDate.</div>
             }
           </div>
-        </div>
-
-        <div class="form-row">
-          <label><i class="bi bi-calendar3 field-icon"></i> Deadline Date</label>
-          <div class="field-wrapper deadline-field">
+          <div class="field-group">
+            <label>Deadline</label>
             <input type="date" class="form-control" formControlName="deadlineDate" />
             @if (isFieldInvalid('deadlineDate')) {
-              <div class="error">Please Enter a DeadlineDate.</div>
+            <div class="error">Please Enter a DeadlineDate.</div>
             }
-
-            <div class="form-check ongoing-box">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                formControlName="isOngoing"
-                id="ongoing"
-              />
-              <label class="form-check-label" for="ongoing">OnGoing Opportunity</label>
-            </div>
           </div>
         </div>
 
-        <div class="form-row">
-          <label><i class="bi bi-chat-square-text field-icon"></i> Short Info</label>
+        <div class="ongoing-box">
+          <input type="checkbox" formControlName="isOngoing" id="ongoing" />
+          <label for="ongoing">Ongoing — no fixed deadline</label>
+        </div>
+
+        <div class="field-group">
+          <label>Short Info</label>
+          <textarea rows="3" class="form-control" formControlName="shortInfo"
+            placeholder="Brief summary shown in search results..."></textarea>
+          @if (isFieldInvalid('shortInfo')) {
+          <div class="error">Please Enter a ShortInfo.</div>
+          }
+        </div>
+
+        <div class="section-divider"><span>Grant Details</span></div>
+
+        <div class="field-group" #dropdownContainer>
+          <label>Donor Agency</label>
           <div class="field-wrapper">
-            <textarea
-              rows="3"
-              class="form-control"
-              formControlName="shortInfo"
-              placeholder="Enter short information about this opportunity..."
-            ></textarea>
-            @if (isFieldInvalid('shortInfo')) {
-              <div class="error">Please Enter a ShortInfo.</div>
-            }
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label><i class="bi bi-people field-icon"></i> Donor Type</label>
-          <div class="field-wrapper has-chevron">
-            <select class="form-control" formControlName="donorType">
-              <option value="US Donors">US Donors</option>
-            </select>
-            <i class="bi bi-chevron-down dropdown-chevron"></i>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label><i class="bi bi-building field-icon"></i> Donor Agency</label>
-          <div class="field-wrapper has-chevron" #dropdownContainer>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="donorAgency"
-              placeholder="Search donor agency..."
-              (input)="onSearchDonor($event)"
-            />
-            <i class="bi bi-chevron-down dropdown-chevron"></i>
+            <input type="text" class="form-control" formControlName="donorAgency" placeholder="Search donor agency..."
+              (input)="onSearchDonor($event)" />
             @if (isFieldInvalid('donorAgency')) {
-              <div class="error">Please enter donor agency.</div>
+            <div class="error">Please enter donor agency.</div>
             }
-
             <ul class="dropdown-list" *ngIf="showDropdown && donorList.length">
               <li *ngFor="let item of donorList" (click)="selectDonor(item)">
                 {{ item.donorName }}
@@ -152,171 +97,161 @@
           </div>
         </div>
 
-        <div class="form-row">
-          <label><i class="bi bi-pencil field-icon"></i> Donor Agency (other)</label>
-          <div class="field-wrapper">
-            <input
-              type="text"
-              class="form-control"
-              formControlName="donorAgencyOther"
-              placeholder="Enter other donor agency"
-            />
-            <div class="error" *ngIf="isFieldInvalid('donorAgencyOther')">Please fill link url</div>
-          </div>
+        <div class="field-group">
+          <label>Donor Agency (other)</label>
+          <input type="text" class="form-control" formControlName="donorAgencyOther"
+            placeholder="Enter other donor agency" />
+          @if (isFieldInvalid('donorAgencyOther')) {
+          <div class="error">Please fill donor agency (other).</div>
+          }
         </div>
 
-        <div class="form-row">
-          <label><i class="bi bi-check2-square field-icon"></i> Grant Type</label>
-          <div class="field-wrapper has-chevron" #grantTypeContainer>
-            <input
-              type="text"
-              class="form-control"
-              [value]="selectedGrantType"
-              placeholder="Select grant type"
-              readonly
-              (click)="showGrantTypeDropdown = !showGrantTypeDropdown"
-            />
-            <i class="bi bi-chevron-down dropdown-chevron"></i>
-            <ul class="dropdown-list" *ngIf="showGrantTypeDropdown">
-              <li *ngFor="let item of grantTypeList" (click)="selectDropdown('grantType', item)">
-                {{ item }}
-              </li>
-            </ul>
-            @if (isFieldInvalid('grantType')) {
-              <div class="error">Please select grant type.</div>
-            }
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label><i class="bi bi-clock field-icon"></i> Grant Duration</label>
-          <div class="field-wrapper has-chevron" #grantDurationContainer>
-            <input
-              type="text"
-              class="form-control"
-              [value]="selectedGrantDuration"
-              placeholder="Select duration"
-              readonly
-              (click)="showGrantDurationDropdown = !showGrantDurationDropdown"
-            />
-            <i class="bi bi-chevron-down dropdown-chevron"></i>
-            <ul class="dropdown-list" *ngIf="showGrantDurationDropdown">
-              <li
-                *ngFor="let item of grantDurationList"
-                (click)="selectDropdown('grantDuration', item)"
-              >
-                {{ item }}
-              </li>
-            </ul>
-
-            @if (isFieldInvalid('grantDuration')) {
-              <div class="error">Please select grant duration.</div>
-            }
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label><i class="bi bi-currency-dollar field-icon"></i> Grant Size</label>
-          <div class="field-wrapper has-chevron" #grantSizeContainer>
-            <input
-              type="text"
-              class="form-control"
-              [value]="selectedGrantSize"
-              placeholder="Select size"
-              readonly
-              (click)="showGrantSizeDropdown = !showGrantSizeDropdown"
-            />
-            <i class="bi bi-chevron-down dropdown-chevron"></i>
-            <ul class="dropdown-list" *ngIf="showGrantSizeDropdown">
-              <li *ngFor="let item of grantSizeList" (click)="selectDropdown('grantSize', item)">
-                {{ item }}
-              </li>
-            </ul>
-            @if (isFieldInvalid('grantSize')) {
-              <div class="error">Please select grant size.</div>
-            }
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label><i class="bi bi-image field-icon"></i> Image</label>
-          <div class="field-wrapper">
-            <div class="image-upload-wrapper">
-              <app-image-cropper
-                [imageSrc]="previewUrl"
-                [dirPath]="'img.USGrants'"
-                [recType]="'CU'"
-                (onCropped)="onImageCropped($event)"
-              ></app-image-cropper>
-
-              <img
-                *ngIf="previewUrl"
-                [src]="previewUrl"
-                class="preview-image"
-                (click)="openImageModal()"
-                title="Click to view"
-              />
+        <div class="field-row-2">
+          <div class="field-group" #grantTypeContainer>
+            <label>Grant Type</label>
+            <div class="field-wrapper has-chevron">
+              <input type="text" class="form-control" [value]="selectedGrantType" placeholder="Select grant type"
+                readonly (click)="showGrantTypeDropdown = !showGrantTypeDropdown" />
+              <i class="bi bi-chevron-down dropdown-chevron"></i>
+              <ul class="dropdown-list" *ngIf="showGrantTypeDropdown">
+                <li *ngFor="let item of grantTypeList" (click)="selectDropdown('grantType', item)">
+                  {{ item }}
+                </li>
+              </ul>
             </div>
-            @if (isImageInvalid()) {
-              <div class="error">Please upload an image.</div>
+            @if (isFieldInvalid('grantType')) {
+            <div class="error">Please select grant type.</div>
+            }
+          </div>
+
+          <div class="field-group" #grantDurationContainer>
+            <label>Duration</label>
+            <div class="field-wrapper has-chevron">
+              <input type="text" class="form-control" [value]="selectedGrantDuration" placeholder="Select duration"
+                readonly (click)="showGrantDurationDropdown = !showGrantDurationDropdown" />
+              <i class="bi bi-chevron-down dropdown-chevron"></i>
+              <ul class="dropdown-list" *ngIf="showGrantDurationDropdown">
+                <li *ngFor="let item of grantDurationList" (click)="selectDropdown('grantDuration', item)">
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
+            @if (isFieldInvalid('grantDuration')) {
+            <div class="error">Please select grant duration.</div>
             }
           </div>
         </div>
-        <div class="form-row">
-          <label><i class="bi bi-shield-check field-icon"></i> Status</label>
-          <div class="field-wrapper has-chevron">
-            <select class="form-control" formControlName="status">
-              <option value="" disabled selected hidden>Select status</option>
-              <option>Draft</option>
-              <option>Published</option>
-              <option>Expired</option>
-            </select>
-            <i class="bi bi-chevron-down dropdown-chevron"></i>
-            <div class="error" *ngIf="isFieldInvalid('status')">Please select status</div>
+
+        <div class="field-row-2">
+          <div class="field-group" #grantSizeContainer>
+            <label>Grant Size</label>
+            <div class="field-wrapper has-chevron">
+              <input type="text" class="form-control" [value]="selectedGrantSize" placeholder="Select size" readonly
+                (click)="showGrantSizeDropdown = !showGrantSizeDropdown" />
+              <i class="bi bi-chevron-down dropdown-chevron"></i>
+              <ul class="dropdown-list" *ngIf="showGrantSizeDropdown">
+                <li *ngFor="let item of grantSizeList" (click)="selectDropdown('grantSize', item)">
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
+            @if (isFieldInvalid('grantSize')) {
+            <div class="error">Please select grant size.</div>
+            }
           </div>
+
+          <div class="field-group">
+            <label>Status</label>
+            <div class="field-wrapper has-chevron">
+              <select class="form-control" formControlName="status">
+                <option value="" disabled selected hidden>Select status</option>
+                <option>Draft</option>
+                <option>Published</option>
+                <option>Expired</option>
+              </select>
+              <i class="bi bi-chevron-down dropdown-chevron"></i>
+            </div>
+            @if (isFieldInvalid('status')) {
+            <div class="error">Please select status</div>
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Cover Image</label>
+          <div class="image-dropzone-row">
+            <div class="image-dropzone" [class.has-image]="previewUrl">
+              <app-image-cropper [imageSrc]="previewUrl" [dirPath]="'img.USGrants'" [recType]="'CU'"
+                (onCropped)="onImageCropped($event)"></app-image-cropper>
+
+              <div class="dropzone-content" *ngIf="!previewUrl">
+                <i class="bi bi-cloud-arrow-up dropzone-icon"></i>
+                <p class="dropzone-text"><span class="link-text">Click to upload</span> or drag &amp; drop</p>
+                <p class="dropzone-hint">PNG, JPG up to 5 MB</p>
+              </div>
+
+              <div class="dropzone-content" *ngIf="previewUrl">
+                <i class="bi bi-arrow-repeat dropzone-icon"></i>
+                <p class="dropzone-text change-text">Change image</p>
+                <p class="dropzone-hint">PNG, JPG up to 5 MB</p>
+              </div>
+            </div>
+
+            <div class="dropzone-thumb-wrap" *ngIf="previewUrl">
+              <img [src]="previewUrl" class="dropzone-thumb" (click)="openImageModal(); $event.stopPropagation()"
+                title="Click to view" />
+              <button type="button" class="dropzone-thumb-remove" (click)="removeImage($event)">&#10005;</button>
+            </div>
+          </div>
+          @if (isImageInvalid()) {
+          <div class="error">Please upload an image.</div>
+          }
         </div>
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="detail-col form-card letter-col">
         <div class="card-header-row">
-          <span class="card-icon-badge badge-green"><i class="bi bi-pencil-square"></i></span>
-          <div>
-            <h5 class="section-title">Letter Text</h5>
-            <p class="section-subtitle">Create or edit the content for this opportunity.</p>
+          <div class="card-header-left">
+            <span class="card-icon-badge badge-green"><i class="bi bi-pencil-square"></i></span>
+            <div>
+              <h5 class="section-title">Letter Text</h5>
+              <p class="section-subtitle">Rich content for this opportunity</p>
+            </div>
           </div>
+          <span class="autosave-badge" *ngIf="autoSaved">Auto-saved</span>
         </div>
         <hr />
         <app-editor formControlName="letterText"></app-editor>
 
         @if (isEditorEmpty() && opportunityForm.get('letterText')?.touched) {
-          <div class="error">Please enter letter text.</div>
+        <div class="error">Please enter letter text.</div>
         }
+
+        <div class="editor-footer">
+          <span class="word-count">~{{ wordCount }} words</span>
+          <button type="button" class="clear-link" (click)="clearLetterText()">Clear</button>
+        </div>
       </div>
     </div>
 
     <div class="buttons">
-      <button type="button" class="button button-primary" (click)="goToPreview()">
+      <button type="button" class="button button-muted" (click)="goToPreview()">
         <i class="bi bi-eye"></i> Preview
       </button>
 
       <div class="buttons-right">
-        <button type="button" class="button button-secondary" (click)="goBack()">
+        <button type="button" class="button button-ghost" (click)="goBack()">
           <i class="bi bi-chevron-double-left"></i> Back
         </button>
-        <button
-          type="button"
-          class="button button-secondary btn-save"
-          [disabled]="isSaving"
-          (click)="onSave()"
-        >
+        <button type="button" class="button button-secondary btn-save" [disabled]="isSaving" (click)="onSave()">
           @if (isSaving) {
-            <span class="loader-dot"></span> Saving...
+          <span class="loader-dot"></span> Saving...
           } @else {
-            <i class="bi bi-bookmark-check"></i> Save
+          <i class="bi bi-save"></i> Save Draft
           }
         </button>
-        
+
         <button type="button" class="button button-primary" (click)="goToGeoLocation()">
           Next <i class="bi bi-chevron-double-right"></i>
         </button>

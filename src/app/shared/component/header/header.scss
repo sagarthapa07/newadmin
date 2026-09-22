@@ -7,6 +7,10 @@ body {
 .app-shell {
   --sidebar-width: 275px;
   --sidebar-width-closed: 75px;
+  --topbar-height: 64px;
+  --sidebar-icon-size: 22px;
+  --sidebar-icon-min-width: 60px;
+  --small-logo-size: 40px;
 
   display: flex;
 }
@@ -18,6 +22,9 @@ body {
   height: 46px;
   position: relative;
   width: 100%;
+  border-radius: 10px;
+  padding: 4px 8px;
+  box-sizing: border-box;
 }
 
 .sidebar.close .image-text {
@@ -34,10 +41,11 @@ body {
   opacity: 1;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
+  width: var(--small-logo-size);
+  height: var(--small-logo-size);
   object-fit: contain;
   margin-left: 5px;
+  transition: width 0.3s ease, height 0.3s ease;
 }
 
 .big-logo {
@@ -68,7 +76,7 @@ body {
   display: flex;
   flex-direction: column;
   padding: 10px 12px;
-  background: var(--sidebar-color);
+  background: var(--sidebar-gradient);
   transition: width 0.3s ease, transform 0.3s ease;
   white-space: nowrap;
   overflow: hidden;
@@ -101,9 +109,9 @@ body {
   position: sticky;
   bottom: 0;
   flex-shrink: 0;
-  background: var(--sidebar-color);
+  background: transparent;
   padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .sidebar .menu-footer ul {
@@ -114,8 +122,8 @@ body {
 .sidebar .text {
   font-size: 16px;
   font-weight: 500;
-  color: var(--text-color);
-  transition: opacity 0.2s ease;
+  color: rgba(255, 255, 255, 0.85);
+  transition: opacity 0.2s ease, color 0.2s ease;
 }
 
 .sidebar .image {
@@ -157,22 +165,34 @@ body {
 }
 
 .sidebar li .icons {
-  min-width: 60px;
-  font-size: 22px;
+  min-width: var(--sidebar-icon-min-width);
+  font-size: var(--sidebar-icon-size);
   display: flex;
   justify-content: center;
-  color: var(--text-color);
+  color: rgba(255, 255, 255, 0.85);
   flex-shrink: 0;
+  transition: font-size 0.3s ease, min-width 0.3s ease, color 0.2s ease;
 }
 
 .sidebar li.nav-link > a:hover {
-  background: var(--primary-color);
+  background: rgba(255, 255, 255, 0.15);
   width: 100%;
+}
+ 
+.sidebar li a.active {
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.sidebar li a.active .icons,
+.sidebar li a.active .text {
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .sidebar li a:hover .icons,
 .sidebar li a:hover .text {
-  color: var(--sidebar-color);
+  color: #ffffff;
 }
 
 .sidebar .menu-bar {
@@ -196,7 +216,7 @@ body {
   left: 10px;
   width: 2px;
   height: 100%;
-  background-color: #e0e0e0;
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 2px;
 }
 
@@ -209,7 +229,7 @@ body {
   display: block;
   padding: 10px 0;
   font-size: 14px;
-  color: #6c757d;
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   cursor: pointer;
 }
@@ -224,7 +244,7 @@ body {
   justify-content: space-between;
   padding: 10px 0;
   font-size: 14px;
-  color: #6c757d;
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   text-decoration: none;
 }
@@ -242,7 +262,7 @@ body {
 .sub-submenu a:focus,
 .sub-submenu a:focus-visible {
   outline: none;
-  box-shadow: inset 2px 0 0 var(--primary-color);
+  box-shadow: inset 2px 0 0 #ffffff;
   border-radius: 4px;
 }
 
@@ -260,20 +280,20 @@ body {
   left: 30px;
   width: 2px;
   height: 100%;
-  background-color: #d0d0d0;
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .sub-submenu a {
   display: block;
   padding: 8px 0;
   font-size: 13px;
-  color: #8a8a8a;
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
   cursor: pointer;
 }
 
 .sub-submenu a:hover {
-  color: var(--primary-color);
+  color: #ffffff;
 }
 
 .main-area {
@@ -287,10 +307,13 @@ body {
   margin-left: var(--sidebar-width);
 }
 
+/* ============================================
+   TOPBAR - FIXED so it never moves on scroll
+   ============================================ */
 .topbar {
   --topbar-icon: 38px;
 
-  height: 64px;
+  height: var(--topbar-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -298,9 +321,23 @@ body {
   padding: 0 20px;
   background: var(--white);
   border-bottom: 1px solid var(--border-color);
-  position: sticky;
+
+  position: fixed;
   top: 0;
-  z-index: 90;
+  left: var(--sidebar-width-closed);
+  right: 0;
+  z-index: 900;
+  transition: left 0.3s ease, height 0.3s ease;
+  box-sizing: border-box;
+}
+
+.main-area-expanded .topbar {
+  left: var(--sidebar-width);
+}
+
+.page-content {
+  padding-top: var(--topbar-height);
+  box-sizing: border-box;
 }
 
 .topbar-left {
@@ -361,7 +398,7 @@ body {
 }
 
 .breadcrumb .crumb.active {
-  color: var(--text-color-dark);
+  color: var(--primary-color);
   font-weight: var(--fw-700);
   cursor: default;
   pointer-events: none;
@@ -437,18 +474,16 @@ body {
 
 .icon-badge {
   position: absolute;
-  top: -2px;
-  right: -2px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--primary-color);
-  color: var(--white);
-  font-size: 10px;
-  font-weight: var(--fw-700);
+  top: 4px;
+  right: 4px;
+  min-width: 9px;
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  display: block;
+  background: var(--danger-color);
+  color: transparent;
+  font-size: 0;
   border-radius: 999px;
   border: 2px solid var(--white);
 }
@@ -468,7 +503,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  z-index: 200;
+  z-index: 950;
   overflow: hidden;
 }
 
@@ -535,16 +570,18 @@ body {
 }
 
 .avatar {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--box-bg-color);
-  color: var(--placeholder-color);
-  font-size: 30px;
+  background: var(--primary-color-light);
+  color: var(--primary-color);
+  border: 1.5px solid var(--primary-color);
+  font-size: 15px;
+  font-weight: 700;
   flex-shrink: 0;
 }
 
@@ -580,6 +617,7 @@ body {
   .app-shell {
     --sidebar-width: 250px;
     --sidebar-width-closed: 70px;
+    --topbar-height: 58px;
   }
 
   .small-logo {
@@ -623,7 +661,6 @@ body {
 
   .topbar {
     --topbar-icon: 35px;
-    height: 58px;
     padding: 0 17px;
     gap: 14px;
   }
@@ -680,6 +717,7 @@ body {
   .app-shell {
     --sidebar-width: 225px;
     --sidebar-width-closed: 66px;
+    --topbar-height: 52px;
   }
 
   .small-logo {
@@ -723,7 +761,6 @@ body {
 
   .topbar {
     --topbar-icon: 32px;
-    height: 52px;
     padding: 0 14px;
     gap: 12px;
   }
@@ -780,6 +817,7 @@ body {
   .app-shell {
     --sidebar-width: 210px;
     --sidebar-width-closed: 60px;
+    --topbar-height: 48px;
   }
 
   .small-logo {
@@ -823,7 +861,6 @@ body {
 
   .topbar {
     --topbar-icon: 30px;
-    height: 48px;
     padding: 0 10px;
     gap: 8px;
   }
@@ -876,6 +913,7 @@ body {
   .app-shell {
     --sidebar-width: 230px;
     --sidebar-width-closed: 56px;
+    --topbar-height: 48px;
   }
 
   .sidebar {
@@ -897,6 +935,11 @@ body {
   .main-area,
   .main-area.main-area-expanded {
     margin-left: 0;
+  }
+
+  .topbar,
+  .main-area-expanded .topbar {
+    left: 0;
   }
 
   .small-logo {
@@ -936,7 +979,6 @@ body {
 
   .topbar {
     --topbar-icon: 32px;
-    height: 48px;
     padding: 0 12px;
     gap: 10px;
   }
@@ -977,6 +1019,7 @@ body {
   .app-shell {
     --sidebar-width: 220px;
     --sidebar-width-closed: 52px;
+    --topbar-height: 46px;
   }
 
   .small-logo {
@@ -1020,7 +1063,6 @@ body {
 
   .topbar {
     --topbar-icon: 30px;
-    height: 46px;
     padding: 0 10px;
     gap: 8px;
   }
@@ -1058,6 +1100,7 @@ body {
   .app-shell {
     --sidebar-width: 200px;
     --sidebar-width-closed: 48px;
+    --topbar-height: 44px;
   }
 
   .small-logo {
@@ -1101,7 +1144,6 @@ body {
 
   .topbar {
     --topbar-icon: 28px;
-    height: 44px;
     padding: 0 8px;
     gap: 6px;
   }
@@ -1121,5 +1163,133 @@ body {
     width: 26px;
     height: 26px;
     font-size: 20px;
+  }
+}
+
+.app-shell:has(.sidebar.close) {
+  --sidebar-width-closed: 62px;
+  --topbar-height: 54px;
+  --topbar-icon: 34px;
+}
+
+.app-shell:has(.sidebar.close) .sidebar li .icons {
+  min-width: 50px;
+  font-size: 18px;
+}
+
+.app-shell:has(.sidebar.close) .small-logo {
+  width: 34px;
+  height: 34px;
+}
+
+/* Laptop range (<= 1440px) */
+@media (max-width: 1440px) {
+  .app-shell:has(.sidebar.close) {
+    --sidebar-width-closed: 58px;
+    --topbar-height: 50px;
+    --topbar-icon: 32px;
+  }
+
+  .app-shell:has(.sidebar.close) .sidebar li .icons {
+    min-width: 46px;
+    font-size: 17px;
+  }
+
+  .app-shell:has(.sidebar.close) .small-logo {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Small laptop / large tablet (<= 1200px) */
+@media (max-width: 1200px) {
+  .app-shell:has(.sidebar.close) {
+    --sidebar-width-closed: 54px;
+    --topbar-height: 46px;
+    --topbar-icon: 29px;
+  }
+
+  .app-shell:has(.sidebar.close) .sidebar li .icons {
+    min-width: 44px;
+    font-size: 16px;
+  }
+
+  .app-shell:has(.sidebar.close) .small-logo {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Tablet (<= 992px) */
+@media (max-width: 992px) {
+  .app-shell:has(.sidebar.close) {
+    --sidebar-width-closed: 50px;
+    --topbar-height: 42px;
+    --topbar-icon: 28px;
+  }
+
+  .app-shell:has(.sidebar.close) .sidebar li .icons {
+    min-width: 40px;
+    font-size: 15px;
+  }
+
+  .app-shell:has(.sidebar.close) .small-logo {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* Mobile-large (<= 768px) — sidebar overlays, but topbar height
+   still shrinks when the sidebar is closed */
+@media (max-width: 768px) {
+  .app-shell:has(.sidebar.close) {
+    --topbar-height: 42px;
+    --topbar-icon: 29px;
+  }
+
+  .app-shell:has(.sidebar.close) .sidebar li .icons {
+    min-width: 40px;
+    font-size: 15px;
+  }
+
+  .app-shell:has(.sidebar.close) .small-logo {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* Mobile (<= 576px) */
+@media (max-width: 576px) {
+  .app-shell:has(.sidebar.close) {
+    --topbar-height: 40px;
+    --topbar-icon: 28px;
+  }
+
+  .app-shell:has(.sidebar.close) .sidebar li .icons {
+    min-width: 36px;
+    font-size: 14px;
+  }
+
+  .app-shell:has(.sidebar.close) .small-logo {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Small mobile (<= 480px) */
+@media (max-width: 480px) {
+  .app-shell:has(.sidebar.close) {
+    --topbar-height: 38px;
+    --topbar-icon: 26px;
+  }
+
+  .app-shell:has(.sidebar.close) .sidebar li .icons {
+    min-width: 34px;
+    font-size: 13px;
+  }
+
+  .app-shell:has(.sidebar.close) .small-logo {
+    width: 22px;
+    height: 22px;
   }
 }

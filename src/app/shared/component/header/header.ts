@@ -162,7 +162,7 @@ export class Header implements OnInit {
     this.userName = cookieUser.userName || cookieUser.name || cookieUser.emailId || 'User';
     this.userRole = cookieUser.userRole || cookieUser.role || '';
 
-    if (!this.userRole && cookieUser.userIndex) {
+    if (!cookieUser.userRole && !cookieUser.role && cookieUser.userIndex) {
       this.api.getUserRecords({ userIndex: cookieUser.userIndex }).subscribe({
         next: (res: any) => {
           const record = res?.data?.[0] || res?.records?.[0] || res;

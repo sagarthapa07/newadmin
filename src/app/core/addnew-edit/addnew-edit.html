@@ -2,42 +2,43 @@
 
 <section class="header-section">
   @if (errorMessage) {
-    <app-alert-message
-      [type]="'error'"
-      [message]="errorMessage"
-      (close)="errorMessage = ''">
-    </app-alert-message>
+  <app-alert-message [type]="'error'" [message]="errorMessage" (close)="errorMessage = ''">
+  </app-alert-message>
   }
 
   <div class="page-header">
-    <h4 class="page-title">Calendar and Premium Newsletter (Add/Edit)</h4>
+    <div class="header-left">
+      <div class="header-icon">
+        <i class="bi {{ activeTab?.icon }}"></i>
+      </div>
+      <div class="header-text">
+        <h4 class="page-title">Calendar & Premium Newsletter</h4>
+        <div class="header-meta">
+          <span class="badge-edit">{{ activeTab?.badge }}</span>
+          <span class="header-subtitle">{{ activeTab?.description }}</span>
+        </div>
+      </div>
+    </div>
 
     <div class="nav-btn">
       @for (item of menuItems; track item.id) {
-        <button
-          class="btn"
-          [class.active]="activeItem === item.id"
-          [class.locked]="isTabLocked(item.id)"
-          [attr.title]="isTabLocked(item.id) ? 'Save this opportunity first' : null"
-          (click)="setActive(item.id)">
-          {{ item.label }}
-        </button>
+      <button class="btn" [class.active]="activeItem === item.id" [class.locked]="isTabLocked(item.id)"
+        [attr.title]="isTabLocked(item.id) ? 'Save this opportunity first' : null" (click)="setActive(item.id)">
+        {{ item.label }}
+      </button>
       }
     </div>
   </div>
 
   @if (isLoading) {
-    <div class="component-loader">
-      <span class="loader-dot"></span>
-      Loading data...
-    </div>
+  <div class="component-loader">
+    <span class="loader-dot"></span>
+    Loading data...
+  </div>
   }
 
   @if (activeItem === 1) {
-    <app-calendar-details
-      [data]="grantData"
-      [draftId]="draftId"
-      (tabChange)="setActive($event)">
-    </app-calendar-details>
+  <app-calendar-details [data]="grantData" [draftId]="draftId" (tabChange)="setActive($event)">
+  </app-calendar-details>
   }
 </section>

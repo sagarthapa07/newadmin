@@ -14,6 +14,8 @@ import { GrantDetail } from '../../datatype';
 import { Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { DraftService } from '../Services/grant-draft';
+import { Common } from '../Services/common';
+import { AlertMessage } from '../../shared/component/alert-message/alert-message';
 
 @Component({
   standalone: true,
@@ -28,6 +30,7 @@ import { DraftService } from '../Services/grant-draft';
     Header,
     FocusGroupsComponent,
     CalendarDetails,
+    AlertMessage,
   ],
   templateUrl: './edit.html',
   styleUrl: './edit.scss',
@@ -38,12 +41,49 @@ export class Edit {
   draftId: string = '';
 
   menuItems = [
-    { id: 1, label: 'Calender Details' },
-    { id: 2, label: 'Geo Location' },
-    { id: 3, label: 'Focus Areas' },
-    { id: 4, label: 'Focus Groups' },
-    { id: 5, label: 'Counties' },
-    { id: 6, label: 'Seo/Social Media' },
+    {
+      id: 1,
+      label: 'Calender Details',
+      icon: 'bi-calendar3',
+      badge: 'Add / Edit',
+      description: 'FundsForNGO Premium',
+    },
+    {
+      id: 2,
+      label: 'Geo Location',
+      icon: 'bi-geo-alt',
+      badge: 'Geo Location',
+      description: 'Choose the geographies that are relevant for this opportunity.',
+    },
+    {
+      id: 3,
+      label: 'Focus Areas',
+      icon: 'bi-bullseye',
+      badge: 'Select Focus Areas',
+      description: 'Choose the focus areas that best match this opportunity.',
+    },
+    {
+      id: 4,
+      label: 'Focus Groups',
+      icon: 'bi-people',
+      badge: 'Select Focus Groups',
+      description:
+        'Choose the beneficiaries, entities and organizations relevant to this opportunity.',
+    },
+    {
+      id: 5,
+      label: 'Counties',
+      icon: 'bi-layers',
+      badge: 'Opportunity Coverage',
+      description: 'Select states and counties to define the coverage for this opportunity.',
+    },
+    {
+      id: 6,
+      label: 'Seo/Social Media',
+      icon: 'bi-share',
+      badge: 'SEO & Social Media',
+      description: 'Manage SEO information and social media references for your opportunity.',
+    },
   ];
 
   activeItem = 1;
@@ -74,6 +114,10 @@ export class Edit {
       status: ['Draft'],
       letterText: [''],
     });
+  }
+
+  get activeTab() {
+    return this.menuItems.find((item) => item.id === this.activeItem);
   }
 
   ngOnInit() {

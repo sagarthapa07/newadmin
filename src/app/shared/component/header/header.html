@@ -1,10 +1,6 @@
 <div class="app-shell">
-  <nav
-    class="sidebar"
-    [class.close]="!isSidebarExpanded()"
-    (mouseenter)="onSidebarEnter()"
-    (mouseleave)="onSidebarLeave()"
-  >
+  <nav class="sidebar" [class.close]="!isSidebarExpanded()" (mouseenter)="onSidebarEnter()"
+    (mouseleave)="onSidebarLeave()">
     <header>
       <div class="image-text">
         <img class="logo small-logo" src="../../../../assets/logo-icon1.png" alt="small logo" />
@@ -26,99 +22,78 @@
           </li>
 
           <li class="nav-link">
-            <a
-              href="#"
-              class="d-flex align-items-center justify-content-between"
-              (click)="toggleCollapse('components1', $event)"
-            >
+            <a href="#" class="d-flex align-items-center justify-content-between"
+              (click)="toggleCollapse('components1', $event)">
               <div class="d-flex align-items-center">
                 <i class="fa-solid fa-puzzle-piece icons"></i>
                 <span class="text nav-text">Components</span>
               </div>
 
-              <i
-                class="fa-solid icons chevron"
-                [class.fa-chevron-down]="!isOpen('components1')"
-                [class.fa-chevron-up]="isOpen('components1')"
-              ></i>
+              <i class="fa-solid icons chevron" [class.fa-chevron-down]="!isOpen('components1')"
+                [class.fa-chevron-up]="isOpen('components1')"></i>
             </a>
           </li>
 
           <li [ngbCollapse]="!isOpen('components1')" class="submenu-wrapper">
             <div class="submenu">
-              <a
-                href="#"
-                class="d-flex align-items-center justify-content-between submenu-parent"
-                (click)="toggleSubCollapse('email-config', $event)"
-              >
+              <a href="#" class="d-flex align-items-center justify-content-between submenu-parent"
+                (click)="toggleSubCollapse('email-config', $event)">
                 <span>Email Configurations</span>
               </a>
 
               @if (isSubOpen('email-config')) {
-                <div class="sub-submenu">
-                  <a class="mx-5" routerLink="/masters/email-settings" (click)="onLeafClick()">
-                    Email Setting
-                  </a>
-                  <a class="mx-5" routerLink="/masters/email-templates" (click)="onLeafClick()">
-                    Email Template
-                  </a>
-                </div>
+              <div class="sub-submenu">
+                <a class="mx-5" routerLink="/masters/email-settings" (click)="onLeafClick()">
+                  Email Setting
+                </a>
+                <a class="mx-5" routerLink="/masters/email-templates" (click)="onLeafClick()">
+                  Email Template
+                </a>
+              </div>
               }
 
-              <a
-                href="#"
-                class="d-flex align-items-center justify-content-between submenu-parent"
-                (click)="toggleSubCollapse('user-mgmt', $event)"
-              >
+              <a href="#" class="d-flex align-items-center justify-content-between submenu-parent"
+                (click)="toggleSubCollapse('user-mgmt', $event)">
                 <span>User Management</span>
               </a>
 
               @if (isSubOpen('user-mgmt')) {
-                <div class="sub-submenu">
-                  <a class="mx-5" routerLink="/masters/users" (click)="onLeafClick()">
-                    User List
-                  </a>
-                  <a class="mx-5" routerLink="/masters/user-add" (click)="onLeafClick()">
-                    Add User
-                  </a>
-                </div>
+              <div class="sub-submenu">
+                <a class="mx-5" routerLink="/masters/users" (click)="onLeafClick()">
+                  User List
+                </a>
+                <a class="mx-5" routerLink="/masters/user-add" (click)="onLeafClick()">
+                  Add User
+                </a>
+              </div>
               }
 
-              <a
-                href="#"
-                class="d-flex align-items-center justify-content-between submenu-parent"
-                (click)="toggleSubCollapse('products', $event)"
-              >
+              <a href="#" class="d-flex align-items-center justify-content-between submenu-parent"
+                (click)="toggleSubCollapse('products', $event)">
                 <span>Products</span>
               </a>
 
               @if (isSubOpen('products')) {
-                <div class="sub-submenu">
-                  <a class="mx-5" routerLink="/masters/plans" (click)="onLeafClick()">
-                    Business Plans
-                  </a>
-                </div>
+              <div class="sub-submenu">
+                <a class="mx-5" routerLink="/masters/plans" (click)="onLeafClick()">
+                  Business Plans
+                </a>
+              </div>
               }
             </div>
           </li>
 
           <!-- Online Resources -->
           <li class="nav-link">
-            <a
-              href="#"
-              class="d-flex align-items-center justify-content-between"
-              (click)="toggleCollapse('components2', $event)"
-            >
+            <a href="#" class="d-flex align-items-center justify-content-between"
+              (click)="toggleCollapse('components2', $event)">
               <div class="d-flex align-items-center">
                 <i class="fa-solid fa-globe icons"></i>
                 <span class="text nav-text">Online Resources</span>
               </div>
 
-              <i
-                class="fa-solid icons chevron"
-                [class.fa-chevron-down]="!isOpen('components2')"
-                [class.fa-chevron-up]="isOpen('components2')"
-              ></i>
+              <i class="fa-solid icons chevron" [class.fa-chevron-down]="!isOpen('components2')"
+                [class.fa-chevron-up]="isOpen('components2')"></i>
             </a>
           </li>
 
@@ -133,21 +108,15 @@
 
           <!-- Premium Members -->
           <li class="nav-link">
-            <a
-              href="#"
-              class="d-flex align-items-center justify-content-between"
-              (click)="toggleCollapse('components3', $event)"
-            >
+            <a href="#" class="d-flex align-items-center justify-content-between"
+              (click)="toggleCollapse('components3', $event)">
               <div class="d-flex align-items-center">
                 <i class="fa-solid fa-people-group icons"></i>
                 <span class="text nav-text">Premium Members</span>
               </div>
 
-              <i
-                class="fa-solid icons chevron"
-                [class.fa-chevron-down]="!isOpen('components3')"
-                [class.fa-chevron-up]="isOpen('components3')"
-              ></i>
+              <i class="fa-solid icons chevron" [class.fa-chevron-down]="!isOpen('components3')"
+                [class.fa-chevron-up]="isOpen('components3')"></i>
             </a>
           </li>
 
@@ -202,11 +171,11 @@
           </span>
 
           @for (crumb of breadcrumbs; track crumb.url; let last = $last) {
-            <i class="bi bi-chevron-right separator"></i>
+          <i class="bi bi-chevron-right separator"></i>
 
-            <span class="crumb" [routerLink]="crumb.url" [class.active]="last">
-              {{ crumb.label }}
-            </span>
+          <span class="crumb" [routerLink]="crumb.url" [class.active]="last">
+            {{ crumb.label }}
+          </span>
           }
         </div>
       </div>
@@ -215,44 +184,34 @@
         <div class="search-box">
           <i class="bi bi-search"></i>
 
-          <input
-            type="text"
-            [(ngModel)]="searchText"
-            placeholder="Search anything..."
-            (keyup.enter)="onSearch()"
-          />
+          <input type="text" [(ngModel)]="searchText" placeholder="Search anything..." (keyup.enter)="onSearch()" />
         </div>
 
         <div class="notif-wrapper">
-          <button
-            class="icon-btn"
-            disabled
-            (click)="toggleNotifications()"
-            aria-label="Notifications"
-          >
+          <button class="icon-btn" disabled (click)="toggleNotifications()" aria-label="Notifications">
             <i class="bi bi-bell"></i>
 
             @if (notifications.length) {
-              <span class="icon-badge">
-                {{ notifications.length }}
-              </span>
+            <span class="icon-badge">
+              {{ notifications.length }}
+            </span>
             }
           </button>
 
           @if (showNotifications) {
-            <div class="dropdown-panel notif-panel">
-              <div class="dropdown-panel-head">Notifications</div>
+          <div class="dropdown-panel notif-panel">
+            <div class="dropdown-panel-head">Notifications</div>
 
-              @for (n of notifications; track n) {
-                <div class="notif-item">
-                  {{ n }}
-                </div>
-              }
-
-              @if (!notifications.length) {
-                <div class="dropdown-empty">No new notifications</div>
-              }
+            @for (n of notifications; track n) {
+            <div class="notif-item">
+              {{ n }}
             </div>
+            }
+
+            @if (!notifications.length) {
+            <div class="dropdown-empty">No new notifications</div>
+            }
+          </div>
           }
         </div>
 
@@ -275,22 +234,22 @@
           </button>
 
           @if (showProfileMenu) {
-            <div class="dropdown-panel profile-panel">
-              <a class="dropdown-item" routerLink="/profile" (click)="showProfileMenu = false">
-                <i class="bi bi-person"></i>
-                My Profile
-              </a>
+          <div class="dropdown-panel profile-panel">
+            <a class="dropdown-item" routerLink="/profile" (click)="showProfileMenu = false">
+              <i class="bi bi-person"></i>
+              My Profile
+            </a>
 
-              <a class="dropdown-item" routerLink="/settings" (click)="showProfileMenu = false">
-                <i class="bi bi-lock"></i>
-                Change Passoword
-              </a>
+            <a class="dropdown-item" routerLink="/settings" (click)="showProfileMenu = false">
+              <i class="bi bi-lock"></i>
+              Change Passoword
+            </a>
 
-              <a class="dropdown-item dropdown-item-danger" href="#" (click)="logout()">
-                <i class="bi bi-box-arrow-right"></i>
-                Logout
-              </a>
-            </div>
+            <a class="dropdown-item dropdown-item-danger" href="#" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i>
+              Logout
+            </a>
+          </div>
           }
         </div>
       </div>

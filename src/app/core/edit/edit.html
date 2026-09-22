@@ -2,85 +2,70 @@
 
 <section class="header-section">
   <div class="page-header">
-    <h4 class="page-title">Calendar and Premium Newsletter (Add/Edit)</h4>
+    <div class="header-left">
+      <div class="header-icon">
+        <i class="bi {{ activeTab?.icon }}"></i>
+      </div>
+      <div class="header-text">
+        <h4 class="page-title">Calendar & Premium Newsletter</h4>
+        <div class="header-meta">
+          <span class="badge-edit">{{ activeTab?.badge }}</span>
+          <span class="header-subtitle">{{ activeTab?.description }}</span>
+        </div>
+      </div>
+    </div>
 
     <div class="nav-btn">
       @for (item of menuItems; track item.id) {
-        <button class="btn" [class.active]="activeItem === item.id" (click)="setActive(item.id)">
-          {{ item.label }}
-        </button>
+      <button class="btn" [class.active]="activeItem === item.id" (click)="setActive(item.id)">
+        {{ item.label }}
+      </button>
       }
     </div>
   </div>
 
   @if (isLoading) {
-    <div class="component-loader">
-      <span class="loader-dot"></span>
-      Loading data...
-    </div>
+  <div class="component-loader">
+    <span class="loader-dot"></span>
+    Loading data...
+  </div>
   }
 
   <div>
     @if (grantData) {
-      <app-calendar-details
-        [hidden]="activeItem !== 1"
-        [data]="grantData"
-        [draftId]="draftId"
-        (tabChange)="setActive($event)"
-      >
-      </app-calendar-details>
+    <app-calendar-details [hidden]="activeItem !== 1" [data]="grantData" [draftId]="draftId"
+      (tabChange)="setActive($event)">
+    </app-calendar-details>
     }
 
     @if (grantData) {
-      <app-geo-location
-        [hidden]="activeItem !== 2"
-        [grantId]="grantData.id"
-        [draftId]="draftId"
-        (tabChange)="setActive($event)"
-      >
-      </app-geo-location>
+    <app-geo-location [hidden]="activeItem !== 2" [grantId]="grantData.id" [draftId]="draftId"
+      (tabChange)="setActive($event)">
+    </app-geo-location>
     }
     @if (grantData) {
-      <app-focus-area
-        [hidden]="activeItem !== 3"
-        [grantId]="grantData.id"
-        [draftId]="draftId"
-        (tabChange)="setActive($event)"
-      >
-      </app-focus-area>
+    <app-focus-area [hidden]="activeItem !== 3" [grantId]="grantData.id" [draftId]="draftId"
+      (tabChange)="setActive($event)">
+    </app-focus-area>
     }
 
     @if (grantData) {
-      <app-focus-groups
-        [hidden]="activeItem !== 4"
-        [grantId]="grantData.id"
-        [draftId]="draftId"
-        (tabChange)="setActive($event)"
-      >
-      </app-focus-groups>
+    <app-focus-groups [hidden]="activeItem !== 4" [grantId]="grantData.id" [draftId]="draftId"
+      (tabChange)="setActive($event)">
+    </app-focus-groups>
     }
 
     @if (grantData) {
-      <app-counties
-        [hidden]="activeItem !== 5"
-        [grantId]="grantData.id"
-        [draftId]="draftId"
-        [stCtType]="grantData.stCtType"
-        [stateString]="grantData.stateString"
-        [countyString]="grantData.countyString"
-        (tabChange)="setActive($event)"
-      >
-      </app-counties>
+    <app-counties [hidden]="activeItem !== 5" [grantId]="grantData.id" [draftId]="draftId"
+      [stCtType]="grantData.stCtType" [stateString]="grantData.stateString" [countyString]="grantData.countyString"
+      (tabChange)="setActive($event)">
+    </app-counties>
     }
 
     @if (grantData) {
-      <app-seo-social
-        [hidden]="activeItem !== 6"
-        [grantId]="grantData.id"
-        [draftId]="draftId"
-        (tabChange)="setActive($event)"
-      >
-      </app-seo-social>
+    <app-seo-social [hidden]="activeItem !== 6" [grantId]="grantData.id" [draftId]="draftId"
+      (tabChange)="setActive($event)">
+    </app-seo-social>
     }
   </div>
 </section>

@@ -68,6 +68,7 @@ export class CalendarDetails {
   showGrantSizeDropdown = false;
   selectedGrantSize = '';
   formSubmitted = false;
+  autoSaved = false; // NEW: drives the "Auto-saved" badge next to Letter Text
 
   grantTypeList = [
     'Awards and Prizes',
@@ -93,8 +94,8 @@ export class CalendarDetails {
     '4 Year',
     '5 Year',
     '5–10 Years',
-    'more then 5 Years',
-    'more then 10 Years',
+    'more than 5 Years',
+    'more than 10 Years',
     'Grant Duration Not Mentioned',
   ];
 
@@ -117,6 +118,16 @@ export class CalendarDetails {
 
   get shortInfoLength(): number {
     return this.opportunityForm.get('shortInfo')?.value?.length || 0;
+  }
+
+  // NEW: word count for the Letter Text editor footer
+  get wordCount(): number {
+    const value = this.opportunityForm.get('letterText')?.value || '';
+    const plainText = value
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/&nbsp;/g, ' ')
+      .trim();
+    return plainText ? plainText.split(/\s+/).filter(Boolean).length : 0;
   }
 
   @HostListener('document:mousedown', ['$event'])
@@ -157,7 +168,7 @@ export class CalendarDetails {
       shortInfo: ['', Validators.required],
       donorType: ['US Donors', Validators.required],
       donorAgency: [''],
-      donorAgencyOther: ['', Validators.required],
+      donorAgencyOther: [''], // CHANGED: Validators.required removed — field no longer in UI, so it can't be blocking
       grantType: ['', Validators.required],
       grantDuration: ['', Validators.required],
       grantSize: ['', Validators.required],
@@ -246,6 +257,7 @@ export class CalendarDetails {
     this.opportunityForm.valueChanges.pipe(debounceTime(800)).subscribe((value) => {
       if (!this.draftId) return;
       this.draftService.saveTabDraft(this.draftId, 'calendarDetails', value, this.data?.id || null);
+      this.autoSaved = true; // NEW: flips the "Auto-saved" badge on after the first debounced draft save
     });
   }
 
@@ -260,10 +272,6 @@ export class CalendarDetails {
     this.selectedGrantSize = saved.grantSize || '';
   }
 
-  // Once the grant is actually persisted to the backend (Save clicked and
-  // API call succeeds), the local pending/unsaved draft copy has served its
-  // purpose and should be cleared out — otherwise it lingers in Pending
-  // Grants as a stale/duplicate entry even though the grant is now saved.
   private clearLocalDraft() {
     if (!this.draftId) return;
     this.draftService.removeDraft(this.draftId);
@@ -289,6 +297,11 @@ export class CalendarDetails {
       .replace(/&nbsp;/g, '')
       .trim();
     return !plainText;
+  }
+
+  // NEW: clears the Letter Text editor content ("Clear" link in the footer)
+  clearLetterText(): void {
+    this.opportunityForm.patchValue({ letterText: '' });
   }
 
   fillForm(data: any) {
@@ -360,9 +373,6 @@ export class CalendarDetails {
     return this.formSubmitted && !this.previewUrl;
   }
 
-  // Central place to pull a readable message out of any HttpErrorResponse
-  // shape our APIs throw, so every catch block below can show the *real*
-  // backend/network reason in the alert instead of a generic string.
   private getErrorMessage(err: any, fallback: string): string {
     return (
       err?.error?.message ||
@@ -432,6 +442,14 @@ export class CalendarDetails {
     this.opportunityForm.patchValue({ img: images[0].image });
     this.previewUrl = images[0].base64;
     this.fullImageUrl = images[0].base64;
+  }
+
+  // NEW: clears the selected cover image (the "x" on the dropzone thumbnail)
+  removeImage(event: Event): void {
+    event.stopPropagation();
+    this.previewUrl = '';
+    this.fullImageUrl = '';
+    this.resizeImages = [];
   }
 
   showImageModal = false;
