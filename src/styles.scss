@@ -1,6 +1,4 @@
 @use 'bootstrap/scss/bootstrap';
-
-/* Global fonts — available everywhere in the app now */
 @import url('https://fonts.googleapis.com/css2?family=Oswald&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
@@ -24,7 +22,6 @@ app-root {
 .page-content {
   flex: 1;
 }
-/* You can add global styles to this file, and also import other style files */
 :root {
   /* Colors  */
   --white: #fff;
@@ -50,16 +47,10 @@ app-root {
   --placeholder-color: #6b7280;
   --danger-color: #f15c5c;
   --hover-color: #cecece;
-
-  /* Fonts */
   --font-oswald: 'Oswald', sans-serif;
   --font-pt-serif: 'PT Serif', serif;
   --font-lato: 'Lato', sans-serif;
-
-  /* Sidebar gradient (moved from app-shell.scss) */
   --sidebar-gradient: linear-gradient(180deg, #00c2e0 0%, #0073a0 100%);
-
-  /* App-shell layout (moved from app-shell.scss) */
   --sidebar-width: 275px;
   --sidebar-width-closed: 75px;
   --topbar-height: 64px;
